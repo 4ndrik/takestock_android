@@ -1,3 +1,14 @@
 <resources>
+    <string name="font_family_regular">sans-serif</string>
+    <string name="font_family_medium">sans-serif-medium</string>
+
+    <string name="font_brandon_bold">brandon_bold.otf</string>
+    <string name="font_brandon_regular">brandon_regular.otf</string>
+    <string name="font_brandon_medium">brandon_medium.otf</string>
+
     <string name="app_name">Take Stock</string>
+    <string name="search_products">Search Products</string>
+    <string name="browse_categories"><![CDATA[Browse Categories >]]></string>
+    <string name="sell_something">Sell Something</string>
+    <string name="home">home</string>
 </resources>
