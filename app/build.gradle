@@ -70,6 +70,7 @@ dependencies {
 //    compile 'io.reactivex:rxjava:1.1.2'
 //    compile 'io.reactivex:rxandroid:1.1.0'
 //    compile 'com.squareup.sqlbrite:sqlbrite:0.6.2'
+    compile 'com.jakewharton:butterknife:7.0.1'
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
