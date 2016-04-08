@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SellActivity"
+        <activity android:name=".SellingActivity"
                   android:screenOrientation="portrait"/>
 
     </application>

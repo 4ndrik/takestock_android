@@ -11,11 +11,11 @@ import com.devabit.takestock.util.FontCache;
 /**
  * Created by Victor Artemyev on 07/04/2016.
  */
-public class SellActivity extends AppCompatActivity {
+public class SellingActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sell);
+        setContentView(R.layout.activity_selling);
         setUpToolbar();
     }
 
