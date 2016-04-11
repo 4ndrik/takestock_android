@@ -11,4 +11,40 @@
     <string name="browse_categories"><![CDATA[Browse Categories >]]></string>
     <string name="sell_something">Sell Something</string>
     <string name="home">home</string>
+    <string name="add_image">Add image</string>
+    <string name="product_title">Product Title*</string>
+    <string name="cancel">Cancel</string>
+    <string name="category">Category*</string>
+    <string name="sub_category">Sub-category*</string>
+    <string name="quantities_and_guide_price">Quantities and guide price*</string>
+    <string name="choose_unit">Choose unit / type of packaging</string>
+    <string name="how_many_unit">How_many [unit] are for sale?</string>
+    <string name="hint_add_product_title">Add product title</string>
+    <string name="kg">kg</string>
+    <string name="minimum">Minimum order</string>
+    <string name="guide_price">Guide price</string>
+    <string name="currency">£</string>
+    <string name="product_description">Product description*</string>
+    <string name="hint_product_description">Great tasting Chocolate Brownie Mix. Mix with Water and Butter for a luxury
+        product. Recipe supplied with order ...
+    </string>
+    <string name="hint_location">Brighton</string>
+    <string name="location">Location*</string>
+    <string name="shipping">Shipping*</string>
+    <string name="condition">Condition*</string>
+    <string name="certification">Certification</string>
+    <string name="iso">ISO</string>
+    <string name="organic">Organic</string>
+    <string name="bsi">BSI</string>
+    <string name="salsa">Salsa</string>
+    <string name="brc">BRC</string>
+    <string name="hint_other">Other</string>
+    <string name="add_keywords">Add keywords</string>
+    <string name="hint_keywords">bargain, ingredients...</string>
+    <string name="hint_keywords_description">List as many as you like. Keywords help customers find your product
+    </string>
+    <string name="preview_ad">Preview ad</string>
+    <string name="save_and_put_on_hold"><![CDATA[Save & put on hold]]></string>
+    <string name="expiry">Expiry</string>
+    <string name="size">Size</string>
 </resources>

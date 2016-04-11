@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="16dp">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/category"
+            style="@style/TextViewLime"/>
+
+    <Spinner
+            android:id="@+id/categories_spinner"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sub_category"
+            style="@style/TextViewLime"/>
+
+    <Spinner
+            android:id="@+id/sub_categories_spinner"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/quantities_and_guide_price"
+            style="@style/TextViewLime"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/choose_unit"
+            style="@style/TextViewGrey"/>
+
+    <Spinner
+            android:id="@+id/unit_packaging_spinner"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/how_many_unit"
+            style="@style/TextViewGrey"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+        <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                tools:text="100"
+                style="@style/EditTextWeight"
+                tools:ignore="LabelFor"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:text="@string/kg"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                style="@style/TextViewGrey"/>
+
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/minimum"
+            style="@style/TextViewGrey"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+        <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                tools:text="100"
+                style="@style/EditTextWeight"
+                tools:ignore="LabelFor"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:text="@string/kg"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                style="@style/TextViewGrey"/>
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/guide_price"
+            style="@style/TextViewGrey"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+        <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="@string/currency"
+                style="@style/EditTextWeight"
+                tools:ignore="LabelFor"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:text="/kg"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                style="@style/TextViewGrey"/>
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/product_description"
+            style="@style/TextViewLime"/>
+
+    <EditText
+            android:id="@+id/product_description_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableEnd="@drawable/ic_edit_lime_24dp"
+            android:hint="@string/hint_product_description"
+            android:theme="@style/EditText"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/location"
+            style="@style/TextViewGrey"/>
+
+    <EditText
+            android:id="@+id/location_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableEnd="@drawable/ic_edit_lime_24dp"
+            android:hint="@string/hint_location"
+            android:theme="@style/EditText"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/shipping"
+            style="@style/TextViewGrey"/>
+
+    <Spinner
+            android:id="@+id/shipping_spinner"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/condition"
+            style="@style/TextViewGrey"/>
+
+    <Spinner
+            android:id="@+id/condition_spinner"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <!--TODO: implement Expiry and Size-->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/expiry"
+            style="@style/TextViewGrey"/>
+
+    <TextView
+            android:id="@+id/expiry_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_expand_24dp"
+            android:layout_marginTop="4dp"
+            android:padding="4dp"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textColorHint="@color/grey_400"
+            android:hint="YYY-MM-(DD)"/>
+
+    <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:text="@string/certification"-->
+            <!--style="@style/TextViewLime"/>-->
+
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/size"
+            style="@style/TextViewGrey"/>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="10"
+                style="@style/EditTextWeight"
+                android:ems="2"
+                android:maxLength="2"
+                tools:ignore="LabelFor"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:text="x"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                style="@style/TextViewGrey"/>
+
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="10"
+                style="@style/EditTextWeight"
+                android:ems="2"
+                android:maxLength="2"
+                tools:ignore="LabelFor"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:text="x"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                style="@style/TextViewGrey"/>
+
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="5"
+                style="@style/EditTextWeight"
+                android:ems="2"
+                android:maxLength="2"
+                tools:ignore="LabelFor"/>
+
+        <Spinner
+                android:layout_marginStart="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/certification"
+            style="@style/TextViewLime"/>
+
+    <TextView
+            android:id="@+id/certification_info_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Loren ipsum sed amed in deo non qua plus ultra"
+            style="@style/TextViewGrey"/>
+
+    <com.devabit.takestock.widget.RadioButtonGroupTableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center">
+
+        <TableRow>
+            <RadioButton android:id="@+id/rad1"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginEnd="48dp"
+                         android:theme="@style/RadioButton"
+                         android:text="@string/brc"/>
+
+            <RadioButton android:id="@+id/rad2"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:theme="@style/RadioButton"
+                         android:text="@string/salsa"/>
+        </TableRow>
+
+        <TableRow>
+            <RadioButton android:id="@+id/rad4"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginEnd="48dp"
+                         android:theme="@style/RadioButton"
+                         android:text="@string/bsi"/>
+
+            <RadioButton android:id="@+id/rad5"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:theme="@style/RadioButton"
+                         android:text="@string/organic"/>
+        </TableRow>
+
+        <TableRow>
+            <RadioButton android:id="@+id/rad3"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginEnd="48dp"
+                         android:theme="@style/RadioButton"
+                         android:text="@string/iso"/>
+        </TableRow>
+    </com.devabit.takestock.widget.RadioButtonGroupTableLayout>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:drawableEnd="@drawable/ic_edit_lime_24dp"
+            android:hint="@string/hint_other"
+            android:theme="@style/EditText"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/add_keywords"
+            style="@style/TextViewLime"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableEnd="@drawable/ic_edit_lime_24dp"
+            android:hint="@string/hint_keywords"
+            android:theme="@style/EditText"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/hint_keywords_description"
+            style="@style/TextViewGrey"/>
+
+    <Button
+            android:id="@+id/preview_ad_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/preview_ad"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:theme="@style/RaisedButtonLime"/>
+
+    <Button
+            android:id="@+id/save_and_put_on_hold_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/save_and_put_on_hold"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:theme="@style/RaisedButtonGrey"/>
+
+</LinearLayout>

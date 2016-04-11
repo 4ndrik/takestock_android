@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.sell_something_button)
-    protected void startSellActivvity() {
+    protected void startSellingActivvity() {
         startActivity(new Intent(this, SellingActivity.class));
     }
 }

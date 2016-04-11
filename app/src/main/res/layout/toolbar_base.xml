@@ -16,7 +16,7 @@
             android:text="@string/home"
             android:textColor="@color/white"
             android:gravity="center"
-            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textAppearance="@android:style/TextAppearance.Medium"
             android:drawableStart="@drawable/ic_navigate_before_24dp"/>
 
     <TextView
@@ -28,7 +28,6 @@
             android:textAllCaps="true"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            />
+            android:textAppearance="@android:style/TextAppearance.Medium"/>
 
 </android.support.v7.widget.Toolbar>

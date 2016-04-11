@@ -8,5 +8,8 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <color name="grey_200">#EEEEEE</color>
     <color name="grey_400">#BDBDBD</color>
+    <color name="grey_600">#757575</color>
+
 </resources>
