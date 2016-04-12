@@ -39,6 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.browse_categories_button)
     protected void startSearchActivity() {
-        startActivity(new Intent(this, SearchActivity.class));
+        startActivity(new Intent(this, EntryActivity.class));
     }
 }

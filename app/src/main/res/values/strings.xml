@@ -50,4 +50,7 @@
     <string name="filter">Filter</string>
     <string name="newest_first">Newest first</string>
     <string name="search">Search</string>
+    <string name="slogan">Unlocking value\nin the food industry</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
 </resources>
