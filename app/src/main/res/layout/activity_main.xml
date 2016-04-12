@@ -37,12 +37,12 @@
                 android:theme="@style/EditText"/>
 
         <Button
-                android:id="@+id/browse_products_button"
+                android:id="@+id/browse_categories_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/browse_categories"
-                android:theme="@style/FlatButton"
+                android:theme="@style/FlatButtonLime"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 style="@style/Widget.AppCompat.Button.Borderless"/>
 

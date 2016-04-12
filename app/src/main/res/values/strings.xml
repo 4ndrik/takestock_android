@@ -26,7 +26,7 @@
     <string name="currency">£</string>
     <string name="product_description">Product description*</string>
     <string name="hint_product_description">Great tasting Chocolate Brownie Mix. Mix with Water and Butter for a luxury
-        product. Recipe supplied with order ...
+        product. Recipe supplied with order …
     </string>
     <string name="hint_location">Brighton</string>
     <string name="location">Location*</string>
@@ -40,11 +40,14 @@
     <string name="brc">BRC</string>
     <string name="hint_other">Other</string>
     <string name="add_keywords">Add keywords</string>
-    <string name="hint_keywords">bargain, ingredients...</string>
+    <string name="hint_keywords">bargain, ingredients…</string>
     <string name="hint_keywords_description">List as many as you like. Keywords help customers find your product
     </string>
     <string name="preview_ad">Preview ad</string>
     <string name="save_and_put_on_hold"><![CDATA[Save & put on hold]]></string>
     <string name="expiry">Expiry</string>
     <string name="size">Size</string>
+    <string name="filter">Filter</string>
+    <string name="newest_first">Newest first</string>
+    <string name="search">Search</string>
 </resources>

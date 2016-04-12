@@ -14,7 +14,7 @@ import com.devabit.takestock.util.FontCache;
 public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.search_products_edit_text) protected EditText mSearchProductsEditText;
-    @Bind(R.id.browse_products_button) protected Button mBrowseProductsButton;
+    @Bind(R.id.browse_categories_button) protected Button mBrowseProductsButton;
     @Bind(R.id.sell_something_button) protected Button mSellSomethingButton;
 
     @Override
@@ -35,5 +35,10 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.sell_something_button)
     protected void startSellingActivvity() {
         startActivity(new Intent(this, SellingActivity.class));
+    }
+
+    @OnClick(R.id.browse_categories_button)
+    protected void startSearchActivity() {
+        startActivity(new Intent(this, SearchActivity.class));
     }
 }
