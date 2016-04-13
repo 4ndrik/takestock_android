@@ -37,9 +37,10 @@ public class SellingActivity extends AppCompatActivity {
         Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         title.setTypeface(boldTypeface);
         title.setText(R.string.sell_something);
-        TextView homeTextView = (TextView) mToolbar.findViewById(R.id.home_toolbar);
+        TextView homeTextView = (TextView) mToolbar.findViewById(R.id.back_toolbar);
         Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
         homeTextView.setTypeface(mediumTypeface);
+        homeTextView.setText(R.string.home);
         homeTextView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();

@@ -325,13 +325,11 @@
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_marginEnd="48dp"
-                         android:theme="@style/RadioButton"
                          android:text="@string/brc"/>
 
             <RadioButton android:id="@+id/rad2"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
-                         android:theme="@style/RadioButton"
                          android:text="@string/salsa"/>
         </TableRow>
 
@@ -340,13 +338,11 @@
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_marginEnd="48dp"
-                         android:theme="@style/RadioButton"
                          android:text="@string/bsi"/>
 
             <RadioButton android:id="@+id/rad5"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
-                         android:theme="@style/RadioButton"
                          android:text="@string/organic"/>
         </TableRow>
 
@@ -355,7 +351,6 @@
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_marginEnd="48dp"
-                         android:theme="@style/RadioButton"
                          android:text="@string/iso"/>
         </TableRow>
     </com.devabit.takestock.widget.RadioButtonGroupTableLayout>

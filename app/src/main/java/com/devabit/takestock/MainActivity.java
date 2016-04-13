@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.browse_categories_button)
     protected void startSearchActivity() {
-        startActivity(new Intent(this, EntryActivity.class));
+//        startActivity(new Intent(this, EntryActivity.class));
+        startActivity(ProductDetailActivity.getStartIntent(MainActivity.this));
     }
 }
