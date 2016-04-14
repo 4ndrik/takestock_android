@@ -140,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:layout_gravity="center"
-                android:text="/kg"
+                android:text="@string/per_kg"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 style="@style/TextViewGrey"/>
     </LinearLayout>
