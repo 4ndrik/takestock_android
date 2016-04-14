@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.devabit.takestock.util.FontCache;
 
 import java.util.List;
@@ -30,5 +31,10 @@ public class EntryActivity extends AppCompatActivity {
                 view.setTypeface(boldTypeface);
             }
         });
+    }
+
+    @OnClick(R.id.sign_up_button)
+    protected void onSignUpButtonClick() {
+        startActivity(SignUpActivity.getStartIntent(EntryActivity.this));
     }
 }

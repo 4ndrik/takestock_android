@@ -28,17 +28,15 @@ public class ProductDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
         ButterKnife.bind(ProductDetailActivity.this);
-
-        mToolbar.setTitle(getText(R.string.app_name));
-
+        mToolbar.setTitle("Test test test test test test");
 
         mContent.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
-                mProductImageView.getLayoutParams().height = mContent.getHeight() / 2;
-                mContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
+                    @Override public void onGlobalLayout() {
+                        mProductImageView.getLayoutParams().height = mContent.getHeight() / 2;
+                        mContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

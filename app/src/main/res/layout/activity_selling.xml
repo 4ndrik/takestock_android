@@ -30,7 +30,7 @@
                         android:layout_height="match_parent"
                         android:paddingTop="125dp"
                         android:paddingBottom="50dp"
-                        android:drawableTop="@drawable/ic_add_image_grey_96dp"
+                        android:drawableTop="@drawable/ic_camera_grey_96dp"
                         android:text="@string/add_image"
                         android:theme="@style/RaisedButtonGrey"
                         android:textAppearance="@android:style/TextAppearance.Small"/>

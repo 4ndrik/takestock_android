@@ -35,11 +35,11 @@ public class SearchActivity extends AppCompatActivity {
         final Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         final Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
 
-        TextView titleToolbar = (TextView) mToolbar.findViewById(R.id.title_toolbar);
+        TextView titleToolbar = (TextView) mToolbar.findViewById(R.id.toolbar_title);
         titleToolbar.setTypeface(boldTypeface);
         titleToolbar.setText(R.string.search);
 
-        TextView homeToolbarTextView = (TextView) mToolbar.findViewById(R.id.back_toolbar);
+        TextView homeToolbarTextView = (TextView) mToolbar.findViewById(R.id.toolbar_back);
         homeToolbarTextView.setTypeface(mediumTypeface);
         homeToolbarTextView.setText(R.string.home);
         homeToolbarTextView.setOnClickListener(new View.OnClickListener() {

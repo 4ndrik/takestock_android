@@ -33,11 +33,11 @@ public class SellingActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         mToolbar.inflateMenu(R.menu.main);
-        TextView title = (TextView) mToolbar.findViewById(R.id.title_toolbar);
+        TextView title = (TextView) mToolbar.findViewById(R.id.toolbar_title);
         Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         title.setTypeface(boldTypeface);
         title.setText(R.string.sell_something);
-        TextView homeTextView = (TextView) mToolbar.findViewById(R.id.back_toolbar);
+        TextView homeTextView = (TextView) mToolbar.findViewById(R.id.toolbar_back);
         Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
         homeTextView.setTypeface(mediumTypeface);
         homeTextView.setText(R.string.home);
