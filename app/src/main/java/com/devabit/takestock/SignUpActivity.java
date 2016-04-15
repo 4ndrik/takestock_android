@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.devabit.takestock.util.FontCache;
@@ -30,21 +28,21 @@ public class SignUpActivity extends AppCompatActivity {
         ButterKnife.bind(SignUpActivity.this);
         Typeface boldTypeface = FontCache.getTypeface(SignUpActivity.this, R.string.font_brandon_bold);
         Typeface mediumTypeface = FontCache.getTypeface(SignUpActivity.this, R.string.font_brandon_medium);
-        setUpToolbar(boldTypeface, mediumTypeface);
+//        setUpToolbar(boldTypeface, mediumTypeface);
     }
 
-    private void setUpToolbar(Typeface boldTypeface, Typeface mediumTypeface) {
-        TextView title = (TextView) mToolbar.findViewById(R.id.title_toolbar);
-        title.setTypeface(boldTypeface);
-        title.setText(R.string.sign_up);
-
-        TextView back = (TextView) mToolbar.findViewById(R.id.back_toolbar);
-        back.setTypeface(mediumTypeface);
-        back.setText(R.string.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-    }
+//    private void setUpToolbar(Typeface boldTypeface, Typeface mediumTypeface) {
+//        TextView title = (TextView) mToolbar.findViewById(R.id.toolbar_title);
+//        title.setTypeface(boldTypeface);
+//        title.setText(R.string.sign_up);
+//
+//        TextView back = (TextView) mToolbar.findViewById(R.id.toolbar_back);
+//        back.setTypeface(mediumTypeface);
+//        back.setText(R.string.back);
+//        back.setOnClickListener(new View.OnClickListener() {
+//            @Override public void onClick(View v) {
+//                onBackPressed();
+//            }
+//        });
+//    }
 }

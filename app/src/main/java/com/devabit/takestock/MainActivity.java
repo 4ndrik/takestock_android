@@ -1,6 +1,5 @@
 package com.devabit.takestock;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.sell_something_button)
     protected void startSellingActivvity() {
-        startActivity(new Intent(this, SellingActivity.class));
+//        startActivity(new Intent(this, SellingActivity.class));
+        startActivity(SignUpActivity.getStartIntent(this));
     }
 
     @OnClick(R.id.browse_categories_button)
@@ -42,4 +42,5 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(new Intent(this, EntryActivity.class));
         startActivity(ProductDetailActivity.getStartIntent(MainActivity.this));
     }
+
 }

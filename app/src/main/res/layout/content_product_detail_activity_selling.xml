@@ -222,14 +222,6 @@
             android:textColorHint="@color/grey_400"
             android:hint="YYY-MM-(DD)"/>
 
-    <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="16dp"-->
-            <!--android:text="@string/certification"-->
-            <!--style="@style/TextViewLime"/>-->
-
-
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

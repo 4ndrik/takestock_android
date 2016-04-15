@@ -62,4 +62,6 @@
     <string name="hint_qty_you_want">Qty you want</string>
     <string name="hint_offer_price">£ Offer price</string>
     <string name="make_offer">Make offer</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>
