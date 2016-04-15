@@ -64,4 +64,5 @@
     <string name="make_offer">Make offer</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="user_name_or_email">User name or email</string>
 </resources>

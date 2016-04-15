@@ -1,5 +1,7 @@
 package com.devabit.takestock;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +18,10 @@ import java.util.List;
  * Created by Victor Artemyev on 12/04/2016.
  */
 public class EntryActivity extends AppCompatActivity {
+
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, EntryActivity.class);
+    }
 
     @Bind({R.id.sign_in_button, R.id.sign_up_button})
     protected List<Button> mButtonList;
@@ -36,5 +42,10 @@ public class EntryActivity extends AppCompatActivity {
     @OnClick(R.id.sign_up_button)
     protected void onSignUpButtonClick() {
         startActivity(SignUpActivity.getStartIntent(EntryActivity.this));
+    }
+
+    @OnClick(R.id.sign_in_button)
+    protected void onSignInButtonClick() {
+        startActivity(SignInActivity.getStartIntent(EntryActivity.this));
     }
 }

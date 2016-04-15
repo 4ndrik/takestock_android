@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.sell_something_button)
     protected void startSellingActivvity() {
 //        startActivity(new Intent(this, SellingActivity.class));
-        startActivity(SignUpActivity.getStartIntent(this));
+        startActivity(EntryActivity.getStartIntent(this));
     }
 
     @OnClick(R.id.browse_categories_button)
