@@ -5,83 +5,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context=".SellingActivity">
+              tools:context=".selling.SellingActivity">
 
     <include layout="@layout/toolbar_base"/>
 
-    <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <ViewFlipper
-                    android:id="@+id/product_preview_content_view_flipper_activity_selling"
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:layout_margin="32dp">
-
-                <Button
-                        android:id="@+id/add_image_product_button_activity_selling"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingTop="125dp"
-                        android:paddingBottom="50dp"
-                        android:drawableTop="@drawable/ic_camera_grey_96dp"
-                        android:text="@string/add_image"
-                        android:theme="@style/RaisedButtonGrey"
-                        android:textAppearance="@android:style/TextAppearance.Small"/>
-
-                <ImageView
-                        android:id="@+id/product_preview_image_view_activity_selling"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/grey_400"
-                        tools:ignore="ContentDescription"/>
-
-            </ViewFlipper>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/product_title"
-                    style="@style/TextViewLime"/>
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:drawableEnd="@drawable/ic_edit_lime_24dp"
-                    android:hint="@string/hint_add_product_title"
-                    android:theme="@style/EditText"/>
-
-            <ViewFlipper
-                    android:id="@+id/product_description_content_view_flipper_activity_selling"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <include layout="@layout/content_product_detail_activity_selling"/>
-
-                <Button
-                        android:id="@+id/cancel_button_activity_selling"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_gravity="center"
-                        android:text="@string/cancel"
-                        android:theme="@style/FlatButtonLime"
-                        android:textAppearance="@android:style/TextAppearance.Small"
-                        style="@style/Widget.AppCompat.Button.Borderless"/>
-
-            </ViewFlipper>
-
-        </LinearLayout>
-
-    </ScrollView>
+    <include layout="@layout/content_entire_activity_selling"/>
 
 </LinearLayout>

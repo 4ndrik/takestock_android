@@ -18,7 +18,7 @@
     <string name="sub_category">Sub-category*</string>
     <string name="quantities_and_guide_price">Quantities and guide price*</string>
     <string name="choose_unit">Choose unit / type of packaging</string>
-    <string name="how_many_unit">How_many [unit] are for sale?</string>
+    <string name="how_many_unit">How many [unit] are for sale?</string>
     <string name="hint_add_product_title">Add product title</string>
     <string name="kg">kg</string>
     <string name="minimum_order">Minimum order</string>

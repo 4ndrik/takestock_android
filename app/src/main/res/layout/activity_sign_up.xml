@@ -13,7 +13,6 @@
             android:layout_width="match_parent"
             android:elevation="4dp"
             android:background="@color/colorPrimary"
-            app:title="@string/sign_up"
             app:titleTextColor="@color/white"
             app:navigationIcon="@drawable/ic_arrow_back_white_24dp"/>
 
