@@ -1,10 +1,11 @@
-package com.devabit.takestock;
+package com.devabit.takestock.entry;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import com.devabit.takestock.R;
 
 /**
  * Created by Victor Artemyev on 15/04/2016.

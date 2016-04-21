@@ -1,4 +1,4 @@
-package com.devabit.takestock;
+package com.devabit.takestock.entry;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.devabit.takestock.R;
 import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.widget.CustomTypefaceSpan;
 
 /**
  * Created by Victor Artemyev on 12/04/2016.
@@ -28,6 +32,10 @@ public class SignUpActivity extends AppCompatActivity {
         ButterKnife.bind(SignUpActivity.this);
         Typeface boldTypeface = FontCache.getTypeface(SignUpActivity.this, R.string.font_brandon_bold);
         Typeface mediumTypeface = FontCache.getTypeface(SignUpActivity.this, R.string.font_brandon_medium);
+
+        SpannableString spannableString = new SpannableString(getText(R.string.sign_up));
+        spannableString.setSpan(new CustomTypefaceSpan(boldTypeface), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        mToolbar.setTitle(spannableString);
 //        setUpToolbar(boldTypeface, mediumTypeface);
     }
 

@@ -1,4 +1,4 @@
-package com.devabit.takestock;
+package com.devabit.takestock.selling;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.devabit.takestock.R;
 import com.devabit.takestock.util.FontCache;
 
 /**

@@ -8,6 +8,7 @@ import android.widget.EditText;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.devabit.takestock.entry.EntryActivity;
 import com.devabit.takestock.util.FontCache;
 
 public class MainActivity extends AppCompatActivity {
