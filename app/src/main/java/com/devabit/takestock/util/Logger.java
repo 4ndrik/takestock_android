@@ -6,7 +6,7 @@ import com.devabit.takestock.BuildConfig;
 /**
  * Created by Victor Artemyev on 22/04/2016.
  */
-public class Logger {
+public final class Logger {
 
     private static final String LOG_PREFIX = "takestock_";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
