@@ -20,7 +20,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".MainActivity"
+                android:name=".ui.main.MainActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.Launcher"
                 android:windowSoftInputMode="stateHidden">
@@ -44,10 +44,10 @@
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
-                android:name=".SearchActivity"
+                android:name=".ui.search.SearchActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ProductDetailActivity"
+                android:name=".ui.productDetail.ProductDetailActivity"
                 android:theme="@style/AppTheme">
         </activity>
     </application>

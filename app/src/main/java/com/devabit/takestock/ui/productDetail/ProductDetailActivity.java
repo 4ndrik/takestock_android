@@ -1,4 +1,4 @@
-package com.devabit.takestock;
+package com.devabit.takestock.ui.productDetail;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.devabit.takestock.R;
 
 public class ProductDetailActivity extends AppCompatActivity {
 

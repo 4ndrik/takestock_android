@@ -6,7 +6,7 @@
         android:id="@+id/content_product_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.devabit.takestock.ProductDetailActivity">
+        tools:context=".ui.productDetail.ProductDetailActivity">
 
     <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar_container"

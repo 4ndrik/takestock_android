@@ -1,4 +1,4 @@
-package com.devabit.takestock;
+package com.devabit.takestock.ui.main;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,7 +8,9 @@ import android.widget.EditText;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.devabit.takestock.R;
 import com.devabit.takestock.ui.entry.EntryActivity;
+import com.devabit.takestock.ui.productDetail.ProductDetailActivity;
 import com.devabit.takestock.util.FontCache;
 
 public class MainActivity extends AppCompatActivity {
