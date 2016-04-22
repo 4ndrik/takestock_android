@@ -1,4 +1,4 @@
-package com.devabit.takestock.selling;
+package com.devabit.takestock.ui.selling;
 
 import android.graphics.Typeface;
 import android.os.Bundle;

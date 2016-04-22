@@ -1,4 +1,4 @@
-package com.devabit.takestock.entry;
+package com.devabit.takestock.ui.entry;
 
 import android.content.Context;
 import android.content.Intent;

@@ -31,16 +31,16 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".entry.EntryActivity"
+                android:name=".ui.entry.EntryActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".entry.SignUpActivity"
+                android:name=".ui.entry.SignUpActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".entry.SignInActivity"
+                android:name=".ui.entry.SignInActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".selling.SellingActivity"
+                android:name=".ui.selling.SellingActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
