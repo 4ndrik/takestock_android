@@ -43,6 +43,7 @@ android {
             minSdkVersion 21
         }
         mock {
+            minSdkVersion 21
             applicationIdSuffix = ".mock"
         }
         prod {
