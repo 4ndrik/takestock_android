@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Victor Artemyev on 07/04/2016.
  */
-public class FontCache {
+public final class FontCache {
 
     private static Map<String, Typeface> sCachedFonts = new HashMap<>();
 
