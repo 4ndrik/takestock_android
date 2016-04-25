@@ -1,5 +1,6 @@
 package com.devabit.takestock.data.remote;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -7,11 +8,15 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.DataSource;
 import com.devabit.takestock.rest.ApiConnection;
 import com.devabit.takestock.rest.RestApi;
+import okhttp3.*;
 import rx.Observable;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 /**
- *Implementation for retrieving data from the network.
- *
+ * Implementation for retrieving data from the network.
+ * <p/>
  * Created by Victor Artemyev on 22/04/2016.
  */
 public class RemoteDataSource implements RestApi, DataSource {
@@ -25,10 +30,41 @@ public class RemoteDataSource implements RestApi, DataSource {
         return sInstance;
     }
 
+    private static final String CONTENT_TYPE_LABEL = "Content-Type";
+    private static final String CONTENT_TYPE_VALUE_JSON = "application/json; charset=utf-8";
+
+    private static final int CONNECT_TIMEOUT = 10;
+    private static final int WRITE_TIMEOUT = 10;
+    private static final int READ_TIMEOUT = 30;
+
     private Context mContext;
+    private AccountManager mAccountManager;
+    private OkHttpClient mOkHttpClient;
 
     private RemoteDataSource(Context context) {
         mContext = context;
+        mAccountManager = AccountManager.get(context);
+        mOkHttpClient = buildClient(mAccountManager);
+    }
+
+    private OkHttpClient buildClient(AccountManager accountManager) {
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                .addInterceptor(getAuthInterceptor(accountManager));
+
+        return builder.build();
+    }
+
+    private Interceptor getAuthInterceptor(final AccountManager accountManager) {
+        return new Interceptor() {
+            @Override public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+
+                return null;
+            }
+        };
     }
 
     @Override public Observable<String> obtainTokenAuth(@NonNull String userName, @NonNull String password) {
