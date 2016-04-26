@@ -40,10 +40,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
+                    android:id="@+id/user_name_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_name_or_email"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"/>
 
@@ -54,10 +57,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
+                    android:id="@+id/password_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
+                    android:inputType="textPassword"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"/>
 

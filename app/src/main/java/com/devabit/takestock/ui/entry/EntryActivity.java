@@ -11,6 +11,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.R;
+import com.devabit.takestock.ui.signIn.SignInActivity;
 import com.devabit.takestock.util.FontCache;
 
 import java.util.List;
