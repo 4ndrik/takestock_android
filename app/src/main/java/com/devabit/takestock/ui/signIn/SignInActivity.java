@@ -1,8 +1,9 @@
 package com.devabit.takestock.ui.signIn;
 
-import android.accounts.AccountManager;
+import android.accounts.*;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +12,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.devabit.takestock.R;
-
 import com.devabit.takestock.Injection;
+import com.devabit.takestock.R;
+import com.devabit.takestock.data.model.AccessToken;
+
+import java.io.IOException;
 
 import static com.devabit.takestock.util.Logger.LOGD;
 import static com.devabit.takestock.util.Logger.makeLogTag;
@@ -61,43 +63,86 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     @OnClick(R.id.sign_in_button)
     protected void onSignInButtonClick() {
-        mPresenter.signIn();
+        mPresenter.obtainAccessToken(getUserName(), getPassword());
     }
 
-    @Override public String getUserName() {
+    private String getUserName() {
         return mUserNameEditText.getText().toString().trim();
     }
 
-    @Override public String getPassword() {
+    private String getPassword() {
         return mPasswordEditText.getText().toString().trim();
     }
 
-    @Override public AccountManager getAccountManager() {
-        return AccountManager.get(SignInActivity.this);
+    @Override public void showIncorrectUsernameError() {
+        showSnack(R.string.error_incorrect_username);
     }
 
-    @Override public void showErrorMessage(String message) {
-        Snackbar.make(mContent, message, Snackbar.LENGTH_SHORT).show();
+    @Override public void showIncorrectPasswordError() {
+        showSnack(R.string.error_incorrect_password);
     }
 
-    @Override public void setProgressIndicator(boolean isActive) {
-        if (isActive) {
-            Toast.makeText(this, "start progress", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "stop progress", Toast.LENGTH_SHORT).show();
-        }
+    @Override public void showNetworkConnectionError() {
+        showSnack(R.string.error_no_network_connection);
     }
 
-    @Override public void failSignIn() {
+    @Override public void showIncorrectCredentialsError() {
+        showSnack(R.string.error_incorrect_credentials);
+    }
 
+    @Override public void showUnknownError() {
+        showSnack(R.string.error_unknown);
     }
 
     private void showSnack(@StringRes int resId) {
         Snackbar.make(mContent, resId, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override public void successSignIn() {
-        LOGD(TAG, "successSignIn");
+
+    @Override public void setProgressIndicator(boolean isActive) {
+
+    }
+
+    @Override public void createAccount(AccessToken accessToken) {
+        AccountManager accountManager = AccountManager.get(SignInActivity.this);
+        Account account = new Account(getUserName(), getString(R.string.authenticator_account_type));
+        accountManager.addAccountExplicitly(account, getPassword(), null);
+        accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), accessToken.token);
+
+        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
+        LOGD(TAG, "" + accounts.length);
+        for (Account ac : accounts) {
+            LOGD(TAG, ac.toString());
+            LOGD(TAG, accountManager.peekAuthToken(ac, getString(R.string.authenticator_token_type)));
+        }
+        accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), "sndnd");
+
+        Account[] accounts1 = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
+        LOGD(TAG, "" + accounts.length);
+        for (Account ac : accounts1) {
+            LOGD(TAG, ac.toString());
+            LOGD(TAG, accountManager.peekAuthToken(ac, getString(R.string.authenticator_token_type)));
+        }
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            boolean isRemoved = accountManager.removeAccountExplicitly(account);
+            LOGD(TAG, "account removed " + isRemoved);
+        } else {
+            accountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
+                @Override public void run(AccountManagerFuture<Boolean> future) {
+                    try {
+                       LOGD(TAG, "account removed " + future.getResult());
+                    } catch (OperationCanceledException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (AuthenticatorException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, null);
+        }
     }
 
     @Override protected void onPause() {

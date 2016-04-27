@@ -75,11 +75,12 @@ public class RemoteDataSource implements RestApi, DataSource {
                 Request.Builder builder = request.newBuilder();
                 builder.addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_VALUE_JSON);
                 Response response = chain.proceed(request);
-
                 switch (response.code()) {
                     case 400:
                         throw new HttpResponseException(response.message());
+
                     case 401:
+                        //TODO: implement refresh token
 
                     default:
                         return response;

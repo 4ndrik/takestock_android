@@ -1,6 +1,6 @@
 package com.devabit.takestock.ui.signIn;
 
-import android.accounts.AccountManager;
+import com.devabit.takestock.data.model.AccessToken;
 import com.devabit.takestock.ui.BasePresenter;
 import com.devabit.takestock.ui.BaseView;
 
@@ -11,25 +11,24 @@ public interface SignInContract {
 
     interface View extends BaseView<Presenter> {
 
-        String getUserName();
+        void showIncorrectUsernameError();
 
-        String getPassword();
+        void showIncorrectPasswordError();
 
-        AccountManager getAccountManager();
+        void showNetworkConnectionError();
 
-        void showErrorMessage(String message);
+        void showIncorrectCredentialsError();
+
+        void showUnknownError();
 
         void setProgressIndicator(boolean isActive);
 
-        void failSignIn();
-
-        void successSignIn();
-
+        void createAccount(AccessToken accessToken);
     }
 
     interface Presenter extends BasePresenter {
 
-        void signIn();
+        void obtainAccessToken(String username, String password);
 
     }
 }
