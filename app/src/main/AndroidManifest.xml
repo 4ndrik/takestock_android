@@ -2,10 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.devabit.takestock">
 
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
 
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature
@@ -37,7 +42,7 @@
                 android:name=".ui.entry.SignUpActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.entry.SignInActivity"
+                android:name=".ui.signIn.SignInActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.selling.SellingActivity"
@@ -48,8 +53,16 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.productDetail.ProductDetailActivity"
-                android:theme="@style/AppTheme">
-        </activity>
+                android:theme="@style/AppTheme"/>
+
+        <service android:name=".authentication.TakeStockAuthenticatorService"
+                 android:exported="false">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                       android:resource="@xml/authenticator"/>
+        </service>
     </application>
 
 </manifest>
