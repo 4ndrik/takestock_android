@@ -1,4 +1,4 @@
-package com.devabit.takestock.data;
+package com.devabit.takestock.data.source;
 
 import com.devabit.takestock.data.model.AccessToken;
 import com.devabit.takestock.data.model.UserCredentials;
@@ -15,7 +15,9 @@ public interface DataSource {
 
     Observable<String> getAdverts();
 
-    Observable<String> getSizeTypes();
+    void saveSizes();
+
+    Observable<String> getSizes();
 
     Observable<String> getCertifications();
 

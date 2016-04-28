@@ -1,4 +1,4 @@
-package com.devabit.takestock.data;
+package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.AccessToken;
@@ -47,7 +47,7 @@ public class DataRepository implements DataSource {
         return null;
     }
 
-    @Override public Observable<String> getSizeTypes() {
+    @Override public Observable<String> getSizes() {
         return null;
     }
 

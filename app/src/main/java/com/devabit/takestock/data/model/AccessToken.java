@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.model;
 
-import com.devabit.takestock.data.remote.RequestObject;
+import com.devabit.takestock.data.source.remote.RequestObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 

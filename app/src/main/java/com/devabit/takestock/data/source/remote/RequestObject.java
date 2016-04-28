@@ -1,4 +1,4 @@
-package com.devabit.takestock.data.remote;
+package com.devabit.takestock.data.source.remote;
 
 /**
  * Created by Victor Artemyev on 26/04/2016.

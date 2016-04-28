@@ -1,4 +1,4 @@
-package com.devabit.takestock.data.remote;
+package com.devabit.takestock.data.source.remote;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.DataSource;
+import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.model.AccessToken;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.exceptions.HttpResponseException;
@@ -174,7 +174,11 @@ public class RemoteDataSource implements RestApi, DataSource {
         return Observable.fromCallable(createGET(composeUrl(GET_ADVERTS)));
     }
 
-    @Override public Observable<String> getSizeTypes() {
+    @Override public void saveSizes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override public Observable<String> getSizes() {
         return Observable.fromCallable(createGET(composeUrl(GET_SIZE_TYPES)));
     }
 

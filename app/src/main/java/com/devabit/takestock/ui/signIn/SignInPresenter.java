@@ -2,7 +2,7 @@ package com.devabit.takestock.ui.signIn;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import com.devabit.takestock.data.DataRepository;
+import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.data.model.AccessToken;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.exceptions.HttpResponseException;
