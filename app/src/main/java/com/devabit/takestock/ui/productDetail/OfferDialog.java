@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.devabit.takestock.R;
 
 /**
  * Created by Victor Artemyev on 14/04/2016.
  */
 public class OfferDialog extends DialogFragment {
+
+    private Unbinder mUnbinder;
 
     public static OfferDialog newInstance() {
         Bundle args = new Bundle();
@@ -33,11 +36,11 @@ public class OfferDialog extends DialogFragment {
     }
 
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
-        ButterKnife.bind(OfferDialog.this, view);
+        mUnbinder = ButterKnife.bind(OfferDialog.this, view);
     }
 
     @Override public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(OfferDialog.this);
+        mUnbinder.unbind();
     }
 }

@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
 import com.devabit.takestock.util.FontCache;
@@ -17,9 +17,9 @@ import com.devabit.takestock.util.FontCache;
  */
 public class SellingActivity extends AppCompatActivity {
 
-    @Bind(R.id.toolbar) protected Toolbar mToolbar;
-    @Bind(R.id.add_image_product_button_activity_selling) protected Button mAddImageButton;
-    @Bind(R.id.expiry_text_view) protected TextView mExpiryTextView;
+    @BindView(R.id.toolbar) protected Toolbar mToolbar;
+    @BindView(R.id.add_image_product_button_activity_selling) protected Button mAddImageButton;
+    @BindView(R.id.expiry_text_view) protected TextView mExpiryTextView;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

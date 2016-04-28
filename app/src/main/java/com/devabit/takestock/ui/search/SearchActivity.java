@@ -10,7 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
 import com.devabit.takestock.util.FontCache;
@@ -22,10 +23,10 @@ import java.util.List;
  */
 public class SearchActivity extends AppCompatActivity {
 
-    @Bind(R.id.toolbar) protected Toolbar mToolbar;
-    @Bind(R.id.recycler_view) protected RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar) protected Toolbar mToolbar;
+    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
-    @Bind({R.id.browse_categories_button, R.id.filter_button, R.id.newest_first_button})
+    @BindViews({R.id.browse_categories_button, R.id.filter_button, R.id.newest_first_button})
     protected List<Button> mButtons;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

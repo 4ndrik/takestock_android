@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.R;
@@ -19,9 +19,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         return new Intent(context, ProductDetailActivity.class);
     }
 
-    @Bind(R.id.toolbar) protected Toolbar mToolbar;
-    @Bind(R.id.content_product_detail) protected View mContent;
-    @Bind(R.id.product_image_view) protected ImageView mProductImageView;
+    @BindView(R.id.toolbar) protected Toolbar mToolbar;
+    @BindView(R.id.content_product_detail) protected View mContent;
+    @BindView(R.id.product_image_view) protected ImageView mProductImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
 import com.devabit.takestock.util.FontCache;
@@ -24,7 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
         return new Intent(context, SignUpActivity.class);
     }
 
-    @Bind(R.id.toolbar) protected Toolbar mToolbar;
+    @BindView(R.id.toolbar) protected Toolbar mToolbar;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

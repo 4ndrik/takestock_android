@@ -1,9 +1,9 @@
 package com.devabit.takestock.ui.signIn;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,16 +12,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.AccessToken;
 
-import java.io.IOException;
-
-import static com.devabit.takestock.util.Logger.LOGD;
 import static com.devabit.takestock.util.Logger.makeLogTag;
 import static com.devabit.takestock.util.Preconditions.checkNotNull;
 
@@ -36,9 +33,9 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
         return new Intent(context, SignInActivity.class);
     }
 
-    @Bind(R.id.content_activity_sign_in) protected View mContent;
-    @Bind(R.id.user_name_edit_text) protected EditText mUserNameEditText;
-    @Bind(R.id.password_edit_text) protected EditText mPasswordEditText;
+    @BindView(R.id.content_activity_sign_in) protected View mContent;
+    @BindView(R.id.user_name_edit_text) protected EditText mUserNameEditText;
+    @BindView(R.id.password_edit_text) protected EditText mPasswordEditText;
 
     private SignInContract.Presenter mPresenter;
 
@@ -109,40 +106,24 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
         accountManager.addAccountExplicitly(account, getPassword(), null);
         accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), accessToken.token);
 
-        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-        LOGD(TAG, "" + accounts.length);
-        for (Account ac : accounts) {
-            LOGD(TAG, ac.toString());
-            LOGD(TAG, accountManager.peekAuthToken(ac, getString(R.string.authenticator_token_type)));
-        }
-        accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), "sndnd");
-
-        Account[] accounts1 = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-        LOGD(TAG, "" + accounts.length);
-        for (Account ac : accounts1) {
-            LOGD(TAG, ac.toString());
-            LOGD(TAG, accountManager.peekAuthToken(ac, getString(R.string.authenticator_token_type)));
-        }
+        //TODO: implement start MainActivity
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            boolean isRemoved = accountManager.removeAccountExplicitly(account);
-            LOGD(TAG, "account removed " + isRemoved);
-        } else {
-            accountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
-                @Override public void run(AccountManagerFuture<Boolean> future) {
-                    try {
-                       LOGD(TAG, "account removed " + future.getResult());
-                    } catch (OperationCanceledException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (AuthenticatorException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, null);
-        }
+        // remove account
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//            boolean isRemoved = accountManager.removeAccountExplicitly(account);
+//            LOGD(TAG, "account removed " + isRemoved);
+//        } else {
+//            accountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
+//                @Override public void run(AccountManagerFuture<Boolean> future) {
+//                    try {
+//                       LOGD(TAG, "account removed " + future.getResult());
+//                    } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+//                        LOGE(TAG, "Account removed error", e);
+//                    }
+//                }
+//            }, null);
+//        }
     }
 
     @Override protected void onPause() {

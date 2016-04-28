@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-import butterknife.Bind;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.R;
@@ -25,7 +25,7 @@ public class EntryActivity extends AppCompatActivity {
         return new Intent(context, EntryActivity.class);
     }
 
-    @Bind({R.id.sign_in_button, R.id.sign_up_button})
+    @BindViews({R.id.sign_in_button, R.id.sign_up_button})
     protected List<Button> mButtonList;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
