@@ -1,5 +1,9 @@
 package com.devabit.takestock.ui.main;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +15,16 @@ import butterknife.OnClick;
 import com.devabit.takestock.R;
 import com.devabit.takestock.ui.entry.EntryActivity;
 import com.devabit.takestock.ui.productDetail.ProductDetailActivity;
+import com.devabit.takestock.ui.selling.SellingActivity;
 import com.devabit.takestock.util.FontCache;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static Intent getStartIntent(Context context) {
+        Intent starter = new Intent(context, MainActivity.class);
+        starter.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return starter;
+    }
 
     @BindView(R.id.search_products_edit_text) protected EditText mSearchProductsEditText;
     @BindView(R.id.browse_categories_button) protected Button mBrowseProductsButton;
@@ -23,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
+
+        if (shouldBeEntryActivityShown()) {
+            startActivity(EntryActivity.getStartIntent(MainActivity.this));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(MainActivity.this);
@@ -34,10 +52,16 @@ public class MainActivity extends AppCompatActivity {
         mSellSomethingButton.setTypeface(boldTypeface);
     }
 
+    private boolean shouldBeEntryActivityShown() {
+        AccountManager accountManager = AccountManager.get(MainActivity.this);
+        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
+        return accounts.length == 0;
+    }
+
     @OnClick(R.id.sell_something_button)
-    protected void startSellingActivvity() {
-//        startActivity(new Intent(this, SellingActivity.class));
-        startActivity(EntryActivity.getStartIntent(this));
+    protected void startSellingActivity() {
+        startActivity(new Intent(this, SellingActivity.class));
+//        startActivity(EntryActivity.getStartIntent(this));
     }
 
     @OnClick(R.id.browse_categories_button)

@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.AccessToken;
+import com.devabit.takestock.ui.main.MainActivity;
 
 import static com.devabit.takestock.util.Logger.makeLogTag;
 import static com.devabit.takestock.util.Preconditions.checkNotNull;
@@ -46,7 +47,6 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
         new SignInPresenter(
                 Injection.provideDataRepository(SignInActivity.this), SignInActivity.this);
-
     }
 
     @Override public void setPresenter(@NonNull SignInContract.Presenter presenter) {
@@ -106,8 +106,7 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
         accountManager.addAccountExplicitly(account, getPassword(), null);
         accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), accessToken.token);
 
-        //TODO: implement start MainActivity
-
+        startActivity(MainActivity.getStartIntent(SignInActivity.this));
 
         // remove account
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {

@@ -1,9 +1,12 @@
 package com.devabit.takestock.data.remote;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
+import com.devabit.takestock.R;
 import com.devabit.takestock.data.DataSource;
 import com.devabit.takestock.data.model.AccessToken;
 import com.devabit.takestock.data.model.UserCredentials;
@@ -40,53 +43,113 @@ public class RemoteDataSource implements RestApi, DataSource {
         return sInstance;
     }
 
-    private static final String CONTENT_TYPE_LABEL = "Content-Type";
-    private static final String CONTENT_TYPE_VALUE_JSON = "application/json; charset=utf-8";
-    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse(CONTENT_TYPE_VALUE_JSON);
+    private static final String HEADER_NAME_CONTENT_TYPE = "Content-Type";
+    private static final String HEADER_VALUE_JSON = "application/json; charset=utf-8";
+    private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
+    private static final String HEADER_VALUE_TOKEN = "JWT ";
+    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse(HEADER_VALUE_JSON);
 
     private static final int CONNECT_TIMEOUT = 10;
     private static final int WRITE_TIMEOUT = 10;
     private static final int READ_TIMEOUT = 30;
 
     private Context mContext;
-    private AccountManager mAccountManager;
-    private OkHttpClient mOkHttpClient;
+    private final ConnectivityManager mConnectivityManager;
+
+    private final AccountManager mAccountManager;
+    private final String mAccountType;
+    private final String mTokenType;
+
+    private final OkHttpClient mOkHttpClient;
 
     private RemoteDataSource(Context context) {
         mContext = context.getApplicationContext();
+        mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         mAccountManager = AccountManager.get(mContext);
-        mOkHttpClient = buildClient(mAccountManager);
+        mAccountType = mContext.getString(R.string.authenticator_account_type);
+        mTokenType = mContext.getString(R.string.authenticator_token_type);
+        mOkHttpClient = buildClient();
     }
 
-    private OkHttpClient buildClient(AccountManager accountManager) {
+    private OkHttpClient buildClient() {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                .addInterceptor(getAuthInterceptor(accountManager));
-
+                .addInterceptor(getAuthInterceptor());
         return builder.build();
     }
 
-    private Interceptor getAuthInterceptor(final AccountManager accountManager) {
+    private Interceptor getAuthInterceptor() {
         return new Interceptor() {
             @Override public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
                 Request.Builder builder = request.newBuilder();
-                builder.addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_VALUE_JSON);
-                Response response = chain.proceed(request);
-                switch (response.code()) {
-                    case 400:
-                        throw new HttpResponseException(response.message());
+                builder.header(HEADER_NAME_CONTENT_TYPE, HEADER_VALUE_JSON);
 
-                    case 401:
-                        //TODO: implement refresh token
+                Account account = getAccountOrNull();
+                Response response;
+                if (account != null) {
+                    String authToken = getAuthToken(account);
+                    setAuthHeader(builder, authToken);
+                    request = builder.build();
+                    response = chain.proceed(request);
 
-                    default:
-                        return response;
+                    if (response.code() == 401) { //if unauthorized
+                        authToken = refreshAuthToken(authToken);
+                        setAuthToken(account, authToken);
+                        setAuthHeader(builder, authToken);
+                    }
                 }
+                response = chain.proceed(request);
+                return checkResponsePerCode(response);
             }
         };
+    }
+
+    @Nullable private Account getAccountOrNull() {
+        Account[] accounts = mAccountManager.getAccountsByType(mAccountType);
+        if (accounts.length > 0) {
+            return accounts[0];
+        } else {
+            return null;
+        }
+    }
+
+    private String getAuthToken(Account account) {
+        return mAccountManager.peekAuthToken(account, mTokenType);
+    }
+
+    private String refreshAuthToken(String token) {
+        synchronized (mOkHttpClient) {
+            AccessToken accessToken = new AccessToken();
+            accessToken.token = token;
+            try {
+                Request request = buildPOSTRequest(composeUrl(POST_TOKEN_VERIFY), accessToken);
+                return mOkHttpClient.newCall(request).execute().body().string();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void setAuthToken(Account account, String authToken) {
+        mAccountManager.setAuthToken(account, mTokenType, authToken);
+    }
+
+    private void setAuthHeader(Request.Builder builder, String authToken) {
+        if (authToken == null) return;
+        builder.header(HEADER_NAME_AUTHORIZATION, HEADER_VALUE_TOKEN + authToken);
+    }
+
+    private Response checkResponsePerCode(Response response) throws IOException {
+        int code = response.code();
+        switch (code) {
+            case 400: //if bad request
+                throw new HttpResponseException(code, response.message());
+            default:
+                return response;
+        }
     }
 
     @Override public Observable<AccessToken> obtainAccessToken(UserCredentials credentials) {
@@ -180,9 +243,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     private boolean isThereInternetConnection() {
         boolean isConnected;
 
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
         isConnected = (networkInfo != null && networkInfo.isConnectedOrConnecting());
 
         return isConnected;

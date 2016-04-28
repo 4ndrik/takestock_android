@@ -22,12 +22,19 @@ import java.io.IOException;
  */
 public class HttpResponseException extends IOException {
 
+  private int mCode;
+
   public HttpResponseException() {
     super();
   }
 
   public HttpResponseException(final String message) {
+    this(0, message);
+  }
+
+  public HttpResponseException(final int code, final String message) {
     super(message);
+    mCode = code;
   }
 
   public HttpResponseException(final String message, final Throwable cause) {
@@ -37,4 +44,9 @@ public class HttpResponseException extends IOException {
   public HttpResponseException(final Throwable cause) {
     super(cause);
   }
+
+  public int getCode() {
+    return mCode;
+  }
+
 }
