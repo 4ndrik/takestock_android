@@ -39,7 +39,7 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     }
 
-    @Override public void obtainAccessToken(String username, String password) {
+    @Override public void obtainAuthToken(String username, String password) {
         if (!validateUsername(username) || !validatePassword(password)) return;
 
         mSignInView.setProgressIndicator(true);
@@ -66,7 +66,7 @@ public class SignInPresenter implements SignInContract.Presenter {
                     }
 
                     @Override public void onNext(AuthToken authToken) {
-                        mSignInView.createAccount(authToken);
+                        mSignInView.processAuthToken(authToken);
                     }
                 });
         mSubscriptions.add(subscription);

@@ -23,12 +23,12 @@ public interface SignInContract {
 
         void setProgressIndicator(boolean isActive);
 
-        void createAccount(AuthToken authToken);
+        void processAuthToken(AuthToken authToken);
     }
 
     interface Presenter extends BasePresenter {
 
-        void obtainAccessToken(String username, String password);
+        void obtainAuthToken(String username, String password);
 
     }
 }

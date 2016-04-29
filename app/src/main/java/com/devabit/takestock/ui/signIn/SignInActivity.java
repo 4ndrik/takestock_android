@@ -60,7 +60,7 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     @OnClick(R.id.sign_in_button)
     protected void onSignInButtonClick() {
-        mPresenter.obtainAccessToken(getUserName(), getPassword());
+        mPresenter.obtainAuthToken(getUserName(), getPassword());
     }
 
     private String getUserName() {
@@ -100,7 +100,7 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     }
 
-    @Override public void createAccount(AuthToken authToken) {
+    @Override public void processAuthToken(AuthToken authToken) {
         AccountManager accountManager = AccountManager.get(SignInActivity.this);
         Account account = new Account(getUserName(), getString(R.string.authenticator_account_type));
         accountManager.addAccountExplicitly(account, getPassword(), null);
