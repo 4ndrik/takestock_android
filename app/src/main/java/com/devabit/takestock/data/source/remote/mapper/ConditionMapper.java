@@ -23,7 +23,8 @@ public class ConditionMapper implements FromJsonMapper<List<Condition>> {
         for (int i = 0; i < length; i++) {
             JSONObject typeJson = jsonArray.getJSONObject(i);
             String state = typeJson.getString(Integer.toString(i + 1));
-            Condition condition = new Condition(state);
+            Condition condition = new Condition();
+            condition.setState(state);
             result.add(condition);
         }
         return result;

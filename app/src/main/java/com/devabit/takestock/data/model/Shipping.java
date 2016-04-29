@@ -1,5 +1,6 @@
 package com.devabit.takestock.data.model;
 
+import android.support.annotation.NonNull;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -11,7 +12,7 @@ public class Shipping extends RealmObject {
     @PrimaryKey
     private String mType;
 
-    public Shipping(String type) {
+    public void setType(@NonNull String type) {
         mType = type;
     }
 

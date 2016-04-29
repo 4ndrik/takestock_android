@@ -11,10 +11,14 @@ import io.realm.annotations.PrimaryKey;
 public class Size extends RealmObject {
 
     @PrimaryKey
-    public String type;
+    private String type;
 
-    public Size(@NonNull String type) {
+    public void setType(@NonNull String type) {
         this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override public String toString() {

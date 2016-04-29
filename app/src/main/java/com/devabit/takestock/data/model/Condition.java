@@ -1,6 +1,5 @@
 package com.devabit.takestock.data.model;
 
-import android.support.annotation.NonNull;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -10,15 +9,19 @@ import io.realm.annotations.PrimaryKey;
 public class Condition extends RealmObject {
 
     @PrimaryKey
-    public String state;
+    private String mState;
 
-    public Condition(@NonNull String state) {
-        this.state = state;
+    public String getState() {
+        return mState;
+    }
+
+    public void setState(String state) {
+        mState = state;
     }
 
     @Override public String toString() {
         return "Condition{" +
-                "state='" + state + '\'' +
+                "mState='" + mState + '\'' +
                 '}';
     }
 }

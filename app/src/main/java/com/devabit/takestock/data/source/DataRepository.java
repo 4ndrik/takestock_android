@@ -1,9 +1,10 @@
 package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.model.AuthToken;
-import com.devabit.takestock.data.model.UserCredentials;
+import com.devabit.takestock.data.model.*;
 import rx.Observable;
+
+import java.util.List;
 
 import static com.devabit.takestock.util.Preconditions.checkNotNull;
 
@@ -47,19 +48,36 @@ public class DataRepository implements DataSource {
         return null;
     }
 
-    @Override public Observable<String> getSizes() {
+    @Override public void saveSizes(List<Size> sizeList) {
+
+    }
+
+    @Override public Observable<List<Size>> getSizes() {
         return null;
     }
 
-    @Override public Observable<String> getCertifications() {
+    @Override public void saveCertifications(List<Certification> certificationList) {
+
+    }
+
+    @Override public Observable<List<Certification>> getCertifications() {
         return null;
     }
 
-    @Override public Observable<String> getShipping() {
+    @Override public void saveShipping(List<Shipping> shippingList) {
+
+    }
+
+    @Override public Observable<List<Shipping>> getShipping() {
         return null;
     }
 
-    @Override public Observable<String> getConditions() {
+    @Override public void saveConditions(List<Condition> conditionList) {
+
+    }
+
+    @Override public Observable<List<Condition>> getConditions() {
         return null;
     }
+
 }
