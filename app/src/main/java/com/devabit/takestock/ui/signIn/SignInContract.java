@@ -1,6 +1,6 @@
 package com.devabit.takestock.ui.signIn;
 
-import com.devabit.takestock.data.model.AccessToken;
+import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.ui.BasePresenter;
 import com.devabit.takestock.ui.BaseView;
 
@@ -23,7 +23,7 @@ public interface SignInContract {
 
         void setProgressIndicator(boolean isActive);
 
-        void createAccount(AccessToken accessToken);
+        void createAccount(AuthToken authToken);
     }
 
     interface Presenter extends BasePresenter {

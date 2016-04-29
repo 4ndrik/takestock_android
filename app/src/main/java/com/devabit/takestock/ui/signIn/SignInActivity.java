@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.AccessToken;
+import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.ui.main.MainActivity;
 
 import static com.devabit.takestock.util.Logger.makeLogTag;
@@ -100,11 +100,11 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     }
 
-    @Override public void createAccount(AccessToken accessToken) {
+    @Override public void createAccount(AuthToken authToken) {
         AccountManager accountManager = AccountManager.get(SignInActivity.this);
         Account account = new Account(getUserName(), getString(R.string.authenticator_account_type));
         accountManager.addAccountExplicitly(account, getPassword(), null);
-        accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), accessToken.token);
+        accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), authToken.token);
 
         startActivity(MainActivity.getStartIntent(SignInActivity.this));
 

@@ -3,7 +3,7 @@ package com.devabit.takestock.ui.signIn;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import com.devabit.takestock.data.source.DataRepository;
-import com.devabit.takestock.data.model.AccessToken;
+import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
@@ -45,9 +45,9 @@ public class SignInPresenter implements SignInContract.Presenter {
         mSignInView.setProgressIndicator(true);
         mSubscriptions.clear();
         final UserCredentials credentials = new UserCredentials(username, password);
-        Subscription subscription = mDataRepository.obtainAccessToken(credentials)
-                .compose(RxTransformers.<AccessToken>applyObservableSchedulers())
-                .subscribe(new Subscriber<AccessToken>() {
+        Subscription subscription = mDataRepository.obtainAuthToken(credentials)
+                .compose(RxTransformers.<AuthToken>applyObservableSchedulers())
+                .subscribe(new Subscriber<AuthToken>() {
                     @Override public void onCompleted() {
                         mSignInView.setProgressIndicator(false);
                     }
@@ -65,8 +65,8 @@ public class SignInPresenter implements SignInContract.Presenter {
                         }
                     }
 
-                    @Override public void onNext(AccessToken accessToken) {
-                        mSignInView.createAccount(accessToken);
+                    @Override public void onNext(AuthToken authToken) {
+                        mSignInView.createAccount(authToken);
                     }
                 });
         mSubscriptions.add(subscription);
