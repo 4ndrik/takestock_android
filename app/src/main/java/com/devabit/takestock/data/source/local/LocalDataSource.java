@@ -1,12 +1,13 @@
 package com.devabit.takestock.data.source.local;
 
 import android.content.Context;
-import com.devabit.takestock.data.model.AccessToken;
-import com.devabit.takestock.data.model.UserCredentials;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import rx.Observable;
+
+import java.util.List;
 
 import static com.devabit.takestock.util.Logger.makeLogTag;
 
@@ -38,7 +39,7 @@ public class LocalDataSource implements DataSource {
         mRealm = Realm.getInstance(config);
     }
 
-    @Override public Observable<AccessToken> obtainAccessToken(UserCredentials credentials) {
+    @Override public Observable<AuthToken> obtainAuthToken(UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
         // AccessToken from server.
         throw new UnsupportedOperationException("This operation not required.");
@@ -52,23 +53,36 @@ public class LocalDataSource implements DataSource {
         return null;
     }
 
-    @Override public void saveSizes() {
+    @Override public void saveSizes(List<Size> sizeList) {
 
     }
 
-    @Override public Observable<String> getSizes() {
+    @Override public Observable<List<Size>> getSizes() {
         return null;
     }
 
-    @Override public Observable<String> getCertifications() {
+    @Override public void saveCertifications(List<Certification> certificationList) {
+
+    }
+
+    @Override public Observable<List<Certification>> getCertifications() {
         return null;
     }
 
-    @Override public Observable<String> getShipping() {
+    @Override public void saveShipping(List<Shipping> shippingList) {
+
+    }
+
+    @Override public Observable<List<Shipping>> getShipping() {
         return null;
     }
 
-    @Override public Observable<String> getConditions() {
+    @Override public void saveConditions(List<Condition> conditionList) {
+
+    }
+
+    @Override public Observable<List<Condition>> getConditions() {
         return null;
     }
+
 }

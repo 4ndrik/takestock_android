@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.model.AccessToken;
+import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.UserCredentials;
 import rx.Observable;
 
@@ -35,8 +35,8 @@ public class DataRepository implements DataSource {
         mDataSource = checkNotNull(dataSource);
     }
 
-    @Override public Observable<AccessToken> obtainAccessToken(UserCredentials credentials) {
-        return mDataSource.obtainAccessToken(credentials);
+    @Override public Observable<AuthToken> obtainAuthToken(UserCredentials credentials) {
+        return mDataSource.obtainAuthToken(credentials);
     }
 
     @Override public Observable<String> getCategories() {

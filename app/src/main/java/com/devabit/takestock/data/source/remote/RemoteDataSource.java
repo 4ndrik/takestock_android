@@ -7,9 +7,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
-import com.devabit.takestock.data.model.AccessToken;
-import com.devabit.takestock.data.model.UserCredentials;
+import com.devabit.takestock.data.source.remote.mapper.*;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
 import com.devabit.takestock.rest.RestApi;
@@ -19,6 +19,7 @@ import rx.Observable;
 import rx.functions.Func1;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -122,10 +123,11 @@ public class RemoteDataSource implements RestApi, DataSource {
 
     private String refreshAuthToken(String token) {
         synchronized (mOkHttpClient) {
-            AccessToken accessToken = new AccessToken();
-            accessToken.token = token;
+            AuthToken authToken = new AuthToken();
+            authToken.token = token;
             try {
-                Request request = buildPOSTRequest(composeUrl(POST_TOKEN_VERIFY), accessToken);
+                String tokeJson = new AuthTokenMapper().toJsonString(authToken);
+                Request request = buildPOSTRequest(composeUrl(POST_TOKEN_VERIFY), tokeJson);
                 return mOkHttpClient.newCall(request).execute().body().string();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -152,13 +154,24 @@ public class RemoteDataSource implements RestApi, DataSource {
         }
     }
 
-    @Override public Observable<AccessToken> obtainAccessToken(UserCredentials credentials) {
-        return Observable.fromCallable(createPOST(composeUrl(POST_TOKEN_AUTH), credentials))
-                .map(new Func1<String, AccessToken>() {
-                    @Override public AccessToken call(String jsonString) {
+    @Override public Observable<AuthToken> obtainAuthToken(UserCredentials credentials) {
+        return Observable.just(credentials)
+                .map(new Func1<UserCredentials, String>() {
+                    @Override public String call(UserCredentials userCredentials) {
                         try {
-                            LOGD(TAG, jsonString);
-                            return AccessToken.fromJson(jsonString);
+                            return new UserCredentialsMapper().toJsonString(userCredentials);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }).flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPOST(composeUrl(POST_TOKEN_AUTH), json));
+                    }
+                }).map(new Func1<String, AuthToken>() {
+                    @Override public AuthToken call(String json) {
+                        try {
+                            return new AuthTokenMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -174,31 +187,79 @@ public class RemoteDataSource implements RestApi, DataSource {
         return Observable.fromCallable(createGET(composeUrl(GET_ADVERTS)));
     }
 
-    @Override public void saveSizes() {
-        throw new UnsupportedOperationException();
+    @Override public void saveSizes(List<Size> sizeList) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<String> getSizes() {
-        return Observable.fromCallable(createGET(composeUrl(GET_SIZE_TYPES)));
+    @Override public Observable<List<Size>> getSizes() {
+        return Observable.fromCallable(createGET(composeUrl(GET_SIZE_TYPES)))
+                .map(new Func1<String, List<Size>>() {
+                    @Override public List<Size> call(String json) {
+                        try {
+                            return new SizeMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
     }
 
-    @Override public Observable<String> getCertifications() {
-        return Observable.fromCallable(createGET(composeUrl(GET_CERTIFICATIONS)));
+    @Override public void saveCertifications(List<Certification> certificationList) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<String> getShipping() {
-        return Observable.fromCallable(createGET(composeUrl(GET_SHIPPING)));
+    @Override public Observable<List<Certification>> getCertifications() {
+        return Observable.fromCallable(createGET(composeUrl(GET_CERTIFICATIONS)))
+                .map(new Func1<String, List<Certification>>() {
+                    @Override public List<Certification> call(String json) {
+                        try {
+                            return new CertificationMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
     }
 
-    @Override public Observable<String> getConditions() {
-        return Observable.fromCallable(createGET(composeUrl(GET_CONDITIONS)));
+    @Override public void saveShipping(List<Shipping> shippingList) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
-    private Callable<String> createPOST(final String url, final RequestObject requestObject) {
+    @Override public Observable<List<Shipping>> getShipping() {
+        return Observable.fromCallable(createGET(composeUrl(GET_SHIPPING)))
+                .map(new Func1<String, List<Shipping>>() {
+                    @Override public List<Shipping> call(String json) {
+                        try {
+                            return new ShippingMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    @Override public void saveConditions(List<Condition> conditionList) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Condition>> getConditions() {
+        return Observable.fromCallable(createGET(composeUrl(GET_CONDITIONS)))
+                .map(new Func1<String, List<Condition>>() {
+                    @Override public List<Condition> call(String json) {
+                        try {
+                            return new ConditionMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+                });
+    }
+
+    private Callable<String> createPOST(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
                 if (isThereInternetConnection()) {
-                    Request request = buildPOSTRequest(url, requestObject);
+                    Request request = buildPOSTRequest(url, json);
                     LOGD(TAG, request.toString());
                     Response response = mOkHttpClient.newCall(request).execute();
                     return response.body().string();
@@ -209,8 +270,8 @@ public class RemoteDataSource implements RestApi, DataSource {
         };
     }
 
-    private Request buildPOSTRequest(String url, RequestObject requestObject) throws Exception {
-        RequestBody body = RequestBody.create(MEDIA_TYPE_JSON, requestObject.toJsonString());
+    private Request buildPOSTRequest(String url, String json) throws Exception {
+        RequestBody body = RequestBody.create(MEDIA_TYPE_JSON, json);
         return new Request.Builder()
                 .url(url)
                 .post(body)
