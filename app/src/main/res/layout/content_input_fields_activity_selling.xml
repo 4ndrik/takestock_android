@@ -14,10 +14,10 @@
             style="@style/TextViewLime"/>
 
     <Spinner
-            android:id="@+id/categories_spinner"
-            android:layout_marginTop="4dp"
+            android:id="@+id/category_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@null"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -27,8 +27,8 @@
             style="@style/TextViewLime"/>
 
     <Spinner
-            android:id="@+id/sub_categories_spinner"
-            android:layout_marginTop="4dp"
+            android:id="@+id/subcategory_spinner"
+            android:background="@null"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -48,7 +48,6 @@
 
     <Spinner
             android:id="@+id/unit_packaging_spinner"
-            android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -187,7 +186,7 @@
 
     <Spinner
             android:id="@+id/shipping_spinner"
-            android:layout_marginTop="4dp"
+            android:background="@null"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -200,7 +199,7 @@
 
     <Spinner
             android:id="@+id/condition_spinner"
-            android:layout_marginTop="4dp"
+            android:background="@null"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -216,9 +215,9 @@
             android:id="@+id/expiry_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_expand_24dp"
+            android:drawableEnd="@drawable/ic_expand_18dp"
             android:layout_marginTop="4dp"
-            android:padding="4dp"
+            android:padding="8dp"
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:textColorHint="@color/grey_400"
             android:hint="YYY-MM-(DD)"/>
@@ -286,8 +285,9 @@
                 tools:ignore="LabelFor"/>
 
         <Spinner
-                android:layout_marginStart="8dp"
-                android:layout_width="wrap_content"
+                android:id="@+id/size_spinner"
+                android:background="@null"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"/>
 
     </LinearLayout>

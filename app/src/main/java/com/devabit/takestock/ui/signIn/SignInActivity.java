@@ -95,7 +95,6 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
         Snackbar.make(mContent, resId, Snackbar.LENGTH_SHORT).show();
     }
 
-
     @Override public void setProgressIndicator(boolean isActive) {
 
     }

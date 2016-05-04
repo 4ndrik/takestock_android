@@ -17,7 +17,7 @@
                 android:layout_margin="32dp">
 
             <Button
-                    android:id="@+id/add_image_product_button_activity_selling"
+                    android:id="@+id/add_image_product_button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="125dp"
