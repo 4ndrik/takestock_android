@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class ConditionMapper implements FromJsonMapper<List<Condition>> {
+public class ConditionJsonMapper implements FromJsonMapper<List<Condition>> {
 
     private static final String CONDITIONS = "conditions";
 

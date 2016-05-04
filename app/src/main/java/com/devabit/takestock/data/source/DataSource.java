@@ -12,23 +12,25 @@ public interface DataSource {
 
     Observable<AuthToken> obtainAuthToken(UserCredentials credentials);
 
-    Observable<String> getCategories();
+    void saveCategories(List<Category> categories);
+
+    Observable<List<Category>> getCategories();
 
     Observable<String> getAdverts();
 
-    void saveSizes(List<Size> sizeList);
+    void saveSizes(List<Size> sizes);
 
     Observable<List<Size>> getSizes();
 
-    void saveCertifications(List<Certification> certificationList);
+    void saveCertifications(List<Certification> certifications);
 
     Observable<List<Certification>> getCertifications();
 
-    void saveShipping(List<Shipping> shippingList);
+    void saveShippings(List<Shipping> shippings);
 
-    Observable<List<Shipping>> getShipping();
+    Observable<List<Shipping>> getShippings();
 
-    void saveConditions(List<Condition> conditionList);
+    void saveConditions(List<Condition> conditions);
 
     Observable<List<Condition>> getConditions();
 

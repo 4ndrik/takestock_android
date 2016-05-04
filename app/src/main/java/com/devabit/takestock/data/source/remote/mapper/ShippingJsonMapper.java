@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class ShippingMapper implements FromJsonMapper<List<Shipping>> {
+public class ShippingJsonMapper implements FromJsonMapper<List<Shipping>> {
 
     private static final String SHIPPING = "shipping";
 

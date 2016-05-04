@@ -7,7 +7,7 @@ import org.json.JSONObject;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class AuthTokenMapper implements FromJsonMapper<AuthToken>, ToJsonMapper<AuthToken>{
+public class AuthTokenJsonMapper implements FromJsonMapper<AuthToken>, ToJsonMapper<AuthToken>{
 
     private static final String TOKEN = "token";
 

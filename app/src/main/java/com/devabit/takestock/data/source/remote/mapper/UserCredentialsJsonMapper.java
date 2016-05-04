@@ -7,7 +7,7 @@ import org.json.JSONObject;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class UserCredentialsMapper implements ToJsonMapper<UserCredentials> {
+public class UserCredentialsJsonMapper implements ToJsonMapper<UserCredentials> {
 
     private static final String NAME = "username";
     private static final String PASSWORD = "password";

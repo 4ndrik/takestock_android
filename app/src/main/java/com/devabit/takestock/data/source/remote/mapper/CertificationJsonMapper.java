@@ -11,13 +11,12 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class CertificationMapper implements FromJsonMapper<List<Certification>> {
+public class CertificationJsonMapper implements FromJsonMapper<List<Certification>> {
 
     public static final String ID = "pk";
     public static final String NAME = "name";
     public static final String DESCRIPTION = "description";
     public static final String LOGO = "logo";
-
 
     @Override public List<Certification> fromJsonString(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);

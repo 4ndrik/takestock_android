@@ -16,6 +16,7 @@ import com.devabit.takestock.rest.RestApi;
 import okhttp3.*;
 import org.json.JSONException;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 import java.io.IOException;
@@ -126,7 +127,7 @@ public class RemoteDataSource implements RestApi, DataSource {
             AuthToken authToken = new AuthToken();
             authToken.token = token;
             try {
-                String tokeJson = new AuthTokenMapper().toJsonString(authToken);
+                String tokeJson = new AuthTokenJsonMapper().toJsonString(authToken);
                 Request request = buildPOSTRequest(composeUrl(POST_TOKEN_VERIFY), tokeJson);
                 return mOkHttpClient.newCall(request).execute().body().string();
             } catch (Exception e) {
@@ -159,7 +160,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 .map(new Func1<UserCredentials, String>() {
                     @Override public String call(UserCredentials userCredentials) {
                         try {
-                            return new UserCredentialsMapper().toJsonString(userCredentials);
+                            return new UserCredentialsJsonMapper().toJsonString(userCredentials);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -171,7 +172,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 }).map(new Func1<String, AuthToken>() {
                     @Override public AuthToken call(String json) {
                         try {
-                            return new AuthTokenMapper().fromJsonString(json);
+                            return new AuthTokenJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -179,8 +180,26 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<String> getCategories() {
-        return Observable.fromCallable(createGET(composeUrl(GET_CATEGORY)));
+    @Override public void saveCategories(List<Category> categories) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Category>> getCategories() {
+        return Observable.fromCallable(createGET(composeUrl(GET_CATEGORY)))
+                .map(new Func1<String, List<Category>>() {
+                    @Override public List<Category> call(String json) {
+                        try {
+                            return new CategoryAndSubcategoryJsonMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .doOnNext(new Action1<List<Category>>() {
+                    @Override public void call(List<Category> categories) {
+                        LOGD(TAG, "Categories from RemoteDataSource " + categories);
+                    }
+                });
     }
 
     @Override public Observable<String> getAdverts() {
@@ -196,10 +215,14 @@ public class RemoteDataSource implements RestApi, DataSource {
                 .map(new Func1<String, List<Size>>() {
                     @Override public List<Size> call(String json) {
                         try {
-                            return new SizeMapper().fromJsonString(json);
+                            return new SizeJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                    }
+                }).doOnNext(new Action1<List<Size>>() {
+                    @Override public void call(List<Size> sizes) {
+                        LOGD(TAG, "Sizes from RemoteDataSource " + sizes);
                     }
                 });
     }
@@ -213,27 +236,36 @@ public class RemoteDataSource implements RestApi, DataSource {
                 .map(new Func1<String, List<Certification>>() {
                     @Override public List<Certification> call(String json) {
                         try {
-                            return new CertificationMapper().fromJsonString(json);
+                            return new CertificationJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
                     }
+                })
+                .doOnNext(new Action1<List<Certification>>() {
+                    @Override public void call(List<Certification> certifications) {
+                        LOGD(TAG, "Certifications from RemoteDataSource " + certifications);
+                    }
                 });
     }
 
-    @Override public void saveShipping(List<Shipping> shippingList) {
+    @Override public void saveShippings(List<Shipping> shippingList) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Shipping>> getShipping() {
+    @Override public Observable<List<Shipping>> getShippings() {
         return Observable.fromCallable(createGET(composeUrl(GET_SHIPPING)))
                 .map(new Func1<String, List<Shipping>>() {
                     @Override public List<Shipping> call(String json) {
                         try {
-                            return new ShippingMapper().fromJsonString(json);
+                            return new ShippingJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                    }
+                }).doOnNext(new Action1<List<Shipping>>() {
+                    @Override public void call(List<Shipping> shippings) {
+                        LOGD(TAG, "Shippings from RemoteDataSource " + shippings);
                     }
                 });
     }
@@ -247,10 +279,14 @@ public class RemoteDataSource implements RestApi, DataSource {
                 .map(new Func1<String, List<Condition>>() {
                     @Override public List<Condition> call(String json) {
                         try {
-                            return new ConditionMapper().fromJsonString(json);
+                            return new ConditionJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException();
                         }
+                    }
+                }).doOnNext(new Action1<List<Condition>>() {
+                    @Override public void call(List<Condition> conditions) {
+                        LOGD(TAG, "Conditions from RemoteDataSource " + conditions);
                     }
                 });
     }
@@ -262,7 +298,9 @@ public class RemoteDataSource implements RestApi, DataSource {
                     Request request = buildPOSTRequest(url, json);
                     LOGD(TAG, request.toString());
                     Response response = mOkHttpClient.newCall(request).execute();
-                    return response.body().string();
+                    try(ResponseBody body = response.body()) {
+                        return body.string();
+                    }
                 } else {
                     throw new NetworkConnectionException("There is no internet connection.");
                 }
@@ -285,7 +323,9 @@ public class RemoteDataSource implements RestApi, DataSource {
                     Request request = buildGETRequest(url);
                     LOGD(TAG, request.toString());
                     Response response = mOkHttpClient.newCall(request).execute();
-                    return response.body().string();
+                    try(ResponseBody body = response.body()) {
+                        return body.string();
+                    }
                 } else {
                     throw new NetworkConnectionException("There is no internet connection.");
                 }

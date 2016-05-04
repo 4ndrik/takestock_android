@@ -3,6 +3,7 @@ package com.devabit.takestock.data.source;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.*;
 import rx.Observable;
+import rx.functions.Action1;
 
 import java.util.List;
 
@@ -15,69 +16,119 @@ public class DataRepository implements DataSource {
 
     private static DataRepository sInstance;
 
-    public static DataRepository getInstance(DataSource dataSource) {
+    /**
+     * Returns the single instance of this class, creating it if necessary.
+     *
+     * @param remoteDataSource the backend data source
+     * @param localDataSource  the device storage data source
+     * @return the {@link DataRepository} instance
+     */
+    public static DataRepository getInstance(DataSource remoteDataSource,
+                                             DataSource localDataSource) {
         if (sInstance == null) {
-            sInstance = new DataRepository(dataSource);
+            sInstance = new DataRepository(remoteDataSource, localDataSource);
         }
         return sInstance;
     }
 
+    private final DataSource mRemoteDataSource;
+    private final DataSource mLocalDataSource;
+
+    private DataRepository(@NonNull DataSource remoteDataSource,
+                           @NonNull DataSource localDataSource) {
+        mRemoteDataSource = checkNotNull(remoteDataSource);
+        mLocalDataSource = checkNotNull(localDataSource);
+    }
+
     /**
-     * Used to force {@link #getInstance(DataSource)} to create a new instance
+     * Used to force {@link #getInstance(DataSource, DataSource)} to create a new instance
      * next time it's called.
      */
     public static void destroyInstance() {
         sInstance = null;
     }
 
-    private final DataSource mDataSource;
-
-    private DataRepository(@NonNull DataSource dataSource) {
-        mDataSource = checkNotNull(dataSource);
-    }
-
     @Override public Observable<AuthToken> obtainAuthToken(UserCredentials credentials) {
-        return mDataSource.obtainAuthToken(credentials);
+        return mRemoteDataSource.obtainAuthToken(credentials);
     }
 
-    @Override public Observable<String> getCategories() {
-        return null;
+    @Override public void saveCategories(List<Category> categories) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Category>> getCategories() {
+        Observable<List<Category>> localCategories = mLocalDataSource.getCategories();
+        Observable<List<Category>> remoteCategories = mRemoteDataSource.getCategories()
+                .doOnNext(new Action1<List<Category>>() {
+                    @Override public void call(List<Category> categories) {
+                        mLocalDataSource.saveCategories(categories);
+                    }
+                });
+        return Observable.concat(localCategories, remoteCategories).first();
     }
 
     @Override public Observable<String> getAdverts() {
         return null;
     }
 
-    @Override public void saveSizes(List<Size> sizeList) {
-
+    @Override public void saveSizes(List<Size> sizes) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Size>> getSizes() {
-        return null;
+        Observable<List<Size>> localSizes = mLocalDataSource.getSizes();
+        Observable<List<Size>> remoteSizes = mRemoteDataSource.getSizes()
+                .doOnNext(new Action1<List<Size>>() {
+                    @Override public void call(List<Size> sizes) {
+                        mLocalDataSource.saveSizes(sizes);
+                    }
+                });
+        return Observable.concat(localSizes, remoteSizes).first();
     }
 
-    @Override public void saveCertifications(List<Certification> certificationList) {
-
+    @Override public void saveCertifications(List<Certification> certifications) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Certification>> getCertifications() {
-        return null;
+        Observable<List<Certification>> localCertifications = mLocalDataSource.getCertifications();
+        Observable<List<Certification>> remoteCertifications = mRemoteDataSource.getCertifications()
+                .doOnNext(new Action1<List<Certification>>() {
+                    @Override public void call(List<Certification> certifications) {
+                        mLocalDataSource.saveCertifications(certifications);
+                    }
+                });
+        return Observable.concat(localCertifications, remoteCertifications).first();
     }
 
-    @Override public void saveShipping(List<Shipping> shippingList) {
-
+    @Override public void saveShippings(List<Shipping> shippings) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Shipping>> getShipping() {
-        return null;
+    @Override public Observable<List<Shipping>> getShippings() {
+        Observable<List<Shipping>> localShippings = mLocalDataSource.getShippings();
+        Observable<List<Shipping>> remoteShippings = mRemoteDataSource.getShippings()
+                .doOnNext(new Action1<List<Shipping>>() {
+                    @Override public void call(List<Shipping> shippings) {
+                        mLocalDataSource.saveShippings(shippings);
+                    }
+                });
+        return Observable.concat(localShippings, remoteShippings).first();
     }
 
-    @Override public void saveConditions(List<Condition> conditionList) {
-
+    @Override public void saveConditions(List<Condition> conditions) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Condition>> getConditions() {
-        return null;
+        Observable<List<Condition>> localConditions = mLocalDataSource.getConditions();
+        Observable<List<Condition>> remoteConditions = mRemoteDataSource.getConditions()
+                .doOnNext(new Action1<List<Condition>>() {
+                    @Override public void call(List<Condition> conditions) {
+                        mLocalDataSource.saveConditions(conditions);
+                    }
+                });
+        return Observable.concat(localConditions, remoteConditions).first();
     }
 
 }
