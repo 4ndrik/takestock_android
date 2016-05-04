@@ -18,8 +18,12 @@ package com.devabit.takestock.ui;
 
 public interface BasePresenter {
 
-    void subscribe();
+    void create();
 
-    void unsubscribe();
+    void resume();
+
+    void pause();
+
+    void destroy();
 
 }

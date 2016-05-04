@@ -55,7 +55,7 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     @Override protected void onResume() {
         super.onResume();
-        mPresenter.subscribe();
+        mPresenter.resume();
     }
 
     @OnClick(R.id.sign_in_button)
@@ -127,6 +127,6 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     @Override protected void onPause() {
         super.onPause();
-        mPresenter.unsubscribe();
+        mPresenter.pause();
     }
 }

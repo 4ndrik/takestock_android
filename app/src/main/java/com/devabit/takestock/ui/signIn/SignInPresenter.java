@@ -35,7 +35,11 @@ public class SignInPresenter implements SignInContract.Presenter {
         mSignInView.setPresenter(SignInPresenter.this);
     }
 
-    @Override public void subscribe() {
+    @Override public void create() {
+
+    }
+
+    @Override public void resume() {
 
     }
 
@@ -91,7 +95,11 @@ public class SignInPresenter implements SignInContract.Presenter {
     }
 
 
-    @Override public void unsubscribe() {
+    @Override public void pause() {
         mSubscriptions.clear();
+    }
+
+    @Override public void destroy() {
+
     }
 }
