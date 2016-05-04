@@ -102,8 +102,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                         setAuthToken(account, authToken);
                         setAuthHeader(builder, authToken);
                     }
+                } else {
+                    response = chain.proceed(request);
                 }
-                response = chain.proceed(request);
+
                 return checkResponsePerCode(response);
             }
         };
@@ -129,7 +131,9 @@ public class RemoteDataSource implements RestApi, DataSource {
             try {
                 String tokeJson = new AuthTokenJsonMapper().toJsonString(authToken);
                 Request request = buildPOSTRequest(composeUrl(POST_TOKEN_VERIFY), tokeJson);
-                return mOkHttpClient.newCall(request).execute().body().string();
+                try(ResponseBody body = mOkHttpClient.newCall(request).execute().body()) {
+                    return body.string();
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
