@@ -1,18 +1,15 @@
 package com.devabit.takestock.data.model;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import java.util.List;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class Category extends RealmObject {
+public class Category {
 
-    @PrimaryKey
     private int mId;
     private String mName;
-    private RealmList<Subcategory> mSubcategories;
+    private List<Subcategory> mSubcategories;
 
     public int getId() {
         return mId;
@@ -30,11 +27,11 @@ public class Category extends RealmObject {
         mName = name;
     }
 
-    public RealmList<Subcategory> getSubcategories() {
+    public List<Subcategory> getSubcategories() {
         return mSubcategories;
     }
 
-    public void setSubcategories(RealmList<Subcategory> subcategories) {
+    public void setSubcategories(List<Subcategory> subcategories) {
         mSubcategories = subcategories;
     }
 

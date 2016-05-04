@@ -1,10 +1,14 @@
-package com.devabit.takestock.data.model;
+package com.devabit.takestock.data.source.local.entity;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class Certification {
+public class CertificationEntity extends RealmObject {
 
+    @PrimaryKey
     private int mId;
     private String mName;
     private String mDescription;
