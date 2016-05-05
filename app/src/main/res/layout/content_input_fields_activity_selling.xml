@@ -307,46 +307,12 @@
             android:text="Loren ipsum sed amed in deo non qua plus ultra"
             style="@style/TextViewGrey"/>
 
-    <com.devabit.takestock.widget.RadioButtonGroupTableLayout
+    <com.devabit.takestock.widget.CertificationRadioButtonGroupView
+            android:id="@+id/certification_group_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_gravity="center">
-
-        <TableRow>
-            <RadioButton android:id="@+id/rad1"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_marginEnd="48dp"
-                         android:text="@string/brc"/>
-
-            <RadioButton android:id="@+id/rad2"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="@string/salsa"/>
-        </TableRow>
-
-        <TableRow>
-            <RadioButton android:id="@+id/rad4"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_marginEnd="48dp"
-                         android:text="@string/bsi"/>
-
-            <RadioButton android:id="@+id/rad5"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="@string/organic"/>
-        </TableRow>
-
-        <TableRow>
-            <RadioButton android:id="@+id/rad3"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_marginEnd="48dp"
-                         android:text="@string/iso"/>
-        </TableRow>
-    </com.devabit.takestock.widget.RadioButtonGroupTableLayout>
+            android:layout_gravity="center"/>
 
     <EditText
             android:layout_width="match_parent"

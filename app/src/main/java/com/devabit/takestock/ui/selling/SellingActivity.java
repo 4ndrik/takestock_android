@@ -17,6 +17,7 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.ui.selling.adapter.*;
 import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
     @BindView(R.id.shipping_spinner) protected Spinner mShippingSpinner;
     @BindView(R.id.condition_spinner) protected Spinner mConditionSpinner;
     @BindView(R.id.size_spinner) protected Spinner mSizeSpinner;
+
+    @BindView(R.id.certification_group_view) protected CertificationRadioButtonGroupView mCertificationGroupView;
 
     private SellingContract.Presenter mPresenter;
 
@@ -90,7 +93,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
     }
 
     private void showSubcategoriesInView(List<Subcategory> subcategories) {
-        SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(SellingActivity.this,subcategories);
+        SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(SellingActivity.this, subcategories);
         mSubcategorySpinner.setAdapter(adapter);
     }
 
@@ -110,7 +113,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
     }
 
     @Override public void showCertificationsInView(List<Certification> certifications) {
-
+        mCertificationGroupView.setUpCertifications(certifications);
     }
 
     private void showSnack(@StringRes int resId) {

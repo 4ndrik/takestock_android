@@ -16,25 +16,23 @@ public class RadioButtonGroupTableLayout extends TableLayout implements View.OnC
 
     public RadioButtonGroupTableLayout(Context context) {
         super(context);
-        // TODO Auto-generated constructor stub
     }
 
     public RadioButtonGroupTableLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // TODO Auto-generated constructor stub
     }
 
     @Override public void onClick(View v) {
-        final RadioButton rb = (RadioButton) v;
+        final RadioButton radioButton = (RadioButton) v;
         if (mActiveRadioButton != null) {
             mActiveRadioButton.setChecked(false);
         }
-        rb.setChecked(true);
-        mActiveRadioButton = rb;
+        radioButton.setChecked(true);
+        mActiveRadioButton = radioButton;
     }
 
     @Override public void addView(View child, int index,
-                        android.view.ViewGroup.LayoutParams params) {
+                                  android.view.ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
         setChildrenOnClickListener((TableRow) child);
     }
