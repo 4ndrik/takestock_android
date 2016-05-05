@@ -10,36 +10,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ViewFlipper
-                android:id="@+id/product_preview_content_view_flipper_activity_selling"
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/image_gallery_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="32dp">
+                android:layout_height="350dp"/>
 
-            <Button
-                    android:id="@+id/add_image_product_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="125dp"
-                    android:paddingBottom="50dp"
-                    android:drawableTop="@drawable/ic_camera_grey_96dp"
-                    android:text="@string/add_image"
-                    android:theme="@style/RaisedButtonGrey"
-                    android:textAppearance="@android:style/TextAppearance.Small"/>
+        <!--<ViewFlipper-->
+                <!--android:id="@+id/product_preview_content_view_flipper_activity_selling"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="350dp"-->
+                <!--android:layout_margin="32dp">-->
 
-            <ImageView
-                    android:id="@+id/product_preview_image_view_activity_selling"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/grey_400"
-                    tools:ignore="ContentDescription"/>
+            <!--<Button-->
+                    <!--android:id="@+id/add_image_product_button"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:paddingTop="125dp"-->
+                    <!--android:paddingBottom="50dp"-->
+                    <!--android:drawableTop="@drawable/ic_camera_grey_96dp"-->
+                    <!--android:text="@string/add_image"-->
+                    <!--android:theme="@style/RaisedButtonGrey"-->
+                    <!--android:textAppearance="@android:style/TextAppearance.Small"/>-->
 
-        </ViewFlipper>
+            <!--<ImageView-->
+                    <!--android:id="@+id/product_preview_image_view_activity_selling"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/grey_400"-->
+                    <!--tools:ignore="ContentDescription"/>-->
+
+        <!--</ViewFlipper>-->
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/product_title"
                 style="@style/TextViewLime"/>
 

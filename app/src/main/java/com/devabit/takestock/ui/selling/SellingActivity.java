@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -28,8 +29,10 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     @BindView(R.id.content_activity_selling) protected View mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
-    @BindView(R.id.add_image_product_button) protected Button mAddImageButton;
+//    @BindView(R.id.add_image_product_button) protected Button mAddImageButton;
     @BindView(R.id.expiry_text_view) protected TextView mExpiryTextView;
+
+    @BindView(R.id.image_gallery_recycler_view) protected RecyclerView mImageGalleryRecyclerView;
 
     @BindView(R.id.category_spinner) protected Spinner mCategorySpinner;
     @BindView(R.id.subcategory_spinner) protected Spinner mSubcategorySpinner;
@@ -39,6 +42,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     @BindView(R.id.certification_group_view) protected CertificationRadioButtonGroupView mCertificationGroupView;
 
+    private ImageGalleryAdapter mGalleryAdapter;
+
     private SellingContract.Presenter mPresenter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +51,10 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         setContentView(R.layout.activity_selling);
         ButterKnife.bind(SellingActivity.this);
         setUpToolbar();
+        setUpImageGalleryRecyclerView();
 
-        Typeface boldTypeface = FontCache.getTypeface(SellingActivity.this, R.string.font_brandon_bold);
-        mAddImageButton.setTypeface(boldTypeface);
+//        Typeface boldTypeface = FontCache.getTypeface(SellingActivity.this, R.string.font_brandon_bold);
+//        mAddImageButton.setTypeface(boldTypeface);
 
         new SellingPresenter(
                 Injection.provideDataRepository(SellingActivity.this), SellingActivity.this);
@@ -70,6 +76,20 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
                 onBackPressed();
             }
         });
+    }
+
+    private void setUpImageGalleryRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                SellingActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        mImageGalleryRecyclerView.setLayoutManager(layoutManager);
+        mGalleryAdapter = new ImageGalleryAdapter(SellingActivity.this);
+        mGalleryAdapter.setOnAddImageListener(new ImageGalleryAdapter.OnAddImageListener() {
+            @Override public void onAddImageClick() {
+                mGalleryAdapter.addImagePath("http://livelovefruit.com/wp-content/uploads/2015/06/Benefits-of-eating-fruit-forbreakfast.jpg");
+                mImageGalleryRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
+            }
+        });
+        mImageGalleryRecyclerView.setAdapter(mGalleryAdapter);
     }
 
     @Override public void setPresenter(SellingContract.Presenter presenter) {
