@@ -159,17 +159,26 @@ public class RemoteDataSource implements RestApi, DataSource {
         }
     }
 
-    @Override public Observable<AuthToken> obtainAuthToken(UserCredentials credentials) {
-        return Observable.just(credentials)
-                .map(new Func1<UserCredentials, String>() {
-                    @Override public String call(UserCredentials userCredentials) {
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(UserCredentials credentials) {
+        return buildUserCredentialsAsJsonStringObservable(credentials)
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPOST(composeUrl(POST_TOKEN_REGISTER), json));
+                    }
+                }).map(new Func1<String, AuthToken>() {
+                    @Override public AuthToken call(String json) {
                         try {
-                            return new UserCredentialsJsonMapper().toJsonString(userCredentials);
+                            return new AuthTokenJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                }).flatMap(new Func1<String, Observable<String>>() {
+                });
+    }
+
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(UserCredentials credentials) {
+        return buildUserCredentialsAsJsonStringObservable(credentials)
+                .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
                         return Observable.fromCallable(createPOST(composeUrl(POST_TOKEN_AUTH), json));
                     }
@@ -177,6 +186,19 @@ public class RemoteDataSource implements RestApi, DataSource {
                     @Override public AuthToken call(String json) {
                         try {
                             return new AuthTokenJsonMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    private Observable<String> buildUserCredentialsAsJsonStringObservable(UserCredentials credentials) {
+        return Observable.just(credentials)
+                .map(new Func1<UserCredentials, String>() {
+                    @Override public String call(UserCredentials userCredentials) {
+                        try {
+                            return new UserCredentialsJsonMapper().toJsonString(userCredentials);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

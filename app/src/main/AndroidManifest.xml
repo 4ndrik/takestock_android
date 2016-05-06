@@ -39,7 +39,7 @@
                 android:name=".ui.entry.EntryActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.entry.SignUpActivity"
+                android:name=".ui.signUp.SignUpActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.signIn.SignInActivity"

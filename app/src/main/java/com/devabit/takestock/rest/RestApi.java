@@ -11,6 +11,7 @@ public interface RestApi {
 
     String POST_TOKEN_AUTH = "token/auth/";
     String POST_TOKEN_VERIFY = "token/verify/";
+    String POST_TOKEN_REGISTER = "token/register/";
 
     String GET_CATEGORY = "category/";
     String GET_ADVERTS = "adverts/";

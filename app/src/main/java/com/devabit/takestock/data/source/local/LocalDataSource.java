@@ -44,7 +44,13 @@ public class LocalDataSource implements DataSource {
         Realm.setDefaultConfiguration(config);
     }
 
-    @Override public Observable<AuthToken> obtainAuthToken(UserCredentials credentials) {
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(UserCredentials credentials) {
+        // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
+        // AccessToken from server.
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
         // AccessToken from server.
         throw new UnsupportedOperationException("This operation not required.");

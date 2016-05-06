@@ -73,8 +73,11 @@
     <string name="error_no_network_connection">There is no network connection right now.</string>
     <string name="error_incorrect_username">Username is incorrect.</string>
     <string name="error_incorrect_password">Password is incorrect.</string>
+    <string name="error_incorrect_email">Email address is incorrect.</string>
+    <string name="error_user_exists">A user with that username already exists.</string>
     
     <string name="authenticator_account_type">com.devabit.takestock.ACCOUNT</string>
     <string name="authenticator_token_type">com.devabit.takestock.TOKEN</string>
+
 
 </resources>

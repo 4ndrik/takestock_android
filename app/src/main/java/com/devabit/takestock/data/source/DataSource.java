@@ -10,7 +10,9 @@ import java.util.List;
  */
 public interface DataSource {
 
-    Observable<AuthToken> obtainAuthToken(UserCredentials credentials);
+    Observable<AuthToken> obtainAuthTokenPerSignUp(UserCredentials credentials);
+
+    Observable<AuthToken> obtainAuthTokenPerSignIn(UserCredentials credentials);
 
     void saveCategories(List<Category> categories);
 

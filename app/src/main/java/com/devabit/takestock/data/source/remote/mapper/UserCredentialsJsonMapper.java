@@ -4,18 +4,22 @@ import com.devabit.takestock.data.model.UserCredentials;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
 public class UserCredentialsJsonMapper implements ToJsonMapper<UserCredentials> {
 
     private static final String NAME = "username";
+    private static final String EMAIL = "email";
     private static final String PASSWORD = "password";
 
-    @Override public String toJsonString(UserCredentials userCredentials) throws JSONException {
+    @Override public String toJsonString(UserCredentials credentials) throws JSONException {
         JSONObject json = new JSONObject();
-        json.put(NAME, userCredentials.name);
-        json.put(PASSWORD, userCredentials.password);
+        if (!isEmpty(credentials.userName)) json.put(NAME, credentials.userName);
+        if (!isEmpty(credentials.emailAddress)) json.put(EMAIL, credentials.emailAddress);
+        if (!isEmpty(credentials.password)) json.put(PASSWORD, credentials.password);
         return json.toString();
     }
 }

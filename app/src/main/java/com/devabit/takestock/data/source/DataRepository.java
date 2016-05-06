@@ -48,8 +48,12 @@ public class DataRepository implements DataSource {
         sInstance = null;
     }
 
-    @Override public Observable<AuthToken> obtainAuthToken(UserCredentials credentials) {
-        return mRemoteDataSource.obtainAuthToken(credentials);
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(UserCredentials credentials) {
+        return mRemoteDataSource.obtainAuthTokenPerSignUp(credentials);
+    }
+
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(UserCredentials credentials) {
+        return mRemoteDataSource.obtainAuthTokenPerSignIn(credentials);
     }
 
     @Override public void saveCategories(List<Category> categories) {

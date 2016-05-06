@@ -5,17 +5,14 @@ package com.devabit.takestock.data.model;
  */
 public class UserCredentials {
 
-    public final String name;
-    public final String password;
-
-    public UserCredentials(String name, String password) {
-        this.name = name;
-        this.password = password;
-    }
+    public String userName;
+    public String emailAddress;
+    public String password;
 
     @Override public String toString() {
         return "UserCredentials{" +
-                "name='" + name + '\'' +
+                "userName='" + userName + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
