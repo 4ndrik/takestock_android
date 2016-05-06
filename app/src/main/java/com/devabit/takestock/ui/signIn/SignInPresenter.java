@@ -8,6 +8,7 @@ import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
+import com.devabit.takestock.util.Validator;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -43,13 +44,12 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     }
 
-    @Override public void obtainAuthToken(String username, String password) {
-        if (!validateUsername(username) || !validatePassword(password)) return;
+    @Override public void obtainAuthToken(UserCredentials credentials) {
+        if (!isUserCredentialsValid(credentials)) return;
 
         mSignInView.setProgressIndicator(true);
         mSubscriptions.clear();
-        final UserCredentials credentials = new UserCredentials(username, password);
-        Subscription subscription = mDataRepository.obtainAuthToken(credentials)
+        Subscription subscription = mDataRepository.obtainAuthTokenPerSignIn(credentials)
                 .compose(RxTransformers.<AuthToken>applyObservableSchedulers())
                 .subscribe(new Subscriber<AuthToken>() {
                     @Override public void onCompleted() {
@@ -76,24 +76,25 @@ public class SignInPresenter implements SignInContract.Presenter {
         mSubscriptions.add(subscription);
     }
 
-    private boolean validateUsername(String name) {
-        if(TextUtils.isEmpty(name)) {
-            mSignInView.showIncorrectUsernameError();
-            return false;
-        }
+    private boolean isUserCredentialsValid(UserCredentials credentials) {
+        return validateUsername(credentials.userName)
+                && validatePassword(credentials.password);
+    }
 
-        return true;
+    private boolean validateUsername(String userName) {
+        boolean isValid = Validator.validateUserName(userName);
+        if (isValid) return true;
+        mSignInView.showIncorrectUsernameError();
+        return false;
+
     }
 
     private boolean validatePassword(String password) {
-        if(TextUtils.isEmpty(password)) {
-            mSignInView.showIncorrectPasswordError();
-            return false;
-        }
-
-        return true;
+        boolean isValid = !TextUtils.isEmpty(password);
+        if (isValid) return true;
+        mSignInView.showIncorrectPasswordError();
+        return false;
     }
-
 
     @Override public void pause() {
         mSubscriptions.clear();

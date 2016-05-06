@@ -1,6 +1,7 @@
 package com.devabit.takestock.ui.signIn;
 
 import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.ui.BasePresenter;
 import com.devabit.takestock.ui.BaseView;
 
@@ -28,7 +29,7 @@ public interface SignInContract {
 
     interface Presenter extends BasePresenter {
 
-        void obtainAuthToken(String username, String password);
+        void obtainAuthToken(UserCredentials userCredentials);
 
     }
 }
