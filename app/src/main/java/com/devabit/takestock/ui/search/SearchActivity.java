@@ -37,20 +37,15 @@ public class SearchActivity extends AppCompatActivity {
         final Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         final Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
 
-        TextView titleToolbar = (TextView) mToolbar.findViewById(R.id.toolbar_title);
+        TextView titleToolbar = ButterKnife.findById(mToolbar, R.id.toolbar_title);
         titleToolbar.setTypeface(boldTypeface);
         titleToolbar.setText(R.string.search);
-
-        TextView homeToolbarTextView = (TextView) mToolbar.findViewById(R.id.toolbar_back);
-        homeToolbarTextView.setTypeface(mediumTypeface);
-        homeToolbarTextView.setText(R.string.home);
-        homeToolbarTextView.setOnClickListener(new View.OnClickListener() {
+        mToolbar.inflateMenu(R.menu.main);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
         });
-
-        mToolbar.inflateMenu(R.menu.main);
 
         ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
             @Override public void apply(Button view, int index) {

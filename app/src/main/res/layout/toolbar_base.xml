@@ -2,23 +2,25 @@
 <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        app:navigationIcon="@drawable/ic_arrow_back_white_24dp">
 
-    <TextView
-            android:id="@+id/toolbar_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:drawableStart="@drawable/ic_navigate_before_24dp"
-            tools:text="@string/home"/>
+    <!--<TextView-->
+            <!--android:id="@+id/toolbar_back"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingTop="8dp"-->
+            <!--android:paddingBottom="8dp"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:gravity="center"-->
+            <!--android:textAppearance="@android:style/TextAppearance.Medium"-->
+            <!--android:drawableStart="@drawable/ic_navigate_before_24dp"-->
+            <!--tools:text="@string/home"/>-->
 
     <TextView
             android:id="@+id/toolbar_title"

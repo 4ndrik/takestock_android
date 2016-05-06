@@ -2,6 +2,7 @@ package com.devabit.takestock.ui.selling;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +10,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
@@ -29,7 +32,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     @BindView(R.id.content_activity_selling) protected View mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
-//    @BindView(R.id.add_image_product_button) protected Button mAddImageButton;
+    //    @BindView(R.id.add_image_product_button) protected Button mAddImageButton;
     @BindView(R.id.expiry_text_view) protected TextView mExpiryTextView;
 
     @BindView(R.id.image_gallery_recycler_view) protected RecyclerView mImageGalleryRecyclerView;
@@ -42,6 +45,9 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     @BindView(R.id.certification_group_view) protected CertificationRadioButtonGroupView mCertificationGroupView;
 
+    @BindViews({R.id.preview_ad_button, R.id.save_and_put_on_hold_button})
+    List<Button> mButtons;
+
     private ImageGalleryAdapter mGalleryAdapter;
 
     private SellingContract.Presenter mPresenter;
@@ -50,28 +56,27 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selling);
         ButterKnife.bind(SellingActivity.this);
-        setUpToolbar();
-        setUpImageGalleryRecyclerView();
 
-//        Typeface boldTypeface = FontCache.getTypeface(SellingActivity.this, R.string.font_brandon_bold);
-//        mAddImageButton.setTypeface(boldTypeface);
+        final Typeface boldTypeface = FontCache.getTypeface(SellingActivity.this, R.string.font_brandon_bold);
+        ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
+            @Override public void apply(@NonNull Button button, int index) {
+                button.setTypeface(boldTypeface);
+            }
+        });
+        setUpToolbar(boldTypeface);
+        setUpImageGalleryRecyclerView();
 
         new SellingPresenter(
                 Injection.provideDataRepository(SellingActivity.this), SellingActivity.this);
         mPresenter.create();
     }
 
-    private void setUpToolbar() {
+    private void setUpToolbar(Typeface typeface) {
         mToolbar.inflateMenu(R.menu.main);
-        TextView title = (TextView) mToolbar.findViewById(R.id.toolbar_title);
-        Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
-        title.setTypeface(boldTypeface);
+        TextView title = ButterKnife.findById(mToolbar, R.id.toolbar_title);
+        title.setTypeface(typeface);
         title.setText(R.string.sell_something);
-        TextView homeTextView = (TextView) mToolbar.findViewById(R.id.toolbar_back);
-        Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
-        homeTextView.setTypeface(mediumTypeface);
-        homeTextView.setText(R.string.home);
-        homeTextView.setOnClickListener(new View.OnClickListener() {
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }

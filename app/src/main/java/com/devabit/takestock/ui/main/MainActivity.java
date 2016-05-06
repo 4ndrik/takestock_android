@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static Intent getStartIntent(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
-        starter.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        starter.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         return starter;
     }
 
