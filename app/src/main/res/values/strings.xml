@@ -66,6 +66,7 @@
     <string name="password">Password</string>
     <string name="user_name_or_email">Username or email</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="guide_price_per_kg">£ %1$s</string>
 
     <!-- Strings related to errors -->
     <string name="error_unknown">Unknown error.</string>
@@ -78,6 +79,7 @@
     
     <string name="authenticator_account_type">com.devabit.takestock.ACCOUNT</string>
     <string name="authenticator_token_type">com.devabit.takestock.TOKEN</string>
+    <string name="count_results_for">%1$d results for</string>
 
 
 </resources>

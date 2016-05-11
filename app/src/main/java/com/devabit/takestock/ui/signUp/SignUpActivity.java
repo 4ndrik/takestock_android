@@ -65,7 +65,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         Typeface mediumTypeface = FontCache.getTypeface(SignUpActivity.this, R.string.font_brandon_medium);
 
         Toolbar toolbar = ButterKnife.findById(SignUpActivity.this, R.id.toolbar);
-        SpannableString spannableString = new SpannableString(getString(R.string.sign_up).toUpperCase());
+        SpannableString spannableString = new SpannableString(getString(R.string.sign_up));
         spannableString.setSpan(new CustomTypefaceSpan(boldTypeface), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         toolbar.setTitle(spannableString);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

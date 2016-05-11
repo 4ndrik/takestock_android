@@ -7,14 +7,17 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.R;
 import com.devabit.takestock.ui.entry.EntryActivity;
-import com.devabit.takestock.ui.productDetail.ProductDetailActivity;
+import com.devabit.takestock.ui.search.SearchActivity;
 import com.devabit.takestock.ui.selling.SellingActivity;
 import com.devabit.takestock.util.FontCache;
 
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
-        if (shouldBeEntryActivityShown()) {
+        if (shouldBeEntryActivityDisplayed()) {
             startActivity(EntryActivity.getStartIntent(MainActivity.this));
             finish();
             return;
@@ -50,9 +53,19 @@ public class MainActivity extends AppCompatActivity {
         Typeface boldTypeface = FontCache.getTypeface(MainActivity.this, R.string.font_brandon_bold);
         mBrowseProductsButton.setTypeface(boldTypeface);
         mSellSomethingButton.setTypeface(boldTypeface);
+
+        mSearchProductsEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    startSearchActivity();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
-    private boolean shouldBeEntryActivityShown() {
+    private boolean shouldBeEntryActivityDisplayed() {
         AccountManager accountManager = AccountManager.get(MainActivity.this);
         Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
         return accounts.length == 0;
@@ -67,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.browse_categories_button)
     protected void startSearchActivity() {
 //        startActivity(new Intent(this, EntryActivity.class));
-        startActivity(ProductDetailActivity.getStartIntent(MainActivity.this));
+//        startActivity(ProductDetailActivity.getStartIntent(MainActivity.this));
+        startActivity(SearchActivity.getStartIntent(MainActivity.this));
     }
 
 }

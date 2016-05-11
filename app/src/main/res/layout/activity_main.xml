@@ -32,6 +32,8 @@
                 android:drawableEnd="@drawable/ic_search_24dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
                 android:hint="@string/search_products"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:theme="@style/EditText"/>

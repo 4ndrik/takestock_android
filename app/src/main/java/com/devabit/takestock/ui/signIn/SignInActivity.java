@@ -64,7 +64,7 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
         Typeface boldTypeface = FontCache.getTypeface(SignInActivity.this, R.string.font_brandon_bold);
 
         Toolbar toolbar = ButterKnife.findById(SignInActivity.this, R.id.toolbar);
-        SpannableString spannableString = new SpannableString(getString(R.string.sign_in).toUpperCase());
+        SpannableString spannableString = new SpannableString(getString(R.string.sign_in));
         spannableString.setSpan(new CustomTypefaceSpan(boldTypeface), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         toolbar.setTitle(spannableString);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
