@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.source.remote.entity.ResultListEntity;
 import com.devabit.takestock.data.source.remote.mapper.*;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
@@ -228,8 +230,29 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<String> getAdverts() {
-        return Observable.fromCallable(createGET(composeUrl(GET_ADVERTS)));
+    @Override public Observable<List<Advert>> getAdverts() {
+        return Observable.fromCallable(createGET(composeUrl(GET_ADVERTS)))
+                .map(new Func1<String, ResultListEntity>() {
+                    @Override public ResultListEntity call(String json) {
+                        try {
+                            return new ResultListEntityJsonMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+                }).map(new Func1<ResultListEntity, List<Advert>>() {
+                    @Override public List<Advert> call(ResultListEntity resultEntity) {
+                        try {
+                            return new AdvertJsonMapper().fromJsonString(resultEntity.getResults());
+                        } catch (JSONException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+                }).doOnNext(new Action1<List<Advert>>() {
+                    @Override public void call(List<Advert> adverts) {
+                        LOGD(TAG, "Adverts: " + adverts);
+                    }
+                });
     }
 
     @Override public void saveSizes(List<Size> sizeList) {

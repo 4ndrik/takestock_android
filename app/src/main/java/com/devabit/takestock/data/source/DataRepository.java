@@ -2,6 +2,7 @@ package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.*;
+import com.devabit.takestock.data.model.Advert;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -71,8 +72,8 @@ public class DataRepository implements DataSource {
         return Observable.concat(localCategories, remoteCategories).first();
     }
 
-    @Override public Observable<String> getAdverts() {
-        return null;
+    @Override public Observable<List<Advert>> getAdverts() {
+        return mRemoteDataSource.getAdverts();
     }
 
     @Override public void saveSizes(List<Size> sizes) {

@@ -93,8 +93,8 @@ public class LocalDataSource implements DataSource {
         });
     }
 
-    @Override public Observable<String> getAdverts() {
-        return null;
+    @Override public Observable<List<Advert>> getAdverts() {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public void saveSizes(List<Size> sizes) {

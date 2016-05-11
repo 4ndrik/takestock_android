@@ -1,6 +1,7 @@
 package com.devabit.takestock.data.source;
 
 import com.devabit.takestock.data.model.*;
+import com.devabit.takestock.data.model.Advert;
 import rx.Observable;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface DataSource {
 
     Observable<List<Category>> getCategories();
 
-    Observable<String> getAdverts();
+    Observable<List<Advert>> getAdverts();
 
     void saveSizes(List<Size> sizes);
 
