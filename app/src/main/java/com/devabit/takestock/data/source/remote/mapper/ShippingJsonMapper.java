@@ -22,8 +22,10 @@ public class ShippingJsonMapper implements FromJsonMapper<List<Shipping>> {
         List<Shipping> result = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
             JSONObject typeJson = jsonArray.getJSONObject(i);
-            String type = typeJson.getString(Integer.toString(i + 1));
+            int id = i + 1;
+            String type = typeJson.getString(Integer.toString(id));
             Shipping shipping = new Shipping();
+            shipping.setId(id);
             shipping.setType(type);
             result.add(shipping);
         }

@@ -29,12 +29,18 @@ public interface DataSource {
 
     Observable<List<Certification>> getCertifications();
 
+    Certification getCertificationById(int id);
+
     void saveShippings(List<Shipping> shippings);
 
     Observable<List<Shipping>> getShippings();
 
+    Shipping getShippingById(int id);
+
     void saveConditions(List<Condition> conditions);
 
     Observable<List<Condition>> getConditions();
+
+    Condition getConditionById(int id);
 
 }

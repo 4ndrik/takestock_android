@@ -23,6 +23,7 @@ public class ShippingEntityDataMapper {
 
     public ShippingEntity transformToEntity(Shipping shipping) {
         ShippingEntity entity = new ShippingEntity();
+        entity.setId(shipping.getId());
         entity.setType(shipping.getType());
         return entity;
     }
@@ -38,6 +39,7 @@ public class ShippingEntityDataMapper {
 
     public Shipping transformFromEntity(ShippingEntity entity) {
         Shipping shipping = new Shipping();
+        shipping.setId(entity.getId());
         shipping.setType(entity.getType());
         return shipping;
     }

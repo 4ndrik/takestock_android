@@ -23,6 +23,7 @@ public class ConditionEntityDataMapper {
 
     public ConditionEntity transformToEntity(Condition condition) {
         ConditionEntity entity = new ConditionEntity();
+        entity.setId(condition.getId());
         entity.setState(condition.getState());
         return entity;
     }
@@ -38,6 +39,7 @@ public class ConditionEntityDataMapper {
 
     public Condition transformFromEntity(ConditionEntity entity) {
         Condition condition = new Condition();
+        condition.setId(entity.getId());
         condition.setState(entity.getState());
         return condition;
     }

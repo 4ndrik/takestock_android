@@ -148,6 +148,14 @@ public class LocalDataSource implements DataSource {
         });
     }
 
+    @Override public Certification getCertificationById(int id) {
+        CertificationEntity entity = Realm.getDefaultInstance()
+                .where(CertificationEntity.class)
+                .equalTo("mId", id)
+                .findFirst();
+        return new CertificationEntityDataMapper().transformFromEntity(entity);
+    }
+
     @Override public void saveShippings(List<Shipping> shippings) {
         List<ShippingEntity> entities = new ShippingEntityDataMapper().transformToEntityList(shippings);
         saveOrUpdateEntities(entities);
@@ -171,6 +179,14 @@ public class LocalDataSource implements DataSource {
                 LOGD(TAG, "Shippings from LocalDataSource " + shippings);
             }
         });
+    }
+
+    @Override public Shipping getShippingById(int id) {
+        ShippingEntity entity = Realm.getDefaultInstance()
+                .where(ShippingEntity.class)
+                .equalTo("mId", id)
+                .findFirst();
+        return new ShippingEntityDataMapper().transformFromEntity(entity);
     }
 
     @Override public void saveConditions(List<Condition> conditionList) {
@@ -197,6 +213,14 @@ public class LocalDataSource implements DataSource {
                 LOGD(TAG, "Conditions from LocalDataSource " + conditionList);
             }
         });
+    }
+
+    @Override public Condition getConditionById(int id) {
+        ConditionEntity entity = Realm.getDefaultInstance()
+                .where(ConditionEntity.class)
+                .equalTo("mId", id)
+                .findFirst();
+        return new ConditionEntityDataMapper().transformFromEntity(entity);
     }
 
     private <E extends RealmModel> List<E> saveOrUpdateEntities(Iterable<E> objects) {

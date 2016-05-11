@@ -298,6 +298,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
+    @Override public Certification getCertificationById(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public void saveShippings(List<Shipping> shippingList) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -319,6 +323,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
+    @Override public Shipping getShippingById(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public void saveConditions(List<Condition> conditionList) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -338,6 +346,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                         LOGD(TAG, "Conditions from RemoteDataSource " + conditions);
                     }
                 });
+    }
+
+    @Override public Condition getConditionById(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     private Callable<String> createPOST(final String url, final String json) {

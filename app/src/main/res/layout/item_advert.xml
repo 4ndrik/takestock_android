@@ -9,7 +9,7 @@
         android:layout_margin="8dp"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="8dp">
+        card_view:cardElevation="4dp">
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                 android:layout_below="@+id/date_text_view"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:textColor="@color/black"
-                android:text="Guide Price per Kg"/>
+                android:text="@string/guide_price"/>
 
         <TextView
                 android:id="@+id/price_text_view"

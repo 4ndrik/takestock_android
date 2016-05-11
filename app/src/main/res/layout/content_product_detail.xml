@@ -33,6 +33,7 @@
                     android:text="@string/guide_price"/>
 
             <TextView
+                    android:id="@+id/guide_price_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -40,7 +41,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:text="£ 7.50 per kg"/>
+                    tools:text="£ 7.50 per kg"/>
 
         </LinearLayout>
 
@@ -65,6 +66,7 @@
                     android:text="@string/minimum_order"/>
 
             <TextView
+                    android:id="@+id/minimum_order_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -72,7 +74,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:text="1 kg"/>
+                    tools:text="1 kg"/>
 
         </LinearLayout>
 
@@ -97,6 +99,7 @@
                     android:text="@string/qty_available"/>
 
             <TextView
+                    android:id="@+id/qty_available_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -104,7 +107,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:text="180 kg"/>
+                    tools:text="180 kg"/>
 
         </LinearLayout>
 
@@ -113,13 +116,14 @@
               android:background="@color/grey_200"/>
 
         <TextView
+                android:id="@+id/description_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif"
                 android:textColor="@color/black"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:text="The product that became Nutella was created by an Italian bakery owner called Pietro Ferrero in the 1940s. He decided to try and create a cheaper alternative to chocolate, which, due to the Second World War, was in short supply. It was made by combining hazelnuts, which were easily available locally, and a little cocoa."/>
+                tools:text="The product that became Nutella was created by an Italian bakery owner called Pietro Ferrero in the 1940s. He decided to try and create a cheaper alternative to chocolate, which, due to the Second World War, was in short supply. It was made by combining hazelnuts, which were easily available locally, and a little cocoa."/>
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -139,6 +143,7 @@
                     android:text="@string/location"/>
 
             <TextView
+                    android:id="@+id/location_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -146,7 +151,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="Blackpool"/>
+                    tools:text="Blackpool"/>
 
         </LinearLayout>
 
@@ -171,6 +176,7 @@
                     android:text="@string/shipping"/>
 
             <TextView
+                    android:id="@+id/shipping_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -178,7 +184,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="Collection only"/>
+                    tools:text="Collection only"/>
 
         </LinearLayout>
 
@@ -203,6 +209,7 @@
                     android:text="@string/expiry"/>
 
             <TextView
+                    android:id="@+id/expiry_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -210,7 +217,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="2016-06-18"/>
+                    tools:text="2016-06-18"/>
 
         </LinearLayout>
 
@@ -235,6 +242,7 @@
                     android:text="@string/certification"/>
 
             <TextView
+                    android:id="@+id/certification_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -242,7 +250,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="ISO"/>
+                    tools:text="ISO"/>
 
         </LinearLayout>
 
@@ -267,6 +275,7 @@
                     android:text="@string/condition"/>
 
             <TextView
+                    android:id="@+id/condition_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -274,7 +283,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="New"/>
+                    tools:text="New"/>
 
         </LinearLayout>
 

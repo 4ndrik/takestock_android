@@ -106,6 +106,10 @@ public class DataRepository implements DataSource {
         return Observable.concat(localCertifications, remoteCertifications).first();
     }
 
+    @Override public Certification getCertificationById(int id) {
+        return mLocalDataSource.getCertificationById(id);
+    }
+
     @Override public void saveShippings(List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -121,6 +125,10 @@ public class DataRepository implements DataSource {
         return Observable.concat(localShippings, remoteShippings).first();
     }
 
+    @Override public Shipping getShippingById(int id) {
+        return mLocalDataSource.getShippingById(id);
+    }
+
     @Override public void saveConditions(List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -134,6 +142,10 @@ public class DataRepository implements DataSource {
                     }
                 });
         return Observable.concat(localConditions, remoteConditions).first();
+    }
+
+    @Override public Condition getConditionById(int id) {
+        return mLocalDataSource.getConditionById(id);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.devabit.takestock.ui.productDetail;
+package com.devabit.takestock.ui.advertDetail;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ public class OfferDialog extends DialogFragment {
     }
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_fragment_offer, container, false);
+        return inflater.inflate(R.layout.dialog_offer, container, false);
     }
 
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {

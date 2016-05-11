@@ -9,7 +9,16 @@ import io.realm.annotations.PrimaryKey;
 public class ConditionEntity extends RealmObject {
 
     @PrimaryKey
+    private int mId;
     private String mState;
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
+    }
 
     public String getState() {
         return mState;

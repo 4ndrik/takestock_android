@@ -96,6 +96,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         void bindAdvert(Advert advert) {
             mAdvert = advert;
             if (!mAdvert.getPhotos().isEmpty()) loadPhoto(mAdvert.getPhotos().get(0).getImageUrl());
+            else mPhotoImageView.setImageResource(R.drawable.ic_image_48dp);
             mNameTextView.setText(mAdvert.getName());
             mLocationTextView.setText(mAdvert.getLocation());
             mPriceTextView.setText(mContext.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice()));
@@ -112,6 +113,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         void loadPhoto(String photoUrl) {
             mPicasso.load(photoUrl)
                     .placeholder(R.drawable.ic_image_48dp)
+                    .error(R.drawable.ic_image_48dp)
                     .centerCrop()
                     .fit()
                     .into(mPhotoImageView);

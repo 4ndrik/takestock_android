@@ -5,7 +5,16 @@ package com.devabit.takestock.data.model;
  */
 public class Condition {
 
+    private int mId;
     private String mState;
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
+    }
 
     public String getState() {
         return mState;
@@ -17,7 +26,8 @@ public class Condition {
 
     @Override public String toString() {
         return "Condition{" +
-                "mState='" + mState + '\'' +
+                "mId=" + mId +
+                ", mState='" + mState + '\'' +
                 '}';
     }
 }

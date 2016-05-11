@@ -7,7 +7,16 @@ import android.support.annotation.NonNull;
  */
 public class Shipping {
 
+    private int mId;
     private String mType;
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
+    }
 
     public void setType(@NonNull String type) {
         mType = type;
@@ -19,7 +28,8 @@ public class Shipping {
 
     @Override public String toString() {
         return "Shipping{" +
-                "mType='" + mType + '\'' +
+                "mId=" + mId +
+                ", mType='" + mType + '\'' +
                 '}';
     }
 }
