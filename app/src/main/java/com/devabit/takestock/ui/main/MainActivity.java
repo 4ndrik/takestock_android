@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.R;
+import com.devabit.takestock.ui.category.CategoriesDialog;
 import com.devabit.takestock.ui.entry.EntryActivity;
 import com.devabit.takestock.ui.search.SearchActivity;
 import com.devabit.takestock.ui.selling.SellingActivity;
@@ -65,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void startSearchActivity() {
+        startActivity(SearchActivity.getStartIntent(MainActivity.this));
+    }
+
     private boolean shouldBeEntryActivityDisplayed() {
         AccountManager accountManager = AccountManager.get(MainActivity.this);
         Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
@@ -74,14 +79,15 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.sell_something_button)
     protected void startSellingActivity() {
         startActivity(new Intent(this, SellingActivity.class));
-//        startActivity(EntryActivity.getStartIntent(this));
     }
 
     @OnClick(R.id.browse_categories_button)
-    protected void startSearchActivity() {
-//        startActivity(new Intent(this, EntryActivity.class));
-//        startActivity(ProductDetailActivity.getStartIntent(MainActivity.this));
-        startActivity(SearchActivity.getStartIntent(MainActivity.this));
+    protected void onBrowseCategoriesButtonClick() {
+        displayCategoriesDialog();
     }
 
+    private void displayCategoriesDialog() {
+        CategoriesDialog dialog = CategoriesDialog.newInstance();
+        dialog.show(getFragmentManager(), dialog.getClass().getCanonicalName());
+    }
 }

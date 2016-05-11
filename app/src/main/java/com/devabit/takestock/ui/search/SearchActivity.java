@@ -19,10 +19,12 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.ui.advertDetail.AdvertDetailActivity;
+import com.devabit.takestock.ui.category.CategoriesDialog;
 import com.devabit.takestock.ui.search.adapter.AdvertAdapter;
 import com.devabit.takestock.util.FontCache;
 
@@ -137,6 +139,16 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
 
     @Override public void setPresenter(@NonNull SearchContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @OnClick(R.id.browse_categories_button)
+    protected void onBrowseCategoriesButtonClick() {
+        displayCategoriesDialog();
+    }
+
+    private void displayCategoriesDialog() {
+        CategoriesDialog dialog = CategoriesDialog.newInstance();
+        dialog.show(getFragmentManager(), dialog.getClass().getCanonicalName());
     }
 
     @Override protected void onPause() {

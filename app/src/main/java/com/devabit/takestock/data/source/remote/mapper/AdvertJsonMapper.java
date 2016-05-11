@@ -47,7 +47,7 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>> {
             advert.setAuthorId(jsonObject.getInt("author"));
             advert.setCategoryId(jsonObject.getInt("category"));
             if (!jsonObject.isNull("subcategory")) advert.setSubCategoryId(jsonObject.getInt("subcategory"));
-            advert.setPackagingId(jsonObject.getInt("packaging"));
+            if (!jsonObject.isNull("packaging")) advert.setPackagingId(jsonObject.getInt("packaging"));
             advert.setMinOrderQuantity(jsonObject.getInt("min_order_quantity"));
             advert.setSize(jsonObject.getString("size"));
             advert.setCertificationId(jsonObject.getInt("certification"));
