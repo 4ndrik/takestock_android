@@ -30,7 +30,7 @@
                 android:layout_marginEnd="16dp"
                 android:drawableEnd="@drawable/ic_edit_purple_24dp"
                 android:hint="@string/hint_add_product_title"
-                />
+                android:theme="@style/EditTextPurple"/>
 
         <ViewFlipper
                 android:id="@+id/product_description_content_view_flipper_activity_selling"
