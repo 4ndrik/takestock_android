@@ -1,6 +1,7 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
 import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,10 +11,25 @@ import org.json.JSONObject;
 public class AuthTokenJsonMapper implements FromJsonMapper<AuthToken>, ToJsonMapper<AuthToken>{
 
     private static final String TOKEN = "token";
+    private static final String USER = "user";
+    private static final String ID = "id";
+    private static final String USERNAME= "username";
+    private static final String EMAIL = "email";
 
     @Override public AuthToken fromJsonString(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
         AuthToken accessToken = new AuthToken();
+
+        if (jsonObject.has(USER)) {
+            User user = new UserJsonMapper().fromJsonString(jsonObject.getString(USER));
+            accessToken.userId = user.getId();
+            accessToken.username = user.getUserName();
+            accessToken.email = user.getEmail();
+        } else {
+            accessToken.userId = jsonObject.getInt(ID);
+            accessToken.username = jsonObject.getString(USERNAME);
+            accessToken.email = jsonObject.getString(EMAIL);
+        }
         accessToken.token = jsonObject.getString(TOKEN);
         return accessToken;
     }

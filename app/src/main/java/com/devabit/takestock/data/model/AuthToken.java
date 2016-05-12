@@ -5,11 +5,17 @@ package com.devabit.takestock.data.model;
  */
 public class AuthToken {
 
+    public int userId;
+    public String username;
+    public String email;
     public String token;
 
     @Override public String toString() {
-        return "AccessToken{" +
-                "token='" + token + '\'' +
+        return "AuthToken{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

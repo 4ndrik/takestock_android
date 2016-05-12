@@ -31,7 +31,7 @@ public class Advert implements Parcelable {
     private String mCertificationExtra;
     private int mItemsCount;
     private int mAuthorId;
-    private Author mAuthor;
+    private User mUser;
     private List<String> mTags;
     private List<Photo> mPhotos;
 
@@ -59,7 +59,7 @@ public class Advert implements Parcelable {
         mCertificationExtra = in.readString();
         mItemsCount = in.readInt();
         mAuthorId = in.readInt();
-        mAuthor = in.readParcelable(Author.class.getClassLoader());
+        mUser = in.readParcelable(User.class.getClassLoader());
         mTags = in.createStringArrayList();
         mPhotos = in.createTypedArrayList(Photo.CREATOR);
     }
@@ -244,12 +244,12 @@ public class Advert implements Parcelable {
         mAuthorId = authorId;
     }
 
-    public Author getAuthor() {
-        return mAuthor;
+    public User getUser() {
+        return mUser;
     }
 
-    public void setAuthor(Author author) {
-        mAuthor = author;
+    public void setUser(User user) {
+        mUser = user;
     }
 
     public List<String> getTags() {
@@ -291,7 +291,7 @@ public class Advert implements Parcelable {
                 ", mCertificationExtra='" + mCertificationExtra + '\'' +
                 ", mItemsCount=" + mItemsCount +
                 ", mAuthorId=" + mAuthorId +
-                ", mAuthor=" + mAuthor +
+                ", mAuthor=" + mUser +
                 ", mTags=" + mTags +
                 ", mPhotos=" + mPhotos +
                 '}';
@@ -323,7 +323,7 @@ public class Advert implements Parcelable {
         dest.writeString(mCertificationExtra);
         dest.writeInt(mItemsCount);
         dest.writeInt(mAuthorId);
-        dest.writeParcelable(mAuthor, flags);
+        dest.writeParcelable(mUser, flags);
         dest.writeStringList(mTags);
         dest.writeTypedList(mPhotos);
     }

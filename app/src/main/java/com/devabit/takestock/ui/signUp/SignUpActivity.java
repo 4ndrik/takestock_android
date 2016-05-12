@@ -154,7 +154,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     @Override public void processAuthToken(AuthToken authToken) {
         AccountManager accountManager = AccountManager.get(SignUpActivity.this);
         Account account = new Account(getUserName(), getString(R.string.authenticator_account_type));
-        accountManager.addAccountExplicitly(account, getPassword(), null);
+        Bundle userData = new Bundle();
+        userData.putString(getString(R.string.authenticator_user_id), String.valueOf(authToken.userId));
+        userData.putString(getString(R.string.authenticator_user_name), String.valueOf(authToken.username));
+        userData.putString(getString(R.string.authenticator_user_email), String.valueOf(authToken.email));
+        accountManager.addAccountExplicitly(account, getPassword(), userData);
         accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), authToken.token);
 
         startActivity(MainActivity.getStartIntent(SignUpActivity.this));

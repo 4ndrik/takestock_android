@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
-public class Author implements Parcelable {
+public class User implements Parcelable {
 
 private int mId;
     private String mUserName;
@@ -24,9 +24,9 @@ private int mId;
     private double mAvgRating;
     private Photo mPhoto;
 
-    public Author(){}
+    public User(){}
 
-    protected Author(Parcel in) {
+    protected User(Parcel in) {
         mId = in.readInt();
         mUserName = in.readString();
         mFirstName = in.readString();
@@ -44,15 +44,15 @@ private int mId;
         mPhoto = in.readParcelable(Photo.class.getClassLoader());
     }
 
-    public static final Creator<Author> CREATOR = new Creator<Author>() {
+    public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
-        public Author createFromParcel(Parcel in) {
-            return new Author(in);
+        public User createFromParcel(Parcel in) {
+            return new User(in);
         }
 
         @Override
-        public Author[] newArray(int size) {
-            return new Author[size];
+        public User[] newArray(int size) {
+            return new User[size];
         }
     };
 
