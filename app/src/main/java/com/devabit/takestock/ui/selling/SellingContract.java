@@ -17,6 +17,8 @@ public interface SellingContract {
 
         void showCategoriesInView(List<Category> categories);
 
+        void showPackagingsInView(List<Packaging> packagings);
+
         void showShippingsInView(List<Shipping> shippings);
 
         void showConditionsInView(List<Condition> conditions);

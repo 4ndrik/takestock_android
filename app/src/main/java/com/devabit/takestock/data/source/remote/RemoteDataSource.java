@@ -352,6 +352,27 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public void savePackagings(List<Packaging> packagings) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Packaging>> getPackagings() {
+        return Observable.fromCallable(createGET(composeUrl(GET_PACKAGING)))
+                .map(new Func1<String, List<Packaging>>() {
+                    @Override public List<Packaging> call(String json) {
+                        try {
+                            return new PackagingJsonMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+                }).doOnNext(new Action1<List<Packaging>>() {
+                    @Override public void call(List<Packaging> packagings) {
+                        LOGD(TAG, "Packaging from RemoteDataSource " + packagings);
+                    }
+                });
+    }
+
     private Callable<String> createPOST(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {

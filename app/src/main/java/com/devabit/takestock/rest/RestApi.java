@@ -19,6 +19,7 @@ public interface RestApi {
     String GET_CERTIFICATIONS = "certifications/";
     String GET_SHIPPING = "shipping/";
     String GET_CONDITIONS = "conditions/";
+    String GET_PACKAGING = "packaging/";
 
     String composeUrl(String... params);
 }

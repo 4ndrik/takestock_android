@@ -1,5 +1,7 @@
 package com.devabit.takestock.ui.selling;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,26 +21,32 @@ import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.*;
-import com.devabit.takestock.ui.selling.adapter.*;
+import com.devabit.takestock.ui.selling.adapters.*;
+import com.devabit.takestock.ui.selling.dialogs.PhotoPickerDialog;
 import com.devabit.takestock.util.FontCache;
 import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
 
 import java.util.List;
+
+import static com.devabit.takestock.util.Logger.LOGD;
+import static com.devabit.takestock.util.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 07/04/2016.
  */
 public class SellingActivity extends AppCompatActivity implements SellingContract.View {
 
+    private static final String TAG = makeLogTag(SellingActivity.class);
+
     @BindView(R.id.content_activity_selling) protected View mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
-    //    @BindView(R.id.add_image_product_button) protected Button mAddImageButton;
     @BindView(R.id.expiry_text_view) protected TextView mExpiryTextView;
 
     @BindView(R.id.image_gallery_recycler_view) protected RecyclerView mImageGalleryRecyclerView;
 
     @BindView(R.id.category_spinner) protected Spinner mCategorySpinner;
     @BindView(R.id.subcategory_spinner) protected Spinner mSubcategorySpinner;
+    @BindView(R.id.packaging_spinner) protected Spinner mPackagingSpinner;
     @BindView(R.id.shipping_spinner) protected Spinner mShippingSpinner;
     @BindView(R.id.condition_spinner) protected Spinner mConditionSpinner;
     @BindView(R.id.size_spinner) protected Spinner mSizeSpinner;
@@ -52,10 +60,20 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     private SellingContract.Presenter mPresenter;
 
+    private Account mAccount;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selling);
         ButterKnife.bind(SellingActivity.this);
+
+        AccountManager accountManager = AccountManager.get(SellingActivity.this);
+        mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
+        String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
+        String username = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_name));
+        String email = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_email));
+
+        LOGD(TAG, "UserId: " + userId + "\n" + "UserName: " + username + "\n" + "Email: " + email);
 
         final Typeface boldTypeface = FontCache.getTypeface(SellingActivity.this, R.string.font_brandon_bold);
         ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
@@ -88,16 +106,22 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
                 SellingActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mImageGalleryRecyclerView.setLayoutManager(layoutManager);
         mGalleryAdapter = new ImageGalleryAdapter(SellingActivity.this);
-        mGalleryAdapter.setOnAddImageListener(new ImageGalleryAdapter.OnAddImageListener() {
-            @Override public void onAddImageClick() {
-                mGalleryAdapter.addImagePath("http://livelovefruit.com/wp-content/uploads/2015/06/Benefits-of-eating-fruit-forbreakfast.jpg");
-                mImageGalleryRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
+        mGalleryAdapter.setOnPickPhotoListener(new ImageGalleryAdapter.OnPickPhotoListener() {
+            @Override public void onPick() {
+//                mGalleryAdapter.addImagePath("http://livelovefruit.com/wp-content/uploads/2015/06/Benefits-of-eating-fruit-forbreakfast.jpg");
+//                mImageGalleryRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
+                displayPhotoPickerDialog();
             }
         });
         mImageGalleryRecyclerView.setAdapter(mGalleryAdapter);
     }
 
-    @Override public void setPresenter(SellingContract.Presenter presenter) {
+    private void displayPhotoPickerDialog() {
+        PhotoPickerDialog dialog = PhotoPickerDialog.newInstance();
+        dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
+    }
+
+    @Override public void setPresenter(@NonNull SellingContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -120,6 +144,11 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
     private void showSubcategoriesInView(List<Subcategory> subcategories) {
         SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(SellingActivity.this, subcategories);
         mSubcategorySpinner.setAdapter(adapter);
+    }
+
+    @Override public void showPackagingsInView(List<Packaging> packagings) {
+        PackagingSpinnerAdapter adapter = new PackagingSpinnerAdapter(SellingActivity.this, packagings);
+        mPackagingSpinner.setAdapter(adapter);
     }
 
     @Override public void showShippingsInView(List<Shipping> shippings) {

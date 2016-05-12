@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.Author;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.model.Photo;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,11 +17,11 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>> {
 
     private static final String ID = "id";
 
-    private final AuthorJsonMapper mAuthorMapper;
+    private final UserJsonMapper mUserMapper;
     private final PhotoJsonMapper mPhotoMapper;
 
     public AdvertJsonMapper() {
-        mAuthorMapper = new AuthorJsonMapper();
+        mUserMapper = new UserJsonMapper();
         mPhotoMapper = new PhotoJsonMapper();
     }
 
@@ -62,8 +62,8 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>> {
             }
             advert.setTags(tags);
 
-            Author author = mAuthorMapper.fromJsonString(jsonObject.getString("author_detailed"));
-            advert.setAuthor(author);
+            User user = mUserMapper.fromJsonString(jsonObject.getString("author_detailed"));
+            advert.setUser(user);
 
             JSONArray jsonPhotosArray = jsonObject.getJSONArray("photos");
             List<Photo> photos = new ArrayList<>(jsonPhotosArray.length());

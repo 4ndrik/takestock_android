@@ -1,4 +1,4 @@
-package com.devabit.takestock.ui.selling.adapter;
+package com.devabit.takestock.ui.selling.adapters;
 
 import android.content.Context;
 import android.view.View;

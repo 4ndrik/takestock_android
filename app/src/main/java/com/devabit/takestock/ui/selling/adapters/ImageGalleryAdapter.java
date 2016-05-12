@@ -1,4 +1,4 @@
-package com.devabit.takestock.ui.selling.adapter;
+package com.devabit.takestock.ui.selling.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -30,11 +30,11 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
     private final LayoutInflater mLayoutInflater;
     private final List<String> mImagesPathList;
 
-    public interface OnAddImageListener {
-        void onAddImageClick();
+    public interface OnPickPhotoListener {
+        void onPick();
     }
 
-    private OnAddImageListener mAddImageListener;
+    private OnPickPhotoListener mPickPhotoListener;
 
     public ImageGalleryAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -81,7 +81,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
     private final View.OnClickListener mClickListener
             = new View.OnClickListener() {
         @Override public void onClick(View v) {
-            if (mAddImageListener != null) mAddImageListener.onAddImageClick();
+            if (mPickPhotoListener != null) mPickPhotoListener.onPick();
         }
     };
 
@@ -104,8 +104,8 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
         notifyDataSetChanged();
     }
 
-    public void setOnAddImageListener(OnAddImageListener addImageListener) {
-        mAddImageListener = addImageListener;
+    public void setOnPickPhotoListener(OnPickPhotoListener pickPhotoListener) {
+        mPickPhotoListener = pickPhotoListener;
     }
 
     static class ButtonViewHolder extends ViewHolder {

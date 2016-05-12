@@ -1,34 +1,34 @@
-package com.devabit.takestock.ui.selling.adapter;
+package com.devabit.takestock.ui.selling.adapters;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.devabit.takestock.data.model.Category;
+import com.devabit.takestock.data.model.Packaging;
 
 import java.util.List;
 
 /**
- * Created by Victor Artemyev on 04/05/2016.
+ * Created by Victor Artemyev on 12/05/2016.
  */
-public class CategorySpinnerAdapter extends SpinnerAdapter<Category> {
+public class PackagingSpinnerAdapter extends SpinnerAdapter<Packaging> {
 
-    private final List<Category> mCategories;
+    private final List<Packaging> mPackagings;
 
-    public CategorySpinnerAdapter(Context context, List<Category> categories) {
-        super(context, categories);
-        mCategories = categories;
+    public PackagingSpinnerAdapter(Context context, List<Packaging> packagings) {
+        super(context, packagings);
+        mPackagings = packagings;
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
         TextView textView = (TextView) super.getView(position, convertView, parent);
-        textView.setText(mCategories.get(position).getName());
+        textView.setText(mPackagings.get(position).getType());
         return textView;
     }
 
     @Override public View getDropDownView(int position, View convertView, ViewGroup parent) {
         TextView view = (TextView) super.getDropDownView(position, convertView, parent);
-        view.setText(mCategories.get(position).getName());
+        view.setText(mPackagings.get(position).getType());
         return view;
     }
 }

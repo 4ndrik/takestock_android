@@ -43,4 +43,8 @@ public interface DataSource {
 
     Condition getConditionById(int id);
 
+    void savePackagings(List<Packaging> packagings);
+    
+    Observable<List<Packaging>> getPackagings();
+
 }

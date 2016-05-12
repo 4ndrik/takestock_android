@@ -35,6 +35,7 @@ public class SellingPresenter implements SellingContract.Presenter {
 
     @Override public void create() {
         setUpCategoriesToView();
+        setUpPackagingToView();
         setUpShippingToView();
         setUpConditionsToView();
         setUpSizesToView();
@@ -48,6 +49,22 @@ public class SellingPresenter implements SellingContract.Presenter {
                 .subscribe(new Action1<List<Category>>() {
                     @Override public void call(List<Category> categories) {
                         mSellingView.showCategoriesInView(categories);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override public void call(Throwable throwable) {
+                        LOGE(TAG, "BOOM:", throwable);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    private void setUpPackagingToView() {
+        Subscription subscription = mDataRepository
+                .getPackagings()
+                .compose(RxTransformers.<List<Packaging>>applyObservableSchedulers())
+                .subscribe(new Action1<List<Packaging>>() {
+                    @Override public void call(List<Packaging> packagings) {
+                        mSellingView.showPackagingsInView(packagings);
                     }
                 }, new Action1<Throwable>() {
                     @Override public void call(Throwable throwable) {

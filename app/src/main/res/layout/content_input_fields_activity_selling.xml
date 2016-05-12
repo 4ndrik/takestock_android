@@ -11,7 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/category"
-            style="@style/TextViewLime"/>
+            style="@style/TextViewPurple"/>
 
     <Spinner
             android:id="@+id/category_spinner"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sub_category"
-            style="@style/TextViewLime"/>
+            style="@style/TextViewPurple"/>
 
     <Spinner
             android:id="@+id/subcategory_spinner"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/quantities_and_guide_price"
-            style="@style/TextViewLime"/>
+            style="@style/TextViewPurple"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -47,7 +47,8 @@
             style="@style/TextViewGrey"/>
 
     <Spinner
-            android:id="@+id/unit_packaging_spinner"
+            android:id="@+id/packaging_spinner"
+            android:background="@null"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -150,16 +151,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/product_description"
-            style="@style/TextViewLime"/>
+            style="@style/TextViewPurple"/>
 
     <EditText
             android:id="@+id/product_description_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/ic_edit_lime_24dp"
-            android:hint="@string/hint_product_description"
-            android:theme="@style/EditText"/>
+            android:drawableEnd="@drawable/ic_edit_purple_24dp"
+            android:hint="@string/hint_product_description"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -173,9 +173,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/ic_edit_lime_24dp"
+            android:drawableEnd="@drawable/ic_edit_purple_24dp"
             android:hint="@string/hint_location"
-            android:theme="@style/EditText"/>
+            android:theme="@style/EditTextPurple"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -215,7 +215,7 @@
             android:id="@+id/expiry_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_expand_18dp"
+            android:drawableEnd="@drawable/ic_expand_down_purple_18dp"
             android:layout_marginTop="4dp"
             android:padding="8dp"
             android:textAppearance="@android:style/TextAppearance.Medium"
@@ -297,7 +297,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/certification"
-            style="@style/TextViewLime"/>
+            style="@style/TextViewPurple"/>
 
     <TextView
             android:id="@+id/certification_info_text_view"
@@ -318,24 +318,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:drawableEnd="@drawable/ic_edit_lime_24dp"
-            android:hint="@string/hint_other"
-            android:theme="@style/EditText"/>
+            android:drawableEnd="@drawable/ic_edit_purple_24dp"
+            android:hint="@string/hint_other"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/add_keywords"
-            style="@style/TextViewLime"/>
+            android:text="@string/add_keywords"/>
 
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/ic_edit_lime_24dp"
-            android:hint="@string/hint_keywords"
-            android:theme="@style/EditText"/>
+            android:drawableEnd="@drawable/ic_edit_purple_24dp"
+            android:hint="@string/hint_keywords"/>
 
     <TextView
             android:layout_width="wrap_content"

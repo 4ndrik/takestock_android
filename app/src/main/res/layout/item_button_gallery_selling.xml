@@ -7,6 +7,6 @@
         android:layout_margin="16dp"
         android:drawableTop="@drawable/ic_camera_grey_96dp"
         android:gravity="bottom|center"
-        android:text="@string/add_image"
+        android:text="@string/add_photo"
         android:theme="@style/RaisedButtonGrey"
         android:textAppearance="@android:style/TextAppearance.Small"/>

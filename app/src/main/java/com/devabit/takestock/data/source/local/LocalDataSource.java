@@ -223,6 +223,31 @@ public class LocalDataSource implements DataSource {
         return new ConditionEntityDataMapper().transformFromEntity(entity);
     }
 
+    @Override public void savePackagings(List<Packaging> packagings) {
+        List<PackagingEntity> entities = new PackagingsEntityDataMaper().transformToEntityList(packagings);
+        saveOrUpdateEntities(entities);
+    }
+
+    @Override public Observable<List<Packaging>> getPackagings() {
+        return Observable.fromCallable(new Callable<RealmResults<PackagingEntity>>() {
+            @Override public RealmResults<PackagingEntity> call() throws Exception {
+                return Realm.getDefaultInstance().where(PackagingEntity.class).findAll();
+            }
+        }).filter(new Func1<RealmResults<PackagingEntity>, Boolean>() {
+            @Override public Boolean call(RealmResults<PackagingEntity> packagingEntities) {
+                return !packagingEntities.isEmpty();
+            }
+        }).map(new Func1<RealmResults<PackagingEntity>, List<Packaging>>() {
+            @Override public List<Packaging> call(RealmResults<PackagingEntity> packagingEntities) {
+                return new PackagingsEntityDataMaper().transformFromEntityList(packagingEntities);
+            }
+        }).doOnNext(new Action1<List<Packaging>>() {
+            @Override public void call(List<Packaging> packagingList) {
+                LOGD(TAG, "Packagings from LocalDataSource " + packagingList);
+            }
+        });
+    }
+
     private <E extends RealmModel> List<E> saveOrUpdateEntities(Iterable<E> objects) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.beginTransaction();

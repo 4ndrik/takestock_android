@@ -36,7 +36,7 @@
                 android:imeOptions="actionSearch"
                 android:hint="@string/search_products"
                 android:textAppearance="@android:style/TextAppearance.Medium"
-                android:theme="@style/EditText"/>
+                android:theme="@style/EditTextLime"/>
 
         <Button
                 android:id="@+id/browse_categories_button"

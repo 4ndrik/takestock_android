@@ -148,4 +148,19 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getConditionById(id);
     }
 
+    @Override public void savePackagings(List<Packaging> packagings) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Packaging>> getPackagings() {
+        Observable<List<Packaging>> localPackagings = mLocalDataSource.getPackagings();
+        Observable<List<Packaging>> remotePackagings = mRemoteDataSource.getPackagings()
+                .doOnNext(new Action1<List<Packaging>>() {
+                    @Override public void call(List<Packaging> packagings) {
+                        mLocalDataSource.savePackagings(packagings);
+                    }
+                });
+        return Observable.concat(localPackagings, remotePackagings).first();
+    }
+
 }
