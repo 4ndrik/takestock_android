@@ -29,14 +29,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
-                android:drawableEnd="@drawable/ic_search_24dp"
+                android:drawableEnd="@drawable/ic_search_purple_24dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:inputType="text"
                 android:imeOptions="actionSearch"
                 android:hint="@string/search_products"
                 android:textAppearance="@android:style/TextAppearance.Medium"
-                android:theme="@style/EditTextLime"/>
+                android:theme="@style/EditTextPurple"/>
 
         <Button
                 android:id="@+id/browse_categories_button"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/browse_categories"
-                android:theme="@style/FlatButtonLime"
+                android:theme="@style/FlatButtonPurple"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 style="@style/Widget.AppCompat.Button.Borderless"/>
 
