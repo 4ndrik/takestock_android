@@ -38,6 +38,7 @@ public class ShippingEntityDataMapper {
     }
 
     public Shipping transformFromEntity(ShippingEntity entity) {
+        if (entity == null) return null;
         Shipping shipping = new Shipping();
         shipping.setId(entity.getId());
         shipping.setType(entity.getType());

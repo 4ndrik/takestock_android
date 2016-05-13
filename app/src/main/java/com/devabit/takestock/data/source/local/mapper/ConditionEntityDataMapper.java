@@ -38,6 +38,7 @@ public class ConditionEntityDataMapper {
     }
 
     public Condition transformFromEntity(ConditionEntity entity) {
+        if (entity == null) return null;
         Condition condition = new Condition();
         condition.setId(entity.getId());
         condition.setState(entity.getState());

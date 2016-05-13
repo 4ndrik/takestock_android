@@ -9,8 +9,6 @@ import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
-import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.source.remote.entity.ResultListEntity;
 import com.devabit.takestock.data.source.remote.mapper.*;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
@@ -155,7 +153,7 @@ public class RemoteDataSource implements RestApi, DataSource {
         int code = response.code();
         switch (code) {
             case 400: //if bad request
-                throw new HttpResponseException(code, response.message());
+                throw new HttpResponseException(code, response.message(), response.body().string());
             default:
                 return response;
         }
@@ -230,27 +228,49 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
+    @Override public Observable<Advert> saveAdvert(final Advert advert) {
+        return Observable.just(advert)
+                .map(new Func1<Advert, String>() {
+                    @Override public String call(Advert advert) {
+                        try {
+                            return new AdvertJsonMapper().toJsonString(advert);
+                        } catch (JSONException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+                }).flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPOST(composeUrl(GET_ADVERTS), json));
+                    }
+                }).map(new Func1<String, Advert>() {
+                    @Override public Advert call(String s) {
+                        LOGD(TAG, s);
+                        return advert;
+                    }
+                });
+    }
+
     @Override public Observable<List<Advert>> getAdverts() {
-        return Observable.fromCallable(createGET(composeUrl(GET_ADVERTS)))
-                .map(new Func1<String, ResultListEntity>() {
-                    @Override public ResultListEntity call(String json) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertList() {
+        return getResultAdvertListPerPage(composeUrl(GET_ADVERTS));
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertListPerPage(String page) {
+        return Observable.fromCallable(createGET(page))
+                .map(new Func1<String, ResultList<Advert>>() {
+                    @Override public ResultList<Advert> call(String json) {
                         try {
-                            return new ResultListEntityJsonMapper().fromJsonString(json);
+                            return new AdvertResultListJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException();
                         }
                     }
-                }).map(new Func1<ResultListEntity, List<Advert>>() {
-                    @Override public List<Advert> call(ResultListEntity resultEntity) {
-                        try {
-                            return new AdvertJsonMapper().fromJsonString(resultEntity.getResults());
-                        } catch (JSONException e) {
-                            throw new RuntimeException();
-                        }
-                    }
-                }).doOnNext(new Action1<List<Advert>>() {
-                    @Override public void call(List<Advert> adverts) {
-                        LOGD(TAG, "Adverts: " + adverts);
+                }).doOnNext(new Action1<ResultList<Advert>>() {
+                    @Override public void call(ResultList<Advert> advertResultList) {
+                        LOGD(TAG, "ResultAdvertList: " + advertResultList);
                     }
                 });
     }

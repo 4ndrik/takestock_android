@@ -13,7 +13,7 @@ public class PhotoJsonMapper implements FromJsonMapper<Photo> {
         JSONObject jsonObject = new JSONObject(json);
         Photo photo = new Photo();
         photo.setId(jsonObject.getInt("id"));
-        photo.setImageUrl(jsonObject.getString("image"));
+        photo.setImagePath(jsonObject.getString("image"));
         photo.setMain(jsonObject.getBoolean("is_main"));
         photo.setWidth(Integer.valueOf(jsonObject.getString("width")));
         photo.setHeight(Integer.valueOf(jsonObject.getString("height")));

@@ -38,7 +38,9 @@ public class PackagingsEntityDataMaper {
     }
 
     public Packaging transformFromEntity(PackagingEntity entity) {
+        if (entity == null) return null;
         Packaging packaging = new Packaging();
+        packaging.setId(entity.getId());
         packaging.setType(entity.getType());
         return packaging;
     }

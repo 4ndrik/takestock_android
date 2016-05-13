@@ -40,6 +40,7 @@ public class CertificationEntityDataMapper {
     }
 
     public Certification transformFromEntity(CertificationEntity entity) {
+        if (entity == null) return null;
         Certification certification = new Certification();
         certification.setId(entity.getId());
         certification.setName(entity.getName());

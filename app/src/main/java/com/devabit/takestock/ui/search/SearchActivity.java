@@ -54,13 +54,15 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     protected List<Button> mButtons;
 
     private AdvertAdapter mAdvertAdapter;
-    private List<Advert> mAdverts;
     private SearchContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(SearchActivity.this);
+
+        new SearchPresenter(
+                Injection.provideDataRepository(SearchActivity.this), SearchActivity.this);
 
         final Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         final Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
@@ -82,28 +84,30 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
             }
         });
 
-        mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override public void onRefresh() {
-                fetchAdverts();
-            }
-        });
-
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mAdvertAdapter = new AdvertAdapter(SearchActivity.this);
         mAdvertAdapter.setOnItemClickListener(new AdvertAdapter.OnItemClickListener() {
-            @Override public void onItemClick(View itemView, int position) {
-                Advert advert = mAdverts.get(position);
+            @Override public void onItemClick(Advert advert) {
                 LOGD(TAG, "Advert: " + advert);
                 startActivity(AdvertDetailActivity.getStartIntent(SearchActivity.this, advert));
             }
         });
+        mAdvertAdapter.setOnEndPositionListener(new AdvertAdapter.OnEndPositionListener() {
+            @Override public void onEndPosition(int position) {
+                fetchAdverts();
+            }
+        });
         mRecyclerView.setAdapter(mAdvertAdapter);
 
-        new SearchPresenter(
-                Injection.provideDataRepository(SearchActivity.this), SearchActivity.this);
+        mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
+                mAdvertAdapter.clearAdverts();
+                mPresenter.refreshAdverts();
+            }
+        });
     }
 
     @Override protected void onResume() {
@@ -115,10 +119,12 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         mPresenter.fetchAdverts();
     }
 
+    @Override public void showAdvertsCountInView(int count) {
+        mResultCountTextView.setText(getString(R.string.count_results_for, count));
+    }
+
     @Override public void showAdvertsInView(List<Advert> adverts) {
-        mAdverts = adverts;
-        mResultCountTextView.setText(getString(R.string.count_results_for, mAdverts.size()));
-        mAdvertAdapter.setAdverts(adverts);
+        mAdvertAdapter.addAdverts(adverts);
     }
 
     @Override public void showNetworkConnectionError() {

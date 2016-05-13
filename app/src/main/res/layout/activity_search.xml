@@ -111,7 +111,7 @@
                     android:layout_height="match_parent"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
-                    tools:listitem="@layout/item_advert"/>
+                    tools:listitem="@layout/item_horizontal_advert"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

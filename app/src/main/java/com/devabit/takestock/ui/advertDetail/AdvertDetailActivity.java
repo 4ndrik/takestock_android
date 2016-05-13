@@ -42,7 +42,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @BindView(R.id.description_text_view) protected TextView mDescriptionTextView;
     @BindView(R.id.location_text_view) protected TextView mLocationTextView;
     @BindView(R.id.shipping_text_view) protected TextView mShippingTextView;
-    @BindView(R.id.expiry_text_view) protected TextView mExpiryTextView;
+    @BindView(R.id.expiry_date_text_view) protected TextView mExpiryTextView;
     @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
     @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
 
@@ -92,7 +92,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         if (mAdvert.getPhotos().isEmpty()) {
             mProductImageView.setImageResource(R.drawable.ic_image_48dp);
         } else {
-            String url = mAdvert.getPhotos().get(0).getImageUrl();
+            String url = mAdvert.getPhotos().get(0).getImagePath();
             Picasso.with(AdvertDetailActivity.this)
                     .load(url)
                     .placeholder(R.drawable.ic_image_48dp)

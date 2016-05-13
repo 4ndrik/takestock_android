@@ -93,7 +93,19 @@ public class LocalDataSource implements DataSource {
         });
     }
 
+    @Override public Observable<Advert> saveAdvert(Advert advert) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public Observable<List<Advert>> getAdverts() {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertList() {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertListPerPage(String link) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 

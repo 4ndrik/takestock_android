@@ -3,19 +3,46 @@ package com.devabit.takestock.data.source.remote.mapper;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.util.TranscoderUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
-public class AdvertJsonMapper implements FromJsonMapper<List<Advert>> {
+public class AdvertJsonMapper implements FromJsonMapper<List<Advert>>, ToJsonMapper<Advert> {
 
     private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String CREATED_AT = "created_at";
+    private static final String EXPIRES_AT = "expires_at";
+    private static final String UPDATED_AT = "updated_at";
+    private static final String INTENDED_USE = "intended_use";
+    private static final String GUIDE_PRICE = "guide_price";
+    private static final String DESCRIPTION = "description";
+    private static final String LOCATION = "location";
+    private static final String SHIPPING = "shipping";
+    private static final String IS_VAT_EXEMPT = "is_vat_exempt";
+    private static final String AUTHOR = "author";
+    private static final String CATEGORY = "category";
+    private static final String SUBCATEGORY = "subcategory";
+    private static final String PACKAGING = "packaging";
+    private static final String MIN_ORDER_QUANTITY = "min_order_quantity";
+    private static final String SIZE = "size";
+    private static final String CERTIFICATION = "certification";
+    private static final String CERTIFICATION_EXTRA = "certification_extra";
+    private static final String CONDITION = "condition";
+    private static final String ITEMS_COUNT = "items_count";
+    private static final String TAGS = "tags";
+    private static final String AUTHOR_DETAILED = "author_detailed";
+    private static final String PHOTOS = "photos";
+    private static final String PHOTOS_LIST = "photos_list";
 
     private final UserJsonMapper mUserMapper;
     private final PhotoJsonMapper mPhotoMapper;
@@ -34,38 +61,38 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>> {
 
             Advert advert = new Advert();
             advert.setId(jsonObject.getInt(ID));
-            advert.setName(jsonObject.getString("name"));
-            advert.setDateCreatedAt(jsonObject.getString("created_at"));
-            advert.setDateExpiresAt(jsonObject.getString("expires_at"));
-            advert.setDateUpdatedAt(jsonObject.getString("updated_at"));
-            advert.setIntendedUse(jsonObject.getString("intended_use"));
-            advert.setGuidePrice(jsonObject.getString("guide_price"));
-            advert.setDescription(jsonObject.getString("description"));
-            advert.setLocation(jsonObject.getString("location"));
-            advert.setShippingId(jsonObject.getInt("shipping"));
-            advert.setVatExempt(jsonObject.getBoolean("is_vat_exempt"));
-            advert.setAuthorId(jsonObject.getInt("author"));
-            advert.setCategoryId(jsonObject.getInt("category"));
-            if (!jsonObject.isNull("subcategory")) advert.setSubCategoryId(jsonObject.getInt("subcategory"));
-            if (!jsonObject.isNull("packaging")) advert.setPackagingId(jsonObject.getInt("packaging"));
-            advert.setMinOrderQuantity(jsonObject.getInt("min_order_quantity"));
-            advert.setSize(jsonObject.getString("size"));
-            advert.setCertificationId(jsonObject.getInt("certification"));
-            advert.setCertificationExtra(jsonObject.getString("certification_extra"));
-            advert.setConditionId(jsonObject.getInt("condition"));
-            advert.setItemsCount(jsonObject.getInt("items_count"));
+            advert.setName(jsonObject.getString(NAME));
+            advert.setDateCreatedAt(jsonObject.getString(CREATED_AT));
+            advert.setDateExpiresAt(jsonObject.getString(EXPIRES_AT));
+            advert.setDateUpdatedAt(jsonObject.getString(UPDATED_AT));
+            advert.setIntendedUse(jsonObject.getString(INTENDED_USE));
+            advert.setGuidePrice(jsonObject.getString(GUIDE_PRICE));
+            advert.setDescription(jsonObject.getString(DESCRIPTION));
+            advert.setLocation(jsonObject.getString(LOCATION));
+            if (!jsonObject.isNull(SHIPPING)) advert.setShippingId(jsonObject.getInt(SHIPPING));
+            advert.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
+            advert.setAuthorId(jsonObject.getInt(AUTHOR));
+            advert.setCategoryId(jsonObject.getInt(CATEGORY));
+            if (!jsonObject.isNull(SUBCATEGORY)) advert.setSubCategoryId(jsonObject.getInt(SUBCATEGORY));
+            if (!jsonObject.isNull(PACKAGING)) advert.setPackagingId(jsonObject.getInt(PACKAGING));
+            advert.setMinOrderQuantity(jsonObject.getInt(MIN_ORDER_QUANTITY));
+            advert.setSize(jsonObject.getString(SIZE));
+            if (jsonObject.isNull(CERTIFICATION)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION));
+            advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
+            if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
+            advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
 
-            JSONArray jsonTagsArray = jsonObject.getJSONArray("tags");
+            JSONArray jsonTagsArray = jsonObject.getJSONArray(TAGS);
             List<String> tags = new ArrayList<>(jsonTagsArray.length());
             for (int i = 0; i < jsonTagsArray.length(); i++) {
                 tags.add(jsonTagsArray.getString(i));
             }
             advert.setTags(tags);
 
-            User user = mUserMapper.fromJsonString(jsonObject.getString("author_detailed"));
+            User user = mUserMapper.fromJsonString(jsonObject.getString(AUTHOR_DETAILED));
             advert.setUser(user);
 
-            JSONArray jsonPhotosArray = jsonObject.getJSONArray("photos");
+            JSONArray jsonPhotosArray = jsonObject.getJSONArray(PHOTOS);
             List<Photo> photos = new ArrayList<>(jsonPhotosArray.length());
             for (int i = 0; i < jsonPhotosArray.length(); i++) {
                 photos.add(mPhotoMapper.fromJsonString(jsonPhotosArray.getString(i)));
@@ -74,5 +101,40 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>> {
             result.add(advert);
         }
         return result;
+    }
+
+    @Override public String toJsonString(Advert target) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(NAME, target.getName());
+        jsonObject.put(EXPIRES_AT, target.getDateExpiresAt());
+        jsonObject.put(GUIDE_PRICE, target.getGuidePrice());
+        jsonObject.put(DESCRIPTION, target.getDescription());
+        jsonObject.put(LOCATION, target.getLocation());
+        jsonObject.put(SHIPPING, target.getShippingId());
+        jsonObject.put(AUTHOR, target.getAuthorId());
+        jsonObject.put(CATEGORY, target.getCategoryId());
+        jsonObject.put(SUBCATEGORY, target.getSubCategoryId());
+        jsonObject.put(PACKAGING, target.getPackagingId());
+        jsonObject.put(MIN_ORDER_QUANTITY, target.getMinOrderQuantity());
+        jsonObject.put(SIZE, target.getSize());
+        jsonObject.put(CERTIFICATION, target.getCertificationId());
+        jsonObject.put(CERTIFICATION_EXTRA, target.getCertificationExtra());
+        jsonObject.put(CONDITION, target.getConditionId());
+        jsonObject.put(ITEMS_COUNT, target.getItemsCount());
+        JSONArray array = new JSONArray();
+        array.put("tag");
+        array.put("tag");
+        jsonObject.put(TAGS, array);
+        JSONArray jsonArray = new JSONArray();
+        for(Photo photo : target.getPhotos()) {
+            try {
+                File file = photo.getFile();
+                jsonArray.put("data:image/jpg;base64," + TranscoderUtil.encodeFileToBase64(file));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        jsonObject.put(PHOTOS_LIST, jsonArray);
+        return jsonObject.toString();
     }
 }

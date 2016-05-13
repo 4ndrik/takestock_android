@@ -72,8 +72,20 @@ public class DataRepository implements DataSource {
         return Observable.concat(localCategories, remoteCategories).first();
     }
 
+    @Override public Observable<Advert> saveAdvert(Advert advert) {
+        return mRemoteDataSource.saveAdvert(advert);
+    }
+
     @Override public Observable<List<Advert>> getAdverts() {
         return mRemoteDataSource.getAdverts();
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertList() {
+        return mRemoteDataSource.getResultAdvertList();
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertListPerPage(String link) {
+        return mRemoteDataSource.getResultAdvertListPerPage(link);
     }
 
     @Override public void saveSizes(List<Size> sizes) {

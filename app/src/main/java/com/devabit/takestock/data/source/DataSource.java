@@ -19,7 +19,13 @@ public interface DataSource {
 
     Observable<List<Category>> getCategories();
 
+    Observable<Advert> saveAdvert(Advert advert);
+
     Observable<List<Advert>> getAdverts();
+
+    Observable<ResultList<Advert>> getResultAdvertList();
+
+    Observable<ResultList<Advert>> getResultAdvertListPerPage(String link);
 
     void saveSizes(List<Size> sizes);
 

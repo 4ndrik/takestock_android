@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.util.Logger;
 import com.squareup.picasso.Picasso;
 
@@ -29,11 +30,20 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
 
     private static final String TAG = "AdvertAdapter";
 
+    private static final int TYPE_HORIZONTAL = 0;
+    private static final int TYPE_VERTICAL = 1;
+
     private final LayoutInflater mLayoutInflater;
     private final List<Advert> mAdverts;
 
+    public interface OnEndPositionListener {
+        void onEndPosition(int position);
+    }
+
+    private OnEndPositionListener mEndPositionListener;
+
     public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
+        void onItemClick(Advert advert);
     }
 
     private static OnItemClickListener sItemClickListener;
@@ -44,11 +54,24 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mLayoutInflater.inflate(R.layout.item_advert, parent, false);
+        View itemView;
+        switch (viewType) {
+            case TYPE_VERTICAL:
+                itemView = mLayoutInflater.inflate(R.layout.item_vertical_advert, parent, false);
+                break;
+
+            default:
+                itemView = mLayoutInflater.inflate(R.layout.item_horizontal_advert, parent, false);
+                break;
+        }
+
         return new ViewHolder(itemView);
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
+        if (position == getItemCount() - 1 && mEndPositionListener != null) {
+            mEndPositionListener.onEndPosition(position);
+        }
         holder.bindAdvert(mAdverts.get(position));
     }
 
@@ -56,14 +79,44 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         return mAdverts.size();
     }
 
-    public void setAdverts(List<Advert> adverts) {
-        mAdverts.clear();
+    @Override public int getItemViewType(int position) {
+        Advert advert = mAdverts.get(position);
+        List<Photo> photos = advert.getPhotos();
+        if (photos.isEmpty()) {
+            return TYPE_HORIZONTAL;
+        } else {
+             Photo photo = photos.get(0);
+            if(photo.getHeight() > photo.getWidth()) return TYPE_VERTICAL;
+            else return TYPE_HORIZONTAL;
+        }
+    }
+
+    public void addAdverts(List<Advert> adverts) {
         mAdverts.addAll(adverts);
         notifyDataSetChanged();
     }
 
+    public void clearAdverts() {
+        mAdverts.clear();
+        notifyDataSetChanged();
+    }
+
+    public List<Advert> getAdverts() {
+        return mAdverts;
+    }
+
+    public void setOnEndPositionListener(OnEndPositionListener endPositionListener) {
+        mEndPositionListener = endPositionListener;
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         sItemClickListener = listener;
+    }
+
+    static class DefaultViewHolder extends ViewHolder {
+        public DefaultViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -73,18 +126,20 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
 
         private final Context mContext;
         private final Picasso mPicasso;
+
         private final ImageView mPhotoImageView;
         private final TextView mNameTextView;
         private final TextView mLocationTextView;
         private final TextView mDateTextView;
         private final TextView mPriceTextView;
 
+
         private Advert mAdvert;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mContext = itemView.getContext();
             itemView.setOnClickListener(ViewHolder.this);
+            mContext = itemView.getContext();
             mPicasso = Picasso.with(mContext);
             mPhotoImageView = findById(itemView, R.id.photo_image_view);
             mNameTextView = findById(itemView, R.id.name_text_view);
@@ -95,14 +150,16 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
 
         void bindAdvert(Advert advert) {
             mAdvert = advert;
-            if (!mAdvert.getPhotos().isEmpty()) loadPhoto(mAdvert.getPhotos().get(0).getImageUrl());
-            else mPhotoImageView.setImageResource(R.drawable.ic_image_48dp);
             mNameTextView.setText(mAdvert.getName());
             mLocationTextView.setText(mAdvert.getLocation());
             mPriceTextView.setText(mContext.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice()));
+            bindCreatedDate(mAdvert.getDateCreatedAt());
+            bindPhoto(mAdvert.getPhotos());
+        }
 
+        void bindCreatedDate(String createdDate) {
             try {
-                Date date = DATE_CRATED_FORMATTER.parse(mAdvert.getDateCreatedAt());
+                Date date = DATE_CRATED_FORMATTER.parse(createdDate);
                 String dateAsString = DATE_NORMAL_FORMATTER.format(date);
                 mDateTextView.setText(dateAsString);
             } catch (ParseException e) {
@@ -110,8 +167,17 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
             }
         }
 
-        void loadPhoto(String photoUrl) {
-            mPicasso.load(photoUrl)
+        void bindPhoto(List<Photo> photos) {
+            if (photos.isEmpty()) {
+                mPhotoImageView.setImageResource(R.drawable.ic_image_48dp);
+            } else {
+                Photo photo = photos.get(0);
+                loadPhoto(photo);
+            }
+        }
+
+        void loadPhoto(Photo photo) {
+            mPicasso.load(photo.getImagePath())
                     .placeholder(R.drawable.ic_image_48dp)
                     .error(R.drawable.ic_image_48dp)
                     .centerCrop()
@@ -120,7 +186,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         }
 
         @Override public void onClick(View v) {
-            if (sItemClickListener != null) sItemClickListener.onItemClick(v, getLayoutPosition());
+            if (sItemClickListener != null) sItemClickListener.onItemClick(mAdvert);
         }
     }
 }

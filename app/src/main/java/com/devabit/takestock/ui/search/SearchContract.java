@@ -13,6 +13,8 @@ public interface SearchContract {
 
     interface View extends BaseView<Presenter> {
 
+        void showAdvertsCountInView(int count);
+
         void showAdvertsInView(List<Advert> adverts);
 
         void showNetworkConnectionError();
@@ -24,6 +26,8 @@ public interface SearchContract {
     }
 
     interface Presenter extends BasePresenter {
+        void refreshAdverts();
+
         void fetchAdverts();
     }
 }
