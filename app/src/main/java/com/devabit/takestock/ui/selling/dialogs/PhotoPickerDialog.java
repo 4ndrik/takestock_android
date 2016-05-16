@@ -35,6 +35,14 @@ public class PhotoPickerDialog extends DialogFragment {
 
     private Unbinder mUnbinder;
 
+    public interface OnPickListener {
+        void onPickFromLibrary(PhotoPickerDialog dialog);
+
+        void onPickFromCamera(PhotoPickerDialog dialog);
+    }
+
+    private OnPickListener mPickListener;
+
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_photo_picker, container, false);
     }
@@ -54,17 +62,21 @@ public class PhotoPickerDialog extends DialogFragment {
 
     @OnClick(R.id.take_photo_button)
     protected void onTakePhotoButtonClick() {
-
+        if (mPickListener != null) mPickListener.onPickFromCamera(PhotoPickerDialog.this);
     }
 
     @OnClick(R.id.choose_photo_button)
     protected void onChooseButtonClick() {
-
+        if (mPickListener != null) mPickListener.onPickFromLibrary(PhotoPickerDialog.this);
     }
 
     @OnClick(R.id.cancel_button)
     protected void onCancelButtonClick() {
         dismiss();
+    }
+
+    public void setOnPickListener(OnPickListener pickListener) {
+        mPickListener = pickListener;
     }
 
     @Override public void onDestroyView() {

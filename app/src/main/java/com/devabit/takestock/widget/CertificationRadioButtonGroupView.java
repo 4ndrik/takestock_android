@@ -33,8 +33,9 @@ public class CertificationRadioButtonGroupView extends TableLayout implements Vi
         for (int index = 0; index < certifications.size(); index++) {
 
             RadioButton radioButton = new RadioButton(context);
-            radioButton.setTag(certifications.get(index).getId());
-            radioButton.setText(certifications.get(index).getName());
+            Certification certification = certifications.get(index);
+            radioButton.setTag(certification);
+            radioButton.setText(certification.getName());
             radioButton.setOnClickListener(CertificationRadioButtonGroupView.this);
             TableRow.LayoutParams params = new TableRow.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -61,13 +62,8 @@ public class CertificationRadioButtonGroupView extends TableLayout implements Vi
         mActiveRadioButton = radioButton;
     }
 
-    public int getCertificationId() {
-        if (mActiveRadioButton == null) return -1;
-        else return Integer.valueOf(mActiveRadioButton.getTag().toString());
-    }
-
-    public String getCertificationName() {
-        if (mActiveRadioButton == null) return "";
-        else return mActiveRadioButton.getText().toString().trim();
+    public Certification getCertification() {
+        if (mActiveRadioButton == null) return null;
+        else return (Certification) mActiveRadioButton.getTag();
     }
 }

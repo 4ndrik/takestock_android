@@ -1,9 +1,11 @@
 package com.devabit.takestock.ui.selling;
 
+import android.net.Uri;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.ui.BasePresenter;
 import com.devabit.takestock.ui.BaseView;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -13,7 +15,35 @@ public interface SellingContract {
 
     interface View extends BaseView<Presenter> {
 
+        void showEmptyPhotosError();
+
+        void showEmptyTitleError();
+
+        void showEmptyItemCountError();
+
+        void showEmptyMinimumOrderError();
+
+        void showEmptyGuidePriceError();
+
+        void showEmptyDescriptionError();
+
+        void showEmptyLocationError();
+
+        void showEmptyExpiryDateError();
+
+        void showEmptySizeError();
+
+        void showEmptyCertificationError();
+
+        void showEmptyCertificationExtraError();
+
+        void showEmptyTagsError();
+
         void showNetworkConnectionError();
+
+        void showUnknownError();
+
+        void showAdvertCreated();
 
         void showCategoriesInView(List<Category> categories);
 
@@ -27,9 +57,15 @@ public interface SellingContract {
 
         void showCertificationsInView(List<Certification> certifications);
 
+        void showPhotoInView(Photo photo);
+
+        void setProgressIndicator(boolean isActive);
     }
 
     interface Presenter extends BasePresenter {
 
+        void processPhotoToFile(Uri photoUri, File photoFile);
+
+        void processAdvert(Advert advert);
     }
 }

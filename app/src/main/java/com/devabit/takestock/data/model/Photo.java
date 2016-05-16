@@ -9,7 +9,7 @@ import android.os.Parcelable;
 public class Photo implements Parcelable {
 
     private int mId;
-    private String mImageUrl;
+    private String mImagePath;
     private boolean mIsMain;
     private int mWidth;
     private int mHeight;
@@ -18,7 +18,7 @@ public class Photo implements Parcelable {
 
     protected Photo(Parcel in) {
         mId = in.readInt();
-        mImageUrl = in.readString();
+        mImagePath = in.readString();
         mIsMain = in.readByte() != 0;
         mWidth = in.readInt();
         mHeight = in.readInt();
@@ -44,12 +44,12 @@ public class Photo implements Parcelable {
         mId = id;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public String getImagePath() {
+        return mImagePath;
     }
 
-    public void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
+    public void setImagePath(String imagePath) {
+        mImagePath = imagePath;
     }
 
     public boolean isMain() {
@@ -79,7 +79,7 @@ public class Photo implements Parcelable {
     @Override public String toString() {
         return "Photo{" +
                 "mId=" + mId +
-                ", mImageUrl='" + mImageUrl + '\'' +
+                ", mImagePath='" + mImagePath + '\'' +
                 ", mIsMain=" + mIsMain +
                 ", mWidth=" + mWidth +
                 ", mHeight=" + mHeight +
@@ -92,7 +92,7 @@ public class Photo implements Parcelable {
 
     @Override public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
-        dest.writeString(mImageUrl);
+        dest.writeString(mImagePath);
         dest.writeByte((byte) (mIsMain ? 1 : 0));
         dest.writeInt(mWidth);
         dest.writeInt(mHeight);

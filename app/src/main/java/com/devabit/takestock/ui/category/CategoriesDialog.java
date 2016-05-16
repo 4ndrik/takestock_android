@@ -72,8 +72,8 @@ public class CategoriesDialog extends DialogFragment implements CategoryContract
             @Override public void onItemClick(View itemView, int position) {
                 Category category = mCategories.get(position);
                 LOGD(TAG, category.toString());
-                startSearchActivity();
                 dismiss();
+                startSearchActivity();
             }
         });
         recyclerView.setAdapter(mCategoriesAdapter);

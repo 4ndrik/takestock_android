@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.devabit.takestock.R;
+import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.util.FontCache;
 import com.squareup.picasso.Picasso;
 
@@ -20,15 +21,15 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 05/05/2016.
  */
-public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapter.ViewHolder> {
+public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapter.ViewHolder> {
 
-    public static final int MAX_IMAGE_COUNT = 4;
+    public static final int MAX_PHOTO_COUNT = 4;
 
     public static final int TYPE_BUTTON = 1;
     public static final int TYPE_IMAGE = 2;
 
     private final LayoutInflater mLayoutInflater;
-    private final List<String> mImagesPathList;
+    private final List<Photo> mPhotos;
 
     public interface OnPickPhotoListener {
         void onPick();
@@ -36,9 +37,9 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
 
     private OnPickPhotoListener mPickPhotoListener;
 
-    public ImageGalleryAdapter(Context context) {
+    public PhotoGalleryAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
-        mImagesPathList = new ArrayList<>(MAX_IMAGE_COUNT);
+        mPhotos = new ArrayList<>(MAX_PHOTO_COUNT);
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,7 +64,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
             case TYPE_BUTTON:
                 ButtonViewHolder buttonHolder = (ButtonViewHolder) holder;
                 buttonHolder.setOnClickListener(mClickListener);
-                if (position == MAX_IMAGE_COUNT) {
+                if (position == MAX_PHOTO_COUNT) {
                     buttonHolder.setVisibility(false);
                 } else {
                     buttonHolder.setVisibility(true);
@@ -72,8 +73,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
 
             case TYPE_IMAGE:
                 ImageViewHolder imageHolder = (ImageViewHolder) holder;
-                String imagePath = mImagesPathList.get(position);
-                imageHolder.loadImageFromPath(imagePath);
+                imageHolder.loadImageFromFile(mPhotos.get(position));
                 break;
         }
     }
@@ -86,22 +86,25 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
     };
 
     @Override public int getItemCount() {
-        return mImagesPathList.size() + 1;
+        return mPhotos.size() + 1;
     }
 
     @Override public int getItemViewType(int position) {
         int itemCount = getItemCount();
-
-        if (mImagesPathList.isEmpty() || position == itemCount - 1) {
+        if (mPhotos.isEmpty() || position == itemCount - 1) {
             return TYPE_BUTTON;
         } else {
             return TYPE_IMAGE;
         }
     }
 
-    public void addImagePath(String imagePath) {
-        mImagesPathList.add(imagePath);
+    public void addPhotoFile(Photo photo) {
+        mPhotos.add(photo);
         notifyDataSetChanged();
+    }
+
+    public List<Photo> getPhotos() {
+        return mPhotos;
     }
 
     public void setOnPickPhotoListener(OnPickPhotoListener pickPhotoListener) {
@@ -160,8 +163,8 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
             imageView = (ImageView) itemView;
         }
 
-        void loadImageFromPath(String imagePath) {
-            picasso.load(imagePath)
+        void loadImageFromFile(Photo photo) {
+            picasso.load(photo.getImagePath())
                     .fit()
                     .centerCrop()
                     .into(imageView);

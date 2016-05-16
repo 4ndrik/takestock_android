@@ -66,6 +66,7 @@
             android:orientation="horizontal">
 
         <EditText
+                android:id="@+id/item_count_edit_text"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -98,6 +99,7 @@
             android:orientation="horizontal">
 
         <EditText
+                android:id="@+id/minimum_order_edit_text"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -129,6 +131,7 @@
             android:orientation="horizontal">
 
         <EditText
+                android:id="@+id/guide_price_edit_text"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -154,7 +157,7 @@
             style="@style/TextViewPurple"/>
 
     <EditText
-            android:id="@+id/product_description_edit_text"
+            android:id="@+id/description_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -174,6 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:singleLine="true"
             android:drawableEnd="@drawable/ic_edit_purple_24dp"
             android:hint="@string/hint_location"
             android:theme="@style/EditTextPurple"/>
@@ -204,7 +208,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    <!--TODO: implement Expiry and Size-->
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -213,7 +216,7 @@
             style="@style/TextViewGrey"/>
 
     <TextView
-            android:id="@+id/expiry_text_view"
+            android:id="@+id/expiry_date_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_expand_down_purple_18dp"
@@ -221,7 +224,7 @@
             android:padding="8dp"
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:textColorHint="@color/grey_400"
-            android:hint="YYY-MM-(DD)"/>
+            android:hint="@string/hint_expiry_date"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -238,6 +241,7 @@
             android:orientation="horizontal">
 
         <EditText
+                android:id="@+id/size_x_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -257,6 +261,7 @@
                 style="@style/TextViewGrey"/>
 
         <EditText
+                android:id="@+id/size_y_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -276,6 +281,7 @@
                 style="@style/TextViewGrey"/>
 
         <EditText
+                android:id="@+id/size_z_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -316,11 +322,12 @@
             android:layout_gravity="center"/>
 
     <EditText
+            android:id="@+id/certification_extra_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:drawableEnd="@drawable/ic_edit_purple_24dp"
-            android:hint="@string/hint_other"
+            android:hint="@string/hint_other_certification_extra"
             android:theme="@style/EditTextPurple"/>
 
     <TextView
@@ -330,6 +337,7 @@
             android:text="@string/add_keywords"/>
 
     <EditText
+            android:id="@+id/tags_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

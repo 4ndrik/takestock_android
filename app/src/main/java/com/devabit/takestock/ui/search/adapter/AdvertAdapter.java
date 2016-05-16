@@ -10,16 +10,14 @@ import android.widget.TextView;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.util.DateFormats;
 import com.devabit.takestock.util.Logger;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static butterknife.ButterKnife.findById;
 
@@ -113,17 +111,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         sItemClickListener = listener;
     }
 
-    static class DefaultViewHolder extends ViewHolder {
-        public DefaultViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private final static DateFormat DATE_CRATED_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH);
-        private final static DateFormat DATE_NORMAL_FORMATTER = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
-
         private final Context mContext;
         private final Picasso mPicasso;
 
@@ -132,7 +120,6 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         private final TextView mLocationTextView;
         private final TextView mDateTextView;
         private final TextView mPriceTextView;
-
 
         private Advert mAdvert;
 
@@ -159,8 +146,8 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
 
         void bindCreatedDate(String createdDate) {
             try {
-                Date date = DATE_CRATED_FORMATTER.parse(createdDate);
-                String dateAsString = DATE_NORMAL_FORMATTER.format(date);
+                Date date = DateFormats.API_FORMAT.parse(createdDate);
+                String dateAsString = DateFormats.DEFAULT_FORMAT.format(date);
                 mDateTextView.setText(dateAsString);
             } catch (ParseException e) {
                 Logger.LOGE(TAG, "BOOM:", e);

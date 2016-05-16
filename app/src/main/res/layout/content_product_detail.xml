@@ -209,7 +209,7 @@
                     android:text="@string/expiry"/>
 
             <TextView
-                    android:id="@+id/expiry_text_view"
+                    android:id="@+id/expiry_date_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

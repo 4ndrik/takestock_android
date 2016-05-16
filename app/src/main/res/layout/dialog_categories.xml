@@ -45,7 +45,7 @@
             android:layout_marginBottom="4dp"
             android:layout_gravity="end"
             android:text="@string/cancel"
-            android:theme="@style/FlatButtonLime"
+            android:theme="@style/FlatButtonPurple"
             android:textStyle="bold"
             android:textAppearance="@android:style/TextAppearance.Small"
             style="@style/Widget.AppCompat.Button.Borderless"/>

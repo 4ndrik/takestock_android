@@ -64,6 +64,12 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="FlatButtonPurple" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/grey_400</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="FlatButtonGrey" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="android:textColor">@color/grey_600</item>
@@ -88,6 +94,15 @@
         <item name="colorControlNormal">@color/grey_600</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    </style>
+
+    <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="textColorAlertDialogListItem">@android:color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:windowBackground">@drawable/background_date_picker_dialog</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

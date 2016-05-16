@@ -1,14 +1,13 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.model.Photo;
-import com.devabit.takestock.util.TranscoderUtil;
+import com.devabit.takestock.data.model.User;
+import com.devabit.takestock.util.Encoder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,8 +127,7 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>>, ToJsonMap
         JSONArray jsonArray = new JSONArray();
         for(Photo photo : target.getPhotos()) {
             try {
-                File file = photo.getFile();
-                jsonArray.put("data:image/jpg;base64," + TranscoderUtil.encodeFileToBase64(file));
+                jsonArray.put("data:image/jpg;base64," + Encoder.encodeFileToBase64(photo.getImagePath()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

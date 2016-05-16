@@ -265,7 +265,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                         try {
                             return new AdvertResultListJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
-                            throw new RuntimeException();
+                            throw new RuntimeException(e);
                         }
                     }
                 }).doOnNext(new Action1<ResultList<Advert>>() {

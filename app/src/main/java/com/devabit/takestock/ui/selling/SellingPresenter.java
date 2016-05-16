@@ -1,13 +1,21 @@
 package com.devabit.takestock.ui.selling;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.rx.RxTransformers;
+import com.devabit.takestock.util.BitmapUtil;
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static com.devabit.takestock.util.Logger.LOGE;
@@ -147,5 +155,189 @@ public class SellingPresenter implements SellingContract.Presenter {
 
     @Override public void destroy() {
 
+    }
+
+    @Override public void processPhotoToFile(Uri photoUri, final File photoFile) {
+        mSellingView.setProgressIndicator(true);
+        Subscription subscription = Observable.just(photoUri)
+                .map(new Func1<Uri, Bitmap>() {
+                    @Override
+                    public Bitmap call(Uri uri) {
+                        try {
+                            Bitmap bitmap = BitmapUtil.getBitmapFromUri(uri);
+                            return BitmapUtil.rotateBitmapPerOrientation(bitmap, uri);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }).map(new Func1<Bitmap, Photo>() {
+                    @Override public Photo call(Bitmap bitmap) {
+                        try {
+                            File file = BitmapUtil.saveBitmapToFile(bitmap, photoFile);
+                            Photo photo = new Photo();
+                            photo.setImagePath("file:" + file.getAbsolutePath());
+                            photo.setFile(file);
+                            return photo;
+                        } catch (IOException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+                })
+                .compose(RxTransformers.<Photo>applyObservableSchedulers())
+                .subscribe(new Subscriber<Photo>() {
+                    @Override public void onCompleted() {
+                        mSellingView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        LOGE(TAG, "BOOM:", e);
+                        mSellingView.setProgressIndicator(false);
+                        mSellingView.showUnknownError();
+                    }
+
+                    @Override public void onNext(Photo photo) {
+                        mSellingView.showPhotoInView(photo);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override public void processAdvert(Advert advert) {
+        if(!isAdvertDataValid(advert)) return;
+        mSellingView.setProgressIndicator(true);
+        Subscription subscription = mDataRepository
+                .saveAdvert(advert)
+                .compose(RxTransformers.<Advert>applyObservableSchedulers())
+                .subscribe(new Subscriber<Advert>() {
+                    @Override public void onCompleted() {
+                        mSellingView.setProgressIndicator(false);
+                        mSellingView.showAdvertCreated();
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        LOGE(TAG, "BOOM:", e);
+                        mSellingView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onNext(Advert advert) {
+
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    private boolean isAdvertDataValid(Advert advert) {
+        return validatePhotos(advert)
+                && validateName(advert)
+                && validateItemCount(advert)
+                && validateMinimumOrder(advert)
+                && validateGuidePrice(advert)
+                && validateDescription(advert)
+                && validateLocation(advert)
+                && validateExpiryDate(advert)
+                && validateSize(advert)
+                && validateCertification(advert)
+                && validateCertificationExtra(advert);
+    }
+
+    private boolean validatePhotos(Advert advert) {
+        List<Photo> photos = advert.getPhotos();
+        if (photos.isEmpty()) {
+            mSellingView.showEmptyPhotosError();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean validateName(Advert advert) {
+        String name = advert.getName();
+        if (name.isEmpty()) {
+            mSellingView.showEmptyTitleError();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean validateItemCount(Advert advert) {
+        int itemCount = advert.getItemsCount();
+        if (itemCount == 0) {
+            mSellingView.showEmptyItemCountError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateMinimumOrder(Advert advert) {
+        int minOrder = advert.getMinOrderQuantity();
+        if (minOrder == 0) {
+            mSellingView.showEmptyMinimumOrderError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateGuidePrice(Advert advert) {
+        String price = advert.getGuidePrice();
+        if (price.isEmpty()) {
+            mSellingView.showEmptyGuidePriceError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateDescription(Advert advert) {
+        String description = advert.getDescription();
+        if (description.isEmpty()) {
+            mSellingView.showEmptyDescriptionError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateLocation(Advert advert) {
+        String location = advert.getLocation();
+        if (location.isEmpty()) {
+            mSellingView.showEmptyLocationError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateExpiryDate(Advert advert) {
+        String date = advert.getDateExpiresAt();
+        if(date.isEmpty()) {
+            mSellingView.showEmptyExpiryDateError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateSize(Advert advert) {
+        String size = advert.getSize();
+        if (size.isEmpty()) {
+            mSellingView.showEmptySizeError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateCertification(Advert advert) {
+        int certificationId = advert.getCertificationId();
+        if(certificationId == 0) {
+            mSellingView.showEmptyCertificationError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateCertificationExtra(Advert advert) {
+        String text = advert.getCertificationExtra();
+        if (text.isEmpty()) {
+            mSellingView.showEmptyCertificationExtraError();
+            return false;
+        }
+        return true;
     }
 }
