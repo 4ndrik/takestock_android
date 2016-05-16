@@ -101,5 +101,14 @@
     <string name="take_photo">Take photo</string>
     <string name="choose_from_library">Choose from Library</string>
     <string name="error_empty_size">Please, add size.</string>
+    <string name="profile">Profile</string>
+    <string name="notifications">Notifications</string>
+    <string name="my_takestock">My Takestock</string>
+    <string name="watching">Watching</string>
+    <string name="purchases">Purchases</string>
+    <string name="offers">Offers</string>
+    <string name="selling">Selling</string>
+    <string name="help_and_contact"><![CDATA[Help & Contact]]></string>
+    <string name="settings">Settings</string>
 
 </resources>

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         return starter;
     }
 
+    @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
+    @BindView(R.id.navigation_view) protected NavigationView mNavigationView;
     @BindView(R.id.search_products_edit_text) protected EditText mSearchProductsEditText;
     @BindView(R.id.browse_categories_button) protected Button mBrowseProductsButton;
     @BindView(R.id.sell_something_button) protected Button mSellSomethingButton;
@@ -89,5 +93,26 @@ public class MainActivity extends AppCompatActivity {
     private void displayCategoriesDialog() {
         CategoriesDialog dialog = CategoriesDialog.newInstance();
         dialog.show(getFragmentManager(), dialog.getClass().getCanonicalName());
+    }
+
+    @OnClick(R.id.menu_button)
+    protected void onMenuButtonClick() {
+        openDrawer();
+    }
+
+    private void openDrawer() {
+        mDrawerLayout.openDrawer(mNavigationView);
+    }
+
+    @Override public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(mNavigationView)) {
+            closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void closeDrawer() {
+        mDrawerLayout.closeDrawer(mNavigationView);
     }
 }

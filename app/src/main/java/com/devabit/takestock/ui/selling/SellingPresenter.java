@@ -176,10 +176,9 @@ public class SellingPresenter implements SellingContract.Presenter {
                             File file = BitmapUtil.saveBitmapToFile(bitmap, photoFile);
                             Photo photo = new Photo();
                             photo.setImagePath("file:" + file.getAbsolutePath());
-                            photo.setFile(file);
                             return photo;
                         } catch (IOException e) {
-                            throw new RuntimeException();
+                            throw new RuntimeException(e);
                         }
                     }
                 })
