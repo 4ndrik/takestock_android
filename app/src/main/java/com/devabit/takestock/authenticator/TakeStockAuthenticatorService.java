@@ -1,4 +1,4 @@
-package com.devabit.takestock.authentication;
+package com.devabit.takestock.authenticator;
 
 import android.app.Service;
 import android.content.Intent;

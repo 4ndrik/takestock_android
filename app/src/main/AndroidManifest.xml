@@ -60,7 +60,7 @@
                 android:name=".ui.photoLibrary.PhotoLibraryActivity"
                 android:screenOrientation="portrait"/>
 
-        <service android:name=".authentication.TakeStockAuthenticatorService"
+        <service android:name="com.devabit.takestock.authenticator.TakeStockAuthenticatorService"
                  android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
