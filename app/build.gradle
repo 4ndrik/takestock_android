@@ -10,6 +10,11 @@ android {
     def versionMinor = rootProject.ext.versionMinor
     def versionPatch = rootProject.ext.versionPatch
 
+    dexOptions {
+        maxProcessCount 2
+        javaMaxHeapSize "2g"
+    }
+
     defaultConfig {
         applicationId "com.devabit.takestock"
 
@@ -42,7 +47,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion rootProject.ext.minSdkVersion
+            minSdkVersion 21
         }
         mock {
             minSdkVersion 21
