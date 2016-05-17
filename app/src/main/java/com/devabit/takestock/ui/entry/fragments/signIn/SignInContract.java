@@ -1,4 +1,4 @@
-package com.devabit.takestock.ui.signUp;
+package com.devabit.takestock.ui.entry.fragments.signIn;
 
 import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.UserCredentials;
@@ -6,32 +6,30 @@ import com.devabit.takestock.ui.BasePresenter;
 import com.devabit.takestock.ui.BaseView;
 
 /**
- * Created by Victor Artemyev on 06/05/2016.
+ * Created by Victor Artemyev on 25/04/2016.
  */
-public interface SignUpContract {
+public interface SignInContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showIncorrectUserNameError();
-
-        void showIncorrectEmailAddressError();
+        void showIncorrectUsernameError();
 
         void showIncorrectPasswordError();
 
-        void showIncorrectCredentialsError();
-
         void showNetworkConnectionError();
+
+        void showIncorrectCredentialsError();
 
         void showUnknownError();
 
         void setProgressIndicator(boolean isActive);
 
         void processAuthToken(AuthToken authToken);
-
     }
 
     interface Presenter extends BasePresenter {
 
-        void obtainAccessToken(UserCredentials userCredentials);
+        void obtainAuthToken(UserCredentials userCredentials);
+
     }
 }

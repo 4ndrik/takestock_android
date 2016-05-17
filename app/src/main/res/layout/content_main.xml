@@ -12,7 +12,7 @@
             android:layout_margin="16dp"
             android:padding="8dp"
             android:src="@drawable/ic_menu_purple_24dp"
-            android:background="@drawable/circle_purple"
+            android:background="@null"
             tools:ignore="ContentDescription"/>
 
     <LinearLayout android:layout_width="match_parent"

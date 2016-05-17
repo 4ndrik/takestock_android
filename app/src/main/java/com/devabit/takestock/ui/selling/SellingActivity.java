@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -49,6 +50,10 @@ import static com.devabit.takestock.util.Logger.*;
 public class SellingActivity extends AppCompatActivity implements SellingContract.View {
 
     private static final String TAG = makeLogTag(SellingActivity.class);
+
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, SellingActivity.class);
+    }
 
     @BindView(R.id.content_activity_selling) protected View mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#BEBC32</color>
-    <color name="colorPrimaryDark">#827717</color>
-    <color name="colorAccent">#9C27B0</color>
-    <color name="colorWindowBackground">#FFFFFF</color>
+    <color name="colorPrimaryDark">@color/lime_900</color>
+    <color name="colorAccent">@color/purple_500</color>
+    <color name="colorWindowBackground">@color/white</color>
 
     <color name="white">#FFFFFF</color>
-    <color name="translucent_white">#80FFFFFF</color>
     <color name="black">#000000</color>
 
-    <color name="purple_300">#FFBA68C8</color>
+    <color name="purple_500">#9C27B0</color>
+    <color name="purple_300">#BA68C8</color>
+
+    <color name="lime_900">#827717</color>
+
+    <color name="translucent_white">#80FFFFFF</color>
+    <color name="translucent_lime_900">#80827717</color>
 
     <color name="grey_200">#EEEEEE</color>
     <color name="grey_400">#BDBDBD</color>

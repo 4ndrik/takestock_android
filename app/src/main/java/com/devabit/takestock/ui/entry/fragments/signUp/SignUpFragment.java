@@ -1,46 +1,37 @@
-package com.devabit.takestock.ui.signUp;
+package com.devabit.takestock.ui.entry.fragments.signUp;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Typeface;
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.Spanned;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import butterknife.BindView;
-import butterknife.BindViews;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import com.devabit.takestock.Injection;
+import butterknife.*;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.UserCredentials;
-import com.devabit.takestock.ui.main.MainActivity;
-import com.devabit.takestock.util.FontCache;
-import com.devabit.takestock.widget.CustomTypefaceSpan;
 
 import java.util.List;
 
 import static com.devabit.takestock.util.Preconditions.checkNotNull;
 
 /**
- * Created by Victor Artemyev on 12/04/2016.
+ * Created by Victor Artemyev on 17/05/2016.
  */
-public class SignUpActivity extends AppCompatActivity implements SignUpContract.View {
+public class SignUpFragment extends Fragment implements SignUpContract.View {
 
-    public static Intent getStartIntent(Context context) {
-        return new Intent(context, SignUpActivity.class);
+    public static SignUpFragment newInstance() {
+        return new SignUpFragment();
     }
 
     @BindView(R.id.content_activity_sign_up) protected View mContent;
@@ -54,31 +45,23 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
             R.id.password_edit_text, R.id.email_edit_text, R.id.sign_up_button})
     List<View> mViews;
 
+    private Unbinder mUnbinder;
     private SignUpContract.Presenter mPresenter;
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
-        ButterKnife.bind(SignUpActivity.this);
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_sign_up, container, false);
+    }
 
-        Typeface boldTypeface = FontCache.getTypeface(SignUpActivity.this, R.string.font_brandon_bold);
-        Typeface mediumTypeface = FontCache.getTypeface(SignUpActivity.this, R.string.font_brandon_medium);
+    @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+        mUnbinder = ButterKnife.bind(SignUpFragment.this, view);
 
-        Toolbar toolbar = ButterKnife.findById(SignUpActivity.this, R.id.toolbar);
-        SpannableString spannableString = new SpannableString(getString(R.string.sign_up));
-        spannableString.setSpan(new CustomTypefaceSpan(boldTypeface), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-        toolbar.setTitle(spannableString);
+        Toolbar toolbar = ButterKnife.findById(view, R.id.toolbar);
+        toolbar.setTitle(R.string.sign_up);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                onBackPressed();
+                getActivity().onBackPressed();
             }
         });
-
-        Button singUpButton = ButterKnife.findById(SignUpActivity.this, R.id.sign_up_button);
-        singUpButton.setTypeface(boldTypeface);
-
-        new SignUpPresenter(
-                Injection.provideDataRepository(SignUpActivity.this), SignUpActivity.this);
     }
 
     @OnClick(R.id.sign_up_button)
@@ -152,7 +135,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     };
 
     @Override public void processAuthToken(AuthToken authToken) {
-        AccountManager accountManager = AccountManager.get(SignUpActivity.this);
+        AccountManager accountManager = AccountManager.get(getActivity());
         Account account = new Account(getUserName(), getString(R.string.authenticator_account_type));
         Bundle userData = new Bundle();
         userData.putString(getString(R.string.authenticator_user_id), String.valueOf(authToken.userId));
@@ -160,11 +143,21 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         userData.putString(getString(R.string.authenticator_user_email), String.valueOf(authToken.email));
         accountManager.addAccountExplicitly(account, getPassword(), userData);
         accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), authToken.token);
+        finishActivityWithResult();
+    }
 
-        startActivity(MainActivity.getStartIntent(SignUpActivity.this));
+    private void finishActivityWithResult() {
+        Activity activity = getActivity();
+        activity.setResult(Activity.RESULT_OK);
+        activity.finish();
     }
 
     @Override public void setPresenter(@NonNull SignUpContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
     }
 }

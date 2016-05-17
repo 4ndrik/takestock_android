@@ -1,4 +1,4 @@
-package com.devabit.takestock.ui.signIn;
+package com.devabit.takestock.ui.entry.fragments.signIn;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
