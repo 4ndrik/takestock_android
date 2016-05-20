@@ -49,7 +49,7 @@
     </style>
 
     <style name="TextViewPurple" parent="Theme.AppCompat.Light">
-        <item name="android:textColor">@color/purple_300</item>
+        <item name="android:textColor">@color/purple_dark</item>
         <item name="android:textAllCaps">true</item>
     </style>
 

@@ -381,14 +381,11 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     @OnClick(R.id.save_and_put_on_hold_button)
     protected void onSaveButtonClick() {
-        AccountManager accountManager = AccountManager.get(SellingActivity.this);
-        mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
-        String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
-        String username = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_name));
-        String email = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_email));
+        Advert advert = getAdvert();
+        mPresenter.processAdvert(advert);
+    }
 
-        LOGD(TAG, "UserId: " + userId + "\n" + "UserName: " + username + "\n" + "Email: " + email);
-
+    private Advert getAdvert() {
         Advert advert = new Advert();
         advert.setPhotos(mPhotoGalleryAdapter.getPhotos());
         advert.setName(getAdvertTitle());
@@ -406,8 +403,19 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         advert.setSize(getSize());
         advert.setCertificationId(getCertificationId());
         advert.setCertificationExtra(getCertificationExtra());
-        advert.setAuthorId(Integer.valueOf(userId));
-        mPresenter.processAdvert(advert);
+        advert.setAuthorId(getUserId());
+        return advert;
+    }
+
+    private int getUserId() {
+        AccountManager accountManager = AccountManager.get(SellingActivity.this);
+        mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
+        String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
+        String username = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_name));
+        String email = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_email));
+
+        LOGD(TAG, "UserId: " + userId + "\n" + "UserName: " + username + "\n" + "Email: " + email);
+        return Integer.valueOf(userId);
     }
 
     private String getAdvertTitle() {
