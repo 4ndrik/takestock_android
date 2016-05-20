@@ -1,7 +1,8 @@
 package com.devabit.takestock.data.source;
 
-import com.devabit.takestock.data.model.*;
-import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.models.Advert;
 import rx.Observable;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface DataSource {
 
     Observable<ResultList<Advert>> getResultAdvertListPerPage(String link);
 
+    Observable<ResultList<Advert>> getResultAdvertListPerFilter(AdvertFilter filter);
+
     void saveSizes(List<Size> sizes);
 
     Observable<List<Size>> getSizes();
@@ -50,7 +53,7 @@ public interface DataSource {
     Condition getConditionById(int id);
 
     void savePackagings(List<Packaging> packagings);
-    
+
     Observable<List<Packaging>> getPackagings();
 
 }

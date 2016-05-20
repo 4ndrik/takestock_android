@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:padding="16dp"
-              tools:context=".ui.selling.SellingActivity">
+              tools:context=".screens.selling.SellingActivity">
 
     <TextView
             android:layout_width="wrap_content"
@@ -314,7 +314,7 @@
             android:text="Loren ipsum sed amed in deo non qua plus ultra"
             style="@style/TextViewGrey"/>
 
-    <com.devabit.takestock.widget.CertificationRadioButtonGroupView
+    <com.devabit.takestock.widgets.CertificationRadioButtonGroupView
             android:id="@+id/certification_group_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.model.Condition;
+import com.devabit.takestock.data.models.Condition;
 import com.devabit.takestock.data.source.local.entity.ConditionEntity;
 import io.realm.RealmResults;
 

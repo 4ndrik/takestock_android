@@ -7,6 +7,7 @@ import com.devabit.takestock.BuildConfig;
  */
 public interface RestApi {
 
+    String SCHEME = "http";
     String API_BASE_URL = BuildConfig.API_URL;
 
     String POST_TOKEN_AUTH = "token/auth/";

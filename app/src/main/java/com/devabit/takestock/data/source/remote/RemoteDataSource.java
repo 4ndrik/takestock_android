@@ -7,9 +7,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.*;
+import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
-import com.devabit.takestock.data.source.remote.mapper.*;
+import com.devabit.takestock.data.source.remote.filterBuilders.AdvertFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.mappers.*;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
 import com.devabit.takestock.rest.RestApi;
@@ -263,6 +265,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 .map(new Func1<String, ResultList<Advert>>() {
                     @Override public ResultList<Advert> call(String json) {
                         try {
+                            LOGD(TAG, json);
                             return new AdvertResultListJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
@@ -271,6 +274,25 @@ public class RemoteDataSource implements RestApi, DataSource {
                 }).doOnNext(new Action1<ResultList<Advert>>() {
                     @Override public void call(ResultList<Advert> advertResultList) {
                         LOGD(TAG, "ResultAdvertList: " + advertResultList);
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertListPerFilter(final AdvertFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<AdvertFilter, String>() {
+                    @Override public String call(AdvertFilter filter) {
+                        return new AdvertFilterUrlBuilder().buildUrl(filter);
+                    }
+                })
+                .doOnNext(new Action1<String>() {
+                    @Override public void call(String s) {
+                        LOGD(TAG, s);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<ResultList<Advert>>>() {
+                    @Override public Observable<ResultList<Advert>> call(String url) {
+                        return getResultAdvertListPerPage(url);
                     }
                 });
     }
@@ -458,6 +480,8 @@ public class RemoteDataSource implements RestApi, DataSource {
 
     @Override public String composeUrl(String... params) {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SCHEME);
+        stringBuilder.append("://");
         stringBuilder.append(API_BASE_URL);
         for (String param : params) {
             stringBuilder.append("/");

@@ -36,6 +36,7 @@
             android:paddingBottom="16dp"
             android:paddingStart="32dp"
             android:paddingEnd="32dp"
+            android:background="@color/white"
             android:orientation="vertical">
 
         <ImageView

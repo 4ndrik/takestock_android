@@ -26,7 +26,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".ui.main.MainActivity"
+                android:name=".screens.main.MainActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.Launcher"
                 android:windowSoftInputMode="stateHidden">
@@ -37,21 +37,21 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.entry.EntryActivity"
+                android:name=".screens.entry.EntryActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.selling.SellingActivity"
+                android:name=".screens.selling.SellingActivity"
                 android:screenOrientation="portrait"
                 android:launchMode="singleTask"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
-                android:name=".ui.search.SearchActivity"
+                android:name=".screens.search.SearchActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.advertDetail.AdvertDetailActivity"
+                android:name=".screens.advertDetail.AdvertDetailActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.photoLibrary.PhotoLibraryActivity"
+                android:name=".screens.photoLibrary.PhotoLibraryActivity"
                 android:screenOrientation="portrait"/>
 
         <service android:name="com.devabit.takestock.authenticator.TakeStockAuthenticatorService"

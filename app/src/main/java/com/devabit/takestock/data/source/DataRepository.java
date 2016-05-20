@@ -1,8 +1,9 @@
 package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.model.*;
-import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.models.Advert;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -86,6 +87,10 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<ResultList<Advert>> getResultAdvertListPerPage(String link) {
         return mRemoteDataSource.getResultAdvertListPerPage(link);
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertListPerFilter(AdvertFilter filter) {
+        return mRemoteDataSource.getResultAdvertListPerFilter(filter);
     }
 
     @Override public void saveSizes(List<Size> sizes) {

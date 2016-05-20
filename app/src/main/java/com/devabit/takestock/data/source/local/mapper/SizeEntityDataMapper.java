@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.model.Size;
+import com.devabit.takestock.data.models.Size;
 import com.devabit.takestock.data.source.local.entity.SizeEntity;
 import io.realm.RealmResults;
 

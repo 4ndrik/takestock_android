@@ -52,7 +52,7 @@
     <string name="expiry">Expiry</string>
     <string name="size">Size</string>
     <string name="filter">Filter</string>
-    <string name="newest_first">Newest first</string>
+    <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="slogan">Unlocking value\nin the food industry</string>
     <string name="sign_up">Sign up</string>
@@ -113,4 +113,11 @@
     <string name="new_to_takestock">New to Takestock?</string>
     <string name="forgot_password">Forgot Password?</string>
 
+    <!--Sort menu-->
+    <string name="sort_created_at">Created at</string>
+    <string name="sort_created_at_descending">Created at (descending)</string>
+    <string name="sort_expires_at">Expires at</string>
+    <string name="sort_expires_at_descending">Expires at (descending)</string>
+    <string name="sort_guide_price">Guide price</string>
+    <string name="sort_guide_price_descending">Guide price (descending)</string>
 </resources>

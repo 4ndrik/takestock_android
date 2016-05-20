@@ -28,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            buildConfigField("String", "API_URL", '"http://takestock.shalakh.in/api/v1"')
+            buildConfigField("String", "API_URL", '"takestock.shalakh.in/api/v1"')
             buildConfigField("boolean", "LOGGING_ENABLED", "false")
             shrinkResources true
             minifyEnabled false
@@ -36,7 +36,7 @@ android {
         }
 
         debug {
-            buildConfigField("String", "API_URL", '"http://takestock.shalakh.in/api/v1"')
+            buildConfigField("String", "API_URL", '"takestock.shalakh.in/api/v1"')
             buildConfigField("boolean", "LOGGING_ENABLED", "true")
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"

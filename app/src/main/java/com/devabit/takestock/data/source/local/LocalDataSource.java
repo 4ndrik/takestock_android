@@ -1,7 +1,8 @@
 package com.devabit.takestock.data.source.local;
 
 import android.content.Context;
-import com.devabit.takestock.data.model.*;
+import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.mapper.*;
@@ -106,6 +107,10 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override public Observable<ResultList<Advert>> getResultAdvertListPerPage(String link) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<ResultList<Advert>> getResultAdvertListPerFilter(AdvertFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
