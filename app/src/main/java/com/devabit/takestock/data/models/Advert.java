@@ -34,6 +34,10 @@ public class Advert implements Parcelable {
     private User mUser;
     private List<String> mTags;
     private List<Photo> mPhotos;
+    private String mPackagingName;
+    private String mOffersCount;
+    private String mQuestionsCount;
+    private String mDaysLeft;
 
     public Advert(){}
 
@@ -62,6 +66,10 @@ public class Advert implements Parcelable {
         mUser = in.readParcelable(User.class.getClassLoader());
         mTags = in.createStringArrayList();
         mPhotos = in.createTypedArrayList(Photo.CREATOR);
+        mPackagingName = in.readString();
+        mOffersCount = in.readString();
+        mQuestionsCount = in.readString();
+        mDaysLeft = in.readString();
     }
 
     public static final Creator<Advert> CREATOR = new Creator<Advert>() {
@@ -268,33 +276,36 @@ public class Advert implements Parcelable {
         mPhotos = photos;
     }
 
-    @Override public String toString() {
-        return "Advert{" +
-                "mId=" + mId +
-                ", mName='" + mName + '\'' +
-                ", mDateCreatedAt='" + mDateCreatedAt + '\'' +
-                ", mDateExpiresAt='" + mDateExpiresAt + '\'' +
-                ", mDateUpdatedAt='" + mDateUpdatedAt + '\'' +
-                ", mIntendedUse='" + mIntendedUse + '\'' +
-                ", mGuidePrice='" + mGuidePrice + '\'' +
-                ", mDescription='" + mDescription + '\'' +
-                ", mLocation='" + mLocation + '\'' +
-                ", mIsVatExempt=" + mIsVatExempt +
-                ", mShippingId=" + mShippingId +
-                ", mCategoryId=" + mCategoryId +
-                ", mSubCategoryId=" + mSubCategoryId +
-                ", mPackagingId=" + mPackagingId +
-                ", mCertificationId=" + mCertificationId +
-                ", mConditionId=" + mConditionId +
-                ", mMinOrderQuantity=" + mMinOrderQuantity +
-                ", mSize='" + mSize + '\'' +
-                ", mCertificationExtra='" + mCertificationExtra + '\'' +
-                ", mItemsCount=" + mItemsCount +
-                ", mAuthorId=" + mAuthorId +
-                ", mAuthor=" + mUser +
-                ", mTags=" + mTags +
-                ", mPhotos=" + mPhotos +
-                '}';
+    public String getPackagingName() {
+        return mPackagingName;
+    }
+
+    public void setPackagingName(String packagingName) {
+        mPackagingName = packagingName;
+    }
+
+    public String getOffersCount() {
+        return mOffersCount;
+    }
+
+    public void setOffersCount(String offersCount) {
+        mOffersCount = offersCount;
+    }
+
+    public String getQuestionsCount() {
+        return mQuestionsCount;
+    }
+
+    public void setQuestionsCount(String questionsCount) {
+        mQuestionsCount = questionsCount;
+    }
+
+    public String getDaysLeft() {
+        return mDaysLeft;
+    }
+
+    public void setDaysLeft(String daysLeft) {
+        mDaysLeft = daysLeft;
     }
 
     @Override public int describeContents() {
@@ -326,5 +337,42 @@ public class Advert implements Parcelable {
         dest.writeParcelable(mUser, flags);
         dest.writeStringList(mTags);
         dest.writeTypedList(mPhotos);
+        dest.writeString(mPackagingName);
+        dest.writeString(mOffersCount);
+        dest.writeString(mQuestionsCount);
+        dest.writeString(mDaysLeft);
+    }
+
+    @Override public String toString() {
+        return "Advert{" +
+                "mId=" + mId +
+                ", mName='" + mName + '\'' +
+                ", mDateCreatedAt='" + mDateCreatedAt + '\'' +
+                ", mDateExpiresAt='" + mDateExpiresAt + '\'' +
+                ", mDateUpdatedAt='" + mDateUpdatedAt + '\'' +
+                ", mIntendedUse='" + mIntendedUse + '\'' +
+                ", mGuidePrice='" + mGuidePrice + '\'' +
+                ", mDescription='" + mDescription + '\'' +
+                ", mLocation='" + mLocation + '\'' +
+                ", mIsVatExempt=" + mIsVatExempt +
+                ", mShippingId=" + mShippingId +
+                ", mCategoryId=" + mCategoryId +
+                ", mSubCategoryId=" + mSubCategoryId +
+                ", mPackagingId=" + mPackagingId +
+                ", mCertificationId=" + mCertificationId +
+                ", mConditionId=" + mConditionId +
+                ", mMinOrderQuantity=" + mMinOrderQuantity +
+                ", mSize='" + mSize + '\'' +
+                ", mCertificationExtra='" + mCertificationExtra + '\'' +
+                ", mItemsCount=" + mItemsCount +
+                ", mAuthorId=" + mAuthorId +
+                ", mUser=" + mUser +
+                ", mTags=" + mTags +
+                ", mPhotos=" + mPhotos +
+                ", mPackagingName='" + mPackagingName + '\'' +
+                ", mOffersCount='" + mOffersCount + '\'' +
+                ", mQuestionsCount='" + mQuestionsCount + '\'' +
+                ", mDaysLeft='" + mDaysLeft + '\'' +
+                '}';
     }
 }

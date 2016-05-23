@@ -1,11 +1,13 @@
 package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.models.Advert;
 import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 import java.util.List;
 
@@ -73,12 +75,17 @@ public class DataRepository implements DataSource {
         return Observable.concat(localCategories, remoteCategories).first();
     }
 
-    @Override public Observable<Advert> saveAdvert(Advert advert) {
-        return mRemoteDataSource.saveAdvert(advert);
-    }
-
-    @Override public Observable<List<Advert>> getAdverts() {
-        return mRemoteDataSource.getAdverts();
+    @Override public Observable<Advert> saveOrUpdateAdvert(Advert advert) {
+        if (TextUtils.isEmpty(advert.getDateUpdatedAt())) {
+            return mRemoteDataSource.saveOrUpdateAdvert(advert)
+                    .flatMap(new Func1<Advert, Observable<Advert>>() {
+                        @Override public Observable<Advert> call(Advert advert) {
+                            return mLocalDataSource.saveOrUpdateAdvert(advert);
+                        }
+                    });
+        } else {
+            return mLocalDataSource.saveOrUpdateAdvert(advert);
+        }
     }
 
     @Override public Observable<ResultList<Advert>> getResultAdvertList() {

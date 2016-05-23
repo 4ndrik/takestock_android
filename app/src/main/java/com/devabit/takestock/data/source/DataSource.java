@@ -20,9 +20,7 @@ public interface DataSource {
 
     Observable<List<Category>> getCategories();
 
-    Observable<Advert> saveAdvert(Advert advert);
-
-    Observable<List<Advert>> getAdverts();
+    Observable<Advert> saveOrUpdateAdvert(Advert advert);
 
     Observable<ResultList<Advert>> getResultAdvertList();
 

@@ -56,6 +56,9 @@
         <activity
                 android:name=".screens.photoLibrary.PhotoLibraryActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screens.selling.SellingActivity"
+                android:screenOrientation="portrait"/>
 
         <service android:name="com.devabit.takestock.authenticator.TakeStockAuthenticatorService"
                  android:exported="false">

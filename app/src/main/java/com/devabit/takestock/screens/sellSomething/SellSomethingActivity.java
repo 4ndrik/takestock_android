@@ -56,7 +56,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
         return new Intent(context, SellSomethingActivity.class);
     }
 
-    @BindView(R.id.content_activity_selling) protected View mContent;
+    @BindView(R.id.content_activity_sell_something) protected View mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
 
     @BindView(R.id.image_gallery_recycler_view) protected RecyclerView mPhotoGalleryRecyclerView;
