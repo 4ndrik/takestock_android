@@ -40,7 +40,7 @@
                 android:name=".screens.entry.EntryActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.selling.SellingActivity"
+                android:name=".screens.sellSomething.SellSomethingActivity"
                 android:screenOrientation="portrait"
                 android:launchMode="singleTask"
                 android:windowSoftInputMode="stateHidden"/>

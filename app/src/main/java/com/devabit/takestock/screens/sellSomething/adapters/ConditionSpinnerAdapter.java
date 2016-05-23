@@ -1,34 +1,34 @@
-package com.devabit.takestock.screens.selling.adapters;
+package com.devabit.takestock.screens.sellSomething.adapters;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.devabit.takestock.data.models.Shipping;
+import com.devabit.takestock.data.models.Condition;
 
 import java.util.List;
 
 /**
  * Created by Victor Artemyev on 04/05/2016.
  */
-public class ShippingSpinnerAdapter extends SpinnerAdapter<Shipping> {
+public class ConditionSpinnerAdapter extends SpinnerAdapter<Condition> {
 
-    private final List<Shipping> mShippings;
+    private final List<Condition> mConditions;
 
-    public ShippingSpinnerAdapter(Context context, List<Shipping> shippings) {
-        super(context, shippings);
-        mShippings = shippings;
+    public ConditionSpinnerAdapter(Context context, List<Condition> conditions) {
+        super(context, conditions);
+        mConditions = conditions;
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
         TextView textView = (TextView) super.getView(position, convertView, parent);
-        textView.setText(mShippings.get(position).getType());
+        textView.setText(mConditions.get(position).getState());
         return textView;
     }
 
     @Override public View getDropDownView(int position, View convertView, ViewGroup parent) {
         TextView view = (TextView) super.getDropDownView(position, convertView, parent);
-        view.setText(mShippings.get(position).getType());
+        view.setText(mConditions.get(position).getState());
         return view;
     }
 }

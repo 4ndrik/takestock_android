@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.selling.dialogs;
+package com.devabit.takestock.screens.sellSomething.dialogs;
 
 import android.app.DialogFragment;
 import android.graphics.Typeface;

@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.selling;
+package com.devabit.takestock.screens.sellSomething;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -25,20 +25,20 @@ import static com.devabit.takestock.util.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class SellingPresenter implements SellingContract.Presenter {
+public class SellSomethingPresenter implements SellSomethingContract.Presenter {
 
-    private static final String TAG = makeLogTag(SellingPresenter.class);
+    private static final String TAG = makeLogTag(SellSomethingPresenter.class);
 
     private final DataRepository mDataRepository;
-    private final SellingContract.View mSellingView;
+    private final SellSomethingContract.View mSellingView;
 
     private CompositeSubscription mSubscriptions;
 
-    public SellingPresenter(@NonNull DataRepository dataRepository, @NonNull SellingContract.View sellingView) {
+    public SellSomethingPresenter(@NonNull DataRepository dataRepository, @NonNull SellSomethingContract.View sellingView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mSellingView = checkNotNull(sellingView, "sellingView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mSellingView.setPresenter(SellingPresenter.this);
+        mSellingView.setPresenter(SellSomethingPresenter.this);
     }
 
     @Override public void create() {
@@ -210,12 +210,11 @@ public class SellingPresenter implements SellingContract.Presenter {
         if(!isAdvertDataValid(advert)) return;
         mSellingView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .saveAdvert(advert)
+                .saveOrUpdateAdvert(advert)
                 .compose(RxTransformers.<Advert>applyObservableSchedulers())
                 .subscribe(new Subscriber<Advert>() {
                     @Override public void onCompleted() {
                         mSellingView.setProgressIndicator(false);
-                        mSellingView.showAdvertSaved();
                     }
 
                     @Override public void onError(Throwable e) {
@@ -224,7 +223,7 @@ public class SellingPresenter implements SellingContract.Presenter {
                     }
 
                     @Override public void onNext(Advert advert) {
-
+                        mSellingView.showAdvertSaved(advert);
                     }
                 });
         mSubscriptions.add(subscription);
