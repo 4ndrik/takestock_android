@@ -26,7 +26,7 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.screens.advertDetail.AdvertDetailActivity;
+import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screens.category.CategoriesDialog;
 import com.devabit.takestock.screens.search.adapter.AdvertAdapter;
 import com.devabit.takestock.util.FontCache;

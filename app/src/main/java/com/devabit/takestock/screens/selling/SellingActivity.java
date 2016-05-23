@@ -28,6 +28,7 @@ import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.screens.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.screens.selling.adapters.*;
 import com.devabit.takestock.screens.selling.dialogs.PhotoPickerDialog;
 import com.devabit.takestock.util.DateFormats;
@@ -315,7 +316,11 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         showSnack(R.string.error_unknown);
     }
 
-    @Override public void showAdvertCreated() {
+    @Override public void showAdvertInPreview(Advert advert) {
+        startActivity(AdvertPreviewActivity.getStartIntent(SellingActivity.this, advert));
+    }
+
+    @Override public void showAdvertSaved() {
         Snackbar.make(mContent, "Advert created.", Snackbar.LENGTH_LONG).show();
     }
 
@@ -379,10 +384,16 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         }
     }
 
+    @OnClick(R.id.preview_ad_button)
+    protected void onPreviewButton() {
+        Advert advert = getAdvert();
+        mPresenter.previewAdvert(advert);
+    }
+
     @OnClick(R.id.save_and_put_on_hold_button)
     protected void onSaveButtonClick() {
         Advert advert = getAdvert();
-        mPresenter.processAdvert(advert);
+        mPresenter.saveAdvert(advert);
     }
 
     private Advert getAdvert() {

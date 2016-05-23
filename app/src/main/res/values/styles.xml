@@ -83,6 +83,13 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="RaisedButtonPurple" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="RaisedButtonGrey" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">@color/grey_200</item>
         <item name="colorButtonNormal">@color/grey_600</item>

@@ -201,7 +201,12 @@ public class SellingPresenter implements SellingContract.Presenter {
         mSubscriptions.add(subscription);
     }
 
-    @Override public void processAdvert(Advert advert) {
+    @Override public void previewAdvert(Advert advert) {
+        if(!isAdvertDataValid(advert)) return;
+        mSellingView.showAdvertInPreview(advert);
+    }
+
+    @Override public void saveAdvert(Advert advert) {
         if(!isAdvertDataValid(advert)) return;
         mSellingView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
@@ -210,7 +215,7 @@ public class SellingPresenter implements SellingContract.Presenter {
                 .subscribe(new Subscriber<Advert>() {
                     @Override public void onCompleted() {
                         mSellingView.setProgressIndicator(false);
-                        mSellingView.showAdvertCreated();
+                        mSellingView.showAdvertSaved();
                     }
 
                     @Override public void onError(Throwable e) {

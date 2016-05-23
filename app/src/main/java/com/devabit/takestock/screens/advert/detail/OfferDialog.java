@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.advertDetail;
+package com.devabit.takestock.screens.advert.detail;
 
 import android.app.DialogFragment;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.advertDetail;
+package com.devabit.takestock.screens.advert.preview;
 
 import com.devabit.takestock.data.models.Certification;
 import com.devabit.takestock.data.models.Condition;
@@ -9,7 +9,7 @@ import com.devabit.takestock.screens.BaseView;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public interface AdvertDetailContract {
+public interface AdvertPreviewContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -18,12 +18,6 @@ public interface AdvertDetailContract {
         void showCertificationInView(Certification certification);
 
         void showConditionInView(Condition condition);
-
-        void showNetworkConnectionError();
-
-        void showUnknownError();
-
-        void setProgressIndicator(boolean isActive);
 
     }
 

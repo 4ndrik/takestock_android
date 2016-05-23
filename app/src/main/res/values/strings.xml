@@ -120,4 +120,5 @@
     <string name="sort_expires_at_descending">Expires at (descending)</string>
     <string name="sort_guide_price">Guide price</string>
     <string name="sort_guide_price_descending">Guide price (descending)</string>
+    <string name="description">Description</string>
 </resources>

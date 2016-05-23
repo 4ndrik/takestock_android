@@ -48,7 +48,10 @@
                 android:name=".screens.search.SearchActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.advertDetail.AdvertDetailActivity"
+                android:name=".screens.advert.detail.AdvertDetailActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screens.advert.preview.AdvertPreviewActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screens.photoLibrary.PhotoLibraryActivity"

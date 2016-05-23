@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.advertDetail;
+package com.devabit.takestock.screens.advert.preview;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.models.Certification;
@@ -13,22 +13,21 @@ import static com.devabit.takestock.util.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
+public class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
 
-    private static final String TAG = makeLogTag(AdvertDetailPresenter.class);
+    private static final String TAG = makeLogTag(AdvertPreviewPresenter.class);
 
     private final DataRepository mDataRepository;
-    private final AdvertDetailContract.View mAdvertView;
+    private final AdvertPreviewContract.View mAdvertView;
 
     private CompositeSubscription mSubscriptions;
 
-    public AdvertDetailPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertDetailContract.View advertView) {
+    public AdvertPreviewPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertPreviewContract.View advertView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
-        mAdvertView = checkNotNull(advertView, "sellingView cannot be null.");
+        mAdvertView = checkNotNull(advertView, "advertView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mAdvertView.setPresenter(AdvertDetailPresenter.this);
+        mAdvertView.setPresenter(AdvertPreviewPresenter.this);
     }
-
 
     @Override public void create() {
 

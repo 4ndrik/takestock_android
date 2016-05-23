@@ -1,16 +1,20 @@
-package com.devabit.takestock.screens.advertDetail;
+package com.devabit.takestock.screens.advert.detail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
@@ -19,9 +23,11 @@ import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Certification;
 import com.devabit.takestock.data.models.Condition;
 import com.devabit.takestock.data.models.Shipping;
-import com.squareup.picasso.Picasso;
+import com.devabit.takestock.screens.advert.adapters.AdvertPhotosAdapter;
+import com.devabit.takestock.util.FontCache;
 
-import static com.devabit.takestock.util.Logger.LOGD;
+import java.util.List;
+
 import static com.devabit.takestock.util.Logger.makeLogTag;
 
 public class AdvertDetailActivity extends AppCompatActivity implements AdvertDetailContract.View {
@@ -35,7 +41,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     @BindView(R.id.content_product_detail) protected View mContent;
-    @BindView(R.id.product_image_view) protected ImageView mProductImageView;
+    @BindView(R.id.advert_photos_recycler_view) protected RecyclerView mPhotosRecyclerView;
     @BindView(R.id.guide_price_text_view) protected TextView mGuidePriceTextView;
     @BindView(R.id.minimum_order_text_view) protected TextView mMinimumOrderTextView;
     @BindView(R.id.qty_available_text_view) protected TextView mQtyAvailableTextView;
@@ -45,6 +51,8 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @BindView(R.id.expiry_date_text_view) protected TextView mExpiryTextView;
     @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
     @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
+    @BindViews({R.id.ask_button, R.id.make_offer_button})
+    protected List<Button> mButtons;
 
     private Advert mAdvert;
     private AdvertDetailContract.Presenter mPresenter;
@@ -59,7 +67,6 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
                 Injection.provideDataRepository(AdvertDetailActivity.this), AdvertDetailActivity.this);
 
         mAdvert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
-        LOGD(TAG, "Advert: " + mAdvert);
 
         Toolbar toolbar = ButterKnife.findById(AdvertDetailActivity.this, R.id.toolbar);
         toolbar.setTitle(mAdvert.getName());
@@ -72,9 +79,9 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mContent.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override public void onGlobalLayout() {
-                        mProductImageView.getLayoutParams().height = mContent.getHeight() / 2;
+                        mPhotosRecyclerView.getLayoutParams().height = mContent.getHeight() / 2;
                         mContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        loadPhoto();
+                        setUpAdvertPhotosToRecyclerView(mAdvert);
                     }
                 });
         mGuidePriceTextView.setText(getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice()));
@@ -83,22 +90,24 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mDescriptionTextView.setText(mAdvert.getDescription());
         mLocationTextView.setText(mAdvert.getLocation());
 
+        final Typeface boldTypeface = FontCache.getTypeface(AdvertDetailActivity.this, R.string.font_brandon_bold);
+        ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
+            @Override public void apply(@NonNull Button view, int index) {
+                view.setTypeface(boldTypeface);
+            }
+        });
+
         mPresenter.fetchShippingById(mAdvert.getShippingId());
         mPresenter.fetchCertificationById(mAdvert.getCertificationId());
         mPresenter.fetchConditionById(mAdvert.getConditionId());
     }
 
-    private void loadPhoto() {
-        if (mAdvert.getPhotos().isEmpty()) {
-            mProductImageView.setImageResource(R.drawable.ic_image_48dp);
-        } else {
-            String url = mAdvert.getPhotos().get(0).getImagePath();
-            Picasso.with(AdvertDetailActivity.this)
-                    .load(url)
-                    .placeholder(R.drawable.ic_image_48dp)
-                    .error(R.drawable.ic_image_48dp)
-                    .into(mProductImageView);
-        }
+    private void setUpAdvertPhotosToRecyclerView(Advert advert) {
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(AdvertDetailActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        mPhotosRecyclerView.setLayoutManager(layoutManager);
+        AdvertPhotosAdapter photosAdapter = new AdvertPhotosAdapter(AdvertDetailActivity.this, advert.getPhotos());
+        mPhotosRecyclerView.setAdapter(photosAdapter);
     }
 
     @OnClick(R.id.make_offer_fab)

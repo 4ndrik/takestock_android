@@ -43,7 +43,9 @@ public interface SellingContract {
 
         void showUnknownError();
 
-        void showAdvertCreated();
+        void showAdvertInPreview(Advert advert);
+
+        void showAdvertSaved();
 
         void showCategoriesInView(List<Category> categories);
 
@@ -66,6 +68,8 @@ public interface SellingContract {
 
         void processPhotoToFile(Uri photoUri, File photoFile);
 
-        void processAdvert(Advert advert);
+        void previewAdvert(Advert advert);
+
+        void saveAdvert(Advert advert);
     }
 }
