@@ -230,7 +230,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<Advert> saveAdvert(final Advert advert) {
+    @Override public Observable<Advert> saveOrUpdateAdvert(final Advert advert) {
         return Observable.just(advert)
                 .map(new Func1<Advert, String>() {
                     @Override public String call(Advert advert) {
@@ -245,15 +245,14 @@ public class RemoteDataSource implements RestApi, DataSource {
                         return Observable.fromCallable(createPOST(composeUrl(GET_ADVERTS), json));
                     }
                 }).map(new Func1<String, Advert>() {
-                    @Override public Advert call(String s) {
-                        LOGD(TAG, s);
-                        return advert;
+                    @Override public Advert call(String jsonString) {
+                        try {
+                            return new AdvertJsonMapper().fromJsonString(jsonString);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
-    }
-
-    @Override public Observable<List<Advert>> getAdverts() {
-        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<ResultList<Advert>> getResultAdvertList() {

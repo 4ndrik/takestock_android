@@ -28,7 +28,7 @@ import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screens.category.CategoriesDialog;
-import com.devabit.takestock.screens.search.adapter.AdvertAdapter;
+import com.devabit.takestock.screens.search.adapters.AdvertAdapter;
 import com.devabit.takestock.util.FontCache;
 import com.devabit.takestock.widgets.AdvertSortView;
 

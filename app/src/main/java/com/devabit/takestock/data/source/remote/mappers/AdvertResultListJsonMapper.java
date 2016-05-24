@@ -32,7 +32,8 @@ public class AdvertResultListJsonMapper implements FromJsonMapper<ResultList<Adv
         } else {
             resultList.setPrevious(jsonObject.getString(PREVIOUS));
         }
-        List<Advert> adverts = new AdvertJsonMapper().fromJsonString(jsonObject.getString(RESULTS));
+        List<Advert> adverts = new AdvertJsonMapper()
+                .fromJsonStringToList(jsonObject.getString(RESULTS));
         resultList.setResults(adverts);
         return resultList;
     }

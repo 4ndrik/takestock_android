@@ -5,6 +5,7 @@ import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.entity.*;
+import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.mapper.*;
 import io.realm.*;
 import rx.Observable;
@@ -94,12 +95,39 @@ public class LocalDataSource implements DataSource {
         });
     }
 
-    @Override public Observable<Advert> saveAdvert(Advert advert) {
-        throw new UnsupportedOperationException("This operation not required.");
-    }
+    @Override public Observable<Advert> saveOrUpdateAdvert(Advert advert) {
+        return Observable.just(advert)
+                .doOnNext(new Action1<Advert>() {
+                    @Override public void call(Advert advert) {
+                        try (Realm realm = Realm.getDefaultInstance()) {
+                            RealmQuery<AdvertEntity> query = realm.where(AdvertEntity.class)
+                                    .equalTo("mId", advert.getId())
+                                    .findAll()
+                                    .where()
+                                    .equalTo("mDateUpdatedAt", advert.getDateUpdatedAt());
 
-    @Override public Observable<List<Advert>> getAdverts() {
-        throw new UnsupportedOperationException("This operation not required.");
+                            if (query.count() > 0) return;
+
+                            realm.beginTransaction();
+                            AdvertEntityDataMapper advertMapper = new AdvertEntityDataMapper();
+                            AdvertEntity advertEntity = advertMapper.transformToEntity(advert);
+                            advertEntity = realm.copyToRealmOrUpdate(advertEntity);
+
+                            RealmList<StringEntity> tagEntities = advertEntity.getTags();
+                            for (String tag : advert.getTags()) {
+                                StringEntity tagEntity = advertMapper.transformTagToEntity(tag);
+                                tagEntities.add(tagEntity);
+                            }
+
+                            RealmList<PhotoEntity> photoEntities = advertEntity.getPhotos();
+                            for (Photo photo : advert.getPhotos()) {
+                                PhotoEntity photoEntity = advertMapper.transformPhotoToEntity(photo);
+                                photoEntities.add(photoEntity);
+                            }
+                            realm.commitTransaction();
+                        }
+                    }
+                });
     }
 
     @Override public Observable<ResultList<Advert>> getResultAdvertList() {
@@ -111,7 +139,25 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override public Observable<ResultList<Advert>> getResultAdvertListPerFilter(AdvertFilter filter) {
-        throw new UnsupportedOperationException("This operation not required.");
+        return Observable.just(filter)
+                .map(new Func1<AdvertFilter, RealmResults<AdvertEntity>>() {
+                    @Override public RealmResults<AdvertEntity> call(AdvertFilter advertFilter) {
+                        RealmQuery<AdvertEntity> query = new AdvertFilterQueryBuilder().buildQuery(advertFilter);
+                        return query.findAll();
+                    }
+                })
+                .map(new Func1<RealmResults<AdvertEntity>, List<Advert>>() {
+                    @Override public List<Advert> call(RealmResults<AdvertEntity> advertEntities) {
+                        return new AdvertEntityDataMapper().transformFromEntitiesToList(advertEntities);
+                    }
+                }).map(new Func1<List<Advert>, ResultList<Advert>>() {
+                    @Override public ResultList<Advert> call(List<Advert> adverts) {
+                        ResultList<Advert> resultList = new ResultList<>();
+                        resultList.setResults(adverts);
+                        return resultList;
+                    }
+                });
+
     }
 
     @Override public void saveSizes(List<Size> sizes) {
@@ -181,7 +227,7 @@ public class LocalDataSource implements DataSource {
     @Override public Observable<List<Shipping>> getShippings() {
         return Observable.fromCallable(new Callable<RealmResults<ShippingEntity>>() {
             @Override public RealmResults<ShippingEntity> call() throws Exception {
-                    return Realm.getDefaultInstance().where(ShippingEntity.class).findAll();
+                return Realm.getDefaultInstance().where(ShippingEntity.class).findAll();
             }
         }).filter(new Func1<RealmResults<ShippingEntity>, Boolean>() {
             @Override public Boolean call(RealmResults<ShippingEntity> entities) {

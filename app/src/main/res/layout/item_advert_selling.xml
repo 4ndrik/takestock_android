@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="4dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <ImageView
+                android:id="@+id/photo_image_view"
+                android:layout_width="124dp"
+                android:layout_height="match_parent"
+                tools:scaleType="centerCrop"
+                tools:src="@drawable/test_image"
+                tools:ignore="ContentDescription"/>
+
+        <TableLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:stretchColumns="*"
+                android:shrinkColumns="*">
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/title_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        tools:text="Chocolate"/>
+
+                <ImageButton
+                        android:id="@+id/menu_more_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|end"
+                        android:padding="8dp"
+                        android:background="@null"
+                        android:src="@drawable/ic_menu_more_black_24dp"
+                        tools:ignore="ContentDescription"/>
+
+            </TableRow>
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="normal"
+                        android:text="Price:"/>
+
+                <TextView
+                        android:id="@+id/guide_price_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        tools:text="45 per kg"/>
+
+            </TableRow>
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="normal"
+                        android:text="Available:"/>
+
+                <TextView
+                        android:id="@+id/qty_available_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        tools:text="45 kg"/>
+
+            </TableRow>
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="normal"
+                        android:text="Updated:"/>
+
+                <TextView
+                        android:id="@+id/date_updated_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        tools:text="13 march 2016"/>
+
+            </TableRow>
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="normal"
+                        android:text="Offers made:"/>
+
+                <TextView
+                        android:id="@+id/offers_made_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold"
+                        tools:text="98"/>
+
+            </TableRow>
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="normal"
+                        android:text="New questions:"/>
+
+                <TextView
+                        android:id="@+id/days_left_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold"
+                        tools:text="10"/>
+
+            </TableRow>
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="normal"
+                        android:text="New questions:"/>
+
+                <TextView
+                        android:id="@+id/new_questions_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold"
+                        tools:text="10"/>
+
+            </TableRow>
+
+            <!--<TableRow-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/title_text_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="@android:style/TextAppearance.Medium"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textStyle="bold"-->
+            <!--tools:text="Chocolate"/>-->
+
+            <!--<ImageButton-->
+            <!--android:id="@+id/menu_more_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="8dp"-->
+            <!--android:background="@null"-->
+            <!--android:src="@drawable/ic_menu_more_black_24dp"-->
+            <!--tools:ignore="ContentDescription"/>-->
+
+            <!--</TableRow>-->
+        </TableLayout>
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:padding="8dp"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/title_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Medium"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textStyle="bold"-->
+        <!--tools:text="Chocolate"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/guide_price_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textStyle="normal"-->
+        <!--tools:text="Price: 45 per kg"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/qty_available_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textStyle="normal"-->
+        <!--tools:text="Available: 45 kg"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/date_updated_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textStyle="normal"-->
+        <!--tools:text="Updated: 13 march 2016"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/offers_made_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+        <!--tools:text="Offers made: 98"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/new_questions_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+        <!--tools:text="New questions: 10"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/days_left_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+        <!--tools:text="Days left: 25"/>-->
+
+
+        <!--</LinearLayout>-->
+
+        <!--<ImageButton-->
+        <!--android:id="@+id/menu_more_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="8dp"-->
+        <!--android:background="@null"-->
+        <!--android:src="@drawable/ic_menu_more_black_24dp"-->
+        <!--tools:ignore="ContentDescription"/>-->
+    </LinearLayout>
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/photo_image_view"-->
+    <!--android:layout_width="150dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:scaleType="centerCrop"-->
+    <!--tools:src="@drawable/test_image"-->
+    <!--tools:ignore="ContentDescription"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/title_text_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_toEndOf="@id/photo_image_view"-->
+    <!--android:layout_marginStart="8dp"-->
+    <!--android:textAppearance="@android:style/TextAppearance.Medium"-->
+    <!--android:textColor="@color/black"-->
+    <!--android:textStyle="bold"-->
+    <!--tools:text="Chocolate"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/guide_price_text_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="8dp"-->
+    <!--android:layout_toEndOf="@id/photo_image_view"-->
+    <!--android:layout_below="@+id/title_text_view"-->
+    <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+    <!--android:textColor="@color/black"-->
+    <!--android:textStyle="normal"-->
+    <!--tools:text="45 per kg"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/qty_available_text_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="8dp"-->
+    <!--android:layout_toEndOf="@id/photo_image_view"-->
+    <!--android:layout_below="@+id/guide_price_text_view"-->
+    <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+    <!--android:textColor="@color/black"-->
+    <!--android:textStyle="normal"-->
+    <!--tools:text="45 kg"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/date_updated_text_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="8dp"-->
+    <!--android:layout_toEndOf="@id/photo_image_view"-->
+    <!--android:layout_below="@+id/qty_available_text_view"-->
+    <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+    <!--android:textColor="@color/black"-->
+    <!--android:textStyle="normal"-->
+    <!--tools:text="Updated: 13 march 2016"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/offers_made_text_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"/>-->
+
+
+    <!--</RelativeLayout>-->
+
+</android.support.v7.widget.CardView>

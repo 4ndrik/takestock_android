@@ -25,6 +25,7 @@ import com.devabit.takestock.screens.category.CategoriesDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
 import com.devabit.takestock.screens.search.SearchActivity;
 import com.devabit.takestock.screens.sellSomething.SellSomethingActivity;
+import com.devabit.takestock.screens.selling.SellingActivity;
 import com.devabit.takestock.util.FontCache;
 
 import java.io.IOException;
@@ -84,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
                         onWatchingMenuItemClick();
                         return true;
 
+                    case R.id.nav_selling:
+                        onSellingMenuItemClick();
+                        return true;
+
                     default:
                         return false;
                 }
@@ -104,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onProfileMenuItemClick() {
-//        if (!isThereAccount()) {
+//        if (!lacksAccount()) {
 //            startEntryActivity(REQUEST_CODE_PROFILE_ACTIVITY);
 //        }
 
@@ -130,21 +135,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onNotificationMenuItemClick() {
-        if (!isThereAccount()) {
-            startEntryActivity(REQUEST_CODE_NOTIFICATIONS_ACTIVITY);
-        }
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_NOTIFICATIONS_ACTIVITY);
     }
 
     private void onWatchingMenuItemClick() {
-        if (!isThereAccount()) {
-            startEntryActivity(REQUEST_CODE_WATCHING_ACTIVITY);
-        }
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_WATCHING_ACTIVITY);
+    }
+
+    private void onSellingMenuItemClick() {
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
+        else startSellingActivity();
     }
 
     @OnClick(R.id.sell_something_button)
     protected void onSellSomethingButtonClick() {
-        if (isThereAccount()) startSellingActivity();
-        else startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
+        else startSellSomethingActivity();
     }
 
     private void startEntryActivity(int requestCode) {
@@ -152,12 +158,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startSellingActivity() {
+        startActivity(SellingActivity.getStartIntent(MainActivity.this));
+    }
+
+    private void startSellSomethingActivity() {
         startActivity(SellSomethingActivity.getStartIntent(MainActivity.this));
     }
 
-    private boolean isThereAccount() {
+    private boolean lacksAccount() {
         Account account = getAccountOrNull();
-        return account != null;
+        return account == null;
     }
 
     @Nullable private Account getAccountOrNull() {

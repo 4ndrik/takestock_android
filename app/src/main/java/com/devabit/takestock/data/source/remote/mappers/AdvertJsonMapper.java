@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
-public class AdvertJsonMapper implements FromJsonMapper<List<Advert>>, ToJsonMapper<Advert> {
+public class AdvertJsonMapper implements FromJsonMapper<Advert>, ToJsonMapper<Advert> {
 
     private static final String ID = "id";
     private static final String NAME = "name";
@@ -42,6 +42,10 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>>, ToJsonMap
     private static final String AUTHOR_DETAILED = "author_detailed";
     private static final String PHOTOS = "photos";
     private static final String PHOTOS_LIST = "photos_list";
+    private static final String PACKAGING_NAME = "packaging_name";
+    private static final String OFFERS_COUNT = "offers_count";
+    private static final String DAYS_LEFT = "days_left";
+    private static final String QUESTIONS_COUNT = "questions_count";
 
     private final UserJsonMapper mUserMapper;
     private final PhotoJsonMapper mPhotoMapper;
@@ -51,55 +55,65 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>>, ToJsonMap
         mPhotoMapper = new PhotoJsonMapper();
     }
 
-    @Override public List<Advert> fromJsonString(String json) throws JSONException {
+    public List<Advert> fromJsonStringToList(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
         int length = jsonArray.length();
         List<Advert> result = new ArrayList<>(length);
         for (int index = 0; index < length; index++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(index);
-
-            Advert advert = new Advert();
-            advert.setId(jsonObject.getInt(ID));
-            advert.setName(jsonObject.getString(NAME));
-            advert.setDateCreatedAt(jsonObject.getString(CREATED_AT));
-            advert.setDateExpiresAt(jsonObject.getString(EXPIRES_AT));
-            advert.setDateUpdatedAt(jsonObject.getString(UPDATED_AT));
-            advert.setIntendedUse(jsonObject.getString(INTENDED_USE));
-            advert.setGuidePrice(jsonObject.getString(GUIDE_PRICE));
-            advert.setDescription(jsonObject.getString(DESCRIPTION));
-            advert.setLocation(jsonObject.getString(LOCATION));
-            if (!jsonObject.isNull(SHIPPING)) advert.setShippingId(jsonObject.getInt(SHIPPING));
-            advert.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
-            advert.setAuthorId(jsonObject.getInt(AUTHOR));
-            advert.setCategoryId(jsonObject.getInt(CATEGORY));
-            if (!jsonObject.isNull(SUBCATEGORY)) advert.setSubCategoryId(jsonObject.getInt(SUBCATEGORY));
-            if (!jsonObject.isNull(PACKAGING)) advert.setPackagingId(jsonObject.getInt(PACKAGING));
-            advert.setMinOrderQuantity(jsonObject.getInt(MIN_ORDER_QUANTITY));
-            advert.setSize(jsonObject.getString(SIZE));
-            if (!jsonObject.isNull(CERTIFICATION)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION));
-            advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
-            if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
-            advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
-
-            JSONArray jsonTagsArray = jsonObject.getJSONArray(TAGS);
-            List<String> tags = new ArrayList<>(jsonTagsArray.length());
-            for (int i = 0; i < jsonTagsArray.length(); i++) {
-                tags.add(jsonTagsArray.getString(i));
-            }
-            advert.setTags(tags);
-
-            User user = mUserMapper.fromJsonString(jsonObject.getString(AUTHOR_DETAILED));
-            advert.setUser(user);
-
-            JSONArray jsonPhotosArray = jsonObject.getJSONArray(PHOTOS);
-            List<Photo> photos = new ArrayList<>(jsonPhotosArray.length());
-            for (int i = 0; i < jsonPhotosArray.length(); i++) {
-                photos.add(mPhotoMapper.fromJsonString(jsonPhotosArray.getString(i)));
-            }
-            advert.setPhotos(photos);
+            String jsonString = jsonArray.getString(index);
+            Advert advert = fromJsonString(jsonString);
             result.add(advert);
         }
         return result;
+    }
+
+    @Override public Advert fromJsonString(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+
+        Advert advert = new Advert();
+        advert.setId(jsonObject.getInt(ID));
+        advert.setName(jsonObject.getString(NAME));
+        advert.setDateCreatedAt(jsonObject.getString(CREATED_AT));
+        advert.setDateExpiresAt(jsonObject.getString(EXPIRES_AT));
+        advert.setDateUpdatedAt(jsonObject.getString(UPDATED_AT));
+        advert.setIntendedUse(jsonObject.getString(INTENDED_USE));
+        advert.setGuidePrice(jsonObject.getString(GUIDE_PRICE));
+        advert.setDescription(jsonObject.getString(DESCRIPTION));
+        advert.setLocation(jsonObject.getString(LOCATION));
+        if (!jsonObject.isNull(SHIPPING)) advert.setShippingId(jsonObject.getInt(SHIPPING));
+        advert.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
+        advert.setAuthorId(jsonObject.getInt(AUTHOR));
+        advert.setCategoryId(jsonObject.getInt(CATEGORY));
+        if (!jsonObject.isNull(SUBCATEGORY)) advert.setSubCategoryId(jsonObject.getInt(SUBCATEGORY));
+        if (!jsonObject.isNull(PACKAGING)) advert.setPackagingId(jsonObject.getInt(PACKAGING));
+        advert.setMinOrderQuantity(jsonObject.getInt(MIN_ORDER_QUANTITY));
+        advert.setSize(jsonObject.getString(SIZE));
+        if (!jsonObject.isNull(CERTIFICATION)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION));
+        advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
+        if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
+        advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
+        advert.setPackagingName(jsonObject.getString(PACKAGING_NAME));
+        advert.setOffersCount(jsonObject.getString(OFFERS_COUNT));
+        advert.setQuestionsCount(jsonObject.getString(QUESTIONS_COUNT));
+        advert.setDaysLeft(jsonObject.getString(DAYS_LEFT));
+
+        JSONArray jsonTagsArray = jsonObject.getJSONArray(TAGS);
+        List<String> tags = new ArrayList<>(jsonTagsArray.length());
+        for (int i = 0; i < jsonTagsArray.length(); i++) {
+            tags.add(jsonTagsArray.getString(i));
+        }
+        advert.setTags(tags);
+
+        User user = mUserMapper.fromJsonString(jsonObject.getString(AUTHOR_DETAILED));
+        advert.setUser(user);
+
+        JSONArray jsonPhotosArray = jsonObject.getJSONArray(PHOTOS);
+        List<Photo> photos = new ArrayList<>(jsonPhotosArray.length());
+        for (int i = 0; i < jsonPhotosArray.length(); i++) {
+            photos.add(mPhotoMapper.fromJsonString(jsonPhotosArray.getString(i)));
+        }
+        advert.setPhotos(photos);
+        return advert;
     }
 
     @Override public String toJsonString(Advert target) throws JSONException {
@@ -125,7 +139,7 @@ public class AdvertJsonMapper implements FromJsonMapper<List<Advert>>, ToJsonMap
         array.put("tag");
         jsonObject.put(TAGS, array);
         JSONArray jsonArray = new JSONArray();
-        for(Photo photo : target.getPhotos()) {
+        for (Photo photo : target.getPhotos()) {
             try {
                 jsonArray.put("data:image/jpg;base64," + Encoder.encodeFileToBase64(photo.getImagePath()));
             } catch (IOException e) {

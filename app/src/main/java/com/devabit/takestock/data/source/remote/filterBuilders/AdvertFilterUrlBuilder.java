@@ -38,6 +38,10 @@ public class AdvertFilterUrlBuilder {
         if (order > 0) {
             builder.appendQueryParameter(ORDER, getOrderAsString(order));
         }
+        int userId = filter.getAuthorId();
+        if (userId > 0) {
+            builder.appendQueryParameter(AUTHOR_ID, String.valueOf(userId));
+        }
 
         return builder.build().toString();
     }

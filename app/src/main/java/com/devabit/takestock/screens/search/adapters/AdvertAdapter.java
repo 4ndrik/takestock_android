@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.search.adapter;
+package com.devabit.takestock.screens.search.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -67,10 +67,18 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
-        if (position == getItemCount() - 1 && mEndPositionListener != null) {
-            mEndPositionListener.onEndPosition(position);
-        }
+        checkEndPosition(position);
         holder.bindAdvert(mAdverts.get(position));
+    }
+
+    private void checkEndPosition(int position) {
+        if (isEndPosition(position)) {
+            if (mEndPositionListener != null) mEndPositionListener.onEndPosition(position);
+        }
+    }
+
+    private boolean isEndPosition(int position) {
+        return position == getItemCount() - 1;
     }
 
     @Override public int getItemCount() {
