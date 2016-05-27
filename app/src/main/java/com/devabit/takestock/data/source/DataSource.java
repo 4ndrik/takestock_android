@@ -1,8 +1,8 @@
 package com.devabit.takestock.data.source;
 
+import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.*;
-import com.devabit.takestock.data.models.Advert;
 import rx.Observable;
 
 import java.util.List;
@@ -12,46 +12,70 @@ import java.util.List;
  */
 public interface DataSource {
 
-    Observable<AuthToken> obtainAuthTokenPerSignUp(UserCredentials credentials);
+    Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials);
 
-    Observable<AuthToken> obtainAuthTokenPerSignIn(UserCredentials credentials);
+    Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials);
 
-    void saveCategories(List<Category> categories);
+    void saveCategories(@NonNull List<Category> categories);
+
+    Observable<List<Category>> updateCategories();
 
     Observable<List<Category>> getCategories();
 
-    Observable<Advert> saveOrUpdateAdvert(Advert advert);
+    Category getCategoryById(int id);
 
-    Observable<ResultList<Advert>> getResultAdvertList();
+    void saveSizes(@NonNull List<Size> sizes);
 
-    Observable<ResultList<Advert>> getResultAdvertListPerPage(String link);
-
-    Observable<ResultList<Advert>> getResultAdvertListPerFilter(AdvertFilter filter);
-
-    void saveSizes(List<Size> sizes);
+    Observable<List<Size>> updateSizes();
 
     Observable<List<Size>> getSizes();
 
-    void saveCertifications(List<Certification> certifications);
+    void saveCertifications(@NonNull List<Certification> certifications);
+
+    Observable<List<Certification>> updateCertifications();
 
     Observable<List<Certification>> getCertifications();
 
     Certification getCertificationById(int id);
 
-    void saveShippings(List<Shipping> shippings);
+    void saveShippings(@NonNull List<Shipping> shippings);
+
+    Observable<List<Shipping>> updateShippings();
 
     Observable<List<Shipping>> getShippings();
 
     Shipping getShippingById(int id);
 
-    void saveConditions(List<Condition> conditions);
+    void saveConditions(@NonNull List<Condition> conditions);
+
+    Observable<List<Condition>> updateConditions();
 
     Observable<List<Condition>> getConditions();
 
     Condition getConditionById(int id);
 
-    void savePackagings(List<Packaging> packagings);
+    void savePackagings(@NonNull List<Packaging> packagings);
+
+    Observable<List<Packaging>> updatePackagings();
 
     Observable<List<Packaging>> getPackagings();
+
+    Packaging getPackagingById(int id);
+
+    void saveOfferStatuses(@NonNull List<OfferStatus> statuses);
+
+    Observable<List<OfferStatus>> updateOfferStatuses();
+
+    Observable<List<OfferStatus>> getOfferStatuses();
+
+    OfferStatus getOfferStatusById(int id);
+
+    Observable<Advert> saveAdvert(@NonNull Advert advert);
+
+    Observable<ResultList<Advert>> getAdvertResultList();
+
+    Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page);
+
+    Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
 
 }

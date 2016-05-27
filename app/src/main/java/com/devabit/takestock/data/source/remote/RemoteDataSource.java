@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
@@ -132,8 +133,8 @@ public class RemoteDataSource implements RestApi, DataSource {
             authToken.token = token;
             try {
                 String tokeJson = new AuthTokenJsonMapper().toJsonString(authToken);
-                Request request = buildPOSTRequest(composeUrl(POST_TOKEN_VERIFY), tokeJson);
-                try(ResponseBody body = mOkHttpClient.newCall(request).execute().body()) {
+                Request request = buildPOSTRequest(TOKEN_VERIFY, tokeJson);
+                try (ResponseBody body = mOkHttpClient.newCall(request).execute().body()) {
                     return body.string();
                 }
             } catch (Exception e) {
@@ -161,11 +162,17 @@ public class RemoteDataSource implements RestApi, DataSource {
         }
     }
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(UserCredentials credentials) {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //     Method for data source
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOST(composeUrl(POST_TOKEN_REGISTER), json));
+                        return Observable.fromCallable(createPOST(TOKEN_REGISTER, json));
                     }
                 }).map(new Func1<String, AuthToken>() {
                     @Override public AuthToken call(String json) {
@@ -178,11 +185,11 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(UserCredentials credentials) {
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOST(composeUrl(POST_TOKEN_AUTH), json));
+                        return Observable.fromCallable(createPOST(TOKEN_AUTH, json));
                     }
                 }).map(new Func1<String, AuthToken>() {
                     @Override public AuthToken call(String json) {
@@ -208,12 +215,16 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public void saveCategories(List<Category> categories) {
+    @Override public void saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<List<Category>> updateCategories() {
+        return getCategories();
+    }
+
     @Override public Observable<List<Category>> getCategories() {
-        return Observable.fromCallable(createGET(composeUrl(GET_CATEGORY)))
+        return Observable.fromCallable(createGET(CATEGORY))
                 .map(new Func1<String, List<Category>>() {
                     @Override public List<Category> call(String json) {
                         try {
@@ -230,78 +241,20 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<Advert> saveOrUpdateAdvert(final Advert advert) {
-        return Observable.just(advert)
-                .map(new Func1<Advert, String>() {
-                    @Override public String call(Advert advert) {
-                        try {
-                            return new AdvertJsonMapper().toJsonString(advert);
-                        } catch (JSONException e) {
-                            throw new RuntimeException();
-                        }
-                    }
-                }).flatMap(new Func1<String, Observable<String>>() {
-                    @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOST(composeUrl(GET_ADVERTS), json));
-                    }
-                }).map(new Func1<String, Advert>() {
-                    @Override public Advert call(String jsonString) {
-                        try {
-                            return new AdvertJsonMapper().fromJsonString(jsonString);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-    }
-
-    @Override public Observable<ResultList<Advert>> getResultAdvertList() {
-        return getResultAdvertListPerPage(composeUrl(GET_ADVERTS));
-    }
-
-    @Override public Observable<ResultList<Advert>> getResultAdvertListPerPage(String page) {
-        return Observable.fromCallable(createGET(page))
-                .map(new Func1<String, ResultList<Advert>>() {
-                    @Override public ResultList<Advert> call(String json) {
-                        try {
-                            LOGD(TAG, json);
-                            return new AdvertResultListJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }).doOnNext(new Action1<ResultList<Advert>>() {
-                    @Override public void call(ResultList<Advert> advertResultList) {
-                        LOGD(TAG, "ResultAdvertList: " + advertResultList);
-                    }
-                });
-    }
-
-    @Override public Observable<ResultList<Advert>> getResultAdvertListPerFilter(final AdvertFilter filter) {
-        return Observable.just(filter)
-                .map(new Func1<AdvertFilter, String>() {
-                    @Override public String call(AdvertFilter filter) {
-                        return new AdvertFilterUrlBuilder().buildUrl(filter);
-                    }
-                })
-                .doOnNext(new Action1<String>() {
-                    @Override public void call(String s) {
-                        LOGD(TAG, s);
-                    }
-                })
-                .flatMap(new Func1<String, Observable<ResultList<Advert>>>() {
-                    @Override public Observable<ResultList<Advert>> call(String url) {
-                        return getResultAdvertListPerPage(url);
-                    }
-                });
-    }
-
-    @Override public void saveSizes(List<Size> sizeList) {
+    @Override public Category getCategoryById(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public void saveSizes(@NonNull List<Size> sizes) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Size>> updateSizes() {
+        return getSizes();
+    }
+
     @Override public Observable<List<Size>> getSizes() {
-        return Observable.fromCallable(createGET(composeUrl(GET_SIZE_TYPES)))
+        return Observable.fromCallable(createGET(SIZE_TYPES))
                 .map(new Func1<String, List<Size>>() {
                     @Override public List<Size> call(String json) {
                         try {
@@ -317,12 +270,16 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public void saveCertifications(List<Certification> certificationList) {
+    @Override public void saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<List<Certification>> updateCertifications() {
+        return getCertifications();
+    }
+
     @Override public Observable<List<Certification>> getCertifications() {
-        return Observable.fromCallable(createGET(composeUrl(GET_CERTIFICATIONS)))
+        return Observable.fromCallable(createGET(CERTIFICATIONS))
                 .map(new Func1<String, List<Certification>>() {
                     @Override public List<Certification> call(String json) {
                         try {
@@ -343,12 +300,16 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public void saveShippings(List<Shipping> shippingList) {
+    @Override public void saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<List<Shipping>> updateShippings() {
+        return getShippings();
+    }
+
     @Override public Observable<List<Shipping>> getShippings() {
-        return Observable.fromCallable(createGET(composeUrl(GET_SHIPPING)))
+        return Observable.fromCallable(createGET(SHIPPING))
                 .map(new Func1<String, List<Shipping>>() {
                     @Override public List<Shipping> call(String json) {
                         try {
@@ -368,12 +329,16 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public void saveConditions(List<Condition> conditionList) {
+    @Override public void saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<List<Condition>> updateConditions() {
+        return getConditions();
+    }
+
     @Override public Observable<List<Condition>> getConditions() {
-        return Observable.fromCallable(createGET(composeUrl(GET_CONDITIONS)))
+        return Observable.fromCallable(createGET(CONDITIONS))
                 .map(new Func1<String, List<Condition>>() {
                     @Override public List<Condition> call(String json) {
                         try {
@@ -393,12 +358,16 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public void savePackagings(List<Packaging> packagings) {
+    @Override public void savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<List<Packaging>> updatePackagings() {
+        return getPackagings();
+    }
+
     @Override public Observable<List<Packaging>> getPackagings() {
-        return Observable.fromCallable(createGET(composeUrl(GET_PACKAGING)))
+        return Observable.fromCallable(createGET(PACKAGING))
                 .map(new Func1<String, List<Packaging>>() {
                     @Override public List<Packaging> call(String json) {
                         try {
@@ -414,6 +383,112 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
+    @Override public Packaging getPackagingById(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<OfferStatus>> updateOfferStatuses() {
+        return getOfferStatuses();
+    }
+
+    @Override public Observable<List<OfferStatus>> getOfferStatuses() {
+        return Observable.fromCallable(createGET(OFFER_STATUS))
+                .map(new Func1<String, List<OfferStatus>>() {
+                    @Override public List<OfferStatus> call(String json) {
+                        try {
+                            return new OfferStatusJsonMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }).doOnNext(new Action1<List<OfferStatus>>() {
+                    @Override public void call(List<OfferStatus> statuses) {
+                        LOGD(TAG, "Offer Statuses from RemoteDataSource " + statuses);
+                    }
+                });
+    }
+
+    @Override public OfferStatus getOfferStatusById(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
+        return Observable.just(advert)
+                .map(new Func1<Advert, String>() {
+                    @Override public String call(Advert advert) {
+                        try {
+                            return new AdvertJsonMapper().toJsonString(advert);
+                        } catch (JSONException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+                }).flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPOST(ADVERTS, json));
+                    }
+                }).map(new Func1<String, Advert>() {
+                    @Override public Advert call(String jsonString) {
+                        try {
+                            return new AdvertJsonMapper().fromJsonString(jsonString);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Advert>> getAdvertResultList() {
+        return getAdvertResultListPerPage(ADVERTS);
+    }
+
+    @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
+        return Observable.fromCallable(createGET(page))
+                .map(new Func1<String, ResultList<Advert>>() {
+                    @Override public ResultList<Advert> call(String json) {
+                        try {
+                            LOGD(TAG, json);
+                            return new AdvertResultListJsonMapper().fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }).doOnNext(new Action1<ResultList<Advert>>() {
+                    @Override public void call(ResultList<Advert> advertResultList) {
+                        LOGD(TAG, "ResultAdvertList: " + advertResultList);
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<AdvertFilter, String>() {
+                    @Override public String call(AdvertFilter filter) {
+                        return new AdvertFilterUrlBuilder().buildUrl(filter);
+                    }
+                })
+                .doOnNext(new Action1<String>() {
+                    @Override public void call(String s) {
+                        LOGD(TAG, s);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<ResultList<Advert>>>() {
+                    @Override public Observable<ResultList<Advert>> call(String url) {
+                        return getAdvertResultListPerPage(url);
+                    }
+                });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //     Methods for HTTP request
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private Callable<String> createPOST(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
@@ -421,7 +496,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                     Request request = buildPOSTRequest(url, json);
                     LOGD(TAG, request.toString());
                     Response response = mOkHttpClient.newCall(request).execute();
-                    try(ResponseBody body = response.body()) {
+                    try (ResponseBody body = response.body()) {
                         return body.string();
                     }
                 } else {
@@ -446,7 +521,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                     Request request = buildGETRequest(url);
                     LOGD(TAG, request.toString());
                     Response response = mOkHttpClient.newCall(request).execute();
-                    try(ResponseBody body = response.body()) {
+                    try (ResponseBody body = response.body()) {
                         return body.string();
                     }
                 } else {
@@ -477,15 +552,15 @@ public class RemoteDataSource implements RestApi, DataSource {
         return isConnected;
     }
 
-    @Override public String composeUrl(String... params) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SCHEME);
-        stringBuilder.append("://");
-        stringBuilder.append(API_BASE_URL);
-        for (String param : params) {
-            stringBuilder.append("/");
-            stringBuilder.append(param);
-        }
-        return stringBuilder.toString();
-    }
+//    @Override public String composeUrl(String... params) {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append(SCHEME);
+//        stringBuilder.append("://");
+//        stringBuilder.append(API_BASE_URL);
+//        for (String param : params) {
+//            stringBuilder.append("/");
+//            stringBuilder.append(param);
+//        }
+//        return stringBuilder.toString();
+//    }
 }

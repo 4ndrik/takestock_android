@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.*;
-import com.devabit.takestock.data.models.Advert;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -52,139 +51,194 @@ public class DataRepository implements DataSource {
         sInstance = null;
     }
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(UserCredentials credentials) {
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
         return mRemoteDataSource.obtainAuthTokenPerSignUp(credentials);
     }
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(UserCredentials credentials) {
+    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials) {
         return mRemoteDataSource.obtainAuthTokenPerSignIn(credentials);
     }
 
-    @Override public void saveCategories(List<Category> categories) {
+    @Override public void saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Category>> getCategories() {
         Observable<List<Category>> localCategories = mLocalDataSource.getCategories();
-        Observable<List<Category>> remoteCategories = mRemoteDataSource.getCategories()
+        Observable<List<Category>> remoteCategories = updateCategories();
+        return Observable.concat(localCategories, remoteCategories).first();
+    }
+
+    @Override public Observable<List<Category>> updateCategories() {
+        return mRemoteDataSource.updateCategories()
                 .doOnNext(new Action1<List<Category>>() {
                     @Override public void call(List<Category> categories) {
                         mLocalDataSource.saveCategories(categories);
                     }
                 });
-        return Observable.concat(localCategories, remoteCategories).first();
     }
 
-    @Override public Observable<Advert> saveOrUpdateAdvert(Advert advert) {
-        if (TextUtils.isEmpty(advert.getDateUpdatedAt())) {
-            return mRemoteDataSource.saveOrUpdateAdvert(advert)
-                    .flatMap(new Func1<Advert, Observable<Advert>>() {
-                        @Override public Observable<Advert> call(Advert advert) {
-                            return mLocalDataSource.saveOrUpdateAdvert(advert);
-                        }
-                    });
-        } else {
-            return mLocalDataSource.saveOrUpdateAdvert(advert);
-        }
+    @Override public Category getCategoryById(int id) {
+        return null;
     }
 
-    @Override public Observable<ResultList<Advert>> getResultAdvertList() {
-        return mRemoteDataSource.getResultAdvertList();
-    }
-
-    @Override public Observable<ResultList<Advert>> getResultAdvertListPerPage(String link) {
-        return mRemoteDataSource.getResultAdvertListPerPage(link);
-    }
-
-    @Override public Observable<ResultList<Advert>> getResultAdvertListPerFilter(AdvertFilter filter) {
-        return mRemoteDataSource.getResultAdvertListPerFilter(filter);
-    }
-
-    @Override public void saveSizes(List<Size> sizes) {
+    @Override public void saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Size>> getSizes() {
         Observable<List<Size>> localSizes = mLocalDataSource.getSizes();
-        Observable<List<Size>> remoteSizes = mRemoteDataSource.getSizes()
+        Observable<List<Size>> remoteSizes = updateSizes();
+        return Observable.concat(localSizes, remoteSizes).first();
+    }
+
+    @Override public Observable<List<Size>> updateSizes() {
+        return mRemoteDataSource.updateSizes()
                 .doOnNext(new Action1<List<Size>>() {
                     @Override public void call(List<Size> sizes) {
                         mLocalDataSource.saveSizes(sizes);
                     }
                 });
-        return Observable.concat(localSizes, remoteSizes).first();
     }
 
-    @Override public void saveCertifications(List<Certification> certifications) {
+    @Override public void saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Certification>> getCertifications() {
         Observable<List<Certification>> localCertifications = mLocalDataSource.getCertifications();
-        Observable<List<Certification>> remoteCertifications = mRemoteDataSource.getCertifications()
+        Observable<List<Certification>> remoteCertifications = updateCertifications();
+        return Observable.concat(localCertifications, remoteCertifications).first();
+    }
+
+    @Override public Observable<List<Certification>> updateCertifications() {
+        return mRemoteDataSource.updateCertifications()
                 .doOnNext(new Action1<List<Certification>>() {
                     @Override public void call(List<Certification> certifications) {
                         mLocalDataSource.saveCertifications(certifications);
                     }
                 });
-        return Observable.concat(localCertifications, remoteCertifications).first();
     }
 
     @Override public Certification getCertificationById(int id) {
         return mLocalDataSource.getCertificationById(id);
     }
 
-    @Override public void saveShippings(List<Shipping> shippings) {
+    @Override public void saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Shipping>> getShippings() {
         Observable<List<Shipping>> localShippings = mLocalDataSource.getShippings();
-        Observable<List<Shipping>> remoteShippings = mRemoteDataSource.getShippings()
+        Observable<List<Shipping>> remoteShippings = updateShippings();
+        return Observable.concat(localShippings, remoteShippings).first();
+    }
+
+    @Override public Observable<List<Shipping>> updateShippings() {
+        return mRemoteDataSource.updateShippings()
                 .doOnNext(new Action1<List<Shipping>>() {
                     @Override public void call(List<Shipping> shippings) {
                         mLocalDataSource.saveShippings(shippings);
                     }
                 });
-        return Observable.concat(localShippings, remoteShippings).first();
     }
 
     @Override public Shipping getShippingById(int id) {
         return mLocalDataSource.getShippingById(id);
     }
 
-    @Override public void saveConditions(List<Condition> conditions) {
+    @Override public void saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Condition>> getConditions() {
         Observable<List<Condition>> localConditions = mLocalDataSource.getConditions();
-        Observable<List<Condition>> remoteConditions = mRemoteDataSource.getConditions()
+        Observable<List<Condition>> remoteConditions = updateConditions();
+        return Observable.concat(localConditions, remoteConditions).first();
+    }
+
+    @Override public Observable<List<Condition>> updateConditions() {
+        return mRemoteDataSource.updateConditions()
                 .doOnNext(new Action1<List<Condition>>() {
                     @Override public void call(List<Condition> conditions) {
                         mLocalDataSource.saveConditions(conditions);
                     }
                 });
-        return Observable.concat(localConditions, remoteConditions).first();
     }
 
     @Override public Condition getConditionById(int id) {
         return mLocalDataSource.getConditionById(id);
     }
 
-    @Override public void savePackagings(List<Packaging> packagings) {
+    @Override public void savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Packaging>> getPackagings() {
         Observable<List<Packaging>> localPackagings = mLocalDataSource.getPackagings();
-        Observable<List<Packaging>> remotePackagings = mRemoteDataSource.getPackagings()
+        Observable<List<Packaging>> remotePackagings = updatePackagings();
+        return Observable.concat(localPackagings, remotePackagings).first();
+    }
+
+    @Override public Observable<List<Packaging>> updatePackagings() {
+        return mRemoteDataSource.updatePackagings()
                 .doOnNext(new Action1<List<Packaging>>() {
                     @Override public void call(List<Packaging> packagings) {
                         mLocalDataSource.savePackagings(packagings);
                     }
                 });
-        return Observable.concat(localPackagings, remotePackagings).first();
+    }
+
+    @Override public Packaging getPackagingById(int id) {
+        return mLocalDataSource.getPackagingById(id);
+    }
+
+    @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<OfferStatus>> updateOfferStatuses() {
+        return mRemoteDataSource.updateOfferStatuses()
+                .doOnNext(new Action1<List<OfferStatus>>() {
+                    @Override public void call(List<OfferStatus> statuses) {
+                        mLocalDataSource.saveOfferStatuses(statuses);
+                    }
+                });
+    }
+
+    @Override public Observable<List<OfferStatus>> getOfferStatuses() {
+        Observable<List<OfferStatus>> localStatuses = mLocalDataSource.getOfferStatuses();
+        Observable<List<OfferStatus>> remoteStatuses = updateOfferStatuses();
+        return Observable.concat(localStatuses, remoteStatuses).first();
+    }
+
+    @Override public OfferStatus getOfferStatusById(int id) {
+        return mLocalDataSource.getOfferStatusById(id);
+    }
+
+    @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
+        if (TextUtils.isEmpty(advert.getDateUpdatedAt())) {
+            return mRemoteDataSource.saveAdvert(advert)
+                    .flatMap(new Func1<Advert, Observable<Advert>>() {
+                        @Override public Observable<Advert> call(Advert advert) {
+                            return mLocalDataSource.saveAdvert(advert);
+                        }
+                    });
+        } else {
+            return mLocalDataSource.saveAdvert(advert);
+        }
+    }
+
+    @Override public Observable<ResultList<Advert>> getAdvertResultList() {
+        return mRemoteDataSource.getAdvertResultList();
+    }
+
+    @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
+        return mRemoteDataSource.getAdvertResultListPerPage(page);
+    }
+
+    @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
+        return mRemoteDataSource.getAdvertResultListPerFilter(filter);
     }
 
 }
