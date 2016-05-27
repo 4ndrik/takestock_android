@@ -146,6 +146,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
 
     private void displayPhotoPickerDialog() {
         PhotoPickerDialog pickerDialog = PhotoPickerDialog.newInstance();
+        pickerDialog.show(getFragmentManager(), pickerDialog.getClass().getSimpleName());
         pickerDialog.setOnPickListener(new PhotoPickerDialog.OnPickListener() {
             @Override public void onPickFromLibrary(PhotoPickerDialog dialog) {
                 dialog.dismiss();
@@ -157,7 +158,6 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
                 startPhotoCameraActivity();
             }
         });
-        pickerDialog.show(getFragmentManager(), pickerDialog.getClass().getSimpleName());
     }
 
     private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;

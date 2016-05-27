@@ -9,9 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.remote.filterBuilders.AdvertFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.filterBuilders.OfferFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.mappers.*;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
@@ -417,11 +419,12 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
+        final AdvertJsonMapper jsonMapper = new AdvertJsonMapper();
         return Observable.just(advert)
                 .map(new Func1<Advert, String>() {
                     @Override public String call(Advert advert) {
                         try {
-                            return new AdvertJsonMapper().toJsonString(advert);
+                            return jsonMapper.toJsonString(advert);
                         } catch (JSONException e) {
                             throw new RuntimeException();
                         }
@@ -433,7 +436,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 }).map(new Func1<String, Advert>() {
                     @Override public Advert call(String jsonString) {
                         try {
-                            return new AdvertJsonMapper().fromJsonString(jsonString);
+                            return jsonMapper.fromJsonString(jsonString);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -443,6 +446,24 @@ public class RemoteDataSource implements RestApi, DataSource {
 
     @Override public Observable<ResultList<Advert>> getAdvertResultList() {
         return getAdvertResultListPerPage(ADVERTS);
+    }
+    @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<AdvertFilter, String>() {
+                    @Override public String call(AdvertFilter filter) {
+                        return new AdvertFilterUrlBuilder(ADVERTS, filter).buildUrl();
+                    }
+                })
+                .doOnNext(new Action1<String>() {
+                    @Override public void call(String url) {
+                        LOGD(TAG, url);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<ResultList<Advert>>>() {
+                    @Override public Observable<ResultList<Advert>> call(String url) {
+                        return getAdvertResultListPerPage(url);
+                    }
+                });
     }
 
     @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
@@ -463,21 +484,68 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
-        return Observable.just(filter)
-                .map(new Func1<AdvertFilter, String>() {
-                    @Override public String call(AdvertFilter filter) {
-                        return new AdvertFilterUrlBuilder().buildUrl(filter);
+    @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
+        final OfferJsonMapper jsonMapper = new OfferJsonMapper();
+        return Observable.just(offer)
+                .map(new Func1<Offer, String>() {
+                    @Override public String call(Offer offer) {
+                        try {
+                            return jsonMapper.toJsonString(offer);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 })
                 .doOnNext(new Action1<String>() {
-                    @Override public void call(String s) {
-                        LOGD(TAG, s);
+                    @Override public void call(String json) {
+                        LOGD(TAG, "Offer json: " + json);
                     }
                 })
-                .flatMap(new Func1<String, Observable<ResultList<Advert>>>() {
-                    @Override public Observable<ResultList<Advert>> call(String url) {
-                        return getAdvertResultListPerPage(url);
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String jsonString) {
+                        return Observable.fromCallable(createPOST(OFFERS, jsonString));
+                    }
+                })
+                .map(new Func1<String, Offer>() {
+                    @Override public Offer call(String jsonString) {
+                        try {
+                            LOGD(TAG, "Offer saved json: " + jsonString);
+                            return jsonMapper.fromJsonString(jsonString);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<OfferFilter, String>() {
+                    @Override public String call(OfferFilter offerFilter) {
+                        return new OfferFilterUrlBuilder(OFFERS, offerFilter).buildUrl();
+                    }
+                })
+                .doOnNext(new Action1<String>() {
+                    @Override public void call(String url) {
+                        LOGD(TAG, url);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<ResultList<Offer>>>() {
+                    @Override public Observable<ResultList<Offer>> call(String url) {
+                        return getOfferResultListPerPage(url);
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
+        return Observable.fromCallable(createGET(page))
+                .map(new Func1<String, ResultList<Offer>>() {
+                    @Override public ResultList<Offer> call(String jsonString) {
+                        try {
+                            return new OfferResultListJsonMapper().fromJsonString(jsonString);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
     }
@@ -487,7 +555,6 @@ public class RemoteDataSource implements RestApi, DataSource {
     //     Methods for HTTP request
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     private Callable<String> createPOST(final String url, final String json) {
         return new Callable<String>() {
@@ -551,16 +618,4 @@ public class RemoteDataSource implements RestApi, DataSource {
 
         return isConnected;
     }
-
-//    @Override public String composeUrl(String... params) {
-//        StringBuilder stringBuilder = new StringBuilder();
-//        stringBuilder.append(SCHEME);
-//        stringBuilder.append("://");
-//        stringBuilder.append(API_BASE_URL);
-//        for (String param : params) {
-//            stringBuilder.append("/");
-//            stringBuilder.append(param);
-//        }
-//        return stringBuilder.toString();
-//    }
 }

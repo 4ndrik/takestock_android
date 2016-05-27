@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class ConditionJsonMapper implements FromJsonMapper<List<Condition>> {
+public class ConditionJsonMapper implements JsonMapper<List<Condition>> {
 
     private static final String CONDITIONS = "conditions";
 
@@ -30,5 +30,9 @@ public class ConditionJsonMapper implements FromJsonMapper<List<Condition>> {
             result.add(condition);
         }
         return result;
+    }
+
+    @Override public String toJsonString(List<Condition> target) throws JSONException {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 }

@@ -1,13 +1,14 @@
-package com.devabit.takestock.data.models;
+package com.devabit.takestock.data.source.local.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
-public class Offer implements Parcelable {
+public class OfferEntity extends RealmObject {
 
+    @PrimaryKey
     private int mId;
     private int mAdvertId;
     private int mOfferId;
@@ -18,35 +19,7 @@ public class Offer implements Parcelable {
     private String mComment;
     private String mCreatedDate;
     private String mUpdatedDate;
-    private User mUser;
-
-    public Offer(){}
-
-    protected Offer(Parcel in) {
-        mId = in.readInt();
-        mAdvertId = in.readInt();
-        mOfferId = in.readInt();
-        mPrice = in.readString();
-        mQuantity = in.readInt();
-        mUserId = in.readInt();
-        mOfferStatusId = in.readInt();
-        mComment = in.readString();
-        mCreatedDate = in.readString();
-        mUpdatedDate = in.readString();
-        mUser = in.readParcelable(User.class.getClassLoader());
-    }
-
-    public static final Creator<Offer> CREATOR = new Creator<Offer>() {
-        @Override
-        public Offer createFromParcel(Parcel in) {
-            return new Offer(in);
-        }
-
-        @Override
-        public Offer[] newArray(int size) {
-            return new Offer[size];
-        }
-    };
+    private UserEntity mUser;
 
     public int getId() {
         return mId;
@@ -100,8 +73,8 @@ public class Offer implements Parcelable {
         return mOfferStatusId;
     }
 
-    public void setOfferStatusId(int offerStatusId) {
-        mOfferStatusId = offerStatusId;
+    public void setOfferStatusId(int id) {
+        mOfferStatusId = id;
     }
 
     public String getComment() {
@@ -128,16 +101,16 @@ public class Offer implements Parcelable {
         mUpdatedDate = updatedDate;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return mUser;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         mUser = user;
     }
 
     @Override public String toString() {
-        return "Offer{" +
+        return "OfferEntity{" +
                 "mId=" + mId +
                 ", mAdvertId=" + mAdvertId +
                 ", mOfferId=" + mOfferId +
@@ -150,23 +123,5 @@ public class Offer implements Parcelable {
                 ", mUpdatedDate='" + mUpdatedDate + '\'' +
                 ", mUser=" + mUser +
                 '}';
-    }
-
-    @Override public int describeContents() {
-        return 0;
-    }
-
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeInt(mAdvertId);
-        dest.writeInt(mOfferId);
-        dest.writeString(mPrice);
-        dest.writeInt(mQuantity);
-        dest.writeInt(mUserId);
-        dest.writeInt(mOfferStatusId);
-        dest.writeString(mComment);
-        dest.writeString(mCreatedDate);
-        dest.writeString(mUpdatedDate);
-        dest.writeParcelable(mUser, flags);
     }
 }

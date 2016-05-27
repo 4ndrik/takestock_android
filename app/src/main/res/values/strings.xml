@@ -109,6 +109,7 @@
     <string name="watching">Watching</string>
     <string name="purchases">Purchases</string>
     <string name="offers">Offers</string>
+    <string name="offer">Offer</string>
     <string name="selling">Selling</string>
     <string name="help_and_contact"><![CDATA[Help & Contact]]></string>
     <string name="settings">Settings</string>
@@ -127,5 +128,6 @@
 
     <string name="total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
     <string name="no_connection">No connection</string>
-    <string name="retry">Retry</string>`
+    <string name="retry">Retry</string>
+    <string name="make">Make</string>`
 </resources>

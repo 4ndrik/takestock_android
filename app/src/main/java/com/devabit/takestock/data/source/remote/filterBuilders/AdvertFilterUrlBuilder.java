@@ -3,12 +3,11 @@ package com.devabit.takestock.data.source.remote.filterBuilders;
 import com.devabit.takestock.data.filters.AdvertFilter;
 
 import static com.devabit.takestock.data.filters.AdvertFilter.*;
-import static com.devabit.takestock.rest.RestApi.ADVERTS;
 
 /**
  * Created by Victor Artemyev on 20/05/2016.
  */
-public class AdvertFilterUrlBuilder {
+public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
 
     private static final String ITEMS_COUNT = "items_count";
     private static final String CATEGORY = "category";
@@ -22,35 +21,25 @@ public class AdvertFilterUrlBuilder {
     public static final String GUIDE_PRICE = "guide_price";
     public static final String GUIDE_PRICE_DESCENDING = "-guide_price";
 
-    private final StringBuilder mBuilder;
-
-    public AdvertFilterUrlBuilder() {
-        mBuilder = new StringBuilder();
-        mBuilder.append(ADVERTS);
+    public AdvertFilterUrlBuilder(String baseUrl, AdvertFilter filter) {
+        super(baseUrl, filter);
     }
 
-    public String buildUrl(AdvertFilter filter) {
-        int itemCount = filter.getItemCount();
+    @Override public String buildUrl() {
+        int itemCount = mFilter.getItemCount();
         if (itemCount > 0) {
             appendQueryParameter(ITEMS_COUNT, String.valueOf(itemCount));
         }
-        int order = filter.getOrder();
+        int order = mFilter.getOrder();
         if (order > 0) {
             appendQueryParameter(ORDER, getOrderAsString(order));
         }
-        int userId = filter.getAuthorId();
+        int userId = mFilter.getAuthorId();
         if (userId > 0) {
             appendQueryParameter(AUTHOR_ID, String.valueOf(userId));
         }
 
         return mBuilder.toString();
-    }
-
-    private void appendQueryParameter(String key, String value) {
-        mBuilder.append(mBuilder.charAt(mBuilder.length() - 1) == '/' ? '?' : '&');
-        mBuilder.append(key);
-        mBuilder.append('=');
-        mBuilder.append(value);
     }
 
     private String getOrderAsString(int order) {

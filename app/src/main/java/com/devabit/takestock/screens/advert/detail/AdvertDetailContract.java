@@ -2,6 +2,7 @@ package com.devabit.takestock.screens.advert.detail;
 
 import com.devabit.takestock.data.models.Certification;
 import com.devabit.takestock.data.models.Condition;
+import com.devabit.takestock.data.models.Offer;
 import com.devabit.takestock.data.models.Shipping;
 import com.devabit.takestock.screens.BasePresenter;
 import com.devabit.takestock.screens.BaseView;
@@ -19,6 +20,8 @@ public interface AdvertDetailContract {
 
         void showConditionInView(Condition condition);
 
+        void showOfferMade(Offer offer);
+
         void showNetworkConnectionError();
 
         void showUnknownError();
@@ -28,10 +31,13 @@ public interface AdvertDetailContract {
     }
 
     interface Presenter extends BasePresenter {
+
         void fetchShippingById(int id);
 
         void fetchCertificationById(int id);
 
         void fetchConditionById(int id);
+
+        void makeOffer(Offer offer);
     }
 }

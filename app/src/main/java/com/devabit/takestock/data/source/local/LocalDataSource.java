@@ -3,6 +3,7 @@ package com.devabit.takestock.data.source.local;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.entity.*;
@@ -333,17 +334,13 @@ public class LocalDataSource implements DataSource {
                             AdvertEntityDataMapper advertMapper = new AdvertEntityDataMapper();
                             AdvertEntity advertEntity = advertMapper.transformToEntity(advert);
                             advertEntity = realm.copyToRealmOrUpdate(advertEntity);
-
-                            RealmList<StringEntity> tagEntities = advertEntity.getTags();
                             for (String tag : advert.getTags()) {
                                 StringEntity tagEntity = advertMapper.transformTagToEntity(tag);
-                                tagEntities.add(tagEntity);
+                                advertEntity.addTag(tagEntity);
                             }
-
-                            RealmList<PhotoEntity> photoEntities = advertEntity.getPhotos();
                             for (Photo photo : advert.getPhotos()) {
                                 PhotoEntity photoEntity = advertMapper.transformPhotoToEntity(photo);
-                                photoEntities.add(photoEntity);
+                                advertEntity.addPhoto(photoEntity);
                             }
                             realm.commitTransaction();
                         }
@@ -379,6 +376,28 @@ public class LocalDataSource implements DataSource {
                     }
                 });
 
+    }
+
+    @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
+        return Observable.just(offer)
+                .doOnNext(new Action1<Offer>() {
+                    @Override public void call(Offer offer) {
+                        try (Realm realm = Realm.getDefaultInstance()) {
+                            realm.beginTransaction();
+                            OfferEntity entity = new OfferEntityDataMapper().transformToEntity(offer);
+                            realm.copyToRealmOrUpdate(entity);
+                            realm.commitTransaction();
+                        }
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     private <E extends RealmModel> List<E> saveOrUpdateEntities(Iterable<E> objects) {

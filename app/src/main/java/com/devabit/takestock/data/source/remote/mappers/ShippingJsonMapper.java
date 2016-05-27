@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class ShippingJsonMapper implements FromJsonMapper<List<Shipping>> {
+public class ShippingJsonMapper implements JsonMapper<List<Shipping>> {
 
     private static final String SHIPPING = "shipping";
 
@@ -30,5 +30,9 @@ public class ShippingJsonMapper implements FromJsonMapper<List<Shipping>> {
             result.add(shipping);
         }
         return result;
+    }
+
+    @Override public String toJsonString(List<Shipping> target) throws JSONException {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 }

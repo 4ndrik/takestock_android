@@ -2,6 +2,7 @@ package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.models.*;
 import rx.Observable;
 
@@ -74,8 +75,14 @@ public interface DataSource {
 
     Observable<ResultList<Advert>> getAdvertResultList();
 
+    Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
+
     Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page);
 
-    Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
+    Observable<Offer> saveOffer(@NonNull Offer offer);
+
+    Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter);
+
+    Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page);
 
 }

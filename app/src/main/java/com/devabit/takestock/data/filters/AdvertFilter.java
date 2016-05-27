@@ -5,7 +5,7 @@ import android.support.annotation.IntDef;
 /**
  * Created by Victor Artemyev on 20/05/2016.
  */
-public class AdvertFilter {
+public class AdvertFilter implements Filter {
 
     public static final int ORDER_DEFAULT = -1;
     public static final int ORDER_EXPIRES_AT = 1;

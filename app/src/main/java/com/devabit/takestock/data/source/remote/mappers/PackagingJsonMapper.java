@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 12/05/2016.
  */
-public class PackagingJsonMapper implements FromJsonMapper<List<Packaging>> {
+public class PackagingJsonMapper implements JsonMapper<List<Packaging>> {
 
     private static final String ID = "id";
     private static final String NAME = "name";
@@ -28,6 +28,10 @@ public class PackagingJsonMapper implements FromJsonMapper<List<Packaging>> {
             result.add(packaging);
         }
         return result;
+    }
+
+    @Override public String toJsonString(List<Packaging> target) throws JSONException {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class CertificationJsonMapper implements FromJsonMapper<List<Certification>> {
+public class CertificationJsonMapper implements JsonMapper<List<Certification>> {
 
     public static final String ID = "pk";
     public static final String NAME = "name";
@@ -38,5 +38,9 @@ public class CertificationJsonMapper implements FromJsonMapper<List<Certificatio
             result.add(certification);
         }
         return result;
+    }
+
+    @Override public String toJsonString(List<Certification> target) throws JSONException {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 }

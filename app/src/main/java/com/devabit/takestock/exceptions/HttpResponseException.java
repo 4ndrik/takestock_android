@@ -22,36 +22,15 @@ import java.io.IOException;
  */
 public class HttpResponseException extends IOException {
 
-  private int mCode;
-  private String mResponse;
+  private final int mCode;
 
-  public HttpResponseException() {
-    super();
-  }
-
-  public HttpResponseException(final String message) {
-    this(0, message, "");
-  }
-
-  public HttpResponseException(final int code, final String message, String response) {
-    super(message);
+  public HttpResponseException(int code, String message, String response) {
+    super(message + "\nCode: " + code + "\nResponse: " + response);
     mCode = code;
-    mResponse = response;
-  }
-
-  public HttpResponseException(final String message, final Throwable cause) {
-    super(message, cause);
-  }
-
-  public HttpResponseException(final Throwable cause) {
-    super(cause);
   }
 
   public int getCode() {
     return mCode;
   }
 
-  public String getResponse() {
-    return mResponse;
-  }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class SizeJsonMapper implements FromJsonMapper<List<Size>> {
+public class SizeJsonMapper implements JsonMapper<List<Size>> {
 
     private static final String TYPES = "types";
 
@@ -28,5 +28,9 @@ public class SizeJsonMapper implements FromJsonMapper<List<Size>> {
             result.add(size);
         }
         return result;
+    }
+
+    @Override public String toJsonString(List<Size> target) throws JSONException {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 }

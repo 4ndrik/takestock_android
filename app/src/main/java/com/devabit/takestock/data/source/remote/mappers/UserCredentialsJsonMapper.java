@@ -9,11 +9,15 @@ import static android.text.TextUtils.isEmpty;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class UserCredentialsJsonMapper implements ToJsonMapper<UserCredentials> {
+public class UserCredentialsJsonMapper implements JsonMapper<UserCredentials> {
 
     private static final String NAME = "username";
     private static final String EMAIL = "email";
     private static final String PASSWORD = "password";
+
+    @Override public UserCredentials fromJsonString(String json) throws JSONException {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
 
     @Override public String toJsonString(UserCredentials credentials) throws JSONException {
         JSONObject json = new JSONObject();

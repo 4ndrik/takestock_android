@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 02/05/2016.
  */
-public class CategoryAndSubcategoryJsonMapper implements FromJsonMapper<List<Category>> {
+public class CategoryAndSubcategoryJsonMapper implements JsonMapper<List<Category>> {
 
     private static final String ID = "pk";
     private static final String NAME = "name";
@@ -50,5 +50,9 @@ public class CategoryAndSubcategoryJsonMapper implements FromJsonMapper<List<Cat
         subcategory.setId(jsonObject.getInt(ID));
         subcategory.setName(jsonObject.getString(NAME));
         return subcategory;
+    }
+
+    @Override public String toJsonString(List<Category> target) throws JSONException {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 }

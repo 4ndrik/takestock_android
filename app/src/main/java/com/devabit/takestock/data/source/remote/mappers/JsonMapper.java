@@ -3,9 +3,10 @@ package com.devabit.takestock.data.source.remote.mappers;
 import org.json.JSONException;
 
 /**
- * Created by Victor Artemyev on 29/04/2016.
+ * Created by Victor Artemyev on 27/05/2016.
  */
-public interface ToJsonMapper<T> {
+public interface JsonMapper<T> {
 
+    T fromJsonString(String json) throws JSONException;
     String toJsonString(T target) throws JSONException;
 }

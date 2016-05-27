@@ -54,6 +54,8 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
             mPicasso.load(photo.getImagePath())
                     .placeholder(R.drawable.ic_image_48dp)
                     .error(R.drawable.ic_image_48dp)
+                    .centerCrop()
+                    .fit()
                     .into(mImageView);
         }
     }

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
-public class AdvertJsonMapper implements FromJsonMapper<Advert>, ToJsonMapper<Advert> {
+public class AdvertJsonMapper implements JsonMapper<Advert> {
 
     private static final String ID = "id";
     private static final String NAME = "name";

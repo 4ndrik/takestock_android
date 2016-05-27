@@ -1,8 +1,8 @@
 package com.devabit.takestock.data.source;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.models.*;
 import rx.Observable;
 import rx.functions.Action1;
@@ -217,16 +217,12 @@ public class DataRepository implements DataSource {
     }
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
-        if (TextUtils.isEmpty(advert.getDateUpdatedAt())) {
-            return mRemoteDataSource.saveAdvert(advert)
-                    .flatMap(new Func1<Advert, Observable<Advert>>() {
-                        @Override public Observable<Advert> call(Advert advert) {
-                            return mLocalDataSource.saveAdvert(advert);
-                        }
-                    });
-        } else {
-            return mLocalDataSource.saveAdvert(advert);
-        }
+        return mRemoteDataSource.saveAdvert(advert)
+                .flatMap(new Func1<Advert, Observable<Advert>>() {
+                    @Override public Observable<Advert> call(Advert advert) {
+                        return mLocalDataSource.saveAdvert(advert);
+                    }
+                });
     }
 
     @Override public Observable<ResultList<Advert>> getAdvertResultList() {
@@ -241,4 +237,20 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getAdvertResultListPerFilter(filter);
     }
 
+    @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
+        return mRemoteDataSource.saveOffer(offer)
+                .flatMap(new Func1<Offer, Observable<Offer>>() {
+                    @Override public Observable<Offer> call(Offer offer) {
+                        return mLocalDataSource.saveOffer(offer);
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
+        return mRemoteDataSource.getOfferResultListPerFilter(filter);
+    }
+
+    @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
+        return mRemoteDataSource.getOfferResultListPerPage(page);
+    }
 }
