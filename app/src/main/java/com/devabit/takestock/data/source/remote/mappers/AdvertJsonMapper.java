@@ -92,7 +92,7 @@ public class AdvertJsonMapper implements FromJsonMapper<Advert>, ToJsonMapper<Ad
         advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
         if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
         advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
-        advert.setPackagingName(jsonObject.getString(PACKAGING_NAME));
+        if (!jsonObject.isNull(PACKAGING_NAME)) advert.setPackagingName(jsonObject.getString(PACKAGING_NAME));
         advert.setOffersCount(jsonObject.getString(OFFERS_COUNT));
         advert.setQuestionsCount(jsonObject.getString(QUESTIONS_COUNT));
         advert.setDaysLeft(jsonObject.getString(DAYS_LEFT));

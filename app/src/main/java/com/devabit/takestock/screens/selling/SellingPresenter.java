@@ -46,7 +46,7 @@ public class SellingPresenter implements SellingContract.Presenter {
     @Override public void fetchAdvertsPerFilter(AdvertFilter filter) {
         mSellingView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .getResultAdvertListPerFilter(filter)
+                .getAdvertResultListPerFilter(filter)
                 .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
                 .subscribe(getSubscriber());
         mSubscriptions.add(subscription);
@@ -56,7 +56,7 @@ public class SellingPresenter implements SellingContract.Presenter {
         if (mAdvertResultList != null && mAdvertResultList.hasNext()) {
             mSellingView.setProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getResultAdvertListPerPage(mAdvertResultList.getNext())
+                    .getAdvertResultListPerPage(mAdvertResultList.getNext())
                     .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
                     .subscribe(getSubscriber());
             mSubscriptions.add(subscription);

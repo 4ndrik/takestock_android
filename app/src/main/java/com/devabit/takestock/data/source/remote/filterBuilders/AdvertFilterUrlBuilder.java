@@ -1,12 +1,9 @@
 package com.devabit.takestock.data.source.remote.filterBuilders;
 
-import android.net.Uri;
 import com.devabit.takestock.data.filters.AdvertFilter;
 
 import static com.devabit.takestock.data.filters.AdvertFilter.*;
-import static com.devabit.takestock.rest.RestApi.API_BASE_URL;
-import static com.devabit.takestock.rest.RestApi.GET_ADVERTS;
-import static com.devabit.takestock.rest.RestApi.SCHEME;
+import static com.devabit.takestock.rest.RestApi.ADVERTS;
 
 /**
  * Created by Victor Artemyev on 20/05/2016.
@@ -25,25 +22,35 @@ public class AdvertFilterUrlBuilder {
     public static final String GUIDE_PRICE = "guide_price";
     public static final String GUIDE_PRICE_DESCENDING = "-guide_price";
 
+    private final StringBuilder mBuilder;
+
+    public AdvertFilterUrlBuilder() {
+        mBuilder = new StringBuilder();
+        mBuilder.append(ADVERTS);
+    }
+
     public String buildUrl(AdvertFilter filter) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME);
-        builder.encodedAuthority(API_BASE_URL);
-        builder.appendEncodedPath(GET_ADVERTS);
         int itemCount = filter.getItemCount();
         if (itemCount > 0) {
-            builder.appendQueryParameter(ITEMS_COUNT, String.valueOf(itemCount));
+            appendQueryParameter(ITEMS_COUNT, String.valueOf(itemCount));
         }
         int order = filter.getOrder();
         if (order > 0) {
-            builder.appendQueryParameter(ORDER, getOrderAsString(order));
+            appendQueryParameter(ORDER, getOrderAsString(order));
         }
         int userId = filter.getAuthorId();
         if (userId > 0) {
-            builder.appendQueryParameter(AUTHOR_ID, String.valueOf(userId));
+            appendQueryParameter(AUTHOR_ID, String.valueOf(userId));
         }
 
-        return builder.build().toString();
+        return mBuilder.toString();
+    }
+
+    private void appendQueryParameter(String key, String value) {
+        mBuilder.append(mBuilder.charAt(mBuilder.length() - 1) == '/' ? '?' : '&');
+        mBuilder.append(key);
+        mBuilder.append('=');
+        mBuilder.append(value);
     }
 
     private String getOrderAsString(int order) {

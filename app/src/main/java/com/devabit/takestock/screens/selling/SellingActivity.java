@@ -75,6 +75,11 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
                 mPresenter.fetchAdverts();
             }
         });
+        mAdvertsAdapter.setOnItemClickListener(new AdvertsAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Advert advert) {
+
+            }
+        });
         recyclerView.setAdapter(mAdvertsAdapter);
 
         mAdvertFilter = getAdvertFilter();

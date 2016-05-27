@@ -31,7 +31,7 @@ public class AdvertEntity extends RealmObject {
     private String mCertificationExtra;
     private int mItemsCount;
     private int mAuthorId;
-//    private User mUser;
+    private UserEntity mUser;
     private RealmList<StringEntity> mTags;
     private RealmList<PhotoEntity> mPhotos;
     private String mPackagingName;
@@ -207,13 +207,13 @@ public class AdvertEntity extends RealmObject {
         mAuthorId = authorId;
     }
 
-//    public User getUser() {
-//        return mUser;
-//    }
-//
-//    public void setUser(User user) {
-//        mUser = user;
-//    }
+    public UserEntity getUser() {
+        return mUser;
+    }
+
+    public void setUser(UserEntity user) {
+        mUser = user;
+    }
 
     public RealmList<StringEntity> getTags() {
         return mTags;

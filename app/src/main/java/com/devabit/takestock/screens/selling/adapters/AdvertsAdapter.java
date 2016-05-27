@@ -87,7 +87,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         mEndPositionListener = endPositionListener;
     }
 
-    public static void setOnItemClickListener(OnItemClickListener itemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         sItemClickListener = itemClickListener;
     }
 

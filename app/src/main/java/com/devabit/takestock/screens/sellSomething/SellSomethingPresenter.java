@@ -210,7 +210,7 @@ public class SellSomethingPresenter implements SellSomethingContract.Presenter {
         if(!isAdvertDataValid(advert)) return;
         mSellingView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .saveOrUpdateAdvert(advert)
+                .saveAdvert(advert)
                 .compose(RxTransformers.<Advert>applyObservableSchedulers())
                 .subscribe(new Subscriber<Advert>() {
                     @Override public void onCompleted() {

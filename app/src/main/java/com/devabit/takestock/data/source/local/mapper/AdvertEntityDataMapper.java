@@ -2,9 +2,11 @@ package com.devabit.takestock.data.source.local.mapper;
 
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Photo;
+import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.data.source.local.entity.AdvertEntity;
 import com.devabit.takestock.data.source.local.entity.PhotoEntity;
 import com.devabit.takestock.data.source.local.entity.StringEntity;
+import com.devabit.takestock.data.source.local.entity.UserEntity;
 import io.realm.RealmList;
 
 import java.util.ArrayList;
@@ -16,9 +18,11 @@ import java.util.List;
 public class AdvertEntityDataMapper {
 
     private final PhotoEntityDataMapper mPhotoMapper;
+    private final UserEntityDataMapper mUserMapper;
 
     public AdvertEntityDataMapper() {
         mPhotoMapper = new PhotoEntityDataMapper();
+        mUserMapper = new UserEntityDataMapper(mPhotoMapper);
     }
 
     public List<Advert> transformFromEntitiesToList(List<AdvertEntity> entities) {
@@ -57,6 +61,9 @@ public class AdvertEntityDataMapper {
         advert.setOffersCount(entity.getOffersCount());
         advert.setQuestionsCount(entity.getQuestionsCount());
         advert.setDaysLeft(entity.getDaysLeft());
+
+        User user = mUserMapper.transformFromEntity(entity.getUser());
+        advert.setUser(user);
 
         RealmList<StringEntity> tagEntities = entity.getTags();
         List<String> tags = new ArrayList<>(tagEntities.size());
@@ -103,6 +110,8 @@ public class AdvertEntityDataMapper {
         entity.setOffersCount(advert.getOffersCount());
         entity.setQuestionsCount(advert.getQuestionsCount());
         entity.setDaysLeft(advert.getDaysLeft());
+        UserEntity userEntity = mUserMapper.transformToEntity(advert.getUser());
+        entity.setUser(userEntity);
         return entity;
     }
 
