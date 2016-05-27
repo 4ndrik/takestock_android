@@ -93,6 +93,8 @@
     <string name="error_empty_expiry_date">Please, add expiry date.</string>
     <string name="error_empty_certification">Please, pick certification.</string>
     <string name="error_empty_certification_extra">Please, add certification extra.</string>
+    <string name="error_empty_quantity">Add quantity</string>
+    <string name="error_empty_price">Add price</string>
 
     <string name="count_results_for">%1$d results for</string>
     <string name="categories">Categories</string>
@@ -121,4 +123,9 @@
     <string name="sort_guide_price">Guide price</string>
     <string name="sort_guide_price_descending">Guide price (descending)</string>
     <string name="description">Description</string>
+
+
+    <string name="total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
+    <string name="no_connection">No connection</string>
+    <string name="retry">Retry</string>`
 </resources>

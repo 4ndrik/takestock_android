@@ -220,4 +220,9 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         super.onPause();
         mPresenter.pause();
     }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        mAdvertAdapter.setOnItemClickListener(null);
+    }
 }

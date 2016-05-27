@@ -69,17 +69,18 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|start"
                         android:textAppearance="@android:style/TextAppearance.Small"
-                        android:textColor="@color/black"
+                        android:textColor="@color/grey_600"
                         android:textStyle="normal"
                         android:text="Price:"/>
 
                 <TextView
                         android:id="@+id/guide_price_text_view"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="@android:style/TextAppearance.Small"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
+                        android:singleLine="true"
+                        android:textStyle="normal"
                         tools:text="45 per kg"/>
 
             </TableRow>
@@ -93,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|start"
                         android:textAppearance="@android:style/TextAppearance.Small"
-                        android:textColor="@color/black"
+                        android:textColor="@color/grey_600"
                         android:textStyle="normal"
                         android:text="Available:"/>
 
@@ -103,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@android:style/TextAppearance.Small"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
+                        android:textStyle="normal"
                         tools:text="45 kg"/>
 
             </TableRow>
@@ -117,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|start"
                         android:textAppearance="@android:style/TextAppearance.Small"
-                        android:textColor="@color/black"
+                        android:textColor="@color/grey_600"
                         android:textStyle="normal"
                         android:text="Updated:"/>
 
@@ -127,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@android:style/TextAppearance.Small"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
+                        android:textStyle="normal"
                         tools:text="13 march 2016"/>
 
             </TableRow>

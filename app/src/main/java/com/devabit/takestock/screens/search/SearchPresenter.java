@@ -58,14 +58,14 @@ public class SearchPresenter implements SearchContract.Presenter {
         if (mAdvertResultList == null) {
             mSearchView.setProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getResultAdvertList()
+                    .getAdvertResultList()
                     .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
                     .subscribe(getSubscriber());
             mSubscriptions.add(subscription);
         } else if (mAdvertResultList.hasNext()) {
             mSearchView.setProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getResultAdvertListPerPage(mAdvertResultList.getNext())
+                    .getAdvertResultListPerPage(mAdvertResultList.getNext())
                     .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
                     .subscribe(getSubscriber());
             mSubscriptions.add(subscription);
@@ -76,7 +76,7 @@ public class SearchPresenter implements SearchContract.Presenter {
         mAdvertFilter = filter;
         mSearchView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .getResultAdvertListPerFilter(filter)
+                .getAdvertResultListPerFilter(filter)
                 .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
                 .subscribe(getSubscriber());
         mSubscriptions.add(subscription);

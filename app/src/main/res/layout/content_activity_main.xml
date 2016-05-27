@@ -2,16 +2,16 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
     <ImageButton
             android:id="@+id/menu_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:padding="8dp"
+            android:padding="16dp"
             android:src="@drawable/ic_menu_purple_dark_24dp"
             android:background="@null"
             tools:ignore="ContentDescription"/>
@@ -24,7 +24,7 @@
                   android:gravity="center">
 
         <ImageView
-                android:id="@+id/logo_fragment_log_in_input_phone"
+                android:id="@+id/logo_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/logo_144dp"
