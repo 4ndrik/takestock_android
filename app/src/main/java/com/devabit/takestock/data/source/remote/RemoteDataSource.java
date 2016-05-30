@@ -10,10 +10,12 @@ import android.support.annotation.Nullable;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.filters.OfferFilter;
+import com.devabit.takestock.data.filters.QuestionFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.remote.filterBuilders.AdvertFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.filterBuilders.OfferFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.filterBuilders.QuestionFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.mappers.*;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
@@ -543,6 +545,66 @@ public class RemoteDataSource implements RestApi, DataSource {
                     @Override public ResultList<Offer> call(String jsonString) {
                         try {
                             return new OfferResultListJsonMapper().fromJsonString(jsonString);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    @Override public Observable<Question> saveQuestion(Question question) {
+        final QuestionJsonMapper jsonMapper = new QuestionJsonMapper();
+        return Observable.just(question)
+                .map(new Func1<Question, String>() {
+                    @Override public String call(Question question) {
+                        try {
+                            return jsonMapper.toJsonString(question);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPOST(QUESTIONS, json));
+                    }
+                })
+                .map(new Func1<String, Question>() {
+                    @Override public Question call(String json) {
+                        try {
+                            return jsonMapper.fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<QuestionFilter, String>() {
+                    @Override public String call(QuestionFilter filter) {
+                        return new QuestionFilterUrlBuilder(QUESTIONS, filter).buildUrl();
+                    }
+                })
+                .doOnNext(new Action1<String>() {
+                    @Override public void call(String url) {
+                        LOGD(TAG, url);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<ResultList<Question>>>() {
+                    @Override public Observable<ResultList<Question>> call(String page) {
+                        return getQuestionResultListPerPage(page);
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+        return Observable.fromCallable(createGET(page))
+                .map(new Func1<String, ResultList<Question>>() {
+                    @Override public ResultList<Question> call(String jsonString) {
+                        try {
+                            return new QuestionResultListJsonMapper().fromJsonString(jsonString);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

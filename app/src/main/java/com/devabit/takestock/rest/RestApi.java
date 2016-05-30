@@ -23,7 +23,7 @@ public interface RestApi {
     String OFFER_STATUS = API_BASE_URL + "offer_status/";
     String ADVERTS = API_BASE_URL + "adverts/";
     String OFFERS = API_BASE_URL + "offers/";
-    String ANSWERS = API_BASE_URL + "answers/";
-    String QUESTIONS = API_BASE_URL + "questions/";
+    String ANSWERS = API_BASE_URL + "qa/answers/";
+    String QUESTIONS = API_BASE_URL + "qa/questions/";
     String USERS = API_BASE_URL + "users/";
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.filters.OfferFilter;
+import com.devabit.takestock.data.filters.QuestionFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.entity.*;
@@ -398,6 +399,18 @@ public class LocalDataSource implements DataSource {
 
     @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
         throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Question> saveQuestion(Question question) {
+        return null;
+    }
+
+    @Override public Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+        return null;
+    }
+
+    @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+        return null;
     }
 
     private <E extends RealmModel> List<E> saveOrUpdateEntities(Iterable<E> objects) {

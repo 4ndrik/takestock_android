@@ -8,7 +8,7 @@ import io.realm.RealmQuery;
 /**
  * Created by Victor Artemyev on 23/05/2016.
  */
-public class AdvertFilterQueryBuilder {
+public class AdvertFilterQueryBuilder extends FilterQueryBuilder<AdvertEntity, AdvertFilter>{
 
     public RealmQuery<AdvertEntity> buildQuery(AdvertFilter filter) {
         Realm realm = Realm.getDefaultInstance();

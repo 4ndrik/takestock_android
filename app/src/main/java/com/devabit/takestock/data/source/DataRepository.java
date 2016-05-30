@@ -3,6 +3,7 @@ package com.devabit.takestock.data.source;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.filters.OfferFilter;
+import com.devabit.takestock.data.filters.QuestionFilter;
 import com.devabit.takestock.data.models.*;
 import rx.Observable;
 import rx.functions.Action1;
@@ -252,5 +253,17 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
         return mRemoteDataSource.getOfferResultListPerPage(page);
+    }
+
+    @Override public Observable<Question> saveQuestion(Question question) {
+        return mRemoteDataSource.saveQuestion(question);
+    }
+
+    @Override public Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+        return mRemoteDataSource.getQuestionResultListPerFilter(filter);
+    }
+
+    @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+        return null;
     }
 }

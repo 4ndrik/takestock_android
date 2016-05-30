@@ -129,5 +129,7 @@
     <string name="total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
     <string name="no_connection">No connection</string>
     <string name="retry">Retry</string>
-    <string name="make">Make</string>`
+    <string name="make">Make</string>
+    <string name="write_question">Write a question...</string>
+    <string name="questions">Questions</string>`
 </resources>

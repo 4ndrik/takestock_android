@@ -30,6 +30,7 @@ import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.screens.advert.adapters.AdvertPhotosAdapter;
 import com.devabit.takestock.screens.advert.detail.dialogs.OfferMakerDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
+import com.devabit.takestock.screens.question.QuestionActivity;
 import com.devabit.takestock.util.FontCache;
 
 import java.util.List;
@@ -227,6 +228,19 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
             view.setAlpha(isActive ? 0.5f : 1.0f);
         }
     };
+
+    @OnClick(R.id.ask_button)
+    protected void onAskButtonClick() {
+        if (lacksAccount()) {
+            startEntryActivity();
+            return;
+        }
+        startQuestionActivity();
+    }
+
+    private void startQuestionActivity() {
+        startActivity(QuestionActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
+    }
 
     @Override public void setPresenter(@NonNull AdvertDetailContract.Presenter presenter) {
         mPresenter = presenter;
