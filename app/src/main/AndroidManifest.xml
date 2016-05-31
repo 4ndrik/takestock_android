@@ -60,7 +60,7 @@
                 android:name=".screens.selling.SellingActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.question.QuestionActivity"
+                android:name=".screens.questions.QuestionsActivity"
                 android:screenOrientation="portrait"/>
 
         <service android:name="com.devabit.takestock.authenticator.TakeStockAuthenticatorService"

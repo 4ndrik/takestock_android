@@ -30,7 +30,7 @@ import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.screens.advert.adapters.AdvertPhotosAdapter;
 import com.devabit.takestock.screens.advert.detail.dialogs.OfferMakerDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
-import com.devabit.takestock.screens.question.QuestionActivity;
+import com.devabit.takestock.screens.questions.QuestionsActivity;
 import com.devabit.takestock.util.FontCache;
 
 import java.util.List;
@@ -239,7 +239,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     private void startQuestionActivity() {
-        startActivity(QuestionActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
+        startActivity(QuestionsActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
     }
 
     @Override public void setPresenter(@NonNull AdvertDetailContract.Presenter presenter) {
