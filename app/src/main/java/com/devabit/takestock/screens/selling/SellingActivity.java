@@ -8,6 +8,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +43,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         return starter;
     }
 
+    @BindView(R.id.content_activity_selling) protected View mContent;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
 
     private SellingContract.Presenter mPresenter;
@@ -123,11 +126,15 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
     }
 
     @Override public void showNetworkConnectionError() {
-
+        showSnack(R.string.error_no_network_connection);
     }
 
     @Override public void showUnknownError() {
+        showSnack(R.string.error_unknown);
+    }
 
+    private void showSnack(@StringRes int resId) {
+        Snackbar.make(mContent, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override public void setProgressIndicator(boolean isActive) {

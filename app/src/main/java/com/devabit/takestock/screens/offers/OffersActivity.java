@@ -139,10 +139,6 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
         mOffersAdapter.addOffers(offerAdvertMap);
     }
 
-//    @Override public void showOffersInView(List<Offer> offers) {
-//        mOffersAdapter.addOffers(offers);
-//    }
-
     @Override public void showNetworkConnectionError() {
         showSnack(R.string.error_no_network_connection);
     }

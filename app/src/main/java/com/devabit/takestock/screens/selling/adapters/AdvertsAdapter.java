@@ -103,30 +103,30 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         final TextView guidePriceTextView;
         final TextView qtyAvailableTextView;
         final TextView dateUpdatedTextView;
-        final TextView offersMadeTextView;
-        final TextView newQuestionsTextView;
-        final TextView daysLeftTextView;
+        final TextView offersCountTextView;
+        final TextView questionsCountTextView;
+        final TextView daysLeftCountTextView;
 
         Advert advert;
 
         public ViewHolder(View itemView) {
             super(itemView);
             Context context = itemView.getContext();
-            this.resources = context.getResources();
-            this.picasso = Picasso.with(context);
-            this.imageView = findById(itemView, R.id.photo_image_view);
-            this.titleTextView = findById(itemView, R.id.title_text_view);
-            this.guidePriceTextView = findById(itemView, R.id.guide_price_text_view);
-            this.qtyAvailableTextView = findById(itemView, R.id.qty_available_text_view);
-            this.dateUpdatedTextView = findById(itemView, R.id.date_updated_text_view);
-            this.offersMadeTextView = findById(itemView, R.id.offers_made_text_view);
-            this.newQuestionsTextView = findById(itemView, R.id.new_questions_text_view);
-            this.daysLeftTextView = findById(itemView, R.id.days_left_text_view);
+            resources = context.getResources();
+            picasso = Picasso.with(context);
+            imageView = findById(itemView, R.id.photo_image_view);
+            titleTextView = findById(itemView, R.id.title_text_view);
+            guidePriceTextView = findById(itemView, R.id.guide_price_text_view);
+            qtyAvailableTextView = findById(itemView, R.id.qty_available_text_view);
+            dateUpdatedTextView = findById(itemView, R.id.date_updated_text_view);
+            offersCountTextView = findById(itemView, R.id.offers_count_text_view);
+            questionsCountTextView = findById(itemView, R.id.questions_count_text_view);
+            daysLeftCountTextView = findById(itemView, R.id.days_left_count_text_view);
 
             ImageButton menuButton = findById(itemView, R.id.menu_button);
             final PopupMenu popupMenu = new PopupMenu(context, menuButton);
             MenuInflater menuInflater = popupMenu.getMenuInflater();
-            menuInflater.inflate(R.menu.advert_selling_menu, popupMenu.getMenu());
+            menuInflater.inflate(R.menu.advert_item_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(mMenuItemClickListener);
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -177,9 +177,9 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             } catch (ParseException e) {
                 LOGE(TAG, "BOOM:", e);
             }
-            offersMadeTextView.setText(advert.getOffersCount());
-            newQuestionsTextView.setText(advert.getQuestionsCount());
-            daysLeftTextView.setText(advert.getDaysLeft());
+            offersCountTextView.setText(advert.getOffersCount());
+            questionsCountTextView.setText(advert.getQuestionsCount());
+            daysLeftCountTextView.setText(advert.getDaysLeft());
         }
 
         void bindPhoto(Photo photo) {
