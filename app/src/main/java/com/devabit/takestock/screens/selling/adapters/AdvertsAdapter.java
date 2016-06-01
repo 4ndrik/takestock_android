@@ -1,6 +1,7 @@
 package com.devabit.takestock.screens.selling.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -38,11 +39,13 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
     private OnEndPositionListener mEndPositionListener;
 
-    public interface OnItemClickListener {
-        void onItemClick(Advert advert);
+    public interface OnMenuItemClickListener {
+        void viewAdvert(Advert advert);
+
+        void editAdvert(Advert advert);
     }
 
-    private static OnItemClickListener sItemClickListener;
+    private static OnMenuItemClickListener sMenuItemClickListener;
 
     public AdvertsAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -87,13 +90,13 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         mEndPositionListener = endPositionListener;
     }
 
-    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
-        sItemClickListener = itemClickListener;
+    public void setOnItemClickListener(OnMenuItemClickListener itemClickListener) {
+        sMenuItemClickListener = itemClickListener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final Context context;
+        final Resources resources;
         final Picasso picasso;
         final ImageView imageView;
         final TextView titleTextView;
@@ -108,8 +111,9 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.context = itemView.getContext();
-            this.picasso = Picasso.with(this.context);
+            Context context = itemView.getContext();
+            this.resources = context.getResources();
+            this.picasso = Picasso.with(context);
             this.imageView = findById(itemView, R.id.photo_image_view);
             this.titleTextView = findById(itemView, R.id.title_text_view);
             this.guidePriceTextView = findById(itemView, R.id.guide_price_text_view);
@@ -119,20 +123,41 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             this.newQuestionsTextView = findById(itemView, R.id.new_questions_text_view);
             this.daysLeftTextView = findById(itemView, R.id.days_left_text_view);
 
-            ImageButton menuButton = findById(itemView, R.id.menu_more_button);
-            final PopupMenu popupMenu = new PopupMenu(this.context, menuButton);
+            ImageButton menuButton = findById(itemView, R.id.menu_button);
+            final PopupMenu popupMenu = new PopupMenu(context, menuButton);
             MenuInflater menuInflater = popupMenu.getMenuInflater();
             menuInflater.inflate(R.menu.advert_selling_menu, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override public boolean onMenuItemClick(MenuItem item) {
-                    return false;
-                }
-            });
+            popupMenu.setOnMenuItemClickListener(mMenuItemClickListener);
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     popupMenu.show();
                 }
             });
+        }
+
+        private final PopupMenu.OnMenuItemClickListener mMenuItemClickListener
+                = new PopupMenu.OnMenuItemClickListener() {
+            @Override public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_view_advert:
+                        onViewAdvertAction();
+                        return true;
+                    case R.id.action_edit_advert:
+                        onEditAdvertAction();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        };
+
+        private void onViewAdvertAction() {
+            if (sMenuItemClickListener != null) sMenuItemClickListener.viewAdvert(advert);
+        }
+
+        private void onEditAdvertAction() {
+            if (sMenuItemClickListener != null) sMenuItemClickListener.editAdvert(advert);
         }
 
         void bindAdvert(Advert advert) {
@@ -143,8 +168,8 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
                 bindPhoto(photo);
             }
             titleTextView.setText(advert.getName());
-            guidePriceTextView.setText(context.getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
-            qtyAvailableTextView.setText(context.getString(R.string.qty_available_kg, advert.getItemsCount()));
+            guidePriceTextView.setText(resources.getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
+            qtyAvailableTextView.setText(resources.getString(R.string.qty_available_kg, advert.getItemsCount()));
             try {
                 Date date = DateFormats.API_FORMAT.parse(advert.getDateUpdatedAt());
                 String dateAsString = DateFormats.DEFAULT_FORMAT.format(date);
@@ -165,5 +190,9 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
                     .fit()
                     .into(imageView);
         }
+    }
+
+    public void destroy() {
+        sMenuItemClickListener = null;
     }
 }

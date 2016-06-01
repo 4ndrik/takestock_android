@@ -62,6 +62,9 @@
         <activity
                 android:name=".screens.questions.QuestionsActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screens.offers.OffersActivity"
+                android:screenOrientation="portrait"/>
 
         <service android:name="com.devabit.takestock.authenticator.TakeStockAuthenticatorService"
                  android:exported="false">

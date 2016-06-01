@@ -49,7 +49,7 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
         return starter;
     }
 
-    @BindView(R.id.content_activity_question) protected View mContent;
+    @BindView(R.id.content_activity_questions) protected View mContent;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
     @BindView(R.id.question_edit_text) protected EditText mQuestionEditText;
     @BindView(R.id.send_question_button) protected ImageButton mSendQuestionButton;

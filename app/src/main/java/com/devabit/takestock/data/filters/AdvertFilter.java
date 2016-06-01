@@ -2,6 +2,10 @@ package com.devabit.takestock.data.filters;
 
 import android.support.annotation.IntDef;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by Victor Artemyev on 20/05/2016.
  */
@@ -22,10 +26,19 @@ public class AdvertFilter implements Filter {
             ORDER_GUIDE_PRICE, ORDER_GUIDE_PRICE_DESCENDING})
     public @interface Order {}
 
+    private Set<Integer> mAdvertIds = new HashSet<>(0);
     private int mItemCount;
     private int mCategoryId;
     private int mAuthorId;
     @Order private int mOrder;
+
+    public Set<Integer> getAdvertIds() {
+        return mAdvertIds;
+    }
+
+    public void setAdvertIds(List<Integer> advertIds) {
+        mAdvertIds.addAll(advertIds);
+    }
 
     public int getItemCount() {
         return mItemCount;

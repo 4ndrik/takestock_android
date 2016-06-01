@@ -15,12 +15,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.Advert;
+import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screens.selling.adapters.AdvertsAdapter;
 import com.devabit.takestock.util.FontCache;
 import com.devabit.takestock.util.Logger;
@@ -55,7 +57,6 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
         final Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         Toolbar toolbar = ButterKnife.findById(SellingActivity.this, R.id.toolbar);
-//        toolbar.inflateMenu(R.menu.main);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
@@ -75,11 +76,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
                 mPresenter.fetchAdverts();
             }
         });
-        mAdvertsAdapter.setOnItemClickListener(new AdvertsAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Advert advert) {
-
-            }
-        });
+        mAdvertsAdapter.setOnItemClickListener(mMenuItemClickListener);
         recyclerView.setAdapter(mAdvertsAdapter);
 
         mAdvertFilter = getAdvertFilter();
@@ -91,6 +88,21 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
             }
         });
         mPresenter.fetchAdvertsPerFilter(mAdvertFilter);
+    }
+
+    private final AdvertsAdapter.OnMenuItemClickListener mMenuItemClickListener
+            = new AdvertsAdapter.OnMenuItemClickListener() {
+        @Override public void viewAdvert(Advert advert) {
+            startAdvertDetailActivity(advert);
+        }
+
+        @Override public void editAdvert(Advert advert) {
+            Toast.makeText(SellingActivity.this, "Not yet implemented.", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private void startAdvertDetailActivity(Advert advert) {
+        startActivity(AdvertDetailActivity.getStartIntent(SellingActivity.this, advert));
     }
 
     private AdvertFilter getAdvertFilter() {
@@ -124,5 +136,10 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     @Override public void setPresenter(@NonNull SellingContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        mAdvertsAdapter.destroy();
     }
 }

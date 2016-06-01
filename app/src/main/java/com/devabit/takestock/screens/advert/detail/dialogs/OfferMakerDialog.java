@@ -117,7 +117,7 @@ public class OfferMakerDialog extends DialogFragment implements OfferMakerContra
         offer.setUserId(mUserId);
         offer.setQuantity(getQuantityAsInt());
         offer.setPrice(getPrice());
-        offer.setOfferStatusId(1);
+        offer.setOfferStatusId(3);
         return offer;
     }
 

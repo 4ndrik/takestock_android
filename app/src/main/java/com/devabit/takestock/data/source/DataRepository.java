@@ -226,16 +226,16 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultList() {
-        return mRemoteDataSource.getAdvertResultList();
-    }
-
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
-        return mRemoteDataSource.getAdvertResultListPerPage(page);
+    @Override public Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter) {
+        return mRemoteDataSource.getAdvertsPerFilter(filter);
     }
 
     @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
         return mRemoteDataSource.getAdvertResultListPerFilter(filter);
+    }
+
+    @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
+        return mRemoteDataSource.getAdvertResultListPerPage(page);
     }
 
     @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
@@ -255,7 +255,7 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getOfferResultListPerPage(page);
     }
 
-    @Override public Observable<Question> saveQuestion(Question question) {
+    @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         return mRemoteDataSource.saveQuestion(question);
     }
 
@@ -264,6 +264,6 @@ public class DataRepository implements DataSource {
     }
 
     @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
-        return null;
+        return mRemoteDataSource.getQuestionResultListPerPage(page);
     }
 }

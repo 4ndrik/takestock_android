@@ -74,7 +74,7 @@ public interface DataSource {
 
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
-    Observable<ResultList<Advert>> getAdvertResultList();
+    Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter);
 
     Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
 
@@ -86,7 +86,7 @@ public interface DataSource {
 
     Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page);
 
-    Observable<Question> saveQuestion(Question question);
+    Observable<Question> saveQuestion(@NonNull Question question);
 
     Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter);
 

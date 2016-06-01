@@ -26,8 +26,8 @@ public class OfferEntityDataMapper {
         offer.setUserId(entity.getUserId());
         offer.setOfferStatusId(entity.getOfferStatusId());
         offer.setComment(entity.getComment());
-        offer.setCreatedDate(entity.getCreatedDate());
-        offer.setUpdatedDate(entity.getUpdatedDate());
+        offer.setDateCreated(entity.getDateCreated());
+        offer.setDateUpdated(entity.getUpdatedDate());
         User user = mUserMapper.transformFromEntity(entity.getUser());
         offer.setUser(user);
         return offer;
@@ -43,8 +43,8 @@ public class OfferEntityDataMapper {
         entity.setUserId(offer.getUserId());
         entity.setOfferStatusId(offer.getOfferStatusId());
         entity.setComment(offer.getComment());
-        entity.setCreatedDate(offer.getCreatedDate());
-        entity.setUpdatedDate(offer.getUpdatedDate());
+        entity.setDateCreated(offer.getDateCreated());
+        entity.setUpdatedDate(offer.getDateUpdated());
         UserEntity userEntity = mUserMapper.transformToEntity(offer.getUser());
         entity.setUser(userEntity);
         return entity;

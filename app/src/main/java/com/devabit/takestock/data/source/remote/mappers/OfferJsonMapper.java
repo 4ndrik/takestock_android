@@ -53,8 +53,8 @@ public class OfferJsonMapper implements JsonMapper<Offer> {
         offer.setUserId(jsonObject.getInt(USER_ID));
         offer.setOfferStatusId(jsonObject.getInt(STATUS_ID));
         offer.setComment(jsonObject.getString(COMMENT));
-        offer.setCreatedDate(jsonObject.getString(DATE_CREATED));
-        offer.setUpdatedDate(jsonObject.getString(DATE_UPDATED));
+        offer.setDateCreated(jsonObject.getString(DATE_CREATED));
+        offer.setDateUpdated(jsonObject.getString(DATE_UPDATED));
         User user = mUserMapper.fromJsonString(jsonObject.getString(USER));
         offer.setUser(user);
         return offer;

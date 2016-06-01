@@ -58,7 +58,7 @@ public class SearchPresenter implements SearchContract.Presenter {
         if (mAdvertResultList == null) {
             mSearchView.setProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getAdvertResultList()
+                    .getAdvertResultListPerFilter(new AdvertFilter())
                     .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
                     .subscribe(getSubscriber());
             mSubscriptions.add(subscription);

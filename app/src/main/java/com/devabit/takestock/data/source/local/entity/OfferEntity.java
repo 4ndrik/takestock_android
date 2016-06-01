@@ -85,11 +85,11 @@ public class OfferEntity extends RealmObject {
         mComment = comment;
     }
 
-    public String getCreatedDate() {
+    public String getDateCreated() {
         return mCreatedDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setDateCreated(String createdDate) {
         mCreatedDate = createdDate;
     }
 

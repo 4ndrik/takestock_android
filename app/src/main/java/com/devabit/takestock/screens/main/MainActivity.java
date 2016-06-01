@@ -24,6 +24,7 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.screens.category.CategoriesDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
+import com.devabit.takestock.screens.offers.OffersActivity;
 import com.devabit.takestock.screens.search.SearchActivity;
 import com.devabit.takestock.screens.sellSomething.SellSomethingActivity;
 import com.devabit.takestock.screens.selling.SellingActivity;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private static final int REQUEST_CODE_PROFILE_ACTIVITY = 102;
     private static final int REQUEST_CODE_NOTIFICATIONS_ACTIVITY = 103;
     private static final int REQUEST_CODE_WATCHING_ACTIVITY = 104;
+    private static final int REQUEST_CODE_OFFERS_ACTIVITY = 105;
 
     private static final int INDEX_MAIN_CONTENT = 0;
     private static final int INDEX_NO_CONNECTION_CONTENT = 1;
@@ -102,6 +104,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
                     case R.id.nav_selling:
                         onSellingMenuItemClick();
+                        return true;
+
+                    case R.id.nav_offers:
+                        onOffersMenuItemClick();
                         return true;
 
                     default:
@@ -164,6 +170,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void onSellingMenuItemClick() {
         if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
         else startSellingActivity();
+    }
+
+    private void onOffersMenuItemClick() {
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_OFFERS_ACTIVITY);
+        else startOffersActivity();
+    }
+
+    private void startOffersActivity() {
+        startActivity(OffersActivity.getStartIntent(MainActivity.this));
     }
 
     @OnClick(R.id.sell_something_button)

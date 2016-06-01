@@ -349,7 +349,7 @@ public class LocalDataSource implements DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultList() {
+    @Override public Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 

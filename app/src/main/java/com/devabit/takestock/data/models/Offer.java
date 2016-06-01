@@ -3,6 +3,8 @@ package com.devabit.takestock.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
@@ -16,8 +18,8 @@ public class Offer implements Parcelable {
     private int mUserId;
     private int mOfferStatusId;
     private String mComment;
-    private String mCreatedDate;
-    private String mUpdatedDate;
+    private String mDateCreated;
+    private String mDateUpdated;
     private User mUser;
 
     public Offer(){}
@@ -31,8 +33,8 @@ public class Offer implements Parcelable {
         mUserId = in.readInt();
         mOfferStatusId = in.readInt();
         mComment = in.readString();
-        mCreatedDate = in.readString();
-        mUpdatedDate = in.readString();
+        mDateCreated = in.readString();
+        mDateUpdated = in.readString();
         mUser = in.readParcelable(User.class.getClassLoader());
     }
 
@@ -112,20 +114,20 @@ public class Offer implements Parcelable {
         mComment = comment;
     }
 
-    public String getCreatedDate() {
-        return mCreatedDate;
+    public String getDateCreated() {
+        return mDateCreated;
     }
 
-    public void setCreatedDate(String createdDate) {
-        mCreatedDate = createdDate;
+    public void setDateCreated(String dateCreated) {
+        mDateCreated = dateCreated;
     }
 
-    public String getUpdatedDate() {
-        return mUpdatedDate;
+    public String getDateUpdated() {
+        return mDateUpdated;
     }
 
-    public void setUpdatedDate(String updatedDate) {
-        mUpdatedDate = updatedDate;
+    public void setDateUpdated(String dateUpdated) {
+        mDateUpdated = dateUpdated;
     }
 
     public User getUser() {
@@ -134,6 +136,26 @@ public class Offer implements Parcelable {
 
     public void setUser(User user) {
         mUser = user;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offer offer = (Offer) o;
+        return mId == offer.mId &&
+                mAdvertId == offer.mAdvertId &&
+                mOfferId == offer.mOfferId &&
+                mQuantity == offer.mQuantity &&
+                mUserId == offer.mUserId &&
+                mOfferStatusId == offer.mOfferStatusId &&
+                Objects.equals(mPrice, offer.mPrice) &&
+                Objects.equals(mComment, offer.mComment) &&
+                Objects.equals(mDateCreated, offer.mDateCreated) &&
+                Objects.equals(mDateUpdated, offer.mDateUpdated);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(mId, mAdvertId, mOfferId, mPrice, mQuantity, mUserId, mOfferStatusId, mComment, mDateCreated, mDateUpdated);
     }
 
     @Override public String toString() {
@@ -146,8 +168,8 @@ public class Offer implements Parcelable {
                 ", mUserId=" + mUserId +
                 ", mOfferStatusId=" + mOfferStatusId +
                 ", mComment='" + mComment + '\'' +
-                ", mCreatedDate='" + mCreatedDate + '\'' +
-                ", mUpdatedDate='" + mUpdatedDate + '\'' +
+                ", mDateCreated='" + mDateCreated + '\'' +
+                ", mDateUpdated='" + mDateUpdated + '\'' +
                 ", mUser=" + mUser +
                 '}';
     }
@@ -165,8 +187,8 @@ public class Offer implements Parcelable {
         dest.writeInt(mUserId);
         dest.writeInt(mOfferStatusId);
         dest.writeString(mComment);
-        dest.writeString(mCreatedDate);
-        dest.writeString(mUpdatedDate);
+        dest.writeString(mDateCreated);
+        dest.writeString(mDateUpdated);
         dest.writeParcelable(mUser, flags);
     }
 }

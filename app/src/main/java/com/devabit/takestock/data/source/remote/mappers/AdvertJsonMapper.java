@@ -88,7 +88,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
         if (!jsonObject.isNull(PACKAGING)) advert.setPackagingId(jsonObject.getInt(PACKAGING));
         advert.setMinOrderQuantity(jsonObject.getInt(MIN_ORDER_QUANTITY));
         advert.setSize(jsonObject.getString(SIZE));
-        if (!jsonObject.isNull(CERTIFICATION)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION));
+//        if (!jsonObject.isNull(CERTIFICATION)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION));
         advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
         if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
         advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));

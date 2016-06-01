@@ -1,6 +1,9 @@
 package com.devabit.takestock.data.source.remote.filterBuilders;
 
+import android.text.TextUtils;
 import com.devabit.takestock.data.filters.AdvertFilter;
+
+import java.util.Set;
 
 import static com.devabit.takestock.data.filters.AdvertFilter.*;
 
@@ -13,6 +16,7 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
     private static final String CATEGORY = "category";
     private static final String AUTHOR_ID = "author_id";
     private static final String ORDER = "o";
+    private static final String IDS = "ids";
 
     public static final String EXPIRES_AT = "expires_at";
     public static final String EXPIRES_AT_DESCENDING = "-expires_at";
@@ -38,7 +42,10 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
         if (userId > 0) {
             appendQueryParameter(AUTHOR_ID, String.valueOf(userId));
         }
-
+        Set<Integer> ids = mFilter.getAdvertIds();
+        if (!ids.isEmpty()) {
+            appendQueryParameter(IDS, TextUtils.join(",", ids));
+        }
         return mBuilder.toString();
     }
 

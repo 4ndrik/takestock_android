@@ -231,11 +231,8 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     @OnClick(R.id.ask_button)
     protected void onAskButtonClick() {
-        if (lacksAccount()) {
-            startEntryActivity();
-            return;
-        }
-        startQuestionActivity();
+        if (lacksAccount()) startEntryActivity();
+        else startQuestionActivity();
     }
 
     private void startQuestionActivity() {

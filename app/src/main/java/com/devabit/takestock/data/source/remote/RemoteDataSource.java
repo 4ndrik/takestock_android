@@ -23,10 +23,12 @@ import com.devabit.takestock.rest.RestApi;
 import okhttp3.*;
 import org.json.JSONException;
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -176,7 +178,7 @@ public class RemoteDataSource implements RestApi, DataSource {
         return buildUserCredentialsAsJsonStringObservable(credentials)
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOST(TOKEN_REGISTER, json));
+                        return Observable.fromCallable(createPOSTCallable(TOKEN_REGISTER, json));
                     }
                 }).map(new Func1<String, AuthToken>() {
                     @Override public AuthToken call(String json) {
@@ -193,7 +195,7 @@ public class RemoteDataSource implements RestApi, DataSource {
         return buildUserCredentialsAsJsonStringObservable(credentials)
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOST(TOKEN_AUTH, json));
+                        return Observable.fromCallable(createPOSTCallable(TOKEN_AUTH, json));
                     }
                 }).map(new Func1<String, AuthToken>() {
                     @Override public AuthToken call(String json) {
@@ -228,7 +230,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<List<Category>> getCategories() {
-        return Observable.fromCallable(createGET(CATEGORY))
+        return Observable.fromCallable(createGETCallable(CATEGORY))
                 .map(new Func1<String, List<Category>>() {
                     @Override public List<Category> call(String json) {
                         try {
@@ -258,7 +260,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<List<Size>> getSizes() {
-        return Observable.fromCallable(createGET(SIZE_TYPES))
+        return Observable.fromCallable(createGETCallable(SIZE_TYPES))
                 .map(new Func1<String, List<Size>>() {
                     @Override public List<Size> call(String json) {
                         try {
@@ -283,7 +285,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<List<Certification>> getCertifications() {
-        return Observable.fromCallable(createGET(CERTIFICATIONS))
+        return Observable.fromCallable(createGETCallable(CERTIFICATIONS))
                 .map(new Func1<String, List<Certification>>() {
                     @Override public List<Certification> call(String json) {
                         try {
@@ -313,7 +315,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<List<Shipping>> getShippings() {
-        return Observable.fromCallable(createGET(SHIPPING))
+        return Observable.fromCallable(createGETCallable(SHIPPING))
                 .map(new Func1<String, List<Shipping>>() {
                     @Override public List<Shipping> call(String json) {
                         try {
@@ -342,7 +344,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<List<Condition>> getConditions() {
-        return Observable.fromCallable(createGET(CONDITIONS))
+        return Observable.fromCallable(createGETCallable(CONDITIONS))
                 .map(new Func1<String, List<Condition>>() {
                     @Override public List<Condition> call(String json) {
                         try {
@@ -371,7 +373,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<List<Packaging>> getPackagings() {
-        return Observable.fromCallable(createGET(PACKAGING))
+        return Observable.fromCallable(createGETCallable(PACKAGING))
                 .map(new Func1<String, List<Packaging>>() {
                     @Override public List<Packaging> call(String json) {
                         try {
@@ -400,7 +402,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<List<OfferStatus>> getOfferStatuses() {
-        return Observable.fromCallable(createGET(OFFER_STATUS))
+        return Observable.fromCallable(createGETCallable(OFFER_STATUS))
                 .map(new Func1<String, List<OfferStatus>>() {
                     @Override public List<OfferStatus> call(String json) {
                         try {
@@ -433,7 +435,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                     }
                 }).flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOST(ADVERTS, json));
+                        return Observable.fromCallable(createPOSTCallable(ADVERTS, json));
                     }
                 }).map(new Func1<String, Advert>() {
                     @Override public Advert call(String jsonString) {
@@ -446,9 +448,36 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultList() {
-        return getAdvertResultListPerPage(ADVERTS);
+    @Override public Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<AdvertFilter, String>() {
+                    @Override public String call(AdvertFilter advertFilter) {
+                        return new AdvertFilterUrlBuilder(ADVERTS, advertFilter).buildUrl();
+                    }
+                })
+                .flatMap(new Func1<String, Observable<List<Advert>>>() {
+                    @Override public Observable<List<Advert>> call(final String page) {
+                        return Observable.create(new Observable.OnSubscribe<List<Advert>>() {
+                            @Override public void call(Subscriber<? super List<Advert>> subscriber) {
+                                try {
+                                    AdvertResultListJsonMapper jsonMapper = new AdvertResultListJsonMapper();
+                                    ResultList<Advert> resultList = jsonMapper.fromJsonString(createGET(page));
+                                    List<Advert> result = new ArrayList<>(resultList.getResults());
+                                    while (resultList.hasNext()) {
+                                        String nextPage = resultList.getNext();
+                                        resultList = jsonMapper.fromJsonString(createGET(nextPage));
+                                        result.addAll(resultList.getResults());
+                                    }
+                                    subscriber.onNext(result);
+                                } catch (Exception e) {
+                                    subscriber.onError(e);
+                                }
+                            }
+                        });
+                    }
+                });
     }
+
     @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<AdvertFilter, String>() {
@@ -469,7 +498,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
-        return Observable.fromCallable(createGET(page))
+        return Observable.fromCallable(createGETCallable(page))
                 .map(new Func1<String, ResultList<Advert>>() {
                     @Override public ResultList<Advert> call(String json) {
                         try {
@@ -505,7 +534,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String jsonString) {
-                        return Observable.fromCallable(createPOST(OFFERS, jsonString));
+                        return Observable.fromCallable(createPOSTCallable(OFFERS, jsonString));
                     }
                 })
                 .map(new Func1<String, Offer>() {
@@ -540,7 +569,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
-        return Observable.fromCallable(createGET(page))
+        return Observable.fromCallable(createGETCallable(page))
                 .map(new Func1<String, ResultList<Offer>>() {
                     @Override public ResultList<Offer> call(String jsonString) {
                         try {
@@ -566,7 +595,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOST(QUESTIONS, json));
+                        return Observable.fromCallable(createPOSTCallable(QUESTIONS, json));
                     }
                 })
                 .map(new Func1<String, Question>() {
@@ -600,7 +629,7 @@ public class RemoteDataSource implements RestApi, DataSource {
     }
 
     @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
-        return Observable.fromCallable(createGET(page))
+        return Observable.fromCallable(createGETCallable(page))
                 .map(new Func1<String, ResultList<Question>>() {
                     @Override public ResultList<Question> call(String jsonString) {
                         try {
@@ -618,21 +647,25 @@ public class RemoteDataSource implements RestApi, DataSource {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Callable<String> createPOST(final String url, final String json) {
+    private Callable<String> createPOSTCallable(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
-                if (isThereInternetConnection()) {
-                    Request request = buildPOSTRequest(url, json);
-                    LOGD(TAG, request.toString());
-                    Response response = mOkHttpClient.newCall(request).execute();
-                    try (ResponseBody body = response.body()) {
-                        return body.string();
-                    }
-                } else {
-                    throw new NetworkConnectionException("There is no internet connection.");
-                }
+                return createPOST(url, json);
             }
         };
+    }
+
+    private String createPOST(String url, String json) throws Exception {
+        if (isThereInternetConnection()) {
+            Request request = buildPOSTRequest(url, json);
+            LOGD(TAG, request.toString());
+            Response response = mOkHttpClient.newCall(request).execute();
+            try (ResponseBody body = response.body()) {
+                return body.string();
+            }
+        } else {
+            throw new NetworkConnectionException("There is no internet connection.");
+        }
     }
 
     private Request buildPOSTRequest(String url, String json) throws Exception {
@@ -643,21 +676,25 @@ public class RemoteDataSource implements RestApi, DataSource {
                 .build();
     }
 
-    private Callable<String> createGET(final String url) {
+    private Callable<String> createGETCallable(final String url) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
-                if (isThereInternetConnection()) {
-                    Request request = buildGETRequest(url);
-                    LOGD(TAG, request.toString());
-                    Response response = mOkHttpClient.newCall(request).execute();
-                    try (ResponseBody body = response.body()) {
-                        return body.string();
-                    }
-                } else {
-                    throw new NetworkConnectionException("There is no internet connection.");
-                }
+                return createGET(url);
             }
         };
+    }
+
+    private String createGET(String url) throws Exception {
+        if (isThereInternetConnection()) {
+            Request request = buildGETRequest(url);
+            LOGD(TAG, request.toString());
+            Response response = mOkHttpClient.newCall(request).execute();
+            try (ResponseBody body = response.body()) {
+                return body.string();
+            }
+        } else {
+            throw new NetworkConnectionException("There is no internet connection.");
+        }
     }
 
     private Request buildGETRequest(String url) {
