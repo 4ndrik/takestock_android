@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.offers.adapters;
+package com.devabit.takestock.screens.buying.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,7 +14,7 @@ import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Offer;
 import com.devabit.takestock.data.models.OfferStatus;
 import com.devabit.takestock.data.models.Photo;
-import com.devabit.takestock.screens.offers.OffersActivity;
+import com.devabit.takestock.screens.buying.BuyingActivity;
 import com.devabit.takestock.util.DateFormats;
 import com.devabit.takestock.util.Logger;
 import com.squareup.picasso.Picasso;
@@ -30,7 +30,7 @@ import static com.devabit.takestock.util.Logger.LOGE;
  */
 public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
-    private static final String TAG = Logger.makeLogTag(OffersActivity.class);
+    private static final String TAG = Logger.makeLogTag(BuyingActivity.class);
 
     private final LayoutInflater mLayoutInflater;
     private final SparseArray<OfferStatus> mOfferStatuses;

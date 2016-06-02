@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.offers;
+package com.devabit.takestock.screens.buying;
 
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
@@ -30,20 +30,20 @@ import static com.devabit.takestock.util.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class OffersPresenter implements OffersContract.Presenter {
+public class BuyingPresenter implements BuyingContract.Presenter {
 
-    private static final String TAG = makeLogTag(OffersPresenter.class);
+    private static final String TAG = makeLogTag(BuyingPresenter.class);
 
     private final DataRepository mDataRepository;
-    private final OffersContract.View mOffersView;
+    private final BuyingContract.View mOffersView;
 
     private CompositeSubscription mSubscriptions;
 
-    public OffersPresenter(@NonNull DataRepository dataRepository, @NonNull OffersContract.View offersView) {
+    public BuyingPresenter(@NonNull DataRepository dataRepository, @NonNull BuyingContract.View buyingView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
-        mOffersView = checkNotNull(offersView, "offersView cannot be null.");
+        mOffersView = checkNotNull(buyingView, "buyingView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mOffersView.setPresenter(OffersPresenter.this);
+        mOffersView.setPresenter(BuyingPresenter.this);
     }
 
     @Override public void create() {

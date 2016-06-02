@@ -169,7 +169,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             }
             titleTextView.setText(advert.getName());
             guidePriceTextView.setText(resources.getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
-            qtyAvailableTextView.setText(resources.getString(R.string.qty_available_kg, advert.getItemsCount()));
+            qtyAvailableTextView.setText(resources.getString(R.string.available_kg, advert.getItemsCount()));
             try {
                 Date date = DateFormats.API_FORMAT.parse(advert.getDateUpdatedAt());
                 String dateAsString = DateFormats.DEFAULT_FORMAT.format(date);

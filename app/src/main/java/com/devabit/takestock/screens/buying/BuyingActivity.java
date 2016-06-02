@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.offers;
+package com.devabit.takestock.screens.buying;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -26,7 +26,7 @@ import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Offer;
 import com.devabit.takestock.data.models.OfferStatus;
 import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
-import com.devabit.takestock.screens.offers.adapters.OffersAdapter;
+import com.devabit.takestock.screens.buying.adapters.OffersAdapter;
 import com.devabit.takestock.util.FontCache;
 import com.devabit.takestock.util.Logger;
 
@@ -35,26 +35,26 @@ import java.util.Map;
 /**
  * Created by Victor Artemyev on 31/05/2016.
  */
-public class OffersActivity extends AppCompatActivity implements OffersContract.View {
+public class BuyingActivity extends AppCompatActivity implements BuyingContract.View {
 
-    private static final String TAG = Logger.makeLogTag(OffersActivity.class);
+    private static final String TAG = Logger.makeLogTag(BuyingActivity.class);
 
     public static Intent getStartIntent(Context context) {
-        Intent starter = new Intent(context, OffersActivity.class);
+        Intent starter = new Intent(context, BuyingActivity.class);
         return starter;
     }
 
     @BindView(R.id.content_activity_offers) protected View mContent;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
 
-    private OffersContract.Presenter mPresenter;
+    private BuyingContract.Presenter mPresenter;
 
     private OffersAdapter mOffersAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offers);
-        ButterKnife.bind(OffersActivity.this);
+        ButterKnife.bind(BuyingActivity.this);
         initPresenter();
         setUpToolbar();
         setUpRefreshLayout();
@@ -62,13 +62,13 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
     }
 
     private void initPresenter() {
-        new OffersPresenter(
-                Injection.provideDataRepository(OffersActivity.this), OffersActivity.this);
+        new BuyingPresenter(
+                Injection.provideDataRepository(BuyingActivity.this), BuyingActivity.this);
     }
 
     private void setUpToolbar() {
         final Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
-        Toolbar toolbar = ButterKnife.findById(OffersActivity.this, R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(BuyingActivity.this, R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
@@ -76,7 +76,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
         });
         TextView titleToolbar = ButterKnife.findById(toolbar, R.id.toolbar_title);
         titleToolbar.setTypeface(boldTypeface);
-        titleToolbar.setText(R.string.offers);
+        titleToolbar.setText(R.string.buying);
     }
 
     private void setUpRefreshLayout() {
@@ -104,11 +104,11 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
     }
 
     private void setUpOffersRecyclerView(SparseArray<OfferStatus> statuses) {
-        RecyclerView recyclerView = ButterKnife.findById(OffersActivity.this, R.id.recycler_view);
+        RecyclerView recyclerView = ButterKnife.findById(BuyingActivity.this, R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(
-                OffersActivity.this, LinearLayoutManager.VERTICAL, false);
+                BuyingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        mOffersAdapter = new OffersAdapter(OffersActivity.this, statuses);
+        mOffersAdapter = new OffersAdapter(BuyingActivity.this, statuses);
         mOffersAdapter.setMenuItemClickListener(mMenuItemClickListener);
         recyclerView.setAdapter(mOffersAdapter);
     }
@@ -121,7 +121,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
     };
 
     private void startAdvertDetailActivity(Advert advert) {
-        startActivity(AdvertDetailActivity.getStartIntent(OffersActivity.this, advert));
+        startActivity(AdvertDetailActivity.getStartIntent(BuyingActivity.this, advert));
     }
 
     private void fetchOffers() {
@@ -129,7 +129,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
     }
 
     private int getUserId() {
-        AccountManager accountManager = AccountManager.get(OffersActivity.this);
+        AccountManager accountManager = AccountManager.get(BuyingActivity.this);
         Account account = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
         String userId = accountManager.getUserData(account, getString(R.string.authenticator_user_id));
         return Integer.valueOf(userId);
@@ -155,7 +155,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
         mRefreshLayout.setRefreshing(isActive);
     }
 
-    @Override public void setPresenter(@NonNull OffersContract.Presenter presenter) {
+    @Override public void setPresenter(@NonNull BuyingContract.Presenter presenter) {
         mPresenter = presenter;
     }
 

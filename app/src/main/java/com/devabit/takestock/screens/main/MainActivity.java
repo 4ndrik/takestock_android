@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.screens.buying.BuyingActivity;
 import com.devabit.takestock.screens.category.CategoriesDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
-import com.devabit.takestock.screens.offers.OffersActivity;
 import com.devabit.takestock.screens.search.SearchActivity;
 import com.devabit.takestock.screens.sellSomething.SellSomethingActivity;
 import com.devabit.takestock.screens.selling.SellingActivity;
@@ -102,12 +102,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         onWatchingMenuItemClick();
                         return true;
 
-                    case R.id.nav_selling:
-                        onSellingMenuItemClick();
+                    case R.id.nav_buying:
+                        onBuyingMenuItemClick();
                         return true;
 
-                    case R.id.nav_offers:
-                        onOffersMenuItemClick();
+                    case R.id.nav_selling:
+                        onSellingMenuItemClick();
                         return true;
 
                     default:
@@ -167,18 +167,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         showNotYetImplementedSnackbar();
     }
 
+    private void onBuyingMenuItemClick() {
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_OFFERS_ACTIVITY);
+        else startBuyingActivity();
+    }
+
     private void onSellingMenuItemClick() {
         if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
         else startSellingActivity();
     }
 
-    private void onOffersMenuItemClick() {
-        if (lacksAccount()) startEntryActivity(REQUEST_CODE_OFFERS_ACTIVITY);
-        else startOffersActivity();
-    }
-
-    private void startOffersActivity() {
-        startActivity(OffersActivity.getStartIntent(MainActivity.this));
+    private void startBuyingActivity() {
+        startActivity(BuyingActivity.getStartIntent(MainActivity.this));
     }
 
     @OnClick(R.id.sell_something_button)

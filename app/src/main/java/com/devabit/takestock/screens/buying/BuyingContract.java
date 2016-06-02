@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.offers;
+package com.devabit.takestock.screens.buying;
 
 import android.util.SparseArray;
 import com.devabit.takestock.data.models.Advert;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Victor Artemyev on 31/05/2016.
  */
-public interface OffersContract {
+public interface BuyingContract {
 
     interface View extends BaseView<Presenter> {
 
