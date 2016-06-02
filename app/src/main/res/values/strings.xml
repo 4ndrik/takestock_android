@@ -101,6 +101,7 @@
     <string name="categories">Categories</string>
     <string name="minimum_order_kg">%1$d kg</string>
     <string name="qty_available_kg">%1$d kg</string>
+    <string name="available_kg">%1$d kg available</string>
     <string name="take_photo">Take photo</string>
     <string name="choose_from_library">Choose from Library</string>
     <string name="error_empty_size">Please, add size.</string>
@@ -132,5 +133,6 @@
     <string name="retry">Retry</string>
     <string name="make">Make</string>
     <string name="write_question">Write a question…</string>
-    <string name="questions">Questions</string>`
+    <string name="questions">Questions</string>
+    <string name="buying">Buying</string>`
 </resources>

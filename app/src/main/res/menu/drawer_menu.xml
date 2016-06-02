@@ -20,15 +20,15 @@
                         android:icon="@drawable/ic_eye_black_24dp"
                         android:title="@string/watching"/>
 
-                <item
-                        android:id="@+id/nav_purchases"
-                        android:icon="@drawable/ic_purchase_black_24dp"
-                        android:title="@string/purchases"/>
+                <!--<item-->
+                        <!--android:id="@+id/nav_purchases"-->
+                        <!--android:icon="@drawable/ic_purchase_black_24dp"-->
+                        <!--android:title="@string/purchases"/>-->
 
                 <item
-                        android:id="@+id/nav_offers"
-                        android:icon="@drawable/ic_offer_black_24dp"
-                        android:title="@string/offers"/>
+                        android:id="@+id/nav_buying"
+                        android:icon="@drawable/ic_purchase_black_24dp"
+                        android:title="@string/buying"/>
 
                 <item
                         android:id="@+id/nav_selling"
