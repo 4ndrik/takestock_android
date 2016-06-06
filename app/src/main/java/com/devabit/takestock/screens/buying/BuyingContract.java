@@ -18,8 +18,7 @@ public interface BuyingContract {
 
         void showOfferStatusesInView(SparseArray<OfferStatus> statuses);
 
-//        void showOffersInView(List<Offer> offers);
-        void showOffersInView(Map<Offer, Advert> offerAdvertMap);
+        void showOfferAdvertPairsInView(Map<Offer, Advert> offerAdvertMap);
 
         void showNetworkConnectionError();
 

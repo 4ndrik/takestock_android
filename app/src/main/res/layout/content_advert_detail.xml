@@ -304,7 +304,7 @@
                 android:theme="@style/RaisedButtonLime"/>
 
         <Button
-                android:id="@+id/make_offer_button"
+                android:id="@+id/make_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

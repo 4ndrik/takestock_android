@@ -26,7 +26,7 @@ import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Offer;
 import com.devabit.takestock.data.models.OfferStatus;
 import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
-import com.devabit.takestock.screens.buying.adapters.OffersAdapter;
+import com.devabit.takestock.screens.buying.adapters.OfferAdvertPairsAdapter;
 import com.devabit.takestock.util.FontCache;
 import com.devabit.takestock.util.Logger;
 
@@ -44,16 +44,16 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
         return starter;
     }
 
-    @BindView(R.id.content_activity_offers) protected View mContent;
+    @BindView(R.id.content_activity_buying) protected View mContent;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
 
     private BuyingContract.Presenter mPresenter;
 
-    private OffersAdapter mOffersAdapter;
+    private OfferAdvertPairsAdapter mOffersAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offers);
+        setContentView(R.layout.activity_buying);
         ButterKnife.bind(BuyingActivity.this);
         initPresenter();
         setUpToolbar();
@@ -108,13 +108,13 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 BuyingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        mOffersAdapter = new OffersAdapter(BuyingActivity.this, statuses);
+        mOffersAdapter = new OfferAdvertPairsAdapter(BuyingActivity.this, statuses);
         mOffersAdapter.setMenuItemClickListener(mMenuItemClickListener);
         recyclerView.setAdapter(mOffersAdapter);
     }
 
-    private final OffersAdapter.OnMenuItemClickListener mMenuItemClickListener
-            = new OffersAdapter.OnMenuItemClickListener() {
+    private final OfferAdvertPairsAdapter.OnMenuItemClickListener mMenuItemClickListener
+            = new OfferAdvertPairsAdapter.OnMenuItemClickListener() {
         @Override public void viewAdvert(Advert advert) {
             startAdvertDetailActivity(advert);
         }
@@ -135,7 +135,7 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
         return Integer.valueOf(userId);
     }
 
-    @Override public void showOffersInView(Map<Offer, Advert> offerAdvertMap) {
+    @Override public void showOfferAdvertPairsInView(Map<Offer, Advert> offerAdvertMap) {
         mOffersAdapter.addOffers(offerAdvertMap);
     }
 

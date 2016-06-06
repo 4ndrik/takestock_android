@@ -28,7 +28,7 @@ import static com.devabit.takestock.util.Logger.LOGE;
 /**
  * Created by Victor Artemyev on 31/05/2016.
  */
-public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
+public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPairsAdapter.ViewHolder> {
 
     private static final String TAG = Logger.makeLogTag(BuyingActivity.class);
 
@@ -44,14 +44,14 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
 
     private static OnMenuItemClickListener sMenuItemClickListener;
 
-    public OffersAdapter(Context context, SparseArray<OfferStatus> statuses) {
+    public OfferAdvertPairsAdapter(Context context, SparseArray<OfferStatus> statuses) {
         mLayoutInflater = LayoutInflater.from(context);
         mOfferStatuses = statuses;
         mOffers = new ArrayList<>();
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.item_offer, parent, false);
+        View view = mLayoutInflater.inflate(R.layout.item_offer_advert_pair, parent, false);
         return new ViewHolder(view);
     }
 

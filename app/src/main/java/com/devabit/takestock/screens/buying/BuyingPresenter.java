@@ -99,18 +99,10 @@ public class BuyingPresenter implements BuyingContract.Presenter {
                 .compose(RxTransformers.<Map<Offer, Advert>>applyObservableSchedulers())
                 .subscribe(new Action1<Map<Offer, Advert>>() {
                     @Override public void call(Map<Offer, Advert> offerAdvertMap) {
-                        mOffersView.showOffersInView(offerAdvertMap);
+                        mOffersView.showOfferAdvertPairsInView(offerAdvertMap);
                     }
                 }, getOnError(), getOnCompleted());
-
-//                .compose(RxTransformers.<ResultList<Offer>>applyObservableSchedulers())
-//                .subscribe(new Action1<ResultList<Offer>>() {
-//                    @Override public void call(ResultList<Offer> resultList) {
-//                        mOffersView.showOffersInView(resultList.getResults());
-//                    }
-//                }, getOnError(), getOnCompleted());
         mSubscriptions.add(subscription);
-
     }
 
     private Observable<SparseArray<Advert>> buildAdvertsPerOffersObservable(List<Offer> offers) {
