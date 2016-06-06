@@ -2,6 +2,7 @@ package com.devabit.takestock.screens.selling.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -40,6 +41,10 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     private OnEndPositionListener mEndPositionListener;
 
     public interface OnMenuItemClickListener {
+        void manageOffers(Advert advert);
+
+        void viewMessages(Advert advert);
+
         void viewAdvert(Advert advert);
 
         void editAdvert(Advert advert);
@@ -107,6 +112,8 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         final TextView questionsCountTextView;
         final TextView daysLeftCountTextView;
 
+        final Menu menu;
+
         Advert advert;
 
         public ViewHolder(View itemView) {
@@ -126,7 +133,8 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             ImageButton menuButton = findById(itemView, R.id.menu_button);
             final PopupMenu popupMenu = new PopupMenu(context, menuButton);
             MenuInflater menuInflater = popupMenu.getMenuInflater();
-            menuInflater.inflate(R.menu.advert_item_menu, popupMenu.getMenu());
+            menu = popupMenu.getMenu();
+            menuInflater.inflate(R.menu.advert_item_menu, menu);
             popupMenu.setOnMenuItemClickListener(mMenuItemClickListener);
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -139,9 +147,19 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
                 = new PopupMenu.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
+
+                    case R.id.action_manage_offers:
+                        onManageOffersAction();
+                        return true;
+
+                    case R.id.action_view_messages:
+                        onViewMassageAction();
+                        return true;
+
                     case R.id.action_view_advert:
                         onViewAdvertAction();
                         return true;
+
                     case R.id.action_edit_advert:
                         onEditAdvertAction();
                         return true;
@@ -151,6 +169,14 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
                 }
             }
         };
+
+        private void onManageOffersAction() {
+            if (sMenuItemClickListener != null) sMenuItemClickListener.manageOffers(advert);
+        }
+
+        private void onViewMassageAction() {
+            if (sMenuItemClickListener != null) sMenuItemClickListener.viewMessages(advert);
+        }
 
         private void onViewAdvertAction() {
             if (sMenuItemClickListener != null) sMenuItemClickListener.viewAdvert(advert);
@@ -177,8 +203,15 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             } catch (ParseException e) {
                 LOGE(TAG, "BOOM:", e);
             }
-            offersCountTextView.setText(advert.getOffersCount());
-            questionsCountTextView.setText(advert.getQuestionsCount());
+
+            String offersCount = advert.getOffersCount();
+            setMenuItemVisibility(R.id.action_manage_offers, !offersCount.equals("0"));
+            offersCountTextView.setText(offersCount);
+
+            String questionsCount = advert.getQuestionsCount();
+            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
+            questionsCountTextView.setText(questionsCount);
+
             daysLeftCountTextView.setText(advert.getDaysLeft());
         }
 
@@ -189,6 +222,11 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
                     .centerCrop()
                     .fit()
                     .into(imageView);
+        }
+
+        void setMenuItemVisibility(@IdRes int itemId, boolean visible) {
+            MenuItem item = menu.findItem(itemId);
+            item.setVisible(visible);
         }
     }
 

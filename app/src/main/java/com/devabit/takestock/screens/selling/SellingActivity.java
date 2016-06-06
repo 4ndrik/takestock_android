@@ -25,6 +25,8 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
+import com.devabit.takestock.screens.answers.AnswersActivity;
+import com.devabit.takestock.screens.offers.OffersActivity;
 import com.devabit.takestock.screens.selling.adapters.AdvertsAdapter;
 import com.devabit.takestock.util.FontCache;
 import com.devabit.takestock.util.Logger;
@@ -95,6 +97,14 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     private final AdvertsAdapter.OnMenuItemClickListener mMenuItemClickListener
             = new AdvertsAdapter.OnMenuItemClickListener() {
+        @Override public void manageOffers(Advert advert) {
+            startOffersActivity(advert);
+        }
+
+        @Override public void viewMessages(Advert advert) {
+            startAnswersActivity(advert);
+        }
+
         @Override public void viewAdvert(Advert advert) {
             startAdvertDetailActivity(advert);
         }
@@ -103,6 +113,14 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
             Toast.makeText(SellingActivity.this, "Not yet implemented.", Toast.LENGTH_LONG).show();
         }
     };
+
+    private void startOffersActivity(Advert advert) {
+        startActivity(OffersActivity.getStartIntent(SellingActivity.this, advert));
+    }
+
+    private void startAnswersActivity(Advert advert) {
+        startActivity(AnswersActivity.getStartIntent(SellingActivity.this, advert.getId()));
+    }
 
     private void startAdvertDetailActivity(Advert advert) {
         startActivity(AdvertDetailActivity.getStartIntent(SellingActivity.this, advert));
