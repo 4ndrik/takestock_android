@@ -8,89 +8,95 @@
 
     <include layout="@layout/toolbar_progress"/>
 
-    <LinearLayout
+    <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:background="@color/white">
 
-        <ImageView
-                android:id="@+id/logo_image_view"
-                android:layout_width="wrap_content"
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo_144dp"
                 android:layout_gravity="center"
-                tools:ignore="ContentDescription"/>
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-                android:id="@+id/user_name_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+            <ImageView
+                    android:id="@+id/logo_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/logo_144dp"
+                    android:layout_gravity="center"
+                    tools:ignore="ContentDescription"/>
 
-            <android.support.design.widget.TextInputEditText
-                    android:id="@+id/user_name_edit_text"
+            <android.support.design.widget.TextInputLayout
+                    android:id="@+id/user_name_input_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/user_name"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapSentences"
-                    android:maxLength="30"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"/>
+                    android:layout_marginTop="16dp">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/user_name_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/user_name"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapSentences"
+                        android:maxLength="30"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
 
-        <android.support.design.widget.TextInputLayout
-                android:id="@+id/email_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                    android:id="@+id/email_edit_text"
+            <android.support.design.widget.TextInputLayout
+                    android:id="@+id/email_input_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"/>
+                    android:layout_marginTop="8dp">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/email_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/email"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
 
-        <android.support.design.widget.TextInputLayout
-                android:id="@+id/password_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                    android:id="@+id/password_edit_text"
+            <android.support.design.widget.TextInputLayout
+                    android:id="@+id/password_input_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"/>
+                    android:layout_marginTop="8dp">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/password_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
 
-        <Button
-                android:id="@+id/sign_up_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/sign_up"
-                android:textAppearance="@android:style/TextAppearance.Small"
-                android:theme="@style/RaisedButtonLime"/>
+            </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
+            <Button
+                    android:id="@+id/sign_up_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/sign_up"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:theme="@style/RaisedButtonLime"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

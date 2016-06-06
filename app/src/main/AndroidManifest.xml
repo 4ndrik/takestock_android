@@ -38,7 +38,8 @@
         </activity>
         <activity
                 android:name=".screens.entry.EntryActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
                 android:name=".screens.sellSomething.SellSomethingActivity"
                 android:screenOrientation="portrait"
@@ -64,6 +65,12 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screens.buying.BuyingActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screens.offers.OffersActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screens.answers.AnswersActivity"
                 android:screenOrientation="portrait"/>
 
         <service android:name="com.devabit.takestock.authenticator.TakeStockAuthenticatorService"
