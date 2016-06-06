@@ -1,9 +1,12 @@
 package com.devabit.takestock.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Victor Artemyev on 30/05/2016.
  */
-public class Question {
+public class Question implements Parcelable {
 
     private int mId;
     private int mUserId;
@@ -13,6 +16,46 @@ public class Question {
     private String mDateCreated;
     private String mUserName;
     private Answer mAnswer;
+
+    public Question() {}
+
+    protected Question(Parcel in) {
+        mId = in.readInt();
+        mUserId = in.readInt();
+        mAdvertId = in.readInt();
+        mMessage = in.readString();
+        mIsNew = in.readByte() != 0;
+        mDateCreated = in.readString();
+        mUserName = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeInt(mUserId);
+        dest.writeInt(mAdvertId);
+        dest.writeString(mMessage);
+        dest.writeByte((byte) (mIsNew ? 1 : 0));
+        dest.writeString(mDateCreated);
+        dest.writeString(mUserName);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 
     public int getId() {
         return mId;
