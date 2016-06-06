@@ -10,15 +10,15 @@ import static com.devabit.takestock.util.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
-public class OfferMakerPresenter implements OfferMakerContract.Presenter {
+public class OfferPresenter implements OfferContract.Presenter {
 
-    private static final String TAG = makeLogTag(OfferMakerPresenter.class);
+    private static final String TAG = makeLogTag(OfferPresenter.class);
 
-    private final OfferMakerContract.View mOfferMakerView;
+    private final OfferContract.View mOfferView;
 
-    public OfferMakerPresenter(@NonNull OfferMakerContract.View offerMakerView) {
-        mOfferMakerView = checkNotNull(offerMakerView, "offerMakerView cannot be null.");
-        mOfferMakerView.setPresenter(OfferMakerPresenter.this);
+    public OfferPresenter(@NonNull OfferContract.View offerView) {
+        mOfferView = checkNotNull(offerView, "offerView cannot be null.");
+        mOfferView.setPresenter(OfferPresenter.this);
     }
 
     @Override public void create() {
@@ -31,7 +31,7 @@ public class OfferMakerPresenter implements OfferMakerContract.Presenter {
 
     @Override public void validateOffer(Offer offer) {
         if (isOfferValid(offer)) {
-            mOfferMakerView.showValidOffer(offer);
+            mOfferView.showValidOffer(offer);
         }
     }
 
@@ -42,7 +42,7 @@ public class OfferMakerPresenter implements OfferMakerContract.Presenter {
             int qtyValue = Integer.valueOf(quantity);
             double priceValue = Double.valueOf(price);
             double totalPrice = qtyValue * priceValue;
-            mOfferMakerView.showTotalPriceInView(quantity, totalPrice);
+            mOfferView.showTotalPriceInView(quantity, totalPrice);
         } catch (NumberFormatException e) {
             LOGE(TAG, "BOOM:", e);
         }
@@ -56,7 +56,7 @@ public class OfferMakerPresenter implements OfferMakerContract.Presenter {
     private boolean validateQuantity(Offer offer) {
         int quantity = offer.getQuantity();
         if (quantity <= 0) {
-            mOfferMakerView.showEmptyQuantityError();
+            mOfferView.showEmptyQuantityError();
             return false;
         }
         return true;
@@ -65,7 +65,7 @@ public class OfferMakerPresenter implements OfferMakerContract.Presenter {
     private boolean validatePrice(Offer offer) {
         String price = offer.getPrice();
         if (price.isEmpty()) {
-            mOfferMakerView.showEmptyPriceError();
+            mOfferView.showEmptyPriceError();
             return false;
         }
         return true;

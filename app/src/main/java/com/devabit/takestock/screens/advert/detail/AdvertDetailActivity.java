@@ -28,7 +28,7 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.screens.advert.adapters.AdvertPhotosAdapter;
-import com.devabit.takestock.screens.advert.detail.dialogs.OfferMakerDialog;
+import com.devabit.takestock.screens.advert.detail.dialogs.OfferDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
 import com.devabit.takestock.screens.questions.QuestionsActivity;
 import com.devabit.takestock.util.FontCache;
@@ -61,7 +61,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
     @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
 
-    @BindViews({R.id.advert_photos_recycler_view, R.id.make_offer_fab, R.id.ask_button, R.id.make_offer_button})
+    @BindViews({R.id.advert_photos_recycler_view, R.id.make_offer_fab, R.id.ask_button, R.id.make_button})
     protected List<View> mViews;
 
     private Account mAccount;
@@ -129,7 +129,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     private void setTypefaceToButtons(Typeface typeface) {
         Button askButton = ButterKnife.findById(AdvertDetailActivity.this, R.id.ask_button);
         askButton.setTypeface(typeface);
-        Button makeOfferButton = ButterKnife.findById(AdvertDetailActivity.this, R.id.make_offer_button);
+        Button makeOfferButton = ButterKnife.findById(AdvertDetailActivity.this, R.id.make_button);
         makeOfferButton.setTypeface(typeface);
     }
 
@@ -138,17 +138,17 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         displayOfferMakerDialog();
     }
 
-    @OnClick(R.id.make_offer_button)
+    @OnClick(R.id.make_button)
     protected void onMakeOfferButtonClick() {
         displayOfferMakerDialog();
     }
 
     private void displayOfferMakerDialog() {
         if (lacksAccount()) startEntryActivity();
-        OfferMakerDialog dialog = OfferMakerDialog.newInstance(getUserId(), mAdvert);
+        OfferDialog dialog = OfferDialog.newInstance(getUserId(), mAdvert);
         dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
-        dialog.setOnOfferMadeListener(new OfferMakerDialog.OnOfferMadeListener() {
-            @Override public void onOfferMade(OfferMakerDialog dialog, Offer offer) {
+        dialog.setOnOfferListener(new OfferDialog.OnOfferListener() {
+            @Override public void onOfferMade(OfferDialog dialog, Offer offer) {
                 dialog.dismiss();
                 mPresenter.makeOffer(offer);
             }

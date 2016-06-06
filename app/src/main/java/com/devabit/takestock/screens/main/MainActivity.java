@@ -168,11 +168,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onBuyingMenuItemClick() {
+        closeDrawer();
         if (lacksAccount()) startEntryActivity(REQUEST_CODE_OFFERS_ACTIVITY);
         else startBuyingActivity();
     }
 
     private void onSellingMenuItemClick() {
+        closeDrawer();
         if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
         else startSellingActivity();
     }
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @OnClick(R.id.sell_something_button)
     protected void onSellSomethingButtonClick() {
+        closeDrawer();
         if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
         else startSellSomethingActivity();
     }

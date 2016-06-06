@@ -7,7 +7,7 @@ import com.devabit.takestock.screens.BaseView;
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
-public interface OfferMakerContract {
+public interface OfferContract {
 
     interface View extends BaseView<Presenter> {
 

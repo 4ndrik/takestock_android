@@ -1,23 +1,21 @@
 package com.devabit.takestock.screens.advert.detail.dialogs;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import butterknife.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
+import butterknife.Unbinder;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Offer;
-import com.devabit.takestock.util.FontCache;
-
-import java.util.List;
 
 import static com.devabit.takestock.util.Logger.LOGD;
 import static com.devabit.takestock.util.Logger.makeLogTag;
@@ -25,16 +23,16 @@ import static com.devabit.takestock.util.Logger.makeLogTag;
 /**
  * Created by Victor Artemyev on 14/04/2016.
  */
-public class OfferMakerDialog extends DialogFragment implements OfferMakerContract.View {
+public class OfferDialog extends DialogFragment implements OfferContract.View {
 
-    private static final String TAG = makeLogTag(OfferMakerDialog.class);
+    private static final String TAG = makeLogTag(OfferDialog.class);
 
     private static final String ARG_USER_ID = "USER_ID";
     private static final String ARG_ADVERT = "ADVERT";
 
-    public static OfferMakerDialog newInstance(int userId, Advert advert) {
+    public static OfferDialog newInstance(int userId, Advert advert) {
         Bundle args = new Bundle();
-        OfferMakerDialog dialog = new OfferMakerDialog();
+        OfferDialog dialog = new OfferDialog();
         args.putInt(ARG_USER_ID, userId);
         args.putParcelable(ARG_ADVERT, advert);
         dialog.setArguments(args);
@@ -46,46 +44,82 @@ public class OfferMakerDialog extends DialogFragment implements OfferMakerContra
     private int mUserId;
     private Advert mAdvert;
 
-    public interface OnOfferMadeListener {
-        void onOfferMade(OfferMakerDialog dialog, Offer offer);
+    public interface OnOfferListener {
+        void onOfferMade(OfferDialog dialog, Offer offer);
     }
 
-    private OnOfferMadeListener mOfferMadeListener;
+    private OnOfferListener mOfferListener;
 
     private Unbinder mUnbinder;
-    private OfferMakerContract.Presenter mPresenter;
+    private OfferContract.Presenter mPresenter;
 
     @BindView(R.id.quantity_edit_text) protected EditText mQuantityEditText;
     @BindView(R.id.price_edit_text) protected EditText mPriceEditText;
     @BindView(R.id.total_price_text_view) protected TextView mTotalPriceTextView;
-    @BindViews({R.id.make_offer_button, R.id.cancel_button})
-    protected List<Button> mButtons;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mUserId = args.getInt(ARG_USER_ID);
         mAdvert = args.getParcelable(ARG_ADVERT);
-        new OfferMakerPresenter(OfferMakerDialog.this);
+        new OfferPresenter(OfferDialog.this);
     }
 
-    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_offer_maker, container, false);
-    }
-
-    @Override public void onViewCreated(View view, Bundle savedInstanceState) {
-        mUnbinder = ButterKnife.bind(OfferMakerDialog.this, view);
-        final Typeface boldTypeface = FontCache.getTypeface(getActivity(), R.string.font_brandon_bold);
-        ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
-            @Override public void apply(@NonNull Button view, int index) {
-                view.setTypeface(boldTypeface);
-            }
-        });
+    @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Activity parentActivity = getActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity, R.style.AppTheme_Dialog_Alert_Purple);
+        builder.setTitle(R.string.offer);
+        builder.setPositiveButton(R.string.make, null);
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setView(R.layout.dialog_offer);
+        return builder.create();
     }
 
     @Override public void onStart() {
         super.onStart();
+        setUpDialog();
+    }
+
+    private void setUpDialog() {
+        super.onStart();
+        AlertDialog dialog = (AlertDialog) getDialog();
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onPositiveButtonClick();
+            }
+        });
+        dialog.getButton(Dialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onNegativeButtonClick();
+            }
+        });
+        View content = ButterKnife.findById(dialog, R.id.content);
+        mUnbinder = ButterKnife.bind(OfferDialog.this, content);
         calculateTotalPrice();
+    }
+
+    private void onPositiveButtonClick() {
+        Offer offer = createOffer();
+        mPresenter.validateOffer(offer);
+    }
+
+    private void onNegativeButtonClick() {
+        dismiss();
+    }
+
+    private Offer createOffer() {
+        Offer offer = new Offer();
+        offer.setAdvertId(mAdvert.getId());
+        offer.setUserId(mUserId);
+        offer.setQuantity(getQuantityAsInt());
+        offer.setPrice(getPrice());
+        offer.setOfferStatusId(3);
+        return offer;
+    }
+
+    private int getQuantityAsInt() {
+        if (getQuantity().isEmpty()) return 0;
+        else return Integer.valueOf(getQuantity());
     }
 
     @OnTextChanged(R.id.quantity_edit_text)
@@ -104,28 +138,6 @@ public class OfferMakerDialog extends DialogFragment implements OfferMakerContra
         mPresenter.calculateOfferTotalPrice(getQuantity(), getPrice());
     }
 
-    @OnClick(R.id.make_offer_button)
-    protected void onMakeOfferButtonClick() {
-        Offer offer = createOffer();
-        LOGD(TAG, "onMakeOfferButtonClick: " + offer);
-        mPresenter.validateOffer(offer);
-    }
-
-    private Offer createOffer() {
-        Offer offer = new Offer();
-        offer.setAdvertId(mAdvert.getId());
-        offer.setUserId(mUserId);
-        offer.setQuantity(getQuantityAsInt());
-        offer.setPrice(getPrice());
-        offer.setOfferStatusId(3);
-        return offer;
-    }
-
-    private int getQuantityAsInt() {
-        if (getQuantity().isEmpty()) return 0;
-        else return Integer.valueOf(getQuantity());
-    }
-
     private String getQuantity() {
         return mQuantityEditText.getText().toString().trim();
     }
@@ -135,7 +147,7 @@ public class OfferMakerDialog extends DialogFragment implements OfferMakerContra
     }
 
     @Override public void showValidOffer(Offer offer) {
-        if (mOfferMadeListener != null) mOfferMadeListener.onOfferMade(OfferMakerDialog.this, offer);
+        if (mOfferListener != null) mOfferListener.onOfferMade(OfferDialog.this, offer);
     }
 
     @Override public void showTotalPriceInView(String quantity, double totalPrice) {
@@ -150,17 +162,12 @@ public class OfferMakerDialog extends DialogFragment implements OfferMakerContra
         mPriceEditText.setError(getText(R.string.error_empty_price));
     }
 
-    @OnClick(R.id.cancel_button)
-    protected void onCancelButtonClick() {
-        dismiss();
-    }
-
-    @Override public void setPresenter(@NonNull OfferMakerContract.Presenter presenter) {
+    @Override public void setPresenter(@NonNull OfferContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
-    public void setOnOfferMadeListener(OnOfferMadeListener offerMadeListener) {
-        mOfferMadeListener = offerMadeListener;
+    public void setOnOfferListener(OnOfferListener offerListener) {
+        mOfferListener = offerListener;
     }
 
     @Override public void onDestroyView() {
