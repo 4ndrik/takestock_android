@@ -10,7 +10,7 @@
     <string name="authenticator_user_name">com.devabit.takestock.USERNAME</string>
     <string name="authenticator_user_email">com.devabit.takestock.USER_EMAIL</string>
 
-    <string name="app_name">Take Stock</string>
+    <string name="app_name">TakeStock</string>
     <string name="search_products">Search Products</string>
     <string name="browse_categories"><![CDATA[Browse Categories >]]></string>
     <string name="sell_something">Sell Something</string>
@@ -70,7 +70,7 @@
     <string name="password">Password</string>
     <string name="user_name_or_email">Username or email</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="guide_price_per_kg">£ %1$s per kg</string>
+    <string name="guide_price_per_kg">£ %1$s/kg</string>
     <string name="offer_price_per_kg">£ %1$s per %2$d kg</string>
     <string name="hint_expiry_date">DD/MM/YYYY</string>
     <string name="expiry_date">%1$d/%2$d/%3$s</string>
@@ -134,5 +134,12 @@
     <string name="make">Make</string>
     <string name="write_question">Write a question…</string>
     <string name="questions">Questions</string>
-    <string name="buying">Buying</string>`
+    <string name="buying">Buying</string>
+    <string name="accept">Accept</string>
+    <string name="counter">Counter</string>
+    <string name="reject">Reject</string>
+    <string name="counter_offer">Counter offer</string>
+    <string name="reply">Reply</string>
+    <string name="answer">Answer</string>
+    <string name="reject_offer">Reject offer</string>`
 </resources>

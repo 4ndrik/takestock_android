@@ -82,6 +82,10 @@ public interface DataSource {
 
     Observable<Offer> saveOffer(@NonNull Offer offer);
 
+    Observable<Offer> updateOffer(@NonNull Offer offer);
+
+    Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter);
+
     Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter);
 
     Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page);
@@ -92,4 +96,5 @@ public interface DataSource {
 
     Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page);
 
+    Observable<Answer> saveAnswer(Answer answer);
 }

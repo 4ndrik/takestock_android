@@ -393,6 +393,14 @@ public class LocalDataSource implements DataSource {
                 });
     }
 
+    @Override public Observable<Offer> updateOffer(@NonNull Offer offer) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -401,15 +409,19 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<Question> saveQuestion(Question question) {
-        return null;
+    @Override public Observable<Question> saveQuestion(@NonNull Question question) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
-        return null;
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Answer> saveAnswer(Answer answer) {
         return null;
     }
 

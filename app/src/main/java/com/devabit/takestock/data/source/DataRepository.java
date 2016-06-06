@@ -247,6 +247,14 @@ public class DataRepository implements DataSource {
                 });
     }
 
+    @Override public Observable<Offer> updateOffer(@NonNull Offer offer) {
+        return mRemoteDataSource.updateOffer(offer);
+    }
+
+    @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
+        return mRemoteDataSource.getOffersPerFilter(filter);
+    }
+
     @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
         return mRemoteDataSource.getOfferResultListPerFilter(filter);
     }
@@ -265,5 +273,9 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
         return mRemoteDataSource.getQuestionResultListPerPage(page);
+    }
+
+    @Override public Observable<Answer> saveAnswer(Answer answer) {
+        return mRemoteDataSource.saveAnswer(answer);
     }
 }

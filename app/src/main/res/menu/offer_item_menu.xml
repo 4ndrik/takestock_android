@@ -3,4 +3,5 @@
     <item
             android:id="@+id/action_view_advert"
             android:title="View advert"/>
+
 </menu>

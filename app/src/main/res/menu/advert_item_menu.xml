@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/action_manage_offers"
+            android:title="Manage offers"/>
+
+    <item
+            android:id="@+id/action_view_messages"
+            android:title="View messages"/>
+
     <item
             android:id="@+id/action_view_advert"
             android:title="View advert"/>

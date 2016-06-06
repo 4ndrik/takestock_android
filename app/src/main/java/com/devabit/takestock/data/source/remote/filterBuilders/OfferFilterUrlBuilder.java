@@ -18,7 +18,7 @@ public class OfferFilterUrlBuilder extends FilterUrlBuilder<OfferFilter> {
         int userId = mFilter.getUserId();
         if (userId > 0) appendQueryParameter(USER_ID, String.valueOf(userId));
         int advertId = mFilter.getAdvertId();
-        if (advertId > 0) appendQueryParameter(ADVERT_ID, String.valueOf(userId));
+        if (advertId > 0) appendQueryParameter(ADVERT_ID, String.valueOf(advertId));
         return mBuilder.toString();
     }
 }

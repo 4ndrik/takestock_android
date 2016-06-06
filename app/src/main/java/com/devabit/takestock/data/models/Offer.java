@@ -13,11 +13,13 @@ public class Offer implements Parcelable {
     private int mId;
     private int mAdvertId;
     private int mOfferId;
+    private int mCounterOfferId;
     private String mPrice;
     private int mQuantity;
     private int mUserId;
     private int mOfferStatusId;
     private String mComment;
+    private String mStatusComment;
     private String mDateCreated;
     private String mDateUpdated;
     private User mUser;
@@ -28,14 +30,38 @@ public class Offer implements Parcelable {
         mId = in.readInt();
         mAdvertId = in.readInt();
         mOfferId = in.readInt();
+        mCounterOfferId = in.readInt();
         mPrice = in.readString();
         mQuantity = in.readInt();
         mUserId = in.readInt();
         mOfferStatusId = in.readInt();
         mComment = in.readString();
+        mStatusComment = in.readString();
         mDateCreated = in.readString();
         mDateUpdated = in.readString();
         mUser = in.readParcelable(User.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeInt(mAdvertId);
+        dest.writeInt(mOfferId);
+        dest.writeInt(mCounterOfferId);
+        dest.writeString(mPrice);
+        dest.writeInt(mQuantity);
+        dest.writeInt(mUserId);
+        dest.writeInt(mOfferStatusId);
+        dest.writeString(mComment);
+        dest.writeString(mStatusComment);
+        dest.writeString(mDateCreated);
+        dest.writeString(mDateUpdated);
+        dest.writeParcelable(mUser, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Offer> CREATOR = new Creator<Offer>() {
@@ -130,6 +156,22 @@ public class Offer implements Parcelable {
         mDateUpdated = dateUpdated;
     }
 
+    public int getCounterOfferId() {
+        return mCounterOfferId;
+    }
+
+    public void setCounterOfferId(int counterOfferId) {
+        mCounterOfferId = counterOfferId;
+    }
+
+    public String getStatusComment() {
+        return mStatusComment;
+    }
+
+    public void setStatusComment(String statusComment) {
+        mStatusComment = statusComment;
+    }
+
     public User getUser() {
         return mUser;
     }
@@ -145,17 +187,22 @@ public class Offer implements Parcelable {
         return mId == offer.mId &&
                 mAdvertId == offer.mAdvertId &&
                 mOfferId == offer.mOfferId &&
+                mCounterOfferId == offer.mCounterOfferId &&
                 mQuantity == offer.mQuantity &&
                 mUserId == offer.mUserId &&
                 mOfferStatusId == offer.mOfferStatusId &&
                 Objects.equals(mPrice, offer.mPrice) &&
                 Objects.equals(mComment, offer.mComment) &&
+                Objects.equals(mStatusComment, offer.mStatusComment) &&
                 Objects.equals(mDateCreated, offer.mDateCreated) &&
                 Objects.equals(mDateUpdated, offer.mDateUpdated);
     }
 
     @Override public int hashCode() {
-        return Objects.hash(mId, mAdvertId, mOfferId, mPrice, mQuantity, mUserId, mOfferStatusId, mComment, mDateCreated, mDateUpdated);
+        return Objects.hash(
+                mId, mAdvertId, mOfferId, mCounterOfferId, mPrice,
+                mQuantity, mUserId, mOfferStatusId, mComment,
+                mStatusComment, mDateCreated, mDateUpdated);
     }
 
     @Override public String toString() {
@@ -163,32 +210,16 @@ public class Offer implements Parcelable {
                 "mId=" + mId +
                 ", mAdvertId=" + mAdvertId +
                 ", mOfferId=" + mOfferId +
+                ", mCounterOfferId=" + mCounterOfferId +
                 ", mPrice='" + mPrice + '\'' +
                 ", mQuantity=" + mQuantity +
                 ", mUserId=" + mUserId +
                 ", mOfferStatusId=" + mOfferStatusId +
                 ", mComment='" + mComment + '\'' +
+                ", mStatusComment='" + mStatusComment + '\'' +
                 ", mDateCreated='" + mDateCreated + '\'' +
                 ", mDateUpdated='" + mDateUpdated + '\'' +
                 ", mUser=" + mUser +
                 '}';
-    }
-
-    @Override public int describeContents() {
-        return 0;
-    }
-
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeInt(mAdvertId);
-        dest.writeInt(mOfferId);
-        dest.writeString(mPrice);
-        dest.writeInt(mQuantity);
-        dest.writeInt(mUserId);
-        dest.writeInt(mOfferStatusId);
-        dest.writeString(mComment);
-        dest.writeString(mDateCreated);
-        dest.writeString(mDateUpdated);
-        dest.writeParcelable(mUser, flags);
     }
 }

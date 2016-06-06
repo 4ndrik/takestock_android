@@ -21,6 +21,8 @@
     <color name="grey_400">#BDBDBD</color>
     <color name="grey_600">#757575</color>
 
+    <color name="red_500">#F44336</color>
+
     <color name="translucent_scrim_top">#26000000</color>
     <color name="translucent_scrim_top_center">#0C000000</color>
     <color name="translucent_scrim_bottom">#40000000</color>

@@ -549,6 +549,70 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
+    @Override public Observable<Offer> updateOffer(@NonNull final Offer offer) {
+        final OfferJsonMapper jsonMapper = new OfferJsonMapper();
+        return Observable.just(offer)
+                .map(new Func1<Offer, String>() {
+                    @Override public String call(Offer offer) {
+                        try {
+                            return jsonMapper.toJsonString(offer);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .doOnNext(new Action1<String>() {
+                    @Override public void call(String json) {
+                        LOGD(TAG, "Offer json: " + json);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String jsonString) {
+                        return Observable.fromCallable(createPUTCallable(OFFERS + offer.getId() + "/", jsonString));
+                    }
+                })
+                .map(new Func1<String, Offer>() {
+                    @Override public Offer call(String jsonString) {
+                        try {
+                            LOGD(TAG, "Offer updated json: " + jsonString);
+                            return jsonMapper.fromJsonString(jsonString);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<OfferFilter, String>() {
+                    @Override public String call(OfferFilter advertFilter) {
+                        return new OfferFilterUrlBuilder(OFFERS, advertFilter).buildUrl();
+                    }
+                })
+                .flatMap(new Func1<String, Observable<List<Offer>>>() {
+                    @Override public Observable<List<Offer>> call(final String page) {
+                        return Observable.create(new Observable.OnSubscribe<List<Offer>>() {
+                            @Override public void call(Subscriber<? super List<Offer>> subscriber) {
+                                try {
+                                    OfferResultListJsonMapper jsonMapper = new OfferResultListJsonMapper();
+                                    ResultList<Offer> resultList = jsonMapper.fromJsonString(createGET(page));
+                                    List<Offer> result = new ArrayList<>(resultList.getResults());
+                                    while (resultList.hasNext()) {
+                                        String nextPage = resultList.getNext();
+                                        resultList = jsonMapper.fromJsonString(createGET(nextPage));
+                                        result.addAll(resultList.getResults());
+                                    }
+                                    subscriber.onNext(result);
+                                } catch (Exception e) {
+                                    subscriber.onError(e);
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
     @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<OfferFilter, String>() {
@@ -641,6 +705,34 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
+    @Override public Observable<Answer> saveAnswer(Answer answer) {
+        final AnswerJsonMapper jsonMapper = new AnswerJsonMapper();
+        return Observable.just(answer)
+                .map(new Func1<Answer, String>() {
+                    @Override public String call(Answer answer) {
+                        try {
+                            return jsonMapper.toJsonString(answer);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPOSTCallable(ANSWERS, json));
+                    }
+                })
+                .map(new Func1<String, Answer>() {
+                    @Override public Answer call(String json) {
+                        try {
+                            return jsonMapper.fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //     Methods for HTTP request
@@ -701,6 +793,35 @@ public class RemoteDataSource implements RestApi, DataSource {
         return new Request.Builder()
                 .url(url)
                 .get()
+                .build();
+    }
+
+    private Callable<String> createPUTCallable(final String url, final String json) {
+        return new Callable<String>() {
+            @Override public String call() throws Exception {
+                return createPUT(url, json);
+            }
+        };
+    }
+
+    private String createPUT(String url, String json) throws Exception {
+        if (isThereInternetConnection()) {
+            Request request = buildPUTRequest(url, json);
+            LOGD(TAG, request.toString());
+            Response response = mOkHttpClient.newCall(request).execute();
+            try (ResponseBody body = response.body()) {
+                return body.string();
+            }
+        } else {
+            throw new NetworkConnectionException("There is no internet connection.");
+        }
+    }
+
+    private Request buildPUTRequest(String url, String json) {
+        RequestBody body = RequestBody.create(MEDIA_TYPE_JSON, json);
+        return new Request.Builder()
+                .url(url)
+                .put(body)
                 .build();
     }
 
