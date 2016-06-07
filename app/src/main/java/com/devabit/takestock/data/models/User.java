@@ -22,7 +22,7 @@ public class User implements Parcelable {
     private boolean mIsVerified;
     private boolean mIsVatExempt;
     private double mAvgRating;
-    private Photo mPhoto;
+    private String mPhotoPath;
 
     public User(){}
 
@@ -41,7 +41,7 @@ public class User implements Parcelable {
         mIsVerified = in.readByte() != 0;
         mIsVatExempt = in.readByte() != 0;
         mAvgRating = in.readDouble();
-        mPhoto = in.readParcelable(Photo.class.getClassLoader());
+        mPhotoPath = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -168,12 +168,12 @@ public class User implements Parcelable {
         mAvgRating = avgRating;
     }
 
-    public Photo getPhoto() {
-        return mPhoto;
+    public String getPhotoPath() {
+        return mPhotoPath;
     }
 
-    public void setPhoto(Photo photo) {
-        mPhoto = photo;
+    public void setPhotoPath(String photoPath) {
+        mPhotoPath = photoPath;
     }
 
     @Override public String toString() {
@@ -192,7 +192,7 @@ public class User implements Parcelable {
                 ", mIsVerified=" + mIsVerified +
                 ", mIsVatExempt=" + mIsVatExempt +
                 ", mAvgRating=" + mAvgRating +
-                ", mPhoto=" + mPhoto +
+                ", mPhotoPath=" + mPhotoPath +
                 '}';
     }
 
@@ -215,6 +215,6 @@ public class User implements Parcelable {
         dest.writeByte((byte) (mIsVerified ? 1 : 0));
         dest.writeByte((byte) (mIsVatExempt ? 1 : 0));
         dest.writeDouble(mAvgRating);
-        dest.writeParcelable(mPhoto, flags);
+        dest.writeString(mPhotoPath);
     }
 }

@@ -15,7 +15,7 @@
     <string name="browse_categories"><![CDATA[Browse Categories >]]></string>
     <string name="sell_something">Sell Something</string>
     <string name="home">home</string>
-    <string name="add_photo">Add photo</string>
+    <string name="add_photo">Add photoPath</string>
     <string name="product_title">Product Title*</string>
     <string name="cancel">Cancel</string>
     <string name="category">Category*</string>
@@ -102,7 +102,7 @@
     <string name="minimum_order_kg">%1$d kg</string>
     <string name="qty_available_kg">%1$d kg</string>
     <string name="available_kg">%1$d kg available</string>
-    <string name="take_photo">Take photo</string>
+    <string name="take_photo">Take photoPath</string>
     <string name="choose_from_library">Choose from Library</string>
     <string name="error_empty_size">Please, add size.</string>
     <string name="profile">Profile</string>
@@ -141,5 +141,6 @@
     <string name="counter_offer">Counter offer</string>
     <string name="reply">Reply</string>
     <string name="answer">Answer</string>
-    <string name="reject_offer">Reject offer</string>`
+    <string name="reject_offer">Reject offer</string>
+    <string name="log_out">Log Out</string>`
 </resources>

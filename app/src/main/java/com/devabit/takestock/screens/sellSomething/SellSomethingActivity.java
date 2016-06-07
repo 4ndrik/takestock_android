@@ -120,7 +120,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     }
 
     private void setUpToolbar(Typeface typeface) {
-        mToolbar.inflateMenu(R.menu.main);
+        mToolbar.inflateMenu(R.menu.profile_account_main);
         TextView title = ButterKnife.findById(mToolbar, R.id.toolbar_title);
         title.setTypeface(typeface);
         title.setText(R.string.sell_something);

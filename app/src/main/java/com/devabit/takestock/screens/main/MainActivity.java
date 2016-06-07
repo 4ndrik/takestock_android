@@ -25,6 +25,7 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.screens.buying.BuyingActivity;
 import com.devabit.takestock.screens.category.CategoriesDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
+import com.devabit.takestock.screens.profile.account.ProfileAccountActivity;
 import com.devabit.takestock.screens.search.SearchActivity;
 import com.devabit.takestock.screens.sellSomething.SellSomethingActivity;
 import com.devabit.takestock.screens.selling.SellingActivity;
@@ -130,30 +131,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onProfileMenuItemClick() {
-        showNotYetImplementedSnackbar();
-//        if (!lacksAccount()) {
-//            startEntryActivity(REQUEST_CODE_PROFILE_ACTIVITY);
-//        }
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_PROFILE_ACTIVITY);
+        else startProfileAccountActivity();
+    }
 
-//         remove account
-//        Account account = getAccountOrNull();
-//        AccountManager accountManager = AccountManager.get(MainActivity.this);
-//        if (account == null) return;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-//            boolean isRemoved = accountManager.removeAccountExplicitly(account);
-//            LOGD(TAG, "account removed " + isRemoved);
-//        } else {
-//            accountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
-//                @Override public void run(AccountManagerFuture<Boolean> future) {
-//                    try {
-//                        LOGD(TAG, "account removed " + future.getResult());
-//                    } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-//                        LOGE(TAG, "Account removed error", e);
-//                    }
-//                }
-//            }, null);
-//        }
-//        closeDrawer();
+    private void startProfileAccountActivity() {
+        startActivityForResult(ProfileAccountActivity.getStartIntent(MainActivity.this), REQUEST_CODE_PROFILE_ACTIVITY);
     }
 
     private void onNotificationMenuItemClick() {

@@ -75,7 +75,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         final Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
 
         Toolbar toolbar = ButterKnife.findById(SearchActivity.this, R.id.toolbar);
-        toolbar.inflateMenu(R.menu.main);
+        toolbar.inflateMenu(R.menu.profile_account_main);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();

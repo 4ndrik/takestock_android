@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.filters.QuestionFilter;
+import com.devabit.takestock.data.filters.UserFilter;
 import com.devabit.takestock.data.models.*;
 import rx.Observable;
 
@@ -96,5 +97,14 @@ public interface DataSource {
 
     Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page);
 
-    Observable<Answer> saveAnswer(Answer answer);
+    Observable<Answer> saveAnswer(@NonNull Answer answer);
+
+    Observable<User> saveUser(@NonNull User user);
+
+    Observable<User> updateUser(@NonNull User user);
+
+    Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter);
+
+    Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter);
+
 }

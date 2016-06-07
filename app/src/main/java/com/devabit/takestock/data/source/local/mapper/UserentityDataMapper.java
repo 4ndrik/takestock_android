@@ -1,23 +1,23 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.data.models.User;
-import com.devabit.takestock.data.source.local.entity.PhotoEntity;
 import com.devabit.takestock.data.source.local.entity.UserEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
 public class UserEntityDataMapper {
 
-    private final PhotoEntityDataMapper mPhotoMapper;
-
-    public UserEntityDataMapper() {
-        mPhotoMapper = new PhotoEntityDataMapper();
-    }
-
-    public UserEntityDataMapper(PhotoEntityDataMapper photoMapper) {
-        mPhotoMapper = photoMapper;
+    public List<User> transformFromEntitiesToList(List<UserEntity> entities) {
+        List<User> result = new ArrayList<>(entities.size());
+        for (UserEntity entity : entities) {
+            User user = transformFromEntity(entity);
+            result.add(user);
+        }
+        return result;
     }
 
     public UserEntity transformToEntity(User user) {
@@ -36,8 +36,7 @@ public class UserEntityDataMapper {
         entity.setVerified(user.isVerified());
         entity.setVatExempt(user.isVatExempt());
         entity.setAvgRating(user.getAvgRating());
-        PhotoEntity photoEntity = mPhotoMapper.transformToEntity(user.getPhoto());
-        entity.setPhotoEntity(photoEntity);
+        entity.setPhotoPath(user.getPhotoPath());
         return entity;
     }
 
@@ -57,8 +56,7 @@ public class UserEntityDataMapper {
         user.setVerified(entity.isVerified());
         user.setVatExempt(entity.isVatExempt());
         user.setAvgRating(entity.getAvgRating());
-        Photo photo = mPhotoMapper.transformFromEntity(entity.getPhotoEntity());
-        user.setPhoto(photo);
+        user.setPhotoPath(entity.getPhotoPath());
         return user;
     }
 }

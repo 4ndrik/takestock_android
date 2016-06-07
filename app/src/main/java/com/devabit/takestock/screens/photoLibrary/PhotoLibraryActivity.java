@@ -25,7 +25,7 @@ public class PhotoLibraryActivity extends AppCompatActivity {
         ButterKnife.bind(PhotoLibraryActivity.this);
 
         Toolbar toolbar = ButterKnife.findById(PhotoLibraryActivity.this, R.id.toolbar);
-        toolbar.inflateMenu(R.menu.main);
+        toolbar.inflateMenu(R.menu.profile_account_main);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();

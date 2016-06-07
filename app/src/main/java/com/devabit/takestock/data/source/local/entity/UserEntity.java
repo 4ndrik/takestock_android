@@ -23,7 +23,7 @@ public class UserEntity extends RealmObject {
     private boolean mIsVerified;
     private boolean mIsVatExempt;
     private double mAvgRating;
-    private PhotoEntity mPhotoEntity;
+    private String mPhotoPath;
 
     public int getId() {
         return mId;
@@ -137,12 +137,12 @@ public class UserEntity extends RealmObject {
         mAvgRating = avgRating;
     }
 
-    public PhotoEntity getPhotoEntity() {
-        return mPhotoEntity;
+    public String getPhotoPath() {
+        return mPhotoPath;
     }
 
-    public void setPhotoEntity(PhotoEntity photoEntity) {
-        mPhotoEntity = photoEntity;
+    public void setPhotoPath(String photoPath) {
+        mPhotoPath = photoPath;
     }
 
     @Override public String toString() {
@@ -161,7 +161,7 @@ public class UserEntity extends RealmObject {
                 ", mIsVerified=" + mIsVerified +
                 ", mIsVatExempt=" + mIsVatExempt +
                 ", mAvgRating=" + mAvgRating +
-                ", mPhotoEntity=" + mPhotoEntity +
+                ", mPhotoEntity=" + mPhotoPath +
                 '}';
     }
 }

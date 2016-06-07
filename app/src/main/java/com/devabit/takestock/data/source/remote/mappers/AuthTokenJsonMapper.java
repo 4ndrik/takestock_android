@@ -25,6 +25,7 @@ public class AuthTokenJsonMapper implements JsonMapper<AuthToken> {
             accessToken.userId = user.getId();
             accessToken.username = user.getUserName();
             accessToken.email = user.getEmail();
+            accessToken.user = user;
         } else {
             accessToken.userId = jsonObject.getInt(ID);
             accessToken.username = jsonObject.getString(USERNAME);

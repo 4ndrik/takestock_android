@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- @formatter:off -->
+<resources>
+
+    <!-- API specific theme attributes 14+ -->
+    <declare-styleable name="AppThemeAttributes">
+        <attr name="selectableRectDrawableColored" format="reference"/>
+    </declare-styleable>
+
+</resources>

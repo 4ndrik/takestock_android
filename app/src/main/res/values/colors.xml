@@ -28,4 +28,8 @@
     <color name="translucent_scrim_bottom">#40000000</color>
     <color name="translucent_scrim_bottom_center">#0D000000</color>
 
+    <color name="selector_normal">@android:color/transparent</color>
+    <color name="selector_lime_pressed">#44AEEA00</color>
+    <color name="selector_lime_focused">#22AEEA00</color>
+
 </resources>

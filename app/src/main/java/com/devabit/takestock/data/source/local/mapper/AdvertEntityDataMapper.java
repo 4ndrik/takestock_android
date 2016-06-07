@@ -22,7 +22,7 @@ public class AdvertEntityDataMapper {
 
     public AdvertEntityDataMapper() {
         mPhotoMapper = new PhotoEntityDataMapper();
-        mUserMapper = new UserEntityDataMapper(mPhotoMapper);
+        mUserMapper = new UserEntityDataMapper();
     }
 
     public List<Advert> transformFromEntitiesToList(List<AdvertEntity> entities) {

@@ -9,6 +9,7 @@ public class AuthToken {
     public String username;
     public String email;
     public String token;
+    public User user;
 
     @Override public String toString() {
         return "AuthToken{" +
@@ -16,6 +17,7 @@ public class AuthToken {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", token='" + token + '\'' +
+                ", user=" + user +
                 '}';
     }
 }

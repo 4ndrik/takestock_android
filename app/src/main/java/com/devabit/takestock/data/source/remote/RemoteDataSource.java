@@ -11,11 +11,13 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.filters.QuestionFilter;
+import com.devabit.takestock.data.filters.UserFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.remote.filterBuilders.AdvertFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.filterBuilders.OfferFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.filterBuilders.QuestionFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.filterBuilders.UserFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.mappers.*;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
@@ -732,6 +734,49 @@ public class RemoteDataSource implements RestApi, DataSource {
                     }
                 });
     }
+
+    @Override public Observable<User> saveUser(@NonNull User user) {
+        return null;
+    }
+
+    @Override public Observable<User> updateUser(@NonNull User user) {
+        return null;
+    }
+
+    @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<UserFilter, String>() {
+                    @Override public String call(UserFilter userFilter) {
+                        return new UserFilterUrlBuilder(USERS, userFilter).buildUrl();
+                    }
+                })
+                .flatMap(new Func1<String, Observable<List<User>>>() {
+                    @Override public Observable<List<User>> call(final String page) {
+                        return Observable.create(new Observable.OnSubscribe<List<User>>() {
+                            @Override public void call(Subscriber<? super List<User>> subscriber) {
+                                try {
+                                    UserResultListJsonMapper jsonMapper = new UserResultListJsonMapper();
+                                    ResultList<User> resultList = jsonMapper.fromJsonString(createGET(page));
+                                    List<User> result = new ArrayList<>(resultList.getResults());
+                                    while (resultList.hasNext()) {
+                                        String nextPage = resultList.getNext();
+                                        resultList = jsonMapper.fromJsonString(createGET(nextPage));
+                                        result.addAll(resultList.getResults());
+                                    }
+                                    subscriber.onNext(result);
+                                } catch (Exception e) {
+                                    subscriber.onError(e);
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
+        return null;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

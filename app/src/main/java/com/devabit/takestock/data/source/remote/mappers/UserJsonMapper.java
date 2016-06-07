@@ -1,9 +1,12 @@
 package com.devabit.takestock.data.source.remote.mappers;
 
-import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.data.models.User;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Victor Artemyev on 10/05/2016.
@@ -25,10 +28,17 @@ public class UserJsonMapper implements JsonMapper<User> {
     private static final String IS_VERIFIED = "is_verified";
     private static final String AVG_RATING = "avg_rating";
     private static final String PHOTO = "photo";
-    private final PhotoJsonMapper mPhotoMapper;
 
-    public UserJsonMapper() {
-        mPhotoMapper = new PhotoJsonMapper();
+    public List<User> fromJsonStringToList(String json) throws JSONException {
+        JSONArray jsonArray = new JSONArray(json);
+        int length = jsonArray.length();
+        List<User> result = new ArrayList<>(length);
+        for (int index = 0; index < length; index++) {
+            String jsonString = jsonArray.getString(index);
+            User user = fromJsonString(jsonString);
+            result.add(user);
+        }
+        return result;
     }
 
     @Override public User fromJsonString(String json) throws JSONException {
@@ -49,10 +59,9 @@ public class UserJsonMapper implements JsonMapper<User> {
         user.setVerified(jsonObject.getBoolean(IS_VERIFIED));
         user.setAvgRating(jsonObject.getDouble(AVG_RATING));
         if (jsonObject.isNull(PHOTO)) {
-            user.setPhoto(null);
+            user.setPhotoPath("");
         } else {
-            Photo photo = mPhotoMapper.fromJsonString(jsonObject.getString(PHOTO));
-            user.setPhoto(photo);
+            user.setPhotoPath(jsonObject.getString(PHOTO));
         }
         return user;
     }

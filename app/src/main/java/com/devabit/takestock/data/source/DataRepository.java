@@ -4,10 +4,12 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.filters.QuestionFilter;
+import com.devabit.takestock.data.filters.UserFilter;
 import com.devabit.takestock.data.models.*;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 import java.util.List;
 
@@ -57,7 +59,18 @@ public class DataRepository implements DataSource {
     }
 
     @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials) {
-        return mRemoteDataSource.obtainAuthTokenPerSignIn(credentials);
+        return mRemoteDataSource.obtainAuthTokenPerSignIn(credentials)
+                .flatMap(new Func1<AuthToken, Observable<AuthToken>>() {
+                    @Override public Observable<AuthToken> call(AuthToken authToken) {
+                        return Observable.zip(Observable.just(authToken), mLocalDataSource.saveUser(authToken.user),
+                                new Func2<AuthToken, User, AuthToken>() {
+                                    @Override public AuthToken call(AuthToken authToken, User user) {
+                                        return authToken;
+                                    }
+                                });
+                    }
+                });
+
     }
 
     @Override public void saveCategories(@NonNull List<Category> categories) {
@@ -277,5 +290,23 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<Answer> saveAnswer(Answer answer) {
         return mRemoteDataSource.saveAnswer(answer);
+    }
+
+    @Override public Observable<User> saveUser(@NonNull User user) {
+        return null;
+    }
+
+    @Override public Observable<User> updateUser(@NonNull User user) {
+        return null;
+    }
+
+    @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {
+        Observable<List<User>> localUsers = mLocalDataSource.getUsersPerFilter(filter);
+        Observable<List<User>> remoteUsers = mRemoteDataSource.getUsersPerFilter(filter);
+        return Observable.concat(localUsers, remoteUsers).first();
+    }
+
+    @Override public Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
+        return mRemoteDataSource.getUserResultListPerFilter(filter);
     }
 }

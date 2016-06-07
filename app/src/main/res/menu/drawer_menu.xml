@@ -20,11 +20,6 @@
                         android:icon="@drawable/ic_eye_black_24dp"
                         android:title="@string/watching"/>
 
-                <!--<item-->
-                        <!--android:id="@+id/nav_purchases"-->
-                        <!--android:icon="@drawable/ic_purchase_black_24dp"-->
-                        <!--android:title="@string/purchases"/>-->
-
                 <item
                         android:id="@+id/nav_buying"
                         android:icon="@drawable/ic_purchase_black_24dp"
@@ -38,18 +33,18 @@
         </item>
     </group>
 
-    <group android:id="@+id/group_settings"
-           android:checkableBehavior="none">
+    <!--<group android:id="@+id/group_settings"-->
+           <!--android:checkableBehavior="none">-->
 
-        <item
-                android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_settings_black_24dp"
-                android:title="@string/settings"/>
+        <!--<item-->
+                <!--android:id="@+id/nav_settings"-->
+                <!--android:icon="@drawable/ic_settings_black_24dp"-->
+                <!--android:title="@string/settings"/>-->
 
-        <item
-                android:id="@+id/nav_help_and_contact"
-                android:icon="@drawable/ic_question_black_24dp"
-                android:title="@string/help_and_contact"/>
-    </group>
+        <!--<item-->
+                <!--android:id="@+id/nav_help_and_contact"-->
+                <!--android:icon="@drawable/ic_question_black_24dp"-->
+                <!--android:title="@string/help_and_contact"/>-->
+    <!--</group>-->
 
 </menu>

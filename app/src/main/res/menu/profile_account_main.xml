@@ -3,9 +3,9 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-            android:id="@+id/action_settings"
+            android:id="@+id/action_edit_profile"
             android:orderInCategory="100"
-            android:icon="@drawable/ic_menu_24dp"
+            android:icon="@drawable/ic_edit_white_24dp"
             app:showAsAction="always"
             android:title="menu"/>
 </menu>

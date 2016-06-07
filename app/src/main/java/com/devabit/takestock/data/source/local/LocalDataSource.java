@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.filters.OfferFilter;
 import com.devabit.takestock.data.filters.QuestionFilter;
+import com.devabit.takestock.data.filters.UserFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
+import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.mapper.*;
 import io.realm.*;
 import rx.Observable;
@@ -421,7 +423,49 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<Answer> saveAnswer(Answer answer) {
+    @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
+        return null;
+    }
+
+    @Override public Observable<User> saveUser(@NonNull User user) {
+        return Observable.just(user)
+                .doOnNext(new Action1<User>() {
+                    @Override public void call(User user) {
+                        try (Realm realm = Realm.getDefaultInstance()) {
+                            realm.beginTransaction();
+                            UserEntity entity = new UserEntityDataMapper().transformToEntity(user);
+                            realm.copyToRealmOrUpdate(entity);
+                            realm.commitTransaction();
+                        }
+                    }
+                });
+    }
+
+    @Override public Observable<User> updateUser(@NonNull User user) {
+        return null;
+    }
+
+    @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {
+        return Observable.just(filter)
+                .map(new Func1<UserFilter, RealmResults<UserEntity>>() {
+                    @Override public RealmResults<UserEntity> call(UserFilter userFilter) {
+                        RealmQuery<UserEntity> query = new UserFilterQueryBuilder().buildQuery(userFilter);
+                        return query.findAll();
+                    }
+                })
+                .filter(new Func1<RealmResults<UserEntity>, Boolean>() {
+                    @Override public Boolean call(RealmResults<UserEntity> userEntities) {
+                        return !userEntities.isEmpty();
+                    }
+                })
+                .map(new Func1<RealmResults<UserEntity>, List<User>>() {
+                    @Override public List<User> call(RealmResults<UserEntity> userEntities) {
+                        return new UserEntityDataMapper().transformFromEntitiesToList(userEntities);
+                    }
+                });
+    }
+
+    @Override public Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
         return null;
     }
 
