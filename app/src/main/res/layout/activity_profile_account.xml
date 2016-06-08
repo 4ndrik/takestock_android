@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <include layout="@layout/toolbar_progress"/>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:orientation="vertical">
+
+                <com.devabit.takestock.widgets.CircleImageView
+                        android:id="@+id/profile_image_view"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/placeholder_user_96dp"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="@color/colorPrimary"/>
+
+                <TextView
+                        android:id="@+id/profile_name_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        tools:text="user"/>
+
+                <RatingBar
+                        android:id="@+id/rating_bar"
+                        android:theme="@style/RatingBar"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:rating="3.7"
+                        android:numStars="5"
+                        android:stepSize="0.1"
+                        android:isIndicator="true"/>
+
+            </LinearLayout>
+
+            <View android:layout_width="match_parent"
+                  style="@style/ViewDivider"/>
+
+            <Button
+                    android:id="@+id/help_and_contact_button"
+                    style="@style/ButtonStyle.Borderless"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey_600"
+                    android:drawablePadding="32dp"
+                    android:drawableStart="@drawable/ic_question_grey600_24dp"
+                    android:text="@string/help_and_contact"/>
+
+            <Button
+                    android:id="@+id/settings_button"
+                    style="@style/ButtonStyle.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:gravity="start|center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey_600"
+                    android:drawablePadding="32dp"
+                    android:drawableStart="@drawable/ic_settings_grey600_24dp"
+                    android:text="@string/settings"/>
+
+            <Button
+                    android:id="@+id/log_out_button"
+                    style="@style/ButtonStyle.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:gravity="start|center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey_600"
+                    android:drawablePadding="32dp"
+                    android:drawableStart="@drawable/ic_logout_grey600_24dp"
+                    android:text="@string/log_out"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

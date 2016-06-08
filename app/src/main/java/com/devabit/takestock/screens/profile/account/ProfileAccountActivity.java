@@ -115,7 +115,8 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         if (photoPath.isEmpty()) return;
         Picasso.with(ProfileAccountActivity.this)
                 .load(photoPath)
-                .error(R.drawable.ic_image_48dp)
+                .placeholder(R.drawable.placeholder_user_96dp)
+                .error(R.drawable.placeholder_user_96dp)
                 .centerCrop()
                 .fit()
                 .into(mProfileImageView);
