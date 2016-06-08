@@ -120,7 +120,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     }
 
     private void setUpToolbar(Typeface typeface) {
-        mToolbar.inflateMenu(R.menu.profile_account_main);
+        mToolbar.inflateMenu(R.menu.profile_account_menu);
         TextView title = ButterKnife.findById(mToolbar, R.id.toolbar_title);
         title.setTypeface(typeface);
         title.setText(R.string.sell_something);
@@ -423,10 +423,6 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
         AccountManager accountManager = AccountManager.get(SellSomethingActivity.this);
         mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
         String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
-        String username = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_name));
-        String email = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_email));
-
-        LOGD(TAG, "UserId: " + userId + "\n" + "UserName: " + username + "\n" + "Email: " + email);
         return Integer.valueOf(userId);
     }
 

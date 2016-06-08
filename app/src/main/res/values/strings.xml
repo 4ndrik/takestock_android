@@ -102,7 +102,7 @@
     <string name="minimum_order_kg">%1$d kg</string>
     <string name="qty_available_kg">%1$d kg</string>
     <string name="available_kg">%1$d kg available</string>
-    <string name="take_photo">Take photoPath</string>
+    <string name="take_photo">Take photo</string>
     <string name="choose_from_library">Choose from Library</string>
     <string name="error_empty_size">Please, add size.</string>
     <string name="profile">Profile</string>
@@ -142,5 +142,8 @@
     <string name="reply">Reply</string>
     <string name="answer">Answer</string>
     <string name="reject_offer">Reject offer</string>
-    <string name="log_out">Log Out</string>`
+    <string name="log_out">Log Out</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="delete_photo">Delete photo</string>`
 </resources>

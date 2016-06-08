@@ -18,13 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.screens.profile.edit.ProfileEditActivity;
 import com.squareup.picasso.Picasso;
 
 import static com.devabit.takestock.util.Logger.*;
@@ -40,6 +40,8 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         return new Intent(context, ProfileAccountActivity.class);
     }
 
+    private static final int REQUEST_CODE_ACTIVITY_EDIT_PROFILE = 101;
+
     @BindView(R.id.profile_image_view) protected ImageView mProfileImageView;
     @BindView(R.id.profile_name_text_view) protected TextView mProfileNameTextView;
 
@@ -47,6 +49,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
 
     private AccountManager mAccountManager;
     private Account mAccount;
+    private User mUser;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,21 +68,36 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
                 onBackPressed();
             }
         });
-        toolbar.inflateMenu(R.menu.profile_account_main);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_edit_profile:
-                        Toast.makeText(ProfileAccountActivity.this, "Not yet implemented.", Toast.LENGTH_SHORT).show();
-                        logOut();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        });
+        toolbar.inflateMenu(R.menu.profile_account_menu);
+        toolbar.setOnMenuItemClickListener(mMenuItemClickListener);
         toolbar.setTitle(R.string.profile);
+    }
+
+    private final Toolbar.OnMenuItemClickListener mMenuItemClickListener
+            = new Toolbar.OnMenuItemClickListener() {
+        @Override public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_edit_profile:
+                    startProfileEditActivity();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+    };
+
+    private void startProfileEditActivity() {
+        Intent starter = ProfileEditActivity.getStartIntent(ProfileAccountActivity.this, mUser);
+        startActivityForResult(starter, REQUEST_CODE_ACTIVITY_EDIT_PROFILE);
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ACTIVITY_EDIT_PROFILE && resultCode == RESULT_OK) {
+            User user = data.getParcelableExtra(User.class.getName());
+            setUpUser(user);
+        }
     }
 
     private void setUpPresenter() {
@@ -107,8 +125,9 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
     }
 
     private void setUpUser(User user) {
-        loadProfilePhoto(user.getPhotoPath());
-        mProfileNameTextView.setText(user.getUserName());
+        mUser = user;
+        loadProfilePhoto(mUser.getPhotoPath());
+        mProfileNameTextView.setText(mUser.getUserName());
     }
 
     private void loadProfilePhoto(String photoPath) {
