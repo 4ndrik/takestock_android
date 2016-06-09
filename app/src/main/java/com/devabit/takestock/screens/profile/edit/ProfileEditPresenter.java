@@ -1,13 +1,24 @@
 package com.devabit.takestock.screens.profile.edit;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
+import com.devabit.takestock.rx.RxTransformers;
+import com.devabit.takestock.util.BitmapUtil;
 import com.devabit.takestock.util.Logger;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
+
+import java.io.File;
+import java.io.IOException;
 
 import static com.devabit.takestock.util.Logger.LOGE;
 import static com.devabit.takestock.util.Preconditions.checkNotNull;
@@ -37,6 +48,48 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
 
     @Override public void resume() {
 
+    }
+
+    @Override public void processPhotoUriToFile(Uri photoUri, final File uniqueFile) {
+        mProfileView.setProgressIndicator(true);
+        Subscription subscription = Observable.just(photoUri)
+                .map(new Func1<Uri, Bitmap>() {
+                    @Override
+                    public Bitmap call(Uri uri) {
+                        try {
+                            Bitmap bitmap = BitmapUtil.getBitmapFromUri(uri);
+                            return BitmapUtil.rotateBitmapPerOrientation(bitmap, uri);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }).map(new Func1<Bitmap, String>() {
+                    @Override public String call(Bitmap bitmap) {
+                        try {
+                            File file = BitmapUtil.saveBitmapToFile(bitmap, uniqueFile);
+                            return "file:" + file.getAbsolutePath();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .compose(RxTransformers.<String>applyObservableSchedulers())
+                .subscribe(new Subscriber<String>() {
+                    @Override public void onCompleted() {
+                        mProfileView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        LOGE(TAG, "BOOM:", e);
+                        mProfileView.setProgressIndicator(false);
+                        mProfileView.showPhotoError();
+                    }
+
+                    @Override public void onNext(String path) {
+                        mProfileView.showPhotoInView(path);
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
     @Override public void updateUser(User user) {

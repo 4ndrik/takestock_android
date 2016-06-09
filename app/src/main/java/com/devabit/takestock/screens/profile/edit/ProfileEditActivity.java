@@ -2,9 +2,14 @@ package com.devabit.takestock.screens.profile.edit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,7 +25,10 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.screens.profile.edit.dialogs.ProfilePhotoPickerDialog;
+import com.devabit.takestock.util.FileUtil;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import static com.devabit.takestock.util.Logger.makeLogTag;
 
@@ -37,6 +45,9 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         return starter;
     }
 
+    private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;
+    private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
+
     @BindView(R.id.content) protected View mContent;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
     @BindView(R.id.profile_image_view) protected ImageView mProfileImageView;
@@ -45,6 +56,8 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
 
     private User mUser;
     private Menu mMenu;
+    private Uri mPhotoUri;
+    private String mPhotoPath;
 
     private ProfileEditContract.Presenter mPresenter;
 
@@ -92,20 +105,9 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
 
     private void setUpUser(User user) {
         mUser = user;
-        loadProfilePhoto(user.getPhotoPath());
+        loadProfilePhotoFromPath(user.getPhotoPath());
         mUserNameEditText.setText(mUser.getUserName());
         mEmailEditText.setText(mUser.getEmail());
-    }
-
-    private void loadProfilePhoto(String photoPath) {
-        if (photoPath.isEmpty()) return;
-        Picasso.with(ProfileEditActivity.this)
-                .load(photoPath)
-                .placeholder(R.drawable.placeholder_user_96dp)
-                .error(R.drawable.placeholder_user_96dp)
-                .centerCrop()
-                .fit()
-                .into(mProfileImageView);
     }
 
     private void updateUser() {
@@ -129,16 +131,104 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         return user;
     }
 
+    @OnClick(R.id.profile_image_view)
+    protected void onProfileImageViewClick() {
+        displayPhotoPickerDialog();
+    }
+
+    private void displayPhotoPickerDialog() {
+        ProfilePhotoPickerDialog dialog = ProfilePhotoPickerDialog.newInstance();
+        dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
+        dialog.setOnPickPhotoListener(mPickPhotoListener);
+    }
+
+    private final ProfilePhotoPickerDialog.OnPickPhotoListener mPickPhotoListener
+            = new ProfilePhotoPickerDialog.OnPickPhotoListener() {
+        @Override public void pickFromCamera(ProfilePhotoPickerDialog dialog) {
+            dialog.dismiss();
+            startCameraActivity();
+        }
+
+        @Override public void pickFromLibrary(ProfilePhotoPickerDialog dialog) {
+            dialog.dismiss();
+            startPhotoLibraryActivity();
+        }
+
+        @Override public void delete(ProfilePhotoPickerDialog dialog) {
+            dialog.dismiss();
+        }
+    };
+
+    private void startCameraActivity() {
+        Intent starter = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        mPhotoUri = Uri.fromFile(FileUtil.getPhotoFile());
+        starter.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+        startActivityForResult(starter, REQUEST_CODE_PHOTO_CAMERA);
+    }
+
+    private void startPhotoLibraryActivity() {
+        Intent starter = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(starter, REQUEST_CODE_PHOTO_LIBRARY);
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PHOTO_LIBRARY && resultCode == RESULT_OK) {
+            mPhotoUri = uriFromPhotoLibraryResult(data);
+            processPhotoUri(mPhotoUri);
+        } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA && resultCode == RESULT_OK) {
+            processPhotoUri(mPhotoUri);
+        }
+    }
+
+    private Uri uriFromPhotoLibraryResult(Intent data) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        try (Cursor cursor = getContentResolver().query(data.getData(), projection, null, null, null)) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return Uri.fromFile(new File(cursor.getString(column_index)));
+        }
+    }
+
+    private void processPhotoUri(Uri photoUri) {
+        mPresenter.processPhotoUriToFile(photoUri, FileUtil.getUniquePhotoFile(ProfileEditActivity.this));
+    }
+
+    @Override public void showPhotoInView(String path) {
+        loadProfilePhotoFromPath(path);
+    }
+
+    private void loadProfilePhotoFromPath(String path) {
+        mPhotoPath = path;
+        if (mPhotoPath.isEmpty()) return;
+        Picasso.with(ProfileEditActivity.this)
+                .load(mPhotoPath)
+                .placeholder(R.drawable.placeholder_user_96dp)
+                .error(R.drawable.placeholder_user_96dp)
+                .centerCrop()
+                .fit()
+                .into(mProfileImageView);
+    }
+
     @Override public void showUserUpdatedInView(User user) {
 
     }
 
     @Override public void showNetworkConnectionError() {
+        showSnack(R.string.error_no_network_connection);
+    }
 
+    @Override public void showPhotoError() {
+        showSnack(R.string.error_photo);
     }
 
     @Override public void showUnknownError() {
+        showSnack(R.string.error_unknown);
+    }
 
+    private void showSnack(@StringRes int resId) {
+        Snackbar.make(mContent, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override public void setProgressIndicator(boolean isActive) {
@@ -167,38 +257,9 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
     }
 
     private String getPhotoPath() {
-        return null;
+        return mPhotoPath;
     }
 
-    @OnClick(R.id.profile_image_view)
-    protected void onProfileImageViewClick() {
-        displayPhotoPickerDialog();
-    }
-
-    private void displayPhotoPickerDialog() {
-        ProfilePhotoPickerDialog dialog = ProfilePhotoPickerDialog.newInstance();
-        dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
-        dialog.setOnPickPhotoListener(mPickPhotoListener);
-    }
-
-    private final ProfilePhotoPickerDialog.OnPickPhotoListener mPickPhotoListener
-            = new ProfilePhotoPickerDialog.OnPickPhotoListener() {
-        @Override public void pickFromCamera(ProfilePhotoPickerDialog dialog) {
-            dialog.dismiss();
-        }
-
-        @Override public void pickFromLibrary(ProfilePhotoPickerDialog dialog) {
-            dialog.dismiss();
-        }
-
-        @Override public void delete(ProfilePhotoPickerDialog dialog) {
-            dialog.dismiss();
-        }
-    };
-
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @Override protected void onStop() {
         super.onStop();

@@ -66,7 +66,7 @@ public interface SellSomethingContract {
 
     interface Presenter extends BasePresenter {
 
-        void processPhotoToFile(Uri photoUri, File photoFile);
+        void processPhotoUriToFile(Uri photoUri, File photoFile);
 
         void previewAdvert(Advert advert);
 

@@ -157,7 +157,7 @@ public class SellSomethingPresenter implements SellSomethingContract.Presenter {
 
     }
 
-    @Override public void processPhotoToFile(Uri photoUri, final File photoFile) {
+    @Override public void processPhotoUriToFile(Uri photoUri, final File photoFile) {
         mSellingView.setProgressIndicator(true);
         Subscription subscription = Observable.just(photoUri)
                 .map(new Func1<Uri, Bitmap>() {

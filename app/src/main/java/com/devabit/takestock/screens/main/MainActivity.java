@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onProfileMenuItemClick() {
+        closeDrawer();
         if (lacksAccount()) startEntryActivity(REQUEST_CODE_PROFILE_ACTIVITY);
         else startProfileAccountActivity();
     }

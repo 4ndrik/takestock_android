@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -32,16 +31,14 @@ import com.devabit.takestock.screens.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.screens.sellSomething.adapters.*;
 import com.devabit.takestock.screens.sellSomething.dialogs.PhotoPickerDialog;
 import com.devabit.takestock.util.DateFormats;
+import com.devabit.takestock.util.FileUtil;
 import com.devabit.takestock.util.FontCache;
 import com.devabit.takestock.widgets.CertificationRadioButtonGroupView;
 
 import java.io.File;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 
 import static com.devabit.takestock.util.Logger.*;
 
@@ -55,6 +52,9 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     public static Intent getStartIntent(Context context) {
         return new Intent(context, SellSomethingActivity.class);
     }
+
+    private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;
+    private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
 
     @BindView(R.id.content_activity_sell_something) protected View mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
@@ -155,12 +155,10 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
 
             @Override public void onPickFromCamera(PhotoPickerDialog dialog) {
                 dialog.dismiss();
-                startPhotoCameraActivity();
+                startCameraActivity();
             }
         });
     }
-
-    private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;
 
     private void startPhotoLibraryActivity() {
         Intent starter = new Intent(Intent.ACTION_PICK,
@@ -168,59 +166,36 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
         startActivityForResult(starter, REQUEST_CODE_PHOTO_LIBRARY);
     }
 
-    private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
+    private Uri mPhotoUri;
 
-    private Uri mCameraPhotoUri;
-
-    private void startPhotoCameraActivity() {
+    private void startCameraActivity() {
         Intent starter = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (starter.resolveActivity(getPackageManager()) != null) {
-            File publicPictureDirection = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            File mediaStorageDir = new File(publicPictureDirection, "TakeStock");
-            mCameraPhotoUri = Uri.fromFile(
-                    new File(
-                            mediaStorageDir.getPath() + File.separator
-                                    + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + ".jpg"));
-            starter.putExtra(MediaStore.EXTRA_OUTPUT, mCameraPhotoUri);
-        } else {
-            showSnack(R.string.error_no_camera_app);
-            return;
-        }
+        mPhotoUri = Uri.fromFile(FileUtil.getPhotoFile());
+        starter.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
         startActivityForResult(starter, REQUEST_CODE_PHOTO_CAMERA);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PHOTO_LIBRARY && resultCode == RESULT_OK) {
-            onPhotoLibraryResult(data);
+            mPhotoUri = uriFromPhotoLibraryResult(data);
+            processPhotoUri(mPhotoUri);
         } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA && resultCode == RESULT_OK) {
-            onPhotoCameraResult();
+            processPhotoUri(mPhotoUri);
         }
     }
 
-    private void onPhotoLibraryResult(Intent data) {
-        Uri photoUri = data.getData();
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = getContentResolver().query(photoUri, proj, null, null, null);
+    private Uri uriFromPhotoLibraryResult(Intent data) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        try (Cursor cursor = getContentResolver().query(data.getData(), projection, null, null, null)) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
-            photoUri = Uri.fromFile(new File(cursor.getString(column_index)));
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            return Uri.fromFile(new File(cursor.getString(column_index)));
         }
-        mPresenter.processPhotoToFile(photoUri, getUniquePhotoFile());
     }
 
-    private void onPhotoCameraResult() {
-        mPresenter.processPhotoToFile(mCameraPhotoUri, getUniquePhotoFile());
-    }
-
-    private File getUniquePhotoFile() {
-        return new File(getCacheDir().getPath() + File.separator + UUID.randomUUID().toString() + ".jpg");
+    private void processPhotoUri(Uri photoUri) {
+        mPresenter.processPhotoUriToFile(photoUri, FileUtil.getUniquePhotoFile(SellSomethingActivity.this));
     }
 
     private void displayDatePickerDialog() {
