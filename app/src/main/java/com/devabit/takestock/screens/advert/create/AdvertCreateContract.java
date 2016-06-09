@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.sellSomething;
+package com.devabit.takestock.screens.advert.create;
 
 import android.net.Uri;
 import com.devabit.takestock.data.models.*;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public interface SellSomethingContract {
+public interface AdvertCreateContract {
 
     interface View extends BaseView<Presenter> {
 

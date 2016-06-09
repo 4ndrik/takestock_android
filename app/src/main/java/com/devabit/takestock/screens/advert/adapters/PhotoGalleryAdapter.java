@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.sellSomething.adapters;
+package com.devabit.takestock.screens.advert.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;

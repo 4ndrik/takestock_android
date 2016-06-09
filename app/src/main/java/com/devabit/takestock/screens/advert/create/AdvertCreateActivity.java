@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.sellSomething;
+package com.devabit.takestock.screens.advert.create;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -27,9 +27,9 @@ import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.screens.advert.adapters.*;
+import com.devabit.takestock.screens.advert.create.dialogs.AdvertPhotoPickerDialog;
 import com.devabit.takestock.screens.advert.preview.AdvertPreviewActivity;
-import com.devabit.takestock.screens.sellSomething.adapters.*;
-import com.devabit.takestock.screens.sellSomething.dialogs.PhotoPickerDialog;
 import com.devabit.takestock.util.DateFormats;
 import com.devabit.takestock.util.FileUtil;
 import com.devabit.takestock.util.FontCache;
@@ -45,12 +45,12 @@ import static com.devabit.takestock.util.Logger.*;
 /**
  * Created by Victor Artemyev on 07/04/2016.
  */
-public class SellSomethingActivity extends AppCompatActivity implements SellSomethingContract.View {
+public class AdvertCreateActivity extends AppCompatActivity implements AdvertCreateContract.View {
 
-    private static final String TAG = makeLogTag(SellSomethingActivity.class);
+    private static final String TAG = makeLogTag(AdvertCreateActivity.class);
 
     public static Intent getStartIntent(Context context) {
-        return new Intent(context, SellSomethingActivity.class);
+        return new Intent(context, AdvertCreateActivity.class);
     }
 
     private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;
@@ -89,19 +89,19 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
 
     private PhotoGalleryAdapter mPhotoGalleryAdapter;
 
-    private SellSomethingContract.Presenter mPresenter;
+    private AdvertCreateContract.Presenter mPresenter;
 
     private Account mAccount;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell_something);
-        ButterKnife.bind(SellSomethingActivity.this);
+        ButterKnife.bind(AdvertCreateActivity.this);
 
-        new SellSomethingPresenter(
-                Injection.provideDataRepository(SellSomethingActivity.this), SellSomethingActivity.this);
+        new AdvertCreatePresenter(
+                Injection.provideDataRepository(AdvertCreateActivity.this), AdvertCreateActivity.this);
 
-        final Typeface boldTypeface = FontCache.getTypeface(SellSomethingActivity.this, R.string.font_brandon_bold);
+        final Typeface boldTypeface = FontCache.getTypeface(AdvertCreateActivity.this, R.string.font_brandon_bold);
         ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
             @Override public void apply(@NonNull Button button, int index) {
                 button.setTypeface(boldTypeface);
@@ -133,9 +133,9 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
 
     private void setUpImageGalleryRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(
-                SellSomethingActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                AdvertCreateActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mPhotoGalleryRecyclerView.setLayoutManager(layoutManager);
-        mPhotoGalleryAdapter = new PhotoGalleryAdapter(SellSomethingActivity.this);
+        mPhotoGalleryAdapter = new PhotoGalleryAdapter(AdvertCreateActivity.this);
         mPhotoGalleryAdapter.setOnPickPhotoListener(new PhotoGalleryAdapter.OnPickPhotoListener() {
             @Override public void onPick() {
                 displayPhotoPickerDialog();
@@ -145,15 +145,15 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     }
 
     private void displayPhotoPickerDialog() {
-        PhotoPickerDialog pickerDialog = PhotoPickerDialog.newInstance();
+        AdvertPhotoPickerDialog pickerDialog = AdvertPhotoPickerDialog.newInstance();
         pickerDialog.show(getFragmentManager(), pickerDialog.getClass().getSimpleName());
-        pickerDialog.setOnPickListener(new PhotoPickerDialog.OnPickListener() {
-            @Override public void onPickFromLibrary(PhotoPickerDialog dialog) {
+        pickerDialog.setOnPickListener(new AdvertPhotoPickerDialog.OnPickListener() {
+            @Override public void onPickFromLibrary(AdvertPhotoPickerDialog dialog) {
                 dialog.dismiss();
                 startPhotoLibraryActivity();
             }
 
-            @Override public void onPickFromCamera(PhotoPickerDialog dialog) {
+            @Override public void onPickFromCamera(AdvertPhotoPickerDialog dialog) {
                 dialog.dismiss();
                 startCameraActivity();
             }
@@ -195,11 +195,11 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     }
 
     private void processPhotoUri(Uri photoUri) {
-        mPresenter.processPhotoUriToFile(photoUri, FileUtil.getUniquePhotoFile(SellSomethingActivity.this));
+        mPresenter.processPhotoUriToFile(photoUri, FileUtil.getUniquePhotoFile(AdvertCreateActivity.this));
     }
 
     private void displayDatePickerDialog() {
-        DatePickerDialog dialog = new DatePickerDialog(SellSomethingActivity.this, R.style.DatePickerDialogTheme,
+        DatePickerDialog dialog = new DatePickerDialog(AdvertCreateActivity.this, R.style.DatePickerDialogTheme,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         mExpiryDateTextView.setError(null);
@@ -209,7 +209,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
         dialog.show();
     }
 
-    @Override public void setPresenter(@NonNull SellSomethingContract.Presenter presenter) {
+    @Override public void setPresenter(@NonNull AdvertCreateContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -292,7 +292,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     }
 
     @Override public void showAdvertInPreview(Advert advert) {
-        startActivity(AdvertPreviewActivity.getStartIntent(SellSomethingActivity.this, advert));
+        startActivity(AdvertPreviewActivity.getStartIntent(AdvertCreateActivity.this, advert));
     }
 
     @Override public void showAdvertSaved(Advert advert) {
@@ -305,34 +305,34 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     }
 
     @Override public void showCategoriesInView(List<Category> categories) {
-        CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(SellSomethingActivity.this, categories);
+        CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
         mCategorySpinner.setAdapter(adapter);
 
         showSubcategoriesInView(categories.get(0).getSubcategories());
     }
 
     private void showSubcategoriesInView(List<Subcategory> subcategories) {
-        SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(SellSomethingActivity.this, subcategories);
+        SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(AdvertCreateActivity.this, subcategories);
         mSubcategorySpinner.setAdapter(adapter);
     }
 
     @Override public void showPackagingsInView(List<Packaging> packagings) {
-        PackagingSpinnerAdapter adapter = new PackagingSpinnerAdapter(SellSomethingActivity.this, packagings);
+        PackagingSpinnerAdapter adapter = new PackagingSpinnerAdapter(AdvertCreateActivity.this, packagings);
         mPackagingSpinner.setAdapter(adapter);
     }
 
     @Override public void showShippingsInView(List<Shipping> shippings) {
-        ShippingSpinnerAdapter adapter = new ShippingSpinnerAdapter(SellSomethingActivity.this, shippings);
+        ShippingSpinnerAdapter adapter = new ShippingSpinnerAdapter(AdvertCreateActivity.this, shippings);
         mShippingSpinner.setAdapter(adapter);
     }
 
     @Override public void showConditionsInView(List<Condition> conditions) {
-        ConditionSpinnerAdapter adapter = new ConditionSpinnerAdapter(SellSomethingActivity.this, conditions);
+        ConditionSpinnerAdapter adapter = new ConditionSpinnerAdapter(AdvertCreateActivity.this, conditions);
         mConditionSpinner.setAdapter(adapter);
     }
 
     @Override public void showSizesInView(List<Size> sizes) {
-        SizeSpinnerAdapter adapter = new SizeSpinnerAdapter(SellSomethingActivity.this, sizes);
+        SizeSpinnerAdapter adapter = new SizeSpinnerAdapter(AdvertCreateActivity.this, sizes);
         mSizeSpinner.setAdapter(adapter);
     }
 
@@ -350,7 +350,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     @Override public void setProgressIndicator(boolean isActive) {
         if (isActive) {
             if (mProgressDialog == null) {
-                mProgressDialog = new ProgressDialog(SellSomethingActivity.this);
+                mProgressDialog = new ProgressDialog(AdvertCreateActivity.this);
                 mProgressDialog.setMessage("Processing...");
                 mProgressDialog.setCancelable(false);
             }
@@ -395,7 +395,7 @@ public class SellSomethingActivity extends AppCompatActivity implements SellSome
     }
 
     private int getUserId() {
-        AccountManager accountManager = AccountManager.get(SellSomethingActivity.this);
+        AccountManager accountManager = AccountManager.get(AdvertCreateActivity.this);
         mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
         String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
         return Integer.valueOf(userId);

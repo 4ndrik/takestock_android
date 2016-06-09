@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:padding="16dp"
-              tools:context=".screens.sellSomething.SellSomethingActivity">
+              tools:context=".screens.advert.create.AdvertCreateActivity">
 
     <TextView
             android:layout_width="wrap_content"

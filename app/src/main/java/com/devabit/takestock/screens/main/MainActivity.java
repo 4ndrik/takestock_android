@@ -27,7 +27,7 @@ import com.devabit.takestock.screens.category.CategoriesDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
 import com.devabit.takestock.screens.profile.account.ProfileAccountActivity;
 import com.devabit.takestock.screens.search.SearchActivity;
-import com.devabit.takestock.screens.sellSomething.SellSomethingActivity;
+import com.devabit.takestock.screens.advert.create.AdvertCreateActivity;
 import com.devabit.takestock.screens.selling.SellingActivity;
 import com.devabit.takestock.util.FontCache;
 
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void startSellSomethingActivity() {
-        startActivity(SellSomethingActivity.getStartIntent(MainActivity.this));
+        startActivity(AdvertCreateActivity.getStartIntent(MainActivity.this));
     }
 
     private boolean lacksAccount() {

@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.sellSomething.dialogs;
+package com.devabit.takestock.screens.advert.create.dialogs;
 
 import android.app.DialogFragment;
 import android.graphics.Typeface;
@@ -22,10 +22,10 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class PhotoPickerDialog extends DialogFragment {
+public class AdvertPhotoPickerDialog extends DialogFragment {
 
-    public static PhotoPickerDialog newInstance() {
-        PhotoPickerDialog dialog = new PhotoPickerDialog();
+    public static AdvertPhotoPickerDialog newInstance() {
+        AdvertPhotoPickerDialog dialog = new AdvertPhotoPickerDialog();
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         return dialog;
     }
@@ -36,9 +36,9 @@ public class PhotoPickerDialog extends DialogFragment {
     private Unbinder mUnbinder;
 
     public interface OnPickListener {
-        void onPickFromLibrary(PhotoPickerDialog dialog);
+        void onPickFromLibrary(AdvertPhotoPickerDialog dialog);
 
-        void onPickFromCamera(PhotoPickerDialog dialog);
+        void onPickFromCamera(AdvertPhotoPickerDialog dialog);
     }
 
     private OnPickListener mPickListener;
@@ -50,7 +50,7 @@ public class PhotoPickerDialog extends DialogFragment {
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().getWindow().setGravity(Gravity.CENTER | Gravity.BOTTOM);
-        mUnbinder = ButterKnife.bind(PhotoPickerDialog.this, view);
+        mUnbinder = ButterKnife.bind(AdvertPhotoPickerDialog.this, view);
 
         final Typeface boldTypeface = FontCache.getTypeface(getActivity(), R.string.font_brandon_bold);
         ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
@@ -62,12 +62,12 @@ public class PhotoPickerDialog extends DialogFragment {
 
     @OnClick(R.id.take_photo_button)
     protected void onTakePhotoButtonClick() {
-        if (mPickListener != null) mPickListener.onPickFromCamera(PhotoPickerDialog.this);
+        if (mPickListener != null) mPickListener.onPickFromCamera(AdvertPhotoPickerDialog.this);
     }
 
     @OnClick(R.id.choose_photo_button)
     protected void onChooseButtonClick() {
-        if (mPickListener != null) mPickListener.onPickFromLibrary(PhotoPickerDialog.this);
+        if (mPickListener != null) mPickListener.onPickFromLibrary(AdvertPhotoPickerDialog.this);
     }
 
     @OnClick(R.id.cancel_button)

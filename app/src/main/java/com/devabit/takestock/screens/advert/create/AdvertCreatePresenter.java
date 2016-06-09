@@ -1,4 +1,4 @@
-package com.devabit.takestock.screens.sellSomething;
+package com.devabit.takestock.screens.advert.create;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -25,20 +25,20 @@ import static com.devabit.takestock.util.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class SellSomethingPresenter implements SellSomethingContract.Presenter {
+public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
 
-    private static final String TAG = makeLogTag(SellSomethingPresenter.class);
+    private static final String TAG = makeLogTag(AdvertCreatePresenter.class);
 
     private final DataRepository mDataRepository;
-    private final SellSomethingContract.View mSellingView;
+    private final AdvertCreateContract.View mSellingView;
 
     private CompositeSubscription mSubscriptions;
 
-    public SellSomethingPresenter(@NonNull DataRepository dataRepository, @NonNull SellSomethingContract.View sellingView) {
+    public AdvertCreatePresenter(@NonNull DataRepository dataRepository, @NonNull AdvertCreateContract.View sellingView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mSellingView = checkNotNull(sellingView, "sellingView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mSellingView.setPresenter(SellSomethingPresenter.this);
+        mSellingView.setPresenter(AdvertCreatePresenter.this);
     }
 
     @Override public void create() {

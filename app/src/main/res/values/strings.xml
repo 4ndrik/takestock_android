@@ -15,7 +15,7 @@
     <string name="browse_categories"><![CDATA[Browse Categories >]]></string>
     <string name="sell_something">Sell Something</string>
     <string name="home">home</string>
-    <string name="add_photo">Add photoPath</string>
+    <string name="add_photo">Add photo</string>
     <string name="product_title">Product Title*</string>
     <string name="cancel">Cancel</string>
     <string name="category">Category*</string>

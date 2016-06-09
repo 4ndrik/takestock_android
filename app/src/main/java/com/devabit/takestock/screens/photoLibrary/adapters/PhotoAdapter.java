@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 /**
  * Created by Victor Artemyev on 12/05/2016.
  */
-public class PhotoAdapter extends
-        RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
+
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return null;
     }
