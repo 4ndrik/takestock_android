@@ -28,7 +28,7 @@ ext {
     // App version
     versionMajor = 2016
     versionMinor = 06
-    versionPatch = 3
+    versionPatch = 13
 
     // Sdk and tools
     minSdkVersion = 19
