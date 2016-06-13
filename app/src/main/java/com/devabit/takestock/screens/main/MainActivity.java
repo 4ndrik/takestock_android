@@ -29,11 +29,11 @@ import com.devabit.takestock.screens.profile.account.ProfileAccountActivity;
 import com.devabit.takestock.screens.search.SearchActivity;
 import com.devabit.takestock.screens.advert.create.AdvertCreateActivity;
 import com.devabit.takestock.screens.selling.SellingActivity;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.FontCache;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 

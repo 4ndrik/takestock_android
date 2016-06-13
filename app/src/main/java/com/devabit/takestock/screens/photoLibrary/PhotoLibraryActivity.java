@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.FontCache;
 
 /**
  * Created by Victor Artemyev on 12/05/2016.

@@ -1,4 +1,4 @@
-package com.devabit.takestock.util;
+package com.devabit.takestock.utils;
 
 import java.util.regex.Pattern;
 

@@ -25,11 +25,11 @@ import com.devabit.takestock.data.models.Answer;
 import com.devabit.takestock.data.models.Question;
 import com.devabit.takestock.screens.answers.adapters.AnswersAdapter;
 import com.devabit.takestock.screens.answers.dialog.AnswerDialog;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.FontCache;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 02/06/2016.

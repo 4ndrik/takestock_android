@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Photo;
-import com.devabit.takestock.util.DateFormats;
+import com.devabit.takestock.utils.DateUtil;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -21,8 +21,8 @@ import java.util.Date;
 import java.util.List;
 
 import static butterknife.ButterKnife.findById;
-import static com.devabit.takestock.util.Logger.LOGE;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGE;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 24/05/2016.
@@ -197,8 +197,8 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             guidePriceTextView.setText(resources.getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
             qtyAvailableTextView.setText(resources.getString(R.string.available_kg, advert.getItemsCount()));
             try {
-                Date date = DateFormats.API_FORMAT.parse(advert.getDateUpdatedAt());
-                String dateAsString = DateFormats.DEFAULT_FORMAT.format(date);
+                Date date = DateUtil.API_FORMAT.parse(advert.getDateUpdatedAt());
+                String dateAsString = DateUtil.DEFAULT_FORMAT.format(date);
                 dateUpdatedTextView.setText(dateAsString);
             } catch (ParseException e) {
                 LOGE(TAG, "BOOM:", e);

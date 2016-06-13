@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.devabit.takestock.R;
-import com.devabit.takestock.util.Logger;
+import com.devabit.takestock.utils.Logger;
 
 /**
  * Created by Victor Artemyev on 08/06/2016.

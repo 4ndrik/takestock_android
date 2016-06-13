@@ -1,4 +1,4 @@
-package com.devabit.takestock.util;
+package com.devabit.takestock.utils;
 
 import android.content.Context;
 import android.os.Environment;
@@ -9,8 +9,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
-import static com.devabit.takestock.util.Logger.LOGD;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 09/06/2016.

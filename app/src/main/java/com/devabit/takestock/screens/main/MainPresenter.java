@@ -13,8 +13,8 @@ import rx.subscriptions.CompositeSubscription;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.*;
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Logger.*;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.

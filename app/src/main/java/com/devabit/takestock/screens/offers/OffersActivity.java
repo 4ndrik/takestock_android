@@ -30,16 +30,16 @@ import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.screens.offers.adapters.OffersAdapter;
 import com.devabit.takestock.screens.offers.dialogs.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screens.offers.dialogs.rejectOffer.RejectOfferDialog;
-import com.devabit.takestock.util.DateFormats;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.DateUtil;
+import com.devabit.takestock.utils.FontCache;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.LOGE;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGE;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 02/06/2016.
@@ -86,8 +86,8 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
         mAdvertNameTextView.setText(advert.getName());
 
         try {
-            Date date = DateFormats.API_FORMAT.parse(advert.getDateUpdatedAt());
-            String dateAsString = DateFormats.DEFAULT_FORMAT.format(date);
+            Date date = DateUtil.API_FORMAT.parse(advert.getDateUpdatedAt());
+            String dateAsString = DateUtil.DEFAULT_FORMAT.format(date);
             mAdvertDateUpdatedTextView.setText(dateAsString);
         } catch (ParseException e) {
             LOGE(TAG, "BOOM:", e);

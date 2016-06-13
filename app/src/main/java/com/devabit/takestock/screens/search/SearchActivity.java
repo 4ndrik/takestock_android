@@ -29,13 +29,13 @@ import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screens.category.CategoriesDialog;
 import com.devabit.takestock.screens.search.adapters.AdvertAdapter;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.FontCache;
 import com.devabit.takestock.widgets.AdvertSortView;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.LOGD;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 11/04/2016.

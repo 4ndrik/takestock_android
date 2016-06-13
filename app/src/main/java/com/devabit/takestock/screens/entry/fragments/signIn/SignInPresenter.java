@@ -8,14 +8,14 @@ import com.devabit.takestock.data.models.UserCredentials;
 import com.devabit.takestock.exceptions.HttpResponseException;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
-import com.devabit.takestock.util.Validator;
+import com.devabit.takestock.utils.Validator;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.devabit.takestock.util.Logger.LOGE;
-import static com.devabit.takestock.util.Logger.makeLogTag;
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Logger.LOGE;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 25/04/2016.

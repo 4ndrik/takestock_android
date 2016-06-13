@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.devabit.takestock.util.Logger.LOGE;
-import static com.devabit.takestock.util.Logger.makeLogTag;
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Logger.LOGE;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.

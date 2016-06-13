@@ -3,9 +3,9 @@ package com.devabit.takestock.screens.offers.dialogs.rejectOffer;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.models.Offer;
 
-import static com.devabit.takestock.util.Logger.LOGE;
-import static com.devabit.takestock.util.Logger.makeLogTag;
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Logger.LOGE;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 25/05/2016.

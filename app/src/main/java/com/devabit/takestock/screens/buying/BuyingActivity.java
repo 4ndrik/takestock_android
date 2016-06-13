@@ -27,8 +27,8 @@ import com.devabit.takestock.data.models.Offer;
 import com.devabit.takestock.data.models.OfferStatus;
 import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screens.buying.adapters.OfferAdvertPairsAdapter;
-import com.devabit.takestock.util.FontCache;
-import com.devabit.takestock.util.Logger;
+import com.devabit.takestock.utils.FontCache;
+import com.devabit.takestock.utils.Logger;
 
 import java.util.Map;
 

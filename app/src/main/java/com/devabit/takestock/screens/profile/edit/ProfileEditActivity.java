@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,12 +26,12 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.screens.profile.edit.dialogs.ProfilePhotoPickerDialog;
-import com.devabit.takestock.util.FileUtil;
+import com.devabit.takestock.utils.FileUtil;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 08/06/2016.
@@ -93,7 +94,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
             = new Toolbar.OnMenuItemClickListener() {
         @Override public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.action_edit_profile:
+                case R.id.action_save_profile:
                     updateUser();
                     return true;
 
@@ -111,7 +112,8 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
     }
 
     private void updateUser() {
-        mPresenter.updateUser(getUserForUpdate());
+        Toast.makeText(ProfileEditActivity.this, "Not yet implemented.", Toast.LENGTH_LONG).show();
+//        mPresenter.updateUser(getUserForUpdate());
     }
 
     private User getUserForUpdate() {

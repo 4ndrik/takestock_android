@@ -27,7 +27,7 @@ import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.screens.profile.edit.ProfileEditActivity;
 import com.squareup.picasso.Picasso;
 
-import static com.devabit.takestock.util.Logger.*;
+import static com.devabit.takestock.utils.Logger.*;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.

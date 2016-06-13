@@ -26,7 +26,7 @@ import com.devabit.takestock.screens.entry.fragments.signUp.SignUpPresenter;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 17/05/2016.

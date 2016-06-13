@@ -1,4 +1,4 @@
-package com.devabit.takestock.util;
+package com.devabit.takestock.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by Victor Artemyev on 24/02/2016.
  */
-public class BitmapUtil {
+public final class BitmapUtil {
 
     public static final int QUALITY_75 = 75;
 

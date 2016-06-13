@@ -23,7 +23,7 @@ import com.devabit.takestock.data.models.UserCredentials;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 17/05/2016.

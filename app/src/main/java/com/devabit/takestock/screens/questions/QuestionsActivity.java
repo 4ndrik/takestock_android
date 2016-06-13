@@ -27,12 +27,12 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Question;
 import com.devabit.takestock.screens.questions.adapters.QuestionsAdapter;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.FontCache;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.LOGD;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 30/05/2016.

@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Photo;
-import com.devabit.takestock.util.DateFormats;
-import com.devabit.takestock.util.Logger;
+import com.devabit.takestock.utils.DateUtil;
+import com.devabit.takestock.utils.Logger;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -154,8 +154,8 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
 
         void bindCreatedDate(String createdDate) {
             try {
-                Date date = DateFormats.API_FORMAT.parse(createdDate);
-                String dateAsString = DateFormats.DEFAULT_FORMAT.format(date);
+                Date date = DateUtil.API_FORMAT.parse(createdDate);
+                String dateAsString = DateUtil.DEFAULT_FORMAT.format(date);
                 mDateTextView.setText(dateAsString);
             } catch (ParseException e) {
                 Logger.LOGE(TAG, "BOOM:", e);

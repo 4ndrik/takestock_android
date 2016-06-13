@@ -6,7 +6,7 @@ import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exceptions.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
-import com.devabit.takestock.util.Logger;
+import com.devabit.takestock.utils.Logger;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action0;
@@ -16,8 +16,8 @@ import rx.subscriptions.CompositeSubscription;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.LOGE;
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Logger.LOGE;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.

@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
@@ -25,11 +24,12 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.screens.advert.detail.AdvertDetailActivity;
+import com.devabit.takestock.screens.advert.edit.AdvertEditActivity;
 import com.devabit.takestock.screens.answers.AnswersActivity;
 import com.devabit.takestock.screens.offers.OffersActivity;
 import com.devabit.takestock.screens.selling.adapters.AdvertsAdapter;
-import com.devabit.takestock.util.FontCache;
-import com.devabit.takestock.util.Logger;
+import com.devabit.takestock.utils.FontCache;
+import com.devabit.takestock.utils.Logger;
 
 import java.util.List;
 
@@ -41,8 +41,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
     private static final String TAG = Logger.makeLogTag(SellingActivity.class);
 
     public static Intent getStartIntent(Context context) {
-        Intent starter = new Intent(context, SellingActivity.class);
-        return starter;
+        return new Intent(context, SellingActivity.class);
     }
 
     @BindView(R.id.content_activity_selling) protected View mContent;
@@ -110,7 +109,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         }
 
         @Override public void editAdvert(Advert advert) {
-            Toast.makeText(SellingActivity.this, "Not yet implemented.", Toast.LENGTH_LONG).show();
+            startAdvertEditActivity(advert);
         }
     };
 
@@ -124,6 +123,10 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     private void startAdvertDetailActivity(Advert advert) {
         startActivity(AdvertDetailActivity.getStartIntent(SellingActivity.this, advert));
+    }
+
+    private void startAdvertEditActivity(Advert advert) {
+        startActivity(AdvertEditActivity.getStartIntent(SellingActivity.this, advert));
     }
 
     private AdvertFilter getAdvertFilter() {
