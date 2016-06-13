@@ -1,9 +1,10 @@
 package com.devabit.takestock.data.source.remote.mappers;
 
 import com.devabit.takestock.data.models.Advert;
+import com.devabit.takestock.data.models.Certification;
 import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.data.models.User;
-import com.devabit.takestock.util.Encoder;
+import com.devabit.takestock.utils.Encoder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,10 +48,12 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
     private static final String DAYS_LEFT = "days_left";
     private static final String QUESTIONS_COUNT = "questions_count";
 
+    private final CertificationJsonMapper mCertificationMapper;
     private final UserJsonMapper mUserMapper;
     private final PhotoJsonMapper mPhotoMapper;
 
     public AdvertJsonMapper() {
+        mCertificationMapper = new CertificationJsonMapper();
         mUserMapper = new UserJsonMapper();
         mPhotoMapper = new PhotoJsonMapper();
     }
@@ -88,6 +91,10 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
         if (!jsonObject.isNull(PACKAGING)) advert.setPackagingId(jsonObject.getInt(PACKAGING));
         advert.setMinOrderQuantity(jsonObject.getInt(MIN_ORDER_QUANTITY));
         advert.setSize(jsonObject.getString(SIZE));
+        if (!jsonObject.isNull(CERTIFICATION))  {
+            Certification certification = mCertificationMapper.fromJsonString(jsonObject.getString(CERTIFICATION));
+            advert.setCertification(certification);
+        }
 //        if (!jsonObject.isNull(CERTIFICATION)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION));
         advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
         if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));

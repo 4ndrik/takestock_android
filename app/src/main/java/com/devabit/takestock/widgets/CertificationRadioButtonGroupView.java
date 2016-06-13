@@ -66,4 +66,12 @@ public class CertificationRadioButtonGroupView extends TableLayout implements Vi
         if (mActiveRadioButton == null) return null;
         else return (Certification) mActiveRadioButton.getTag();
     }
+
+    public void selectCertification(Certification certification) {
+        if (mActiveRadioButton != null) {
+            mActiveRadioButton.setChecked(false);
+        }
+        mActiveRadioButton = (RadioButton) findViewWithTag(certification);
+        mActiveRadioButton.setChecked(true);
+    }
 }

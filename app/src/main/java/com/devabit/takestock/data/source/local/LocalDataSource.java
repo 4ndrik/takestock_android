@@ -20,8 +20,8 @@ import rx.functions.Func1;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static com.devabit.takestock.util.Logger.LOGD;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 28/04/2016.

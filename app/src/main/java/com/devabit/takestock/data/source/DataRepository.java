@@ -13,7 +13,7 @@ import rx.functions.Func2;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 25/04/2016.

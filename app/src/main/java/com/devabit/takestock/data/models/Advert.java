@@ -25,6 +25,7 @@ public class Advert implements Parcelable {
     private int mSubCategoryId;
     private int mPackagingId;
     private int mCertificationId;
+    private Certification mCertification;
     private int mConditionId;
     private int mMinOrderQuantity;
     private String mSize;
@@ -57,6 +58,7 @@ public class Advert implements Parcelable {
         mSubCategoryId = in.readInt();
         mPackagingId = in.readInt();
         mCertificationId = in.readInt();
+        mCertification = in.readParcelable(Certification.class.getClassLoader());
         mConditionId = in.readInt();
         mMinOrderQuantity = in.readInt();
         mSize = in.readString();
@@ -70,6 +72,44 @@ public class Advert implements Parcelable {
         mOffersCount = in.readString();
         mQuestionsCount = in.readString();
         mDaysLeft = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mName);
+        dest.writeString(mDateCreatedAt);
+        dest.writeString(mDateExpiresAt);
+        dest.writeString(mDateUpdatedAt);
+        dest.writeString(mIntendedUse);
+        dest.writeString(mGuidePrice);
+        dest.writeString(mDescription);
+        dest.writeString(mLocation);
+        dest.writeByte((byte) (mIsVatExempt ? 1 : 0));
+        dest.writeInt(mShippingId);
+        dest.writeInt(mCategoryId);
+        dest.writeInt(mSubCategoryId);
+        dest.writeInt(mPackagingId);
+        dest.writeInt(mCertificationId);
+        dest.writeParcelable(mCertification, flags);
+        dest.writeInt(mConditionId);
+        dest.writeInt(mMinOrderQuantity);
+        dest.writeString(mSize);
+        dest.writeString(mCertificationExtra);
+        dest.writeInt(mItemsCount);
+        dest.writeInt(mAuthorId);
+        dest.writeParcelable(mUser, flags);
+        dest.writeStringList(mTags);
+        dest.writeTypedList(mPhotos);
+        dest.writeString(mPackagingName);
+        dest.writeString(mOffersCount);
+        dest.writeString(mQuestionsCount);
+        dest.writeString(mDaysLeft);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Advert> CREATOR = new Creator<Advert>() {
@@ -204,6 +244,14 @@ public class Advert implements Parcelable {
         mCertificationId = certificationId;
     }
 
+    public Certification getCertification() {
+        return mCertification;
+    }
+
+    public void setCertification(Certification certification) {
+        mCertification = certification;
+    }
+
     public int getConditionId() {
         return mConditionId;
     }
@@ -308,41 +356,6 @@ public class Advert implements Parcelable {
         mDaysLeft = daysLeft;
     }
 
-    @Override public int describeContents() {
-        return 0;
-    }
-
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mName);
-        dest.writeString(mDateCreatedAt);
-        dest.writeString(mDateExpiresAt);
-        dest.writeString(mDateUpdatedAt);
-        dest.writeString(mIntendedUse);
-        dest.writeString(mGuidePrice);
-        dest.writeString(mDescription);
-        dest.writeString(mLocation);
-        dest.writeByte((byte) (mIsVatExempt ? 1 : 0));
-        dest.writeInt(mShippingId);
-        dest.writeInt(mCategoryId);
-        dest.writeInt(mSubCategoryId);
-        dest.writeInt(mPackagingId);
-        dest.writeInt(mCertificationId);
-        dest.writeInt(mConditionId);
-        dest.writeInt(mMinOrderQuantity);
-        dest.writeString(mSize);
-        dest.writeString(mCertificationExtra);
-        dest.writeInt(mItemsCount);
-        dest.writeInt(mAuthorId);
-        dest.writeParcelable(mUser, flags);
-        dest.writeStringList(mTags);
-        dest.writeTypedList(mPhotos);
-        dest.writeString(mPackagingName);
-        dest.writeString(mOffersCount);
-        dest.writeString(mQuestionsCount);
-        dest.writeString(mDaysLeft);
-    }
-
     @Override public String toString() {
         return "Advert{" +
                 "mId=" + mId +
@@ -360,6 +373,7 @@ public class Advert implements Parcelable {
                 ", mSubCategoryId=" + mSubCategoryId +
                 ", mPackagingId=" + mPackagingId +
                 ", mCertificationId=" + mCertificationId +
+                ", mCertification=" + mCertification +
                 ", mConditionId=" + mConditionId +
                 ", mMinOrderQuantity=" + mMinOrderQuantity +
                 ", mSize='" + mSize + '\'' +

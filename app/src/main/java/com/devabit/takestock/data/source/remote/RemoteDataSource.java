@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import static com.devabit.takestock.util.Logger.LOGD;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Implementation for retrieving data from the network.
@@ -291,7 +291,7 @@ public class RemoteDataSource implements RestApi, DataSource {
                 .map(new Func1<String, List<Certification>>() {
                     @Override public List<Certification> call(String json) {
                         try {
-                            return new CertificationJsonMapper().fromJsonString(json);
+                            return new CertificationJsonMapper().fromJsonStringToList(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

@@ -7,8 +7,8 @@ import com.devabit.takestock.data.models.Shipping;
 import com.devabit.takestock.data.source.DataRepository;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.devabit.takestock.util.Logger.makeLogTag;
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.

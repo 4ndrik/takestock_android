@@ -72,7 +72,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="guide_price_per_kg">£ %1$s/kg</string>
     <string name="offer_price_per_kg">£ %1$s per %2$d kg</string>
-    <string name="hint_expiry_date">DD/MM/YYYY</string>
+    <string name="add_expiry_date">Add expiry date</string>
     <string name="expiry_date">%1$d/%2$d/%3$s</string>
 
     <!-- Strings related to errors -->
@@ -147,4 +147,5 @@
     <string name="edit_profile">Edit profile</string>
     <string name="change_profile_picture">Change profile picture</string>
     <string name="delete_photo">Delete photo</string>
+    <string name="edit_advert">Edit advert</string>
 </resources>

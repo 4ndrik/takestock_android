@@ -7,7 +7,7 @@ import com.devabit.takestock.data.source.local.LocalDataSource;
 import com.devabit.takestock.data.source.remote.RemoteDataSource;
 import com.devabit.takestock.data.source.DataSource;
 
-import static com.devabit.takestock.util.Preconditions.checkNotNull;
+import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Enables injection of mock implementations for

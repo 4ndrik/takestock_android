@@ -31,12 +31,12 @@ import com.devabit.takestock.screens.advert.adapters.AdvertPhotosAdapter;
 import com.devabit.takestock.screens.advert.detail.dialogs.OfferDialog;
 import com.devabit.takestock.screens.entry.EntryActivity;
 import com.devabit.takestock.screens.questions.QuestionsActivity;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.FontCache;
 
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.LOGD;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 public class AdvertDetailActivity extends AppCompatActivity implements AdvertDetailContract.View {
 

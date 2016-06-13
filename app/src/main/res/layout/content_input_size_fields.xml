@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal" >
+
+    <EditText
+            android:id="@+id/size_x_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="10"
+            style="@style/EditTextWeight"
+            android:ems="2"
+            android:maxLength="2"
+            tools:ignore="LabelFor"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_gravity="center"
+            android:text="x"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            style="@style/TextViewGrey"/>
+
+    <EditText
+            android:id="@+id/size_y_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="10"
+            style="@style/EditTextWeight"
+            android:ems="2"
+            android:maxLength="2"
+            tools:ignore="LabelFor"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_gravity="center"
+            android:text="x"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            style="@style/TextViewGrey"/>
+
+    <EditText
+            android:id="@+id/size_z_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="5"
+            style="@style/EditTextWeight"
+            android:ems="2"
+            android:maxLength="2"
+            tools:ignore="LabelFor"/>
+
+    <Spinner
+            android:id="@+id/size_spinner"
+            android:background="@null"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>

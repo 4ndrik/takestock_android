@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Photo;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.FontCache;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -98,8 +98,14 @@ public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapte
         }
     }
 
-    public void addPhotoFile(Photo photo) {
+    public void addPhoto(Photo photo) {
         mPhotos.add(photo);
+        notifyDataSetChanged();
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        mPhotos.clear();
+        mPhotos.addAll(photos);
         notifyDataSetChanged();
     }
 

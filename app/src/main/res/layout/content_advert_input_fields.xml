@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="16dp"
-              tools:context=".screens.advert.create.AdvertCreateActivity">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/product_title"
+            style="@style/TextViewPurple"/>
+
+    <EditText
+            android:id="@+id/title_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionNext"
+            android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
+            android:hint="@string/hint_add_product_title"
+            android:theme="@style/EditTextPurple"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/category"
             style="@style/TextViewPurple"/>
 
@@ -180,7 +198,7 @@
             android:layout_marginTop="8dp"
             android:singleLine="true"
             android:inputType="textCapSentences"
-            android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
+            android:drawableEnd="@drawable/ic_place_purple_dark_24dp"
             android:hint="@string/hint_location"
             android:theme="@style/EditTextPurple"/>
 
@@ -221,12 +239,12 @@
             android:id="@+id/expiry_date_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_expand_down_purple_dark_18dp"
+            android:drawableEnd="@drawable/ic_calendar_purple_dark_24dp"
             android:layout_marginTop="4dp"
             android:padding="8dp"
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:textColorHint="@color/grey_400"
-            android:hint="@string/hint_expiry_date"/>
+            android:hint="@string/add_expiry_date"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -235,71 +253,7 @@
             android:text="@string/size"
             style="@style/TextViewGrey"/>
 
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-        <EditText
-                android:id="@+id/size_x_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="10"
-                style="@style/EditTextWeight"
-                android:ems="2"
-                android:maxLength="2"
-                tools:ignore="LabelFor"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_gravity="center"
-                android:text="x"
-                android:textAppearance="@android:style/TextAppearance.Medium"
-                style="@style/TextViewGrey"/>
-
-        <EditText
-                android:id="@+id/size_y_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="10"
-                style="@style/EditTextWeight"
-                android:ems="2"
-                android:maxLength="2"
-                tools:ignore="LabelFor"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_gravity="center"
-                android:text="x"
-                android:textAppearance="@android:style/TextAppearance.Medium"
-                style="@style/TextViewGrey"/>
-
-        <EditText
-                android:id="@+id/size_z_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="5"
-                style="@style/EditTextWeight"
-                android:ems="2"
-                android:maxLength="2"
-                tools:ignore="LabelFor"/>
-
-        <Spinner
-                android:id="@+id/size_spinner"
-                android:background="@null"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"/>
-
-    </LinearLayout>
+    <include layout="@layout/content_input_size_fields"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -353,27 +307,5 @@
             android:layout_marginTop="8dp"
             android:text="@string/hint_keywords_description"
             style="@style/TextViewGrey"/>
-
-    <Button
-            android:id="@+id/preview_ad_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/preview_ad"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:theme="@style/RaisedButtonLime"/>
-
-    <Button
-            android:id="@+id/save_and_put_on_hold_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/save_and_put_on_hold"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:theme="@style/RaisedButtonGrey"/>
 
 </LinearLayout>

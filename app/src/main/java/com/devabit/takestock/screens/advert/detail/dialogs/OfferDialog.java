@@ -17,8 +17,8 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Offer;
 
-import static com.devabit.takestock.util.Logger.LOGD;
-import static com.devabit.takestock.util.Logger.makeLogTag;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 14/04/2016.

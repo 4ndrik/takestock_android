@@ -28,19 +28,18 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.screens.advert.adapters.*;
-import com.devabit.takestock.screens.advert.create.dialogs.AdvertPhotoPickerDialog;
+import com.devabit.takestock.screens.advert.dialogs.AdvertPhotoPickerDialog;
 import com.devabit.takestock.screens.advert.preview.AdvertPreviewActivity;
-import com.devabit.takestock.util.DateFormats;
-import com.devabit.takestock.util.FileUtil;
-import com.devabit.takestock.util.FontCache;
+import com.devabit.takestock.utils.DateUtil;
+import com.devabit.takestock.utils.FileUtil;
+import com.devabit.takestock.utils.FontCache;
 import com.devabit.takestock.widgets.CertificationRadioButtonGroupView;
 
 import java.io.File;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
-import static com.devabit.takestock.util.Logger.*;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 07/04/2016.
@@ -59,7 +58,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @BindView(R.id.content_activity_sell_something) protected View mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
 
-    @BindView(R.id.image_gallery_recycler_view) protected RecyclerView mPhotoGalleryRecyclerView;
+    @BindView(R.id.recycler_view) protected RecyclerView mPhotosRecyclerView;
 
     @BindView(R.id.category_spinner) protected Spinner mCategorySpinner;
     @BindView(R.id.subcategory_spinner) protected Spinner mSubcategorySpinner;
@@ -95,7 +94,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sell_something);
+        setContentView(R.layout.activity_advert_create);
         ButterKnife.bind(AdvertCreateActivity.this);
 
         new AdvertCreatePresenter(
@@ -108,7 +107,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
             }
         });
         setUpToolbar(boldTypeface);
-        setUpImageGalleryRecyclerView();
+        setUpPhotosRecyclerView();
 
         mExpiryDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -120,7 +119,6 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     private void setUpToolbar(Typeface typeface) {
-        mToolbar.inflateMenu(R.menu.profile_account_menu);
         TextView title = ButterKnife.findById(mToolbar, R.id.toolbar_title);
         title.setTypeface(typeface);
         title.setText(R.string.sell_something);
@@ -131,31 +129,31 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         });
     }
 
-    private void setUpImageGalleryRecyclerView() {
+    private void setUpPhotosRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 AdvertCreateActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        mPhotoGalleryRecyclerView.setLayoutManager(layoutManager);
+        mPhotosRecyclerView.setLayoutManager(layoutManager);
         mPhotoGalleryAdapter = new PhotoGalleryAdapter(AdvertCreateActivity.this);
         mPhotoGalleryAdapter.setOnPickPhotoListener(new PhotoGalleryAdapter.OnPickPhotoListener() {
             @Override public void onPick() {
                 displayPhotoPickerDialog();
             }
         });
-        mPhotoGalleryRecyclerView.setAdapter(mPhotoGalleryAdapter);
+        mPhotosRecyclerView.setAdapter(mPhotoGalleryAdapter);
     }
 
     private void displayPhotoPickerDialog() {
         AdvertPhotoPickerDialog pickerDialog = AdvertPhotoPickerDialog.newInstance();
-        pickerDialog.show(getFragmentManager(), pickerDialog.getClass().getSimpleName());
+        pickerDialog.show(getSupportFragmentManager(), pickerDialog.getClass().getName());
         pickerDialog.setOnPickListener(new AdvertPhotoPickerDialog.OnPickListener() {
-            @Override public void onPickFromLibrary(AdvertPhotoPickerDialog dialog) {
-                dialog.dismiss();
-                startPhotoLibraryActivity();
-            }
-
             @Override public void onPickFromCamera(AdvertPhotoPickerDialog dialog) {
                 dialog.dismiss();
                 startCameraActivity();
+            }
+
+            @Override public void onPickFromLibrary(AdvertPhotoPickerDialog dialog) {
+                dialog.dismiss();
+                startPhotoLibraryActivity();
             }
         });
     }
@@ -220,7 +218,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     @Override public void showEmptyPhotosError() {
         showSnack(R.string.error_empty_photos);
-        requestFocusOnView(mPhotoGalleryRecyclerView);
+        requestFocusOnView(mPhotosRecyclerView);
     }
 
     @Override public void showEmptyTitleError() {
@@ -341,8 +339,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showPhotoInView(Photo photo) {
-        mPhotoGalleryAdapter.addPhotoFile(photo);
-        mPhotoGalleryRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
+        mPhotoGalleryAdapter.addPhoto(photo);
+        mPhotosRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
     }
 
     private ProgressDialog mProgressDialog;
@@ -374,7 +372,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private Advert getAdvert() {
         Advert advert = new Advert();
-        advert.setPhotos(mPhotoGalleryAdapter.getPhotos());
+        advert.setPhotos(getPhotos());
         advert.setName(getAdvertTitle());
         advert.setCategoryId(getCategoryId());
         advert.setSubCategoryId(getSubcategoryId());
@@ -394,11 +392,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         return advert;
     }
 
-    private int getUserId() {
-        AccountManager accountManager = AccountManager.get(AdvertCreateActivity.this);
-        mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
-        String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
-        return Integer.valueOf(userId);
+    private List<Photo> getPhotos() {
+        return mPhotoGalleryAdapter.getPhotos();
     }
 
     private String getAdvertTitle() {
@@ -455,13 +450,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     private String getExpiryDate() {
-        try {
-            Date date = DateFormats.EXPIRY_FORMAT.parse(mExpiryDateTextView.getText().toString());
-            return DateFormats.API_FORMAT.format(date);
-        } catch (ParseException e) {
-            LOGE(TAG, "BOOM:", e);
-            return "";
-        }
+        String value = mExpiryDateTextView.getText().toString().trim();
+        return DateUtil.formatToApiDate(value);
     }
 
     private String getSize() {
@@ -485,6 +475,13 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private String getTags() {
         return mTagsEditText.getText().toString().trim();
+    }
+
+    private int getUserId() {
+        AccountManager accountManager = AccountManager.get(AdvertCreateActivity.this);
+        mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
+        String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
+        return Integer.valueOf(userId);
     }
 
     @Override protected void onPause() {
