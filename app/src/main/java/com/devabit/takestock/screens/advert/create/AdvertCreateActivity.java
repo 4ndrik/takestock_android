@@ -3,7 +3,6 @@ package com.devabit.takestock.screens.advert.create;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +18,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -56,7 +58,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
 
     @BindView(R.id.content_activity_sell_something) protected View mContent;
-    @BindView(R.id.toolbar) protected Toolbar mToolbar;
+    @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
+    @BindView(R.id.content_input) protected ViewGroup mContentInput;
 
     @BindView(R.id.recycler_view) protected RecyclerView mPhotosRecyclerView;
 
@@ -108,21 +111,15 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         });
         setUpToolbar(boldTypeface);
         setUpPhotosRecyclerView();
-
-        mExpiryDateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                displayDatePickerDialog();
-            }
-        });
-
-        mPresenter.create();
     }
 
     private void setUpToolbar(Typeface typeface) {
-        TextView title = ButterKnife.findById(mToolbar, R.id.toolbar_title);
-        title.setTypeface(typeface);
-        title.setText(R.string.sell_something);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = ButterKnife.findById(AdvertCreateActivity.this, R.id.toolbar);
+        toolbar.setTitle(R.string.sell_something);
+//        TextView title = ButterKnife.findById(toolbar, R.id.toolbar_title);
+//        title.setTypeface(typeface);
+//        title.setText(R.string.sell_something);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
@@ -196,6 +193,11 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         mPresenter.processPhotoUriToFile(photoUri, FileUtil.getUniquePhotoFile(AdvertCreateActivity.this));
     }
 
+    @OnClick(R.id.expiry_date_text_view)
+    protected void onExpiryDateTextViewClick() {
+        displayDatePickerDialog();
+    }
+
     private void displayDatePickerDialog() {
         DatePickerDialog dialog = new DatePickerDialog(AdvertCreateActivity.this, R.style.DatePickerDialogTheme,
                 new DatePickerDialog.OnDateSetListener() {
@@ -211,9 +213,9 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         mPresenter = presenter;
     }
 
-    @Override protected void onResume() {
-        super.onResume();
-        mPresenter.resume();
+    @Override protected void onStart() {
+        super.onStart();
+        mPresenter.fetchAdvertRelatedData();
     }
 
     @Override public void showEmptyPhotosError() {
@@ -343,18 +345,31 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         mPhotosRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
     }
 
-    private ProgressDialog mProgressDialog;
-
     @Override public void setProgressIndicator(boolean isActive) {
+        setProgressBarActive(isActive);
+        setTouchDisabled(isActive);
+        setContentInputTransparency(isActive);
+    }
+
+    private void setProgressBarActive(boolean isActive) {
+        mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
+    }
+
+    private void setTouchDisabled(boolean isActive) {
+        Window window = getWindow();
         if (isActive) {
-            if (mProgressDialog == null) {
-                mProgressDialog = new ProgressDialog(AdvertCreateActivity.this);
-                mProgressDialog.setMessage("Processing...");
-                mProgressDialog.setCancelable(false);
-            }
-            mProgressDialog.show();
-        } else if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    private void setContentInputTransparency(boolean isActive) {
+        for (int i = 0; i < mContentInput.getChildCount(); i++) {
+            View view = mContentInput.getChildAt(i);
+            view.setAlpha(isActive ? 0.5f : 1.0f);
         }
     }
 
@@ -484,8 +499,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         return Integer.valueOf(userId);
     }
 
-    @Override protected void onPause() {
-        super.onPause();
+    @Override protected void onStop() {
+        super.onStop();
         mPresenter.pause();
     }
 

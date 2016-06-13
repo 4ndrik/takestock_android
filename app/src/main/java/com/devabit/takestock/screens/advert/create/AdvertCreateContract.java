@@ -66,6 +66,8 @@ public interface AdvertCreateContract {
 
     interface Presenter extends BasePresenter {
 
+        void fetchAdvertRelatedData();
+
         void processPhotoUriToFile(Uri photoUri, File photoFile);
 
         void previewAdvert(Advert advert);

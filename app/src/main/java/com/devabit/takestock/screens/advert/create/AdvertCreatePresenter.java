@@ -11,6 +11,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
@@ -30,135 +31,124 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private static final String TAG = makeLogTag(AdvertCreatePresenter.class);
 
     private final DataRepository mDataRepository;
-    private final AdvertCreateContract.View mSellingView;
+    private final AdvertCreateContract.View mCreateView;
 
     private CompositeSubscription mSubscriptions;
 
-    public AdvertCreatePresenter(@NonNull DataRepository dataRepository, @NonNull AdvertCreateContract.View sellingView) {
+    private boolean mIsAdvertRelatedDataShowed;
+
+    public AdvertCreatePresenter(@NonNull DataRepository dataRepository, @NonNull AdvertCreateContract.View createView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
-        mSellingView = checkNotNull(sellingView, "sellingView cannot be null.");
+        mCreateView = checkNotNull(createView, "createView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mSellingView.setPresenter(AdvertCreatePresenter.this);
+        mCreateView.setPresenter(AdvertCreatePresenter.this);
     }
 
     @Override public void create() {
-        setUpCategoriesToView();
-        setUpPackagingToView();
-        setUpShippingToView();
-        setUpConditionsToView();
-        setUpSizesToView();
-        setUpCertificationsToView();
-    }
 
-    private void setUpCategoriesToView() {
-        Subscription subscription = mDataRepository
-                .getCategories()
-                .compose(RxTransformers.<List<Category>>applyObservableSchedulers())
-                .subscribe(new Action1<List<Category>>() {
-                    @Override public void call(List<Category> categories) {
-                        mSellingView.showCategoriesInView(categories);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
-                        LOGE(TAG, "BOOM:", throwable);
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
-
-    private void setUpPackagingToView() {
-        Subscription subscription = mDataRepository
-                .getPackagings()
-                .compose(RxTransformers.<List<Packaging>>applyObservableSchedulers())
-                .subscribe(new Action1<List<Packaging>>() {
-                    @Override public void call(List<Packaging> packagings) {
-                        mSellingView.showPackagingsInView(packagings);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
-                        LOGE(TAG, "BOOM:", throwable);
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
-
-    private void setUpShippingToView() {
-        Subscription subscription = mDataRepository
-                .getShippings()
-                .compose(RxTransformers.<List<Shipping>>applyObservableSchedulers())
-                .subscribe(new Action1<List<Shipping>>() {
-                    @Override public void call(List<Shipping> shippings) {
-                        mSellingView.showShippingsInView(shippings);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
-                        LOGE(TAG, "BOOM:", throwable);
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
-
-    private void setUpConditionsToView() {
-        Subscription subscription = mDataRepository
-                .getConditions()
-                .compose(RxTransformers.<List<Condition>>applyObservableSchedulers())
-                .subscribe(new Action1<List<Condition>>() {
-                    @Override public void call(List<Condition> conditions) {
-                        mSellingView.showConditionsInView(conditions);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
-                        LOGE(TAG, "BOOM:", throwable);
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
-
-    private void setUpSizesToView() {
-        Subscription subscription = mDataRepository
-                .getSizes()
-                .compose(RxTransformers.<List<Size>>applyObservableSchedulers())
-                .subscribe(new Action1<List<Size>>() {
-                    @Override public void call(List<Size> sizes) {
-                        mSellingView.showSizesInView(sizes);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
-                        LOGE(TAG, "BOOM:", throwable);
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
-
-    private void setUpCertificationsToView() {
-        Subscription subscription = mDataRepository
-                .getCertifications()
-                .compose(RxTransformers.<List<Certification>>applyObservableSchedulers())
-                .subscribe(new Action1<List<Certification>>() {
-                    @Override public void call(List<Certification> certifications) {
-                        mSellingView.showCertificationsInView(certifications);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
-                        LOGE(TAG, "BOOM:", throwable);
-                    }
-                });
-        mSubscriptions.add(subscription);
     }
 
     @Override public void resume() {
     }
 
-    @Override public void pause() {
-        mSubscriptions.clear();
+    @Override public void fetchAdvertRelatedData() {
+        if (mIsAdvertRelatedDataShowed) return;
+        mCreateView.setProgressIndicator(true);
+        Subscription subscription = buildAdvertRelatedDataObservable()
+                .compose(RxTransformers.<List<Certification>>applyObservableSchedulers())
+                .subscribe(new Subscriber<List<Certification>>() {
+                    @Override public void onCompleted() {
+                        mIsAdvertRelatedDataShowed = true;
+                        mCreateView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        LOGE(TAG, "BOOM:", e);
+                        mCreateView.setProgressIndicator(false);
+                        mCreateView.showUnknownError();
+                    }
+
+                    @Override public void onNext(List<Certification> certifications) {
+
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
-    @Override public void destroy() {
+    private Observable<List<Certification>> buildAdvertRelatedDataObservable() {
+        return Observable.defer(
+                new Func0<Observable<List<Category>>>() {
+                    @Override public Observable<List<Category>> call() {
+                        return mDataRepository.getCategories()
+                                .compose(RxTransformers.<List<Category>>applyObservableSchedulers())
+                                .doOnNext(new Action1<List<Category>>() {
+                                    @Override public void call(List<Category> categories) {
+                                        mCreateView.showCategoriesInView(categories);
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Func1<List<Category>, Observable<List<Packaging>>>() {
+                    @Override public Observable<List<Packaging>> call(List<Category> categories) {
+                        return mDataRepository.getPackagings()
+                                .compose(RxTransformers.<List<Packaging>>applyObservableSchedulers())
+                                .doOnNext(new Action1<List<Packaging>>() {
+                                    @Override public void call(List<Packaging> packagings) {
+                                        mCreateView.showPackagingsInView(packagings);
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Func1<List<Packaging>, Observable<List<Shipping>>>() {
+                    @Override public Observable<List<Shipping>> call(List<Packaging> packagings) {
+                        return mDataRepository
+                                .getShippings()
+                                .compose(RxTransformers.<List<Shipping>>applyObservableSchedulers())
+                                .doOnNext(new Action1<List<Shipping>>() {
+                                    @Override public void call(List<Shipping> shippings) {
+                                        mCreateView.showShippingsInView(shippings);
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Func1<List<Shipping>, Observable<List<Condition>>>() {
+                    @Override public Observable<List<Condition>> call(List<Shipping> shippings) {
+                        return mDataRepository.getConditions()
+                                .compose(RxTransformers.<List<Condition>>applyObservableSchedulers())
+                                .doOnNext(new Action1<List<Condition>>() {
+                                    @Override public void call(List<Condition> conditions) {
+                                        mCreateView.showConditionsInView(conditions);
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Func1<List<Condition>, Observable<List<Size>>>() {
+                    @Override public Observable<List<Size>> call(List<Condition> conditions) {
+                        return mDataRepository.getSizes()
+                                .compose(RxTransformers.<List<Size>>applyObservableSchedulers())
+                                .doOnNext(new Action1<List<Size>>() {
+                                    @Override public void call(List<Size> sizes) {
+                                        mCreateView.showSizesInView(sizes);
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Func1<List<Size>, Observable<List<Certification>>>() {
+                    @Override public Observable<List<Certification>> call(List<Size> sizes) {
+                        return mDataRepository.getCertifications()
+                                .compose(RxTransformers.<List<Certification>>applyObservableSchedulers())
+                                .doOnNext(new Action1<List<Certification>>() {
+                                    @Override public void call(List<Certification> certifications) {
+                                        mCreateView.showCertificationsInView(certifications);
+                                    }
+                                });
+                    }
+                });
 
     }
 
     @Override public void processPhotoUriToFile(Uri photoUri, final File photoFile) {
-        mSellingView.setProgressIndicator(true);
+        mCreateView.setProgressIndicator(true);
         Subscription subscription = Observable.just(photoUri)
                 .map(new Func1<Uri, Bitmap>() {
                     @Override
@@ -185,17 +175,17 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
                 .compose(RxTransformers.<Photo>applyObservableSchedulers())
                 .subscribe(new Subscriber<Photo>() {
                     @Override public void onCompleted() {
-                        mSellingView.setProgressIndicator(false);
+                        mCreateView.setProgressIndicator(false);
                     }
 
                     @Override public void onError(Throwable e) {
                         LOGE(TAG, "BOOM:", e);
-                        mSellingView.setProgressIndicator(false);
-                        mSellingView.showUnknownError();
+                        mCreateView.setProgressIndicator(false);
+                        mCreateView.showUnknownError();
                     }
 
                     @Override public void onNext(Photo photo) {
-                        mSellingView.showPhotoInView(photo);
+                        mCreateView.showPhotoInView(photo);
                     }
                 });
         mSubscriptions.add(subscription);
@@ -203,27 +193,27 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
 
     @Override public void previewAdvert(Advert advert) {
         if(!isAdvertDataValid(advert)) return;
-        mSellingView.showAdvertInPreview(advert);
+        mCreateView.showAdvertInPreview(advert);
     }
 
     @Override public void saveAdvert(Advert advert) {
         if(!isAdvertDataValid(advert)) return;
-        mSellingView.setProgressIndicator(true);
+        mCreateView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
                 .saveAdvert(advert)
                 .compose(RxTransformers.<Advert>applyObservableSchedulers())
                 .subscribe(new Subscriber<Advert>() {
                     @Override public void onCompleted() {
-                        mSellingView.setProgressIndicator(false);
+                        mCreateView.setProgressIndicator(false);
                     }
 
                     @Override public void onError(Throwable e) {
                         LOGE(TAG, "BOOM:", e);
-                        mSellingView.setProgressIndicator(false);
+                        mCreateView.setProgressIndicator(false);
                     }
 
                     @Override public void onNext(Advert advert) {
-                        mSellingView.showAdvertSaved(advert);
+                        mCreateView.showAdvertSaved(advert);
                     }
                 });
         mSubscriptions.add(subscription);
@@ -246,7 +236,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validatePhotos(Advert advert) {
         List<Photo> photos = advert.getPhotos();
         if (photos.isEmpty()) {
-            mSellingView.showEmptyPhotosError();
+            mCreateView.showEmptyPhotosError();
             return false;
         } else {
             return true;
@@ -256,7 +246,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateName(Advert advert) {
         String name = advert.getName();
         if (name.isEmpty()) {
-            mSellingView.showEmptyTitleError();
+            mCreateView.showEmptyTitleError();
             return false;
         } else {
             return true;
@@ -266,7 +256,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateItemCount(Advert advert) {
         int itemCount = advert.getItemsCount();
         if (itemCount == 0) {
-            mSellingView.showEmptyItemCountError();
+            mCreateView.showEmptyItemCountError();
             return false;
         }
         return true;
@@ -275,7 +265,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateMinimumOrder(Advert advert) {
         int minOrder = advert.getMinOrderQuantity();
         if (minOrder == 0) {
-            mSellingView.showEmptyMinimumOrderError();
+            mCreateView.showEmptyMinimumOrderError();
             return false;
         }
         return true;
@@ -284,7 +274,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateGuidePrice(Advert advert) {
         String price = advert.getGuidePrice();
         if (price.isEmpty()) {
-            mSellingView.showEmptyGuidePriceError();
+            mCreateView.showEmptyGuidePriceError();
             return false;
         }
         return true;
@@ -293,7 +283,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateDescription(Advert advert) {
         String description = advert.getDescription();
         if (description.isEmpty()) {
-            mSellingView.showEmptyDescriptionError();
+            mCreateView.showEmptyDescriptionError();
             return false;
         }
         return true;
@@ -302,7 +292,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateLocation(Advert advert) {
         String location = advert.getLocation();
         if (location.isEmpty()) {
-            mSellingView.showEmptyLocationError();
+            mCreateView.showEmptyLocationError();
             return false;
         }
         return true;
@@ -311,7 +301,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateExpiryDate(Advert advert) {
         String date = advert.getDateExpiresAt();
         if(date.isEmpty()) {
-            mSellingView.showEmptyExpiryDateError();
+            mCreateView.showEmptyExpiryDateError();
             return false;
         }
         return true;
@@ -320,7 +310,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateSize(Advert advert) {
         String size = advert.getSize();
         if (size.isEmpty()) {
-            mSellingView.showEmptySizeError();
+            mCreateView.showEmptySizeError();
             return false;
         }
         return true;
@@ -329,7 +319,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateCertification(Advert advert) {
         int certificationId = advert.getCertificationId();
         if(certificationId == 0) {
-            mSellingView.showEmptyCertificationError();
+            mCreateView.showEmptyCertificationError();
             return false;
         }
         return true;
@@ -338,9 +328,17 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateCertificationExtra(Advert advert) {
         String text = advert.getCertificationExtra();
         if (text.isEmpty()) {
-            mSellingView.showEmptyCertificationExtraError();
+            mCreateView.showEmptyCertificationExtraError();
             return false;
         }
         return true;
+    }
+
+    @Override public void pause() {
+        mSubscriptions.clear();
+    }
+
+    @Override public void destroy() {
+
     }
 }

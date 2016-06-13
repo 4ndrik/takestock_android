@@ -12,9 +12,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -50,6 +48,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
     private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
 
     @BindView(R.id.content) protected View mContent;
+    @BindView(R.id.content_input) protected ViewGroup mContentInput;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
     @BindView(R.id.profile_image_view) protected ImageView mProfileImageView;
     @BindView(R.id.user_name_edit_text) protected EditText mUserNameEditText;
@@ -236,14 +235,34 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
     @Override public void setProgressIndicator(boolean isActive) {
         setMenuVisibility(!isActive);
         setProgressBarActive(isActive);
+        setTouchDisabled(isActive);
+        setContentInputTransparency(isActive);
+    }
+
+    private void setMenuVisibility(boolean isActive) {
+        mMenu.getItem(0).setVisible(isActive);
     }
 
     private void setProgressBarActive(boolean isActive) {
         mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
     }
 
-    private void setMenuVisibility(boolean isActive) {
-        mMenu.getItem(0).setVisible(isActive);
+    private void setTouchDisabled(boolean isActive) {
+        Window window = getWindow();
+        if (isActive) {
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    private void setContentInputTransparency(boolean isActive) {
+        for (int i = 0; i < mContentInput.getChildCount(); i++) {
+            View view = mContentInput.getChildAt(i);
+            view.setAlpha(isActive ? 0.5f : 1.0f);
+        }
     }
 
     @Override public void setPresenter(@NonNull ProfileEditContract.Presenter presenter) {

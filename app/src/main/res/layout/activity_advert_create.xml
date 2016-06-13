@@ -5,13 +5,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_base"/>
+    <include layout="@layout/toolbar_progress"/>
 
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <LinearLayout
+                android:id="@+id/content_input"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
