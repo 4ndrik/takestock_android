@@ -63,7 +63,7 @@ public class SignInPresenter implements SignInContract.Presenter {
                         if (e instanceof NetworkConnectionException) {
                             mSignInView.showNetworkConnectionError();
                         } else if (e instanceof HttpResponseException) {
-                            mSignInView.showIncorrectCredentialsError();
+                            mSignInView.showCredentialsError();
                         } else {
                             mSignInView.showUnknownError();
                         }
@@ -84,7 +84,7 @@ public class SignInPresenter implements SignInContract.Presenter {
     private boolean validateUsername(String userName) {
         boolean isValid = Validator.validateUserName(userName);
         if (isValid) return true;
-        mSignInView.showIncorrectUsernameError();
+        mSignInView.showUserNameError();
         return false;
 
     }
@@ -92,7 +92,7 @@ public class SignInPresenter implements SignInContract.Presenter {
     private boolean validatePassword(String password) {
         boolean isValid = !TextUtils.isEmpty(password);
         if (isValid) return true;
-        mSignInView.showIncorrectPasswordError();
+        mSignInView.showPasswordError();
         return false;
     }
 

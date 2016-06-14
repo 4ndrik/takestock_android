@@ -62,7 +62,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                         if (e instanceof NetworkConnectionException) {
                             mSignUpView.showNetworkConnectionError();
                         } else if (e instanceof HttpResponseException) {
-                            mSignUpView.showIncorrectCredentialsError();
+                            mSignUpView.showCredentialsError();
                         } else {
                             mSignUpView.showUnknownError();
                         }
@@ -86,21 +86,21 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     private boolean validateUserName(String userName) {
         boolean isValid = Validator.validateUserName(userName);
         if (isValid) return true;
-        mSignUpView.showIncorrectUserNameError();
+        mSignUpView.showUserNameError();
         return false;
     }
 
     private boolean validateEmailAddress(String emailAddress) {
-        boolean isValid = Validator.validateUserName(emailAddress);
+        boolean isValid = Validator.validateEmailAddress(emailAddress);
         if (isValid) return true;
-        mSignUpView.showIncorrectEmailAddressError();
+        mSignUpView.showEmailError();
         return false;
     }
 
     private boolean validatePassword(String password) {
         boolean isValid = !TextUtils.isEmpty(password);
         if(isValid) return true;
-        mSignUpView.showIncorrectPasswordError();
+        mSignUpView.showPasswordError();
         return false;
     }
 

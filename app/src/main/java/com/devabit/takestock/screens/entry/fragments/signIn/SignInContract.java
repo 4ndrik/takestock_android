@@ -12,13 +12,13 @@ public interface SignInContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showIncorrectUsernameError();
+        void showUserNameError();
 
-        void showIncorrectPasswordError();
+        void showPasswordError();
 
         void showNetworkConnectionError();
 
-        void showIncorrectCredentialsError();
+        void showCredentialsError();
 
         void showUnknownError();
 

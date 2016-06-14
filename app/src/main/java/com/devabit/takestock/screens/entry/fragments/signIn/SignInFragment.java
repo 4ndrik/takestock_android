@@ -4,16 +4,16 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import butterknife.*;
@@ -23,8 +23,6 @@ import com.devabit.takestock.data.models.AuthToken;
 import com.devabit.takestock.data.models.UserCredentials;
 import com.devabit.takestock.screens.entry.fragments.signUp.SignUpFragment;
 import com.devabit.takestock.screens.entry.fragments.signUp.SignUpPresenter;
-
-import java.util.List;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
@@ -38,13 +36,12 @@ public class SignInFragment extends Fragment implements SignInContract.View {
     }
 
     @BindView(R.id.content_activity_sign_in) protected View mContent;
+    @BindView(R.id.content_input) protected ViewGroup mContentInput;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
+    @BindView(R.id.user_name_input_layout) protected TextInputLayout mUserNameInputLayout;
+    @BindView(R.id.password_input_layout) protected TextInputLayout mPasswordInputLayout;
     @BindView(R.id.user_name_edit_text) protected EditText mUserNameEditText;
     @BindView(R.id.password_edit_text) protected EditText mPasswordEditText;
-
-    @BindViews({R.id.logo_image_view, R.id.user_name_edit_text, R.id.password_edit_text, R.id.sign_in_button,
-            R.id.sign_up_button, R.id.forgot_password_text_view, R.id.new_to_takestock_text_view})
-    protected List<View> mViews;
 
     private Unbinder mUnbinder;
     private SignInContract.Presenter mPresenter;
@@ -55,6 +52,10 @@ public class SignInFragment extends Fragment implements SignInContract.View {
 
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
         mUnbinder = ButterKnife.bind(SignInFragment.this, view);
+        setUpToolbar(view);
+    }
+
+    private void setUpToolbar(View view) {
         Toolbar toolbar = ButterKnife.findById(view, R.id.toolbar);
         toolbar.setTitle(R.string.sign_in);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -75,6 +76,7 @@ public class SignInFragment extends Fragment implements SignInContract.View {
 
     @OnClick(R.id.sign_in_button)
     protected void onSignInButtonClick() {
+        hideKeyboard();
         mPresenter.obtainAuthToken(getUserCredentials());
     }
 
@@ -93,19 +95,33 @@ public class SignInFragment extends Fragment implements SignInContract.View {
         return mPasswordEditText.getText().toString().trim();
     }
 
-    @Override public void showIncorrectUsernameError() {
-        showSnack(R.string.error_incorrect_username);
+    @Override public void showUserNameError() {
+        mUserNameInputLayout.setErrorEnabled(true);
+        mUserNameInputLayout.setError(getString(R.string.error_incorrect_username));
     }
 
-    @Override public void showIncorrectPasswordError() {
-        showSnack(R.string.error_incorrect_password);
+    @OnTextChanged(R.id.user_name_edit_text)
+    protected void onUserNameTextChanged() {
+        mUserNameInputLayout.setError(null);
+        mUserNameInputLayout.setErrorEnabled(false);
+    }
+
+    @Override public void showPasswordError() {
+        mPasswordInputLayout.setErrorEnabled(true);
+        mPasswordInputLayout.setError(getString(R.string.error_incorrect_password));
+    }
+
+    @OnTextChanged(R.id.password_edit_text)
+    protected void onPasswordTextChanged() {
+        mPasswordInputLayout.setError(null);
+        mPasswordInputLayout.setErrorEnabled(false);
     }
 
     @Override public void showNetworkConnectionError() {
         showSnack(R.string.error_no_network_connection);
     }
 
-    @Override public void showIncorrectCredentialsError() {
+    @Override public void showCredentialsError() {
         showSnack(R.string.error_incorrect_credentials);
     }
 
@@ -118,21 +134,32 @@ public class SignInFragment extends Fragment implements SignInContract.View {
     }
 
     @Override public void setProgressIndicator(boolean isActive) {
-        mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
-        ButterKnife.apply(mViews, ENABLED, isActive ? Boolean.FALSE : Boolean.TRUE);
+        setProgressBarActive(isActive);
+        setTouchDisabled(isActive);
+        setContentInputActive(!isActive);
     }
 
-    private static final ButterKnife.Setter<View, Boolean> ENABLED
-            = new ButterKnife.Setter<View, Boolean>() {
-        @Override public void set(@NonNull View view, Boolean isEnable, int index) {
-            if (view instanceof Button) {
-                view.setEnabled(isEnable);
-            } else {
-                view.setFocusableInTouchMode(isEnable);
-            }
-            view.setAlpha(isEnable ? 1.0f : 0.5f);
+    private void setProgressBarActive(boolean isActive) {
+        mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
+    }
+
+    private void setTouchDisabled(boolean isActive) {
+        Window window = getActivity().getWindow();
+        if (isActive) {
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
-    };
+    }
+
+    private void setContentInputActive(boolean isActive) {
+        for (int i = 0; i < mContentInput.getChildCount(); i++) {
+            View view = mContentInput.getChildAt(i);
+            view.setAlpha(isActive ? 1.0f : 0.5f);
+        }
+    }
 
     @Override public void processAuthToken(AuthToken authToken) {
         AccountManager accountManager = AccountManager.get(getActivity());
@@ -154,6 +181,7 @@ public class SignInFragment extends Fragment implements SignInContract.View {
 
     @OnClick(R.id.sign_up_button)
     protected void onSignUpButtonClick() {
+        hideKeyboard();
         SignUpFragment signUpFragment = SignUpFragment.newInstance();
         getFragmentManager()
                 .beginTransaction()
@@ -161,6 +189,12 @@ public class SignInFragment extends Fragment implements SignInContract.View {
                 .addToBackStack(null)
                 .commit();
         new SignUpPresenter(Injection.provideDataRepository(getActivity()), signUpFragment);
+    }
+
+    private void hideKeyboard() {
+        Activity parentActivity = getActivity();
+        InputMethodManager imm = (InputMethodManager) parentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(parentActivity.getWindow().getDecorView().getWindowToken(), 0);
     }
 
     @Override public void onPause() {

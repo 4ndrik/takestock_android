@@ -12,13 +12,13 @@ public interface SignUpContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showIncorrectUserNameError();
+        void showUserNameError();
 
-        void showIncorrectEmailAddressError();
+        void showEmailError();
 
-        void showIncorrectPasswordError();
+        void showPasswordError();
 
-        void showIncorrectCredentialsError();
+        void showCredentialsError();
 
         void showNetworkConnectionError();
 
