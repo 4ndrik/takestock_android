@@ -24,6 +24,8 @@ import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.screens.about.AboutActivity;
+import com.devabit.takestock.screens.help.HelpActivity;
 import com.devabit.takestock.screens.profile.edit.ProfileEditActivity;
 import com.squareup.picasso.Picasso;
 
@@ -156,6 +158,25 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
     @Override public void setPresenter(@NonNull ProfileAccountContract.Presenter presenter) {
         mPresenter = presenter;
     }
+
+    @OnClick(R.id.help_and_contact_button)
+    protected void onHelpButtonClick() {
+        startHelpActivity();
+    }
+
+    private void startHelpActivity() {
+        startActivity(HelpActivity.getStartIntent(ProfileAccountActivity.this));
+    }
+
+    @OnClick(R.id.about_button)
+    protected void onAboutButtonClick() {
+        startAboutActivity();
+    }
+
+    private void startAboutActivity() {
+        startActivity(AboutActivity.getStartIntent(ProfileAccountActivity.this));
+    }
+
 
     @OnClick(R.id.log_out_button)
     protected void onLogOutButtonClick() {

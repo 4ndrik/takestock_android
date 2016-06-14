@@ -94,6 +94,20 @@
                     android:text="@string/settings"/>
 
             <Button
+                    android:id="@+id/about_button"
+                    style="@style/ButtonStyle.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:gravity="start|center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey_600"
+                    android:drawablePadding="32dp"
+                    android:drawableStart="@drawable/ic_info_grey600_24dp"
+                    android:text="@string/about"/>
+
+            <Button
                     android:id="@+id/log_out_button"
                     style="@style/ButtonStyle.Borderless"
                     android:layout_width="match_parent"

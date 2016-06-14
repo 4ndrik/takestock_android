@@ -85,6 +85,12 @@
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
+                android:name=".screens.help.HelpActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screens.about.AboutActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".screens.camera.CameraActivity"
                 android:theme="@style/AppTheme.Fullscreen"/>
 

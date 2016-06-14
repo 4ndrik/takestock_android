@@ -79,9 +79,9 @@
     <string name="error_unknown">Unknown error.</string>
     <string name="error_incorrect_credentials">Unable to login with provided credentials.</string>
     <string name="error_no_network_connection">There is no network connection right now.</string>
-    <string name="error_incorrect_username">Username is incorrect.</string>
-    <string name="error_incorrect_password">Password is incorrect.</string>
-    <string name="error_incorrect_email">Email address is incorrect.</string>
+    <string name="error_incorrect_username">User name is incorrect</string>
+    <string name="error_incorrect_password">Password is incorrect</string>
+    <string name="error_incorrect_email">Email address is incorrect</string>
     <string name="error_user_exists">A user with that username already exists.</string>
     <string name="error_no_camera_app">Need camera app.</string>
     <string name="error_empty_photos">Please, add photos.</string>
@@ -148,4 +148,15 @@
     <string name="change_profile_picture">Change profile picture</string>
     <string name="delete_photo">Delete photo</string>
     <string name="edit_advert">Edit advert</string>
+    <string name="about">About</string>
+    <string name="help_guide">There are detailed selling guides and best practice on our main website at</string>
+    <string name="help_questions_message">If you have any questions about using our app you can message us</string>
+    <string name="website">www.takestock.com</string>
+    <string name="website_url">http://www.takestock.com/</string>
+    <string name="admin_email">admin@wetakestock.com</string>
+    <string name="send_question">Send question…</string>
+    <string name="about_takestock">\tMany businesses in large distributed industries have a problem with stock being unwanted in one location and desired somewhere else. Takestock.com was created to be an online trading platform to make it easy for owners of stock to sell their unwanted items and to find a buyer efficiently rather than turning to scrap as an option. Takestock is initially focussing on the food manufacturing and agricultural sectors where 600,000 tonnes of food are wasted each year in the UK alone. \n\n\tWe are an eCommerce platform and believe the future solution to distributed unwanted stock is an e market place. That is why we do not advertise on behalf of brands, publish content or produce editorials for the trades we operate in. We focus on trading and helping you turn unwanted stock into cash. Takestock was set up by 4 founders who have a wide range of experience across multiple tech and food sectors. We think it is unacceptable that nearly £1Bn in food is wasted each year in the UK and we intend to make an impact on that at Takestock.</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="terms_of_services_url">http://takestock.shalakh.in/legal/</string>
+    <string name="agreement">I agree to Takestock\'s</string>
 </resources>
