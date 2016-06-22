@@ -28,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            buildConfigField("String", "API_URL", '"http://takestock.shalakh.in/api/v1/"')
+            buildConfigField("String", "API_URL", '"http://dev.takestock.com/api/v1/"')
             buildConfigField("boolean", "LOGGING_ENABLED", "false")
             shrinkResources true
             minifyEnabled false
@@ -36,7 +36,7 @@ android {
         }
 
         debug {
-            buildConfigField("String", "API_URL", '"http://takestock.shalakh.in/api/v1/"')
+            buildConfigField("String", "API_URL", '"http://dev.takestock.com/api/v1/"')
             buildConfigField("boolean", "LOGGING_ENABLED", "true")
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
@@ -82,7 +82,7 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
-    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.0'
 
     compile 'com.squareup.okhttp3:okhttp:3.3.1'

@@ -94,7 +94,7 @@
                 android:name=".screens.camera.CameraActivity"
                 android:theme="@style/AppTheme.Fullscreen"/>
 
-        <service android:name="com.devabit.takestock.authenticator.TakeStockAuthenticatorService"
+        <service android:name=".authenticator.TakeStockAuthenticatorService"
                  android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
