@@ -24,8 +24,8 @@ public final class DateUtil {
     public static String formatToApiDate(String value) {
         if (TextUtils.isEmpty(value)) return "";
         try {
-            Date date = DateUtil.EXPIRY_FORMAT.parse(value);
-            return DateUtil.API_FORMAT.format(date);
+            Date date = EXPIRY_FORMAT.parse(value);
+            return API_FORMAT.format(date);
         } catch (ParseException e) {
             LOGE(TAG, "BOOM:", e);
             return "";
@@ -35,8 +35,19 @@ public final class DateUtil {
     public static String formatToExpiryDate(String value) {
         if (TextUtils.isEmpty(value)) return"";
         try {
-            Date date = DateUtil.API_FORMAT.parse(value);
-            return DateUtil.EXPIRY_FORMAT.format(date);
+            Date date = API_FORMAT.parse(value);
+            return EXPIRY_FORMAT.format(date);
+        } catch (ParseException e) {
+            LOGE(TAG, "BOOM:", e);
+            return "";
+        }
+    }
+
+    public static String formatToDefaultDate(String value) {
+        if (TextUtils.isEmpty(value)) return"";
+        try {
+            Date date = API_FORMAT.parse(value);
+            return DEFAULT_FORMAT.format(date);
         } catch (ParseException e) {
             LOGE(TAG, "BOOM:", e);
             return "";

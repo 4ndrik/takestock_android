@@ -6,7 +6,7 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".screens.search.SearchActivity"
+        tools:context=".screen.search.SearchActivity"
         tools:background="@color/white">
 
     <include layout="@layout/content_activity_search"/>

@@ -230,6 +230,31 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getOfferStatusById(id);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for BusinessType
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public void saveBusinessTypes(@NonNull List<BusinessType> businessTypes) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<BusinessType>> updateBusinessTypes() {
+        return mRemoteDataSource.updateBusinessTypes()
+                .doOnNext(new Action1<List<BusinessType>>() {
+                    @Override public void call(List<BusinessType> businessTypes) {
+                        mLocalDataSource.saveBusinessTypes(businessTypes);
+                    }
+                });
+    }
+
+    @Override public Observable<List<BusinessType>> getBusinessTypes() {
+        return null;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Advert
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         return mRemoteDataSource.saveAdvert(advert)
                 .flatMap(new Func1<Advert, Observable<Advert>>() {
@@ -288,7 +313,7 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getQuestionResultListPerPage(page);
     }
 
-    @Override public Observable<Answer> saveAnswer(Answer answer) {
+    @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         return mRemoteDataSource.saveAnswer(answer);
     }
 

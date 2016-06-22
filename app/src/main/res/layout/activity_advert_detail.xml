@@ -6,7 +6,7 @@
         android:id="@+id/content_product_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".screens.advert.detail.AdvertDetailActivity">
+        tools:context=".screen.advert.detail.AdvertDetailActivity">
 
     <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar_container"

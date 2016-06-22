@@ -14,14 +14,13 @@ import com.devabit.takestock.data.filters.QuestionFilter;
 import com.devabit.takestock.data.filters.UserFilter;
 import com.devabit.takestock.data.models.*;
 import com.devabit.takestock.data.source.DataSource;
-import com.devabit.takestock.data.source.remote.filterBuilders.AdvertFilterUrlBuilder;
-import com.devabit.takestock.data.source.remote.filterBuilders.OfferFilterUrlBuilder;
-import com.devabit.takestock.data.source.remote.filterBuilders.QuestionFilterUrlBuilder;
-import com.devabit.takestock.data.source.remote.filterBuilders.UserFilterUrlBuilder;
-import com.devabit.takestock.data.source.remote.mappers.*;
-import com.devabit.takestock.exceptions.HttpResponseException;
-import com.devabit.takestock.exceptions.NetworkConnectionException;
-import com.devabit.takestock.rest.RestApi;
+import com.devabit.takestock.data.source.remote.filterBuilder.AdvertFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.filterBuilder.OfferFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.filterBuilder.QuestionFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.filterBuilder.UserFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.mapper.*;
+import com.devabit.takestock.exception.HttpResponseException;
+import com.devabit.takestock.exception.NetworkConnectionException;
 import okhttp3.*;
 import org.json.JSONException;
 import rx.Observable;
@@ -43,7 +42,7 @@ import static com.devabit.takestock.utils.Logger.makeLogTag;
  * <p/>
  * Created by Victor Artemyev on 22/04/2016.
  */
-public class RemoteDataSource implements RestApi, DataSource {
+public class RemoteDataSource implements ApiRest, DataSource {
 
     private static final String TAG = makeLogTag(RemoteDataSource.class);
 
@@ -170,11 +169,9 @@ public class RemoteDataSource implements RestApi, DataSource {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //     Method for data source
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for AuthToken
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
@@ -223,6 +220,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Category
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -253,6 +254,10 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Size
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -277,6 +282,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                     }
                 });
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Certification
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -308,6 +317,10 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Shipping
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -336,6 +349,10 @@ public class RemoteDataSource implements RestApi, DataSource {
     @Override public Shipping getShippingById(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Condition
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -366,6 +383,10 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Packaging
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -395,6 +416,10 @@ public class RemoteDataSource implements RestApi, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for OfferStatus
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -423,6 +448,40 @@ public class RemoteDataSource implements RestApi, DataSource {
     @Override public OfferStatus getOfferStatusById(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for BusinessType
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public void saveBusinessTypes(@NonNull List<BusinessType> businessTypes) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<BusinessType>> updateBusinessTypes() {
+        return getBusinessTypes();
+    }
+
+    @Override public Observable<List<BusinessType>> getBusinessTypes() {
+        return Observable.fromCallable(createGETCallable(BUSINESS_TYPE))
+                .map(new Func1<String, List<BusinessType>>() {
+                    @Override public List<BusinessType> call(String json) {
+                        try {
+                            return new BusinessTypeJsonMapper().fromJsonStringToList(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .doOnNext(new Action1<List<BusinessType>>() {
+                    @Override public void call(List<BusinessType> types) {
+                        LOGD(TAG, "BusinessTypes from RemoteDataSource " + types);
+                    }
+                });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Advert
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         final AdvertJsonMapper jsonMapper = new AdvertJsonMapper();
@@ -516,6 +575,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                     }
                 });
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Offer
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
         final OfferJsonMapper jsonMapper = new OfferJsonMapper();
@@ -647,7 +710,11 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<Question> saveQuestion(Question question) {
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Question
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         final QuestionJsonMapper jsonMapper = new QuestionJsonMapper();
         return Observable.just(question)
                 .map(new Func1<Question, String>() {
@@ -707,7 +774,11 @@ public class RemoteDataSource implements RestApi, DataSource {
                 });
     }
 
-    @Override public Observable<Answer> saveAnswer(Answer answer) {
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Answer
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         final AnswerJsonMapper jsonMapper = new AnswerJsonMapper();
         return Observable.just(answer)
                 .map(new Func1<Answer, String>() {
@@ -734,6 +805,10 @@ public class RemoteDataSource implements RestApi, DataSource {
                     }
                 });
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for User
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<User> saveUser(@NonNull User user) {
         return null;
@@ -777,12 +852,9 @@ public class RemoteDataSource implements RestApi, DataSource {
         return null;
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //     Methods for HTTP request
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for HTTP request
+    ///////////////////////////////////////////////////////////////////////////
 
     private Callable<String> createPOSTCallable(final String url, final String json) {
         return new Callable<String>() {

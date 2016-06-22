@@ -12,8 +12,7 @@
     <android.support.design.widget.CoordinatorLayout
             android:id="@+id/content_activity_search"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
@@ -24,7 +23,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:orientation="horizontal"
                     app:layout_scrollFlags="scroll|enterAlways|snap">
 
                 <ImageView
@@ -98,6 +96,7 @@
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorAccent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.RecyclerView

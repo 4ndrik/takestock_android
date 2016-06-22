@@ -328,6 +328,18 @@ public class LocalDataSource implements DataSource {
         return new OfferStatusEntityDataMapper().transformFromEntity(entity);
     }
 
+    @Override public void saveBusinessTypes(@NonNull List<BusinessType> businessTypes) {
+
+    }
+
+    @Override public Observable<List<BusinessType>> updateBusinessTypes() {
+        return null;
+    }
+
+    @Override public Observable<List<BusinessType>> getBusinessTypes() {
+        return null;
+    }
+
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         return Observable.just(advert)
                 .doOnNext(new Action1<Advert>() {

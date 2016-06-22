@@ -73,6 +73,12 @@ public interface DataSource {
 
     OfferStatus getOfferStatusById(int id);
 
+    void saveBusinessTypes(@NonNull List<BusinessType> businessTypes);
+
+    Observable<List<BusinessType>> updateBusinessTypes();
+
+    Observable<List<BusinessType>> getBusinessTypes();
+
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
     Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter);

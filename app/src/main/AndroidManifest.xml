@@ -28,7 +28,7 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".screens.main.MainActivity"
+                android:name=".screen.main.MainActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.Launcher"
                 android:windowSoftInputMode="stateHidden">
@@ -39,59 +39,59 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".screens.entry.EntryActivity"
+                android:name=".screen.entry.EntryActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-                android:name=".screens.advert.create.AdvertCreateActivity"
+                android:name=".screen.advert.create.AdvertCreateActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
-                android:name=".screens.advert.edit.AdvertEditActivity"
+                android:name=".screen.advert.edit.AdvertEditActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
-                android:name=".screens.advert.detail.AdvertDetailActivity"
+                android:name=".screen.advert.detail.AdvertDetailActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.advert.preview.AdvertPreviewActivity"
+                android:name=".screen.advert.preview.AdvertPreviewActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.search.SearchActivity"
+                android:name=".screen.search.SearchActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.photoLibrary.PhotoLibraryActivity"
+                android:name=".screen.photoLibrary.PhotoLibraryActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.selling.SellingActivity"
+                android:name=".screen.selling.SellingActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.questions.QuestionsActivity"
+                android:name=".screen.questions.QuestionsActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.buying.BuyingActivity"
+                android:name=".screen.buying.BuyingActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.offers.OffersActivity"
+                android:name=".screen.offers.OffersActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.answers.AnswersActivity"
+                android:name=".screen.answers.AnswersActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.profile.account.ProfileAccountActivity"
+                android:name=".screen.profile.account.ProfileAccountActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.profile.edit.ProfileEditActivity"
+                android:name=".screen.profile.edit.ProfileEditActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
-                android:name=".screens.help.HelpActivity"
+                android:name=".screen.help.HelpActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.about.AboutActivity"
+                android:name=".screen.about.AboutActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screens.camera.CameraActivity"
+                android:name=".screen.camera.CameraActivity"
                 android:theme="@style/AppTheme.Fullscreen"/>
 
         <service android:name=".authenticator.TakeStockAuthenticatorService"
