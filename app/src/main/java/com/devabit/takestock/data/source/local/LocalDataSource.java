@@ -41,8 +41,6 @@ public class LocalDataSource implements DataSource {
 
     private static final String DATA_BASE_NAME = "takestock.realm";
 
-//    private final Realm mRealm;
-
     private LocalDataSource(Context context) {
         RealmConfiguration config = new RealmConfiguration.Builder(context)
                 .name(DATA_BASE_NAME)
@@ -50,6 +48,10 @@ public class LocalDataSource implements DataSource {
                 .build();
         Realm.setDefaultConfiguration(config);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for AuthToken
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
@@ -62,6 +64,10 @@ public class LocalDataSource implements DataSource {
         // AccessToken from server.
         throw new UnsupportedOperationException("This operation not required.");
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Category
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveCategories(@NonNull List<Category> categories) {
         CategoryEntityDataMapper categoryMapper = new CategoryEntityDataMapper();
@@ -112,6 +118,10 @@ public class LocalDataSource implements DataSource {
         return new CategoryEntityDataMapper().transformFromEntity(entity);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Size
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveSizes(@NonNull List<Size> sizes) {
         List<SizeEntity> entities = new SizeEntityDataMapper().transformToEntityList(sizes);
         saveOrUpdateEntities(entities);
@@ -140,6 +150,10 @@ public class LocalDataSource implements DataSource {
             }
         });
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Certification
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveCertifications(@NonNull List<Certification> certifications) {
         List<CertificationEntity> entities = new CertificationEntityDataMapper()
@@ -179,6 +193,10 @@ public class LocalDataSource implements DataSource {
         return new CertificationEntityDataMapper().transformFromEntity(entity);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Shipping
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveShippings(@NonNull List<Shipping> shippings) {
         List<ShippingEntity> entities = new ShippingEntityDataMapper().transformToEntityList(shippings);
         saveOrUpdateEntities(entities);
@@ -215,6 +233,10 @@ public class LocalDataSource implements DataSource {
                 .findFirst();
         return new ShippingEntityDataMapper().transformFromEntity(entity);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Condition
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveConditions(@NonNull List<Condition> conditionList) {
         List<ConditionEntity> entities = new ConditionEntityDataMapper()
@@ -254,6 +276,10 @@ public class LocalDataSource implements DataSource {
         return new ConditionEntityDataMapper().transformFromEntity(entity);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Packaging
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void savePackagings(@NonNull List<Packaging> packagings) {
         List<PackagingEntity> entities = new PackagingsEntityDataMaper().transformToEntityList(packagings);
         saveOrUpdateEntities(entities);
@@ -290,6 +316,10 @@ public class LocalDataSource implements DataSource {
                 .findFirst();
         return new PackagingsEntityDataMaper().transformFromEntity(entity);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for OfferStatus
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         List<OfferStatusEntity> entities = new OfferStatusEntityDataMapper().transformToEntityList(statuses);
@@ -328,8 +358,25 @@ public class LocalDataSource implements DataSource {
         return new OfferStatusEntityDataMapper().transformFromEntity(entity);
     }
 
-    @Override public void saveBusinessTypes(@NonNull List<BusinessType> businessTypes) {
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for BusinessType
+    ///////////////////////////////////////////////////////////////////////////
 
+    @Override public void saveBusinessTypes(@NonNull List<BusinessType> businessTypes) {
+        BusinessTypeDataMapper dataMapper = new BusinessTypeDataMapper();
+        try (Realm realm = Realm.getDefaultInstance()) {
+            realm.beginTransaction();
+            for (BusinessType type : businessTypes) {
+                BusinessTypeEntity typeEntity = dataMapper.transformToEntity(type);
+                typeEntity = realm.copyToRealmOrUpdate(typeEntity);
+                RealmList<BusinessSubtypeEntity> subcategoryEntities = typeEntity.getSubtypeEntities();
+                for (BusinessSubtype subtype : type.getSubtypes()) {
+                    BusinessSubtypeEntity subtypeEntity = dataMapper.transformSubtypeToEntity(subtype);
+                    subcategoryEntities.add(subtypeEntity);
+                }
+            }
+            realm.commitTransaction();
+        }
     }
 
     @Override public Observable<List<BusinessType>> updateBusinessTypes() {
@@ -337,8 +384,44 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override public Observable<List<BusinessType>> getBusinessTypes() {
-        return null;
+        return Observable.fromCallable(new Callable<RealmResults<BusinessTypeEntity>>() {
+            @Override public RealmResults<BusinessTypeEntity> call() throws Exception {
+                return Realm.getDefaultInstance().where(BusinessTypeEntity.class).findAll();
+            }
+        }).filter(new Func1<RealmResults<BusinessTypeEntity>, Boolean>() {
+            @Override public Boolean call(RealmResults<BusinessTypeEntity> entities) {
+                return !entities.isEmpty();
+            }
+        }).map(new Func1<RealmResults<BusinessTypeEntity>, List<BusinessType>>() {
+            @Override public List<BusinessType> call(RealmResults<BusinessTypeEntity> entities) {
+                return new BusinessTypeDataMapper().transformFromEntityList(entities);
+            }
+        }).doOnNext(new Action1<List<BusinessType>>() {
+            @Override public void call(List<BusinessType> types) {
+                LOGD(TAG, "BusinessTypes from LocalDataSource " + types);
+            }
+        });
     }
+
+    @Override public BusinessType getBusinessTypeById(int id) {
+        BusinessTypeEntity entity = Realm.getDefaultInstance()
+                .where(BusinessTypeEntity.class)
+                .equalTo("mId", id)
+                .findFirst();
+        return new BusinessTypeDataMapper().transformFromEntity(entity);
+    }
+
+    @Override public BusinessSubtype getBusinessSubtypeById(int id) {
+        BusinessSubtypeEntity entity = Realm.getDefaultInstance()
+                .where(BusinessSubtypeEntity.class)
+                .equalTo("mId", id)
+                .findFirst();
+        return new BusinessSubtypeDataMapper().transformFromEntity(entity);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Advert
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         return Observable.just(advert)
@@ -393,6 +476,10 @@ public class LocalDataSource implements DataSource {
 
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Offer
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
         return Observable.just(offer)
                 .doOnNext(new Action1<Offer>() {
@@ -423,6 +510,10 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Question
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -435,9 +526,17 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Answer
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
-        return null;
+        throw new UnsupportedOperationException("This operation not required.");
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for User
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<User> saveUser(@NonNull User user) {
         return Observable.just(user)
@@ -454,7 +553,7 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override public Observable<User> updateUser(@NonNull User user) {
-        return null;
+        return saveUser(user);
     }
 
     @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {

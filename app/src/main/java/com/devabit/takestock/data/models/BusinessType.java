@@ -1,6 +1,7 @@
 package com.devabit.takestock.data.models;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Victor Artemyev on 22/06/2016.
@@ -33,6 +34,18 @@ public class BusinessType {
 
     public void setSubtypes(List<BusinessSubtype> subtypes) {
         mSubtypes = subtypes;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BusinessType type = (BusinessType) o;
+        return mId == type.mId &&
+                Objects.equals(mName, type.mName);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(mId, mName);
     }
 
     @Override public String toString() {

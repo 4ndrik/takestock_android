@@ -1,6 +1,7 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
 import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.utils.Encoder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,12 @@ public class UserJsonMapper implements JsonMapper<User> {
     private static final String IS_VERIFIED = "is_verified";
     private static final String AVG_RATING = "avg_rating";
     private static final String PHOTO = "photo";
+    private static final String BUSINESS_NAME = "bussines_name";
+    private static final String BUSINESS_TYPE = "bussines_type";
+    private static final String BUSINESS_SUBTYPE = "business_sub_type";
+    private static final String POSTCODE = "postcode";
+    private static final String VAT_NUMBER = "vat_number";
+    private static final String PHOTO_B64 = "photo_b64";
 
     public List<User> fromJsonStringToList(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
@@ -49,24 +56,42 @@ public class UserJsonMapper implements JsonMapper<User> {
         user.setFirstName(jsonObject.getString(FIRST_NAME));
         user.setLastName(jsonObject.getString(LAST_NAME));
         user.setEmail(jsonObject.getString(EMAIL));
+        user.setPhotoPath(jsonObject.isNull(PHOTO) ? "" : jsonObject.getString(PHOTO));
+        user.setSubscribed(jsonObject.getBoolean(IS_SUBSCRIBED));
+
+        user.setBusinessName(jsonObject.isNull(BUSINESS_NAME) ? "" : jsonObject.getString(BUSINESS_NAME));
+        user.setBusinessTypeId(jsonObject.isNull(BUSINESS_TYPE) ? -1 : jsonObject.getInt(BUSINESS_TYPE));
+        user.setBusinessSubtypeId(jsonObject.isNull(BUSINESS_SUBTYPE) ? -1 : jsonObject.getInt(BUSINESS_SUBTYPE));
+        user.setPostcode(jsonObject.isNull(POSTCODE)? -1 : jsonObject.getInt(POSTCODE));
+        user.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
+        user.setVatNumber(jsonObject.isNull(VAT_NUMBER) ? -1 : jsonObject.getInt(VAT_NUMBER));
+
         user.setDateJoined(jsonObject.getString(DATE_JOINED));
         user.setDateLastLogin(jsonObject.getString(LAST_LOGIN));
         user.setSuperuser(jsonObject.getBoolean(IS_SUPERUSER));
-        user.setSubscribed(jsonObject.getBoolean(IS_SUBSCRIBED));
         user.setStaff(jsonObject.getBoolean(IS_STAFF));
         user.setActive(jsonObject.getBoolean(IS_ACTIVE));
-        user.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
         user.setVerified(jsonObject.getBoolean(IS_VERIFIED));
         user.setAvgRating(jsonObject.getDouble(AVG_RATING));
-        if (jsonObject.isNull(PHOTO)) {
-            user.setPhotoPath("");
-        } else {
-            user.setPhotoPath(jsonObject.getString(PHOTO));
-        }
         return user;
     }
 
-    @Override public String toJsonString(User target) throws JSONException {
-        throw new UnsupportedOperationException("This operation not required.");
+    @Override public String toJsonString(User target) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(ID, target.getId());
+        jsonObject.put(USERNAME, target.getUserName());
+        jsonObject.put(EMAIL, target.getEmail());
+        jsonObject.put(IS_SUBSCRIBED, target.isSubscribed());
+        if (!target.getBusinessName().isEmpty()) jsonObject.put(BUSINESS_NAME, target.getBusinessName());
+        if (target.getBusinessTypeId() > 0) jsonObject.put(BUSINESS_TYPE, target.getBusinessTypeId());
+        if (target.getBusinessSubtypeId() > 0) jsonObject.put(BUSINESS_SUBTYPE, target.getBusinessSubtypeId());
+        if (target.getPostcode() > 0) jsonObject.put(POSTCODE, target.getPostcode());
+        jsonObject.put(IS_VAT_EXEMPT, target.isVatExempt());
+        if (target.getVatNumber() > 0) jsonObject.put(VAT_NUMBER, target.getVatNumber());
+        if (!target.getPhotoPath().isEmpty()) {
+            String photo = Encoder.encodeFileToBase64(target.getPhotoPath());
+            jsonObject.put(PHOTO_B64, photo);
+        }
+        return jsonObject.toString();
     }
 }

@@ -54,6 +54,10 @@ public class DataRepository implements DataSource {
         sInstance = null;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for AuthToken
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
         return mRemoteDataSource.obtainAuthTokenPerSignUp(credentials);
     }
@@ -72,6 +76,10 @@ public class DataRepository implements DataSource {
                 });
 
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Category
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -96,6 +104,10 @@ public class DataRepository implements DataSource {
         return null;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Size
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -114,6 +126,10 @@ public class DataRepository implements DataSource {
                     }
                 });
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Certification
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -138,6 +154,10 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getCertificationById(id);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Shipping
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -160,6 +180,10 @@ public class DataRepository implements DataSource {
     @Override public Shipping getShippingById(int id) {
         return mLocalDataSource.getShippingById(id);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Condition
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -184,6 +208,10 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getConditionById(id);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Packaging
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public void savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -206,6 +234,10 @@ public class DataRepository implements DataSource {
     @Override public Packaging getPackagingById(int id) {
         return mLocalDataSource.getPackagingById(id);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for OfferStatus
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -248,7 +280,17 @@ public class DataRepository implements DataSource {
     }
 
     @Override public Observable<List<BusinessType>> getBusinessTypes() {
-        return null;
+        Observable<List<BusinessType>> localBusinessType = mLocalDataSource.getBusinessTypes();
+        Observable<List<BusinessType>> remoteBusinessType = updateBusinessTypes();
+        return Observable.concat(localBusinessType, remoteBusinessType).first();
+    }
+
+    @Override public BusinessType getBusinessTypeById(int id) {
+        return mLocalDataSource.getBusinessTypeById(id);
+    }
+
+    @Override public BusinessSubtype getBusinessSubtypeById(int id) {
+        return mLocalDataSource.getBusinessSubtypeById(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -276,6 +318,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getAdvertResultListPerPage(page);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Offer
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
         return mRemoteDataSource.saveOffer(offer)
                 .flatMap(new Func1<Offer, Observable<Offer>>() {
@@ -301,6 +347,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getOfferResultListPerPage(page);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Question
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         return mRemoteDataSource.saveQuestion(question);
     }
@@ -313,16 +363,29 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getQuestionResultListPerPage(page);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Answer
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         return mRemoteDataSource.saveAnswer(answer);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for User
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<User> saveUser(@NonNull User user) {
         return null;
     }
 
     @Override public Observable<User> updateUser(@NonNull User user) {
-        return null;
+        return mRemoteDataSource.updateUser(user)
+                .flatMap(new Func1<User, Observable<User>>() {
+                    @Override public Observable<User> call(User user) {
+                        return mLocalDataSource.updateUser(user);
+                    }
+                });
     }
 
     @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {

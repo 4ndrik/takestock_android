@@ -22,16 +22,14 @@
                 tools:src="@drawable/test_image"
                 tools:ignore="ContentDescription"/>
 
-        <ImageButton
-                android:id="@+id/following_button"
+        <CheckBox
+                android:id="@+id/watching_check_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/circle_white"
-                android:padding="4dp"
-                android:layout_margin="8dp"
-                android:src="@drawable/ic_eye_grey_24dp"
                 android:layout_alignEnd="@+id/photo_image_view"
-                tools:ignore="ContentDescription"/>
+                android:layout_margin="8dp"
+                android:elevation="4dp"
+                android:button="@drawable/selector_watching"/>
 
         <TextView
                 android:id="@+id/name_text_view"

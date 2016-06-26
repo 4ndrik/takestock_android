@@ -24,6 +24,11 @@ public class UserEntity extends RealmObject {
     private boolean mIsVatExempt;
     private double mAvgRating;
     private String mPhotoPath;
+    private int mPostcode;
+    private int mVatNumber;
+    private String mBusinessName;
+    private int mBusinessTypeId;
+    private int mBusinessSubtypeId;
 
     public int getId() {
         return mId;
@@ -145,6 +150,46 @@ public class UserEntity extends RealmObject {
         mPhotoPath = photoPath;
     }
 
+    public int getPostcode() {
+        return mPostcode;
+    }
+
+    public void setPostcode(int postcode) {
+        mPostcode = postcode;
+    }
+
+    public int getVatNumber() {
+        return mVatNumber;
+    }
+
+    public void setVatNumber(int vatNumber) {
+        mVatNumber = vatNumber;
+    }
+
+    public String getBusinessName() {
+        return mBusinessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        mBusinessName = businessName;
+    }
+
+    public int getBusinessTypeId() {
+        return mBusinessTypeId;
+    }
+
+    public void setBusinessTypeId(int businessTypeId) {
+        mBusinessTypeId = businessTypeId;
+    }
+
+    public int getBusinessSubtypeId() {
+        return mBusinessSubtypeId;
+    }
+
+    public void setBusinessSubtypeId(int businessSubtypeId) {
+        mBusinessSubtypeId = businessSubtypeId;
+    }
+
     @Override public String toString() {
         return "UserEntity{" +
                 "mId=" + mId +
@@ -161,7 +206,12 @@ public class UserEntity extends RealmObject {
                 ", mIsVerified=" + mIsVerified +
                 ", mIsVatExempt=" + mIsVatExempt +
                 ", mAvgRating=" + mAvgRating +
-                ", mPhotoEntity=" + mPhotoPath +
+                ", mPhotoPath='" + mPhotoPath + '\'' +
+                ", mPostcode=" + mPostcode +
+                ", mVatNumber=" + mVatNumber +
+                ", mBusinessName='" + mBusinessName + '\'' +
+                ", mBusinessTypeId=" + mBusinessTypeId +
+                ", mBusinessSubtypeId=" + mBusinessSubtypeId +
                 '}';
     }
 }

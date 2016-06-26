@@ -45,8 +45,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     private static final String TAG = makeLogTag(SearchActivity.class);
 
     public static Intent getStartIntent(Context context) {
-        Intent starter = new Intent(context, SearchActivity.class);
-        return starter;
+        return new Intent(context, SearchActivity.class);
     }
 
     @BindView(R.id.content_activity_search) protected View mContent;

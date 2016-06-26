@@ -26,4 +26,5 @@ public interface ApiRest {
     String ANSWERS = API_BASE_URL + "qa/answers/";
     String QUESTIONS = API_BASE_URL + "qa/questions/";
     String USERS = API_BASE_URL + "users/";
+    String ME = API_BASE_URL + "me/";
 }

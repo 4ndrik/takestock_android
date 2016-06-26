@@ -37,6 +37,11 @@ public class UserEntityDataMapper {
         entity.setVatExempt(user.isVatExempt());
         entity.setAvgRating(user.getAvgRating());
         entity.setPhotoPath(user.getPhotoPath());
+        entity.setBusinessName(user.getBusinessName());
+        entity.setBusinessTypeId(user.getBusinessTypeId());
+        entity.setBusinessSubtypeId(user.getBusinessSubtypeId());
+        entity.setPostcode(user.getPostcode());
+        entity.setVatNumber(user.getVatNumber());
         return entity;
     }
 
@@ -57,6 +62,11 @@ public class UserEntityDataMapper {
         user.setVatExempt(entity.isVatExempt());
         user.setAvgRating(entity.getAvgRating());
         user.setPhotoPath(entity.getPhotoPath());
+        user.setBusinessName(entity.getBusinessName());
+        user.setBusinessTypeId(entity.getBusinessTypeId());
+        user.setBusinessSubtypeId(entity.getBusinessSubtypeId());
+        user.setPostcode(entity.getPostcode());
+        user.setVatNumber(entity.getVatNumber());
         return user;
     }
 }

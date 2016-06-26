@@ -479,6 +479,14 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public BusinessType getBusinessTypeById(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public BusinessSubtype getBusinessSubtypeById(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Advert
     ///////////////////////////////////////////////////////////////////////////
@@ -811,11 +819,36 @@ public class RemoteDataSource implements ApiRest, DataSource {
     ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<User> saveUser(@NonNull User user) {
-        return null;
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<User> updateUser(@NonNull User user) {
-        return null;
+        final UserJsonMapper jsonMapper = new UserJsonMapper();
+        return Observable.just(user)
+                .map(new Func1<User, String>() {
+                    @Override public String call(User user) {
+                        try {
+                            return jsonMapper.toJsonString(user);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPATCHCallable(ME, json));
+                    }
+                })
+                .map(new Func1<String, User>() {
+                    @Override public User call(String json) {
+                        LOGD(TAG, json);
+                        try {
+                            return jsonMapper.fromJsonString(json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(json);
+                        }
+                    }
+                });
     }
 
     @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {
@@ -856,6 +889,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     // Methods for HTTP request
     ///////////////////////////////////////////////////////////////////////////
 
+    /**POST*/
     private Callable<String> createPOSTCallable(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
@@ -885,6 +919,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .build();
     }
 
+    /**GET*/
     private Callable<String> createGETCallable(final String url) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
@@ -913,6 +948,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .build();
     }
 
+    /**PUT*/
     private Callable<String> createPUTCallable(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
@@ -939,6 +975,36 @@ public class RemoteDataSource implements ApiRest, DataSource {
         return new Request.Builder()
                 .url(url)
                 .put(body)
+                .build();
+    }
+
+    /**PATCH*/
+    private Callable<String> createPATCHCallable(final String url, final String json) {
+        return new Callable<String>() {
+            @Override public String call() throws Exception {
+                return createPATCH(url, json);
+            }
+        };
+    }
+
+    private String createPATCH(String url, String json) throws Exception {
+        if (isThereInternetConnection()) {
+            Request request = buildPATCHRequest(url, json);
+            LOGD(TAG, request.toString());
+            Response response = mOkHttpClient.newCall(request).execute();
+            try (ResponseBody body = response.body()) {
+                return body.string();
+            }
+        } else {
+            throw new NetworkConnectionException("There is no internet connection.");
+        }
+    }
+
+    private Request buildPATCHRequest(String url, String json) {
+        RequestBody body = RequestBody.create(MEDIA_TYPE_JSON, json);
+        return new Request.Builder()
+                .url(url)
+                .patch(body)
                 .build();
     }
 

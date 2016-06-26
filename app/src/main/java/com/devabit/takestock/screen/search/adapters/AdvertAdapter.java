@@ -5,18 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.utils.Logger;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static butterknife.ButterKnife.findById;
@@ -91,8 +90,8 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         if (photos.isEmpty()) {
             return TYPE_HORIZONTAL;
         } else {
-             Photo photo = photos.get(0);
-            if(photo.getHeight() > photo.getWidth()) return TYPE_VERTICAL;
+            Photo photo = photos.get(0);
+            if (photo.getHeight() > photo.getWidth()) return TYPE_VERTICAL;
             else return TYPE_HORIZONTAL;
         }
     }
@@ -119,7 +118,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         sItemClickListener = listener;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private final Context mContext;
         private final Picasso mPicasso;
 
@@ -128,12 +127,27 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         private final TextView mLocationTextView;
         private final TextView mDateTextView;
         private final TextView mPriceTextView;
+        private final CheckBox mWatchingCheckBox;
 
         private Advert mAdvert;
 
+        private final View.OnClickListener mClickListener
+                = new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (sItemClickListener != null) sItemClickListener.onItemClick(mAdvert);
+            }
+        };
+
+        private final CheckBox.OnCheckedChangeListener mCheckedChangeListener
+                = new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        };
+
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(ViewHolder.this);
+            itemView.setOnClickListener(mClickListener);
             mContext = itemView.getContext();
             mPicasso = Picasso.with(mContext);
             mPhotoImageView = findById(itemView, R.id.photo_image_view);
@@ -141,6 +155,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
             mLocationTextView = findById(itemView, R.id.location_text_view);
             mDateTextView = findById(itemView, R.id.date_text_view);
             mPriceTextView = findById(itemView, R.id.price_text_view);
+            mWatchingCheckBox = findById(itemView, R.id.watching_check_box);
         }
 
         void bindAdvert(Advert advert) {
@@ -152,14 +167,8 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
             bindPhoto(mAdvert.getPhotos());
         }
 
-        void bindCreatedDate(String createdDate) {
-            try {
-                Date date = DateUtil.API_FORMAT.parse(createdDate);
-                String dateAsString = DateUtil.DEFAULT_FORMAT.format(date);
-                mDateTextView.setText(dateAsString);
-            } catch (ParseException e) {
-                Logger.LOGE(TAG, "BOOM:", e);
-            }
+        void bindCreatedDate(String date) {
+            mDateTextView.setText(DateUtil.formatToDefaultDate(date));
         }
 
         void bindPhoto(List<Photo> photos) {
@@ -178,10 +187,6 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
                     .centerCrop()
                     .fit()
                     .into(mPhotoImageView);
-        }
-
-        @Override public void onClick(View v) {
-            if (sItemClickListener != null) sItemClickListener.onItemClick(mAdvert);
         }
     }
 }

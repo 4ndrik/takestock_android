@@ -29,15 +29,15 @@ public final class Logger {
         return makeLogTag(cls.getSimpleName());
     }
 
-    public static void LOGD(final String tag, String message) {
+    public static void LOGD(final String tag, Object message) {
         if (LOGGING_ENABLED) {
-            Log.d(tag, message);
+            Log.d(tag, message.toString());
         }
     }
 
-    public static void LOGD(final String tag, String message, Throwable cause) {
+    public static void LOGD(final String tag, Object message, Throwable cause) {
         if (LOGGING_ENABLED) {
-            Log.d(tag, message, cause);
+            Log.d(tag, message.toString(), cause);
         }
     }
 

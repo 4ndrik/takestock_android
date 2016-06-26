@@ -23,6 +23,11 @@ public class User implements Parcelable {
     private boolean mIsVatExempt;
     private double mAvgRating;
     private String mPhotoPath;
+    private int mPostcode;
+    private int mVatNumber;
+    private String mBusinessName;
+    private int mBusinessTypeId;
+    private int mBusinessSubtypeId;
 
     public User(){}
 
@@ -42,6 +47,40 @@ public class User implements Parcelable {
         mIsVatExempt = in.readByte() != 0;
         mAvgRating = in.readDouble();
         mPhotoPath = in.readString();
+        mPostcode = in.readInt();
+        mVatNumber = in.readInt();
+        mBusinessName = in.readString();
+        mBusinessTypeId = in.readInt();
+        mBusinessSubtypeId = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mUserName);
+        dest.writeString(mFirstName);
+        dest.writeString(mLastName);
+        dest.writeString(mEmail);
+        dest.writeString(mDateJoined);
+        dest.writeString(mDateLastLogin);
+        dest.writeByte((byte) (mIsSuperuser ? 1 : 0));
+        dest.writeByte((byte) (mIsStaff ? 1 : 0));
+        dest.writeByte((byte) (mIsActive ? 1 : 0));
+        dest.writeByte((byte) (mIsSubscribed ? 1 : 0));
+        dest.writeByte((byte) (mIsVerified ? 1 : 0));
+        dest.writeByte((byte) (mIsVatExempt ? 1 : 0));
+        dest.writeDouble(mAvgRating);
+        dest.writeString(mPhotoPath);
+        dest.writeInt(mPostcode);
+        dest.writeInt(mVatNumber);
+        dest.writeString(mBusinessName);
+        dest.writeInt(mBusinessTypeId);
+        dest.writeInt(mBusinessSubtypeId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -176,8 +215,48 @@ public class User implements Parcelable {
         mPhotoPath = photoPath;
     }
 
+    public int getPostcode() {
+        return mPostcode;
+    }
+
+    public void setPostcode(int postcode) {
+        mPostcode = postcode;
+    }
+
+    public int getVatNumber() {
+        return mVatNumber;
+    }
+
+    public void setVatNumber(int vatNumber) {
+        mVatNumber = vatNumber;
+    }
+
+    public String getBusinessName() {
+        return mBusinessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        mBusinessName = businessName;
+    }
+
+    public int getBusinessTypeId() {
+        return mBusinessTypeId;
+    }
+
+    public void setBusinessTypeId(int businessTypeId) {
+        mBusinessTypeId = businessTypeId;
+    }
+
+    public int getBusinessSubtypeId() {
+        return mBusinessSubtypeId;
+    }
+
+    public void setBusinessSubtypeId(int businessSubtypeId) {
+        mBusinessSubtypeId = businessSubtypeId;
+    }
+
     @Override public String toString() {
-        return "Author{" +
+        return "User{" +
                 "mId=" + mId +
                 ", mUserName='" + mUserName + '\'' +
                 ", mFirstName='" + mFirstName + '\'' +
@@ -192,29 +271,12 @@ public class User implements Parcelable {
                 ", mIsVerified=" + mIsVerified +
                 ", mIsVatExempt=" + mIsVatExempt +
                 ", mAvgRating=" + mAvgRating +
-                ", mPhotoPath=" + mPhotoPath +
+                ", mPhotoPath='" + mPhotoPath + '\'' +
+                ", mPostcode=" + mPostcode +
+                ", mVatNumber=" + mVatNumber +
+                ", mBusinessName='" + mBusinessName + '\'' +
+                ", mBusinessTypeId=" + mBusinessTypeId +
+                ", mBusinessSubtypeId=" + mBusinessSubtypeId +
                 '}';
-    }
-
-    @Override public int describeContents() {
-        return 0;
-    }
-
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mUserName);
-        dest.writeString(mFirstName);
-        dest.writeString(mLastName);
-        dest.writeString(mEmail);
-        dest.writeString(mDateJoined);
-        dest.writeString(mDateLastLogin);
-        dest.writeByte((byte) (mIsSuperuser ? 1 : 0));
-        dest.writeByte((byte) (mIsStaff ? 1 : 0));
-        dest.writeByte((byte) (mIsActive ? 1 : 0));
-        dest.writeByte((byte) (mIsSubscribed ? 1 : 0));
-        dest.writeByte((byte) (mIsVerified ? 1 : 0));
-        dest.writeByte((byte) (mIsVatExempt ? 1 : 0));
-        dest.writeDouble(mAvgRating);
-        dest.writeString(mPhotoPath);
     }
 }

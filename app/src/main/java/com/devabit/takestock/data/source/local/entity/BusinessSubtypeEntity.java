@@ -1,6 +1,5 @@
 package com.devabit.takestock.data.source.local.entity;
 
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -12,7 +11,6 @@ public class BusinessSubtypeEntity extends RealmObject {
     @PrimaryKey
     private int mId;
     private String mName;
-    private RealmList<BusinessSubtypeEntity> mSubtypeEntities;
 
     public int getId() {
         return mId;
@@ -30,15 +28,10 @@ public class BusinessSubtypeEntity extends RealmObject {
         mName = name;
     }
 
-    public RealmList<BusinessSubtypeEntity> getSubtypeEntities() {
-        return mSubtypeEntities;
-    }
-
     @Override public String toString() {
         return "BusinessSubtypeEntity{" +
                 "mId=" + mId +
                 ", mName='" + mName + '\'' +
-                ", mSubtypeEntities=" + mSubtypeEntities +
                 '}';
     }
 }
