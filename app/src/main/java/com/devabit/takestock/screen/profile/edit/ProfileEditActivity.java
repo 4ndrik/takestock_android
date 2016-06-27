@@ -63,6 +63,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
 
     @BindView(R.id.business_type_spinner) protected Spinner mBusinessTypeSpinner;
     @BindView(R.id.business_subtype_spinner) protected Spinner mBusinessSubtypeSpinner;
+    @BindView(R.id.business_subtype_text_view) protected TextView mBusinessSubtypeTextView;
 
     @BindView(R.id.email_subscription_check_box) protected CheckBox mEmailSubscriptionCheckBox;
     @BindView(R.id.vat_register_check_box) protected CheckBox mVatRegisterCheckBox;
@@ -73,8 +74,6 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
     private String mPhotoPath;
 
     private ProfileEditContract.Presenter mPresenter;
-
-//    private BusinessSubtypeSpinnerAdapter mBusinessSubtypeAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -224,7 +223,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
     private void showBusinessSubtypesInView(List<BusinessSubtype> subtypes) {
         if (subtypes.isEmpty()) {
             mBusinessSubtypeSpinner.setAdapter(null);
-            setBusinessSubtypeSpinnerVisibility(false);
+            setBusinessSubtypeContentVisibility(false);
         } else {
             BusinessSubtypeSpinnerAdapter adapter = new BusinessSubtypeSpinnerAdapter(ProfileEditActivity.this, subtypes);
             NothingSelectedSpinnerAdapter<BusinessSubtype> nothingSelectedAdapter
@@ -232,7 +231,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
                     adapter, R.layout.item_spinner, R.string.select_one, ProfileEditActivity.this);
             mBusinessSubtypeSpinner.setAdapter(nothingSelectedAdapter);
             setUserBusinessSubtypesTypeSelection(nothingSelectedAdapter, subtypes);
-            setBusinessSubtypeSpinnerVisibility(true);
+            setBusinessSubtypeContentVisibility(true);
         }
     }
 
@@ -252,7 +251,8 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         return null;
     }
 
-    private void setBusinessSubtypeSpinnerVisibility(boolean visible) {
+    private void setBusinessSubtypeContentVisibility(boolean visible) {
+        mBusinessSubtypeTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
         mBusinessSubtypeSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
