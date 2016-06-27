@@ -1,11 +1,13 @@
 package com.devabit.takestock.screen.profile.edit;
 
 import android.net.Uri;
+import com.devabit.takestock.data.models.BusinessType;
 import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.
@@ -13,6 +15,8 @@ import java.io.File;
 public interface ProfileEditContract {
 
     interface View extends BaseView<Presenter> {
+
+        void showBusinessTypesInView(List<BusinessType> businessTypes);
 
         void showPhotoInView(String path);
 
@@ -29,6 +33,7 @@ public interface ProfileEditContract {
     }
 
     interface Presenter extends BasePresenter {
+
         void processPhotoUriToFile(Uri photoUri, File uniqueFile);
 
         void updateUser(User user);

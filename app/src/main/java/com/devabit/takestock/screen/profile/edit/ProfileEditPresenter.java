@@ -3,6 +3,7 @@ package com.devabit.takestock.screen.profile.edit;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import com.devabit.takestock.data.models.BusinessType;
 import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
@@ -19,7 +20,9 @@ import rx.subscriptions.CompositeSubscription;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import static com.devabit.takestock.utils.Logger.LOGD;
 import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
@@ -35,6 +38,8 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
 
     private CompositeSubscription mSubscriptions;
 
+    private boolean mIsUserProfileRelatedDataShowed;
+
     public ProfileEditPresenter(@NonNull DataRepository dataRepository, @NonNull ProfileEditContract.View profileView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mProfileView = checkNotNull(profileView, "profileView cannot be null.");
@@ -42,9 +47,22 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
         mProfileView.setPresenter(ProfileEditPresenter.this);
     }
 
-
     @Override public void resume() {
+        fetchUserProfileData();
+    }
 
+    private void fetchUserProfileData() {
+        if (mIsUserProfileRelatedDataShowed) return;
+        mProfileView.setProgressIndicator(true);
+        Subscription subscription = mDataRepository.getBusinessTypes()
+                .compose(RxTransformers.<List<BusinessType>>applyObservableSchedulers())
+                .subscribe(new Action1<List<BusinessType>>() {
+                    @Override public void call(List<BusinessType> businessTypes) {
+                        mProfileView.showBusinessTypesInView(businessTypes);
+                        mIsUserProfileRelatedDataShowed = true;
+                    }
+                }, getOnError(), getOnCompleted());
+        mSubscriptions.add(subscription);
     }
 
     @Override public void processPhotoUriToFile(Uri photoUri, final File uniqueFile) {
@@ -64,7 +82,7 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
                     @Override public String call(Bitmap bitmap) {
                         try {
                             File file = BitmapUtil.saveBitmapToFile(bitmap, uniqueFile);
-                            return "file:" + file.getAbsolutePath();
+                            return file.getAbsolutePath();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -90,7 +108,20 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
     }
 
     @Override public void updateUser(User user) {
-
+        mProfileView.setProgressIndicator(true);
+        Subscription subscription = mDataRepository.updateUser(user)
+                .compose(RxTransformers.<User>applyObservableSchedulers())
+                .doOnNext(new Action1<User>() {
+                    @Override public void call(User user) {
+                        LOGD(TAG, user);
+                    }
+                })
+                .subscribe(new Action1<User>() {
+                    @Override public void call(User user) {
+                        mProfileView.showUserUpdatedInView(user);
+                    }
+                }, getOnError(), getOnCompleted());
+        mSubscriptions.add(subscription);
     }
 
     @NonNull private Action1<Throwable> getOnError() {

@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.profile.edit.dialogs;
+package com.devabit.takestock.screen.profile.edit.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

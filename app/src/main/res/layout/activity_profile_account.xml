@@ -49,7 +49,7 @@
                 <RatingBar
                         android:id="@+id/rating_bar"
                         android:theme="@style/RatingBar"
-                        style="?android:attr/ratingBarStyleSmall"
+                        style="?attr/ratingBarStyleSmall"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -64,26 +64,29 @@
             <View android:layout_width="match_parent"
                   style="@style/ViewDivider"/>
 
-            <Button
+            <TextView
                     android:id="@+id/help_and_contact_button"
-                    style="@style/ButtonStyle.Borderless"
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start|center"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:paddingStart="24dp"
                     android:paddingEnd="24dp"
                     android:textAllCaps="false"
                     android:textColor="@color/grey_600"
                     android:drawablePadding="32dp"
                     android:drawableStart="@drawable/ic_question_grey600_24dp"
-                    android:text="@string/help_and_contact"/>
+                    android:text="@string/help_and_contact"
+                    android:background="?attr/selectableItemBackground"/>
 
-            <Button
+            <TextView
                     android:id="@+id/settings_button"
-                    style="@style/ButtonStyle.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:paddingStart="24dp"
                     android:paddingEnd="24dp"
                     android:gravity="start|center"
@@ -91,13 +94,15 @@
                     android:textColor="@color/grey_600"
                     android:drawablePadding="32dp"
                     android:drawableStart="@drawable/ic_settings_grey600_24dp"
-                    android:text="@string/settings"/>
+                    android:text="@string/settings"
+                    android:background="?attr/selectableItemBackground"/>
 
-            <Button
+            <TextView
                     android:id="@+id/about_button"
-                    style="@style/ButtonStyle.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:paddingStart="24dp"
                     android:paddingEnd="24dp"
                     android:gravity="start|center"
@@ -105,13 +110,15 @@
                     android:textColor="@color/grey_600"
                     android:drawablePadding="32dp"
                     android:drawableStart="@drawable/ic_info_grey600_24dp"
-                    android:text="@string/about"/>
+                    android:text="@string/about"
+                    android:background="?attr/selectableItemBackground"/>
 
-            <Button
+            <TextView
                     android:id="@+id/log_out_button"
-                    style="@style/ButtonStyle.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:paddingStart="24dp"
                     android:paddingEnd="24dp"
                     android:gravity="start|center"
@@ -119,7 +126,8 @@
                     android:textColor="@color/grey_600"
                     android:drawablePadding="32dp"
                     android:drawableStart="@drawable/ic_logout_grey600_24dp"
-                    android:text="@string/log_out"/>
+                    android:text="@string/log_out"
+                    android:background="?attr/selectableItemBackground"/>
 
         </LinearLayout>
 

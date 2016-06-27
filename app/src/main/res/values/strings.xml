@@ -159,4 +159,16 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="terms_of_services_url">http://takestock.shalakh.in/legal/</string>
     <string name="agreement">I agree to Takestock\'s</string>
+    <string name="select">Select</string>
+    <string name="my_business">My business</string>
+    <string name="business_name">Business name</string>
+    <string name="type_of_business">Type of business</string>
+    <string name="business_subtype">Subtype</string>
+    <string name="postcode">Postcode</string>
+    <string name="vat_registered">I am VAT registered</string>
+    <string name="vat_number">VAT number</string>
+    <string name="email_subscription">I am subscribed to receive news and updates by email</string>
+    <string name="payment_details">Payment details</string>
+    <string name="credit_card">0000 0000 0000 0000</string>
+    <string name="select_one">Select one</string>
 </resources>

@@ -40,7 +40,7 @@
         <item name="android:textColorHint">@color/grey_400</item>
     </style>
 
-    <style name="EditTextWeight" parent="Theme.AppCompat.Light">
+    <style name="EditTextRoundedCornersGrey" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/grey_400</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:textColor">@color/black</item>
@@ -48,6 +48,10 @@
         <item name="android:textColorHint">@color/grey_400</item>
         <item name="android:background">@drawable/rounded_corners_grey</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="EditTextRoundedCornersPurple" parent="EditTextRoundedCornersGrey">
+        <item name="android:background">@drawable/rounded_corners_dark_purple</item>
     </style>
 
     <style name="TextViewLime" parent="Theme.AppCompat.Light">
@@ -153,6 +157,7 @@
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 

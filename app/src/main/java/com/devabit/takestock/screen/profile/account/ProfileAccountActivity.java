@@ -21,15 +21,17 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.bumptech.glide.Glide;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.User;
 import com.devabit.takestock.screen.about.AboutActivity;
 import com.devabit.takestock.screen.help.HelpActivity;
 import com.devabit.takestock.screen.profile.edit.ProfileEditActivity;
-import com.squareup.picasso.Picasso;
 
-import static com.devabit.takestock.utils.Logger.*;
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.LOGE;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.
@@ -134,12 +136,10 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
 
     private void loadProfilePhoto(String photoPath) {
         if (photoPath.isEmpty()) return;
-        Picasso.with(ProfileAccountActivity.this)
+        Glide.with(ProfileAccountActivity.this)
                 .load(photoPath)
-                .placeholder(R.drawable.placeholder_user_96dp)
                 .error(R.drawable.placeholder_user_96dp)
-                .centerCrop()
-                .fit()
+                .crossFade()
                 .into(mProfileImageView);
     }
 
