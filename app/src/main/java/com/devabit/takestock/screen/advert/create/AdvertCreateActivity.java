@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,8 +30,8 @@ import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.*;
-import com.devabit.takestock.screen.advert.adapters.*;
-import com.devabit.takestock.screen.advert.dialogs.AdvertPhotoPickerDialog;
+import com.devabit.takestock.screen.advert.adapter.*;
+import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
 import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FileUtil;
@@ -42,6 +43,7 @@ import java.util.List;
 
 import static com.devabit.takestock.utils.Logger.LOGD;
 import static com.devabit.takestock.utils.Logger.makeLogTag;
+import static com.devabit.takestock.utils.PermissionChecker.*;
 
 /**
  * Created by Victor Artemyev on 07/04/2016.
@@ -56,6 +58,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;
     private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
+    private static final int REQUEST_CODE_CAMERA_PERMISSION = 103;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 104;
 
     @BindView(R.id.content_activity_sell_something) protected View mContent;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
@@ -90,10 +94,12 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     List<Button> mButtons;
 
     private PhotoGalleryAdapter mPhotoGalleryAdapter;
+    private SubcategorySpinnerAdapter mSubcategoryAdapter;
 
     private AdvertCreateContract.Presenter mPresenter;
 
     private Account mAccount;
+    private Uri mPhotoUri;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,29 +151,58 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         pickerDialog.setOnPickListener(new AdvertPhotoPickerDialog.OnPickListener() {
             @Override public void onPickFromCamera(AdvertPhotoPickerDialog dialog) {
                 dialog.dismiss();
-                startCameraActivity();
+                pickPhotoFromCamera();
             }
 
-            @Override public void onPickFromLibrary(AdvertPhotoPickerDialog dialog) {
+            @Override public void onPickFromStorage(AdvertPhotoPickerDialog dialog) {
                 dialog.dismiss();
-                startPhotoLibraryActivity();
+                pickPhotoFromStorage();
             }
         });
     }
 
-    private void startPhotoLibraryActivity() {
-        Intent starter = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(starter, REQUEST_CODE_PHOTO_LIBRARY);
+    private void pickPhotoFromCamera() {
+        if (lacksPermissions(AdvertCreateActivity.this, CAMERA_PERMISSIONS)) {
+            ActivityCompat.requestPermissions(AdvertCreateActivity.this,
+                    CAMERA_PERMISSIONS, REQUEST_CODE_CAMERA_PERMISSION);
+        } else {
+            startCameraActivity();
+        }
     }
 
-    private Uri mPhotoUri;
+    private void pickPhotoFromStorage() {
+        if (lacksPermissions(AdvertCreateActivity.this, STORAGE_PERMISSIONS)) {
+            ActivityCompat.requestPermissions(AdvertCreateActivity.this,
+                    STORAGE_PERMISSIONS, REQUEST_CODE_STORAGE_PERMISSION);
+        } else {
+            startPhotoStorageActivity();
+        }
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (!grantPermissions(grantResults)) return;
+        switch (requestCode) {
+            case REQUEST_CODE_CAMERA_PERMISSION:
+                startCameraActivity();
+                break;
+            case REQUEST_CODE_STORAGE_PERMISSION:
+                startPhotoStorageActivity();
+                break;
+        }
+    }
 
     private void startCameraActivity() {
         Intent starter = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mPhotoUri = Uri.fromFile(FileUtil.getPhotoFile());
         starter.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
         startActivityForResult(starter, REQUEST_CODE_PHOTO_CAMERA);
+    }
+
+    private void startPhotoStorageActivity() {
+        Intent starter = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(starter, REQUEST_CODE_PHOTO_LIBRARY);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -304,16 +339,38 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         Snackbar.make(mContent, resId, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override public void showCategoriesInView(List<Category> categories) {
-        CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
+    @Override public void showCategoriesInView(final List<Category> categories) {
+        final CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
         mCategorySpinner.setAdapter(adapter);
+        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Category category = adapter.getItem(position);
+                showSubcategoriesInView(category.getSubcategories());
+            }
 
-        showSubcategoriesInView(categories.get(0).getSubcategories());
+            @Override public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void showSubcategoriesInView(List<Subcategory> subcategories) {
-        SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(AdvertCreateActivity.this, subcategories);
-        mSubcategorySpinner.setAdapter(adapter);
+        if (subcategories.isEmpty()) {
+            setSubcategorySpinnerVisibility(false);
+        } else {
+            setSubcategorySpinnerVisibility(true);
+            if (mSubcategoryAdapter == null) {
+                mSubcategoryAdapter = new SubcategorySpinnerAdapter(AdvertCreateActivity.this, subcategories);
+                mSubcategorySpinner.setAdapter(mSubcategoryAdapter);
+            } else {
+                mSubcategoryAdapter.clear();
+                mSubcategoryAdapter.addAll(subcategories);
+            }
+        }
+    }
+
+    private void setSubcategorySpinnerVisibility(boolean visible) {
+        mSubcategorySpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override public void showPackagingsInView(List<Packaging> packagings) {
