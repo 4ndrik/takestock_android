@@ -14,10 +14,10 @@ import android.widget.TextView;
 import java.util.Collection;
 
 /**
- * Decorator Adapter to allow a Spinner to show a 'Nothing Selected...' initially
+ * Decorator Adapter to allow a Spinner to show a 'Hint...' initially
  * displayed instead of the first choice in the Adapter.
  */
-public class NothingSelectedSpinnerAdapter<T> implements SpinnerAdapter, ListAdapter {
+public class HintSpinnerAdapter<T> implements SpinnerAdapter, ListAdapter {
 
     protected static final int EXTRA = 1;
     protected BaseSpinnerAdapter<T> mAdapter;
@@ -36,7 +36,7 @@ public class NothingSelectedSpinnerAdapter<T> implements SpinnerAdapter, ListAda
      *                              you want text grayed out like a prompt...
      * @param context
      */
-    public NothingSelectedSpinnerAdapter(
+    public HintSpinnerAdapter(
             BaseSpinnerAdapter<T> spinnerAdapter,
             @LayoutRes int nothingSelectedLayout,
             @StringRes int hintStringRes,
@@ -58,11 +58,11 @@ public class NothingSelectedSpinnerAdapter<T> implements SpinnerAdapter, ListAda
      *                                      the dropdown.
      * @param context
      */
-    public NothingSelectedSpinnerAdapter(BaseSpinnerAdapter<T> spinnerAdapter,
-                                         @LayoutRes int nothingSelectedLayout,
-                                         @LayoutRes int nothingSelectedDropdownLayout,
-                                         @StringRes int hintStringRes,
-                                         Context context) {
+    public HintSpinnerAdapter(BaseSpinnerAdapter<T> spinnerAdapter,
+                              @LayoutRes int nothingSelectedLayout,
+                              @LayoutRes int nothingSelectedDropdownLayout,
+                              @StringRes int hintStringRes,
+                              Context context) {
         mAdapter = spinnerAdapter;
         mContext = context.getApplicationContext();
         mNothingSelectedLayout = nothingSelectedLayout;

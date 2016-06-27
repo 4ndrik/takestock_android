@@ -27,7 +27,7 @@ import com.devabit.takestock.screen.profile.edit.adapter.BusinessSubtypeSpinnerA
 import com.devabit.takestock.screen.profile.edit.adapter.BusinessTypeSpinnerAdapter;
 import com.devabit.takestock.screen.profile.edit.dialog.ProfilePhotoPickerDialog;
 import com.devabit.takestock.utils.FileUtil;
-import com.devabit.takestock.widgets.NothingSelectedSpinnerAdapter;
+import com.devabit.takestock.widgets.HintSpinnerAdapter;
 
 import java.io.File;
 import java.util.List;
@@ -189,7 +189,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
 
     @Override public void showBusinessTypesInView(List<BusinessType> businessTypes) {
         BusinessTypeSpinnerAdapter businessTypeAdapter = new BusinessTypeSpinnerAdapter(ProfileEditActivity.this, businessTypes);
-        final NothingSelectedSpinnerAdapter<BusinessType> nothingSelectedAdapter = new NothingSelectedSpinnerAdapter<>(
+        final HintSpinnerAdapter<BusinessType> nothingSelectedAdapter = new HintSpinnerAdapter<>(
                 businessTypeAdapter, R.layout.item_spinner, R.string.select_one, ProfileEditActivity.this);
         mBusinessTypeSpinner.setAdapter(nothingSelectedAdapter);
         mBusinessTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -205,7 +205,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         setUserBusinessTypeSelection(nothingSelectedAdapter, businessTypes);
     }
 
-    private void setUserBusinessTypeSelection(NothingSelectedSpinnerAdapter<BusinessType> adapter, List<BusinessType> types) {
+    private void setUserBusinessTypeSelection(HintSpinnerAdapter<BusinessType> adapter, List<BusinessType> types) {
         BusinessType type = getBusinessTypeById(mUser.getBusinessTypeId(), types);
         if (type == null) return;
         int position = adapter.getPosition(type);
@@ -226,8 +226,8 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
             setBusinessSubtypeContentVisibility(false);
         } else {
             BusinessSubtypeSpinnerAdapter adapter = new BusinessSubtypeSpinnerAdapter(ProfileEditActivity.this, subtypes);
-            NothingSelectedSpinnerAdapter<BusinessSubtype> nothingSelectedAdapter
-                    = new NothingSelectedSpinnerAdapter<>(
+            HintSpinnerAdapter<BusinessSubtype> nothingSelectedAdapter
+                    = new HintSpinnerAdapter<>(
                     adapter, R.layout.item_spinner, R.string.select_one, ProfileEditActivity.this);
             mBusinessSubtypeSpinner.setAdapter(nothingSelectedAdapter);
             setUserBusinessSubtypesTypeSelection(nothingSelectedAdapter, subtypes);
@@ -235,7 +235,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         }
     }
 
-    private void setUserBusinessSubtypesTypeSelection(NothingSelectedSpinnerAdapter<BusinessSubtype> adapter,
+    private void setUserBusinessSubtypesTypeSelection(HintSpinnerAdapter<BusinessSubtype> adapter,
                                                       List<BusinessSubtype> subtypes) {
         BusinessSubtype subtype = getBusinessSubtypeById(mUser.getBusinessSubtypeId(), subtypes);
         if (subtype == null) return;
