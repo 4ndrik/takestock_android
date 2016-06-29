@@ -18,12 +18,17 @@ public interface SearchContract {
 
         void showAdvertsInView(List<Advert> adverts);
 
+        void showAdvertAddedToWatching(int advertId);
+
+        void showAdvertRemovedFromWatching(int advertId);
+
+        void showAdvertWatchingError(int advertId);
+
         void showNetworkConnectionError();
 
         void showUnknownError();
 
         void setProgressIndicator(boolean isActive);
-
     }
 
     interface Presenter extends BasePresenter {
@@ -33,5 +38,7 @@ public interface SearchContract {
         void fetchAdverts();
 
         void fetchAdvertsPerFilter(AdvertFilter filter);
+
+        void addRemoveWatchingAdvert(int advertId);
     }
 }

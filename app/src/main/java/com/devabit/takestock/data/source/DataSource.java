@@ -15,9 +15,17 @@ import java.util.List;
  */
 public interface DataSource {
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for AuthToken
+    ///////////////////////////////////////////////////////////////////////////
+
     Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials);
 
     Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Category
+    ///////////////////////////////////////////////////////////////////////////
 
     void saveCategories(@NonNull List<Category> categories);
 
@@ -27,11 +35,19 @@ public interface DataSource {
 
     Category getCategoryById(int id);
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Size
+    ///////////////////////////////////////////////////////////////////////////
+
     void saveSizes(@NonNull List<Size> sizes);
 
     Observable<List<Size>> updateSizes();
 
     Observable<List<Size>> getSizes();
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Certification
+    ///////////////////////////////////////////////////////////////////////////
 
     void saveCertifications(@NonNull List<Certification> certifications);
 
@@ -41,6 +57,10 @@ public interface DataSource {
 
     Certification getCertificationById(int id);
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Shipping
+    ///////////////////////////////////////////////////////////////////////////
+
     void saveShippings(@NonNull List<Shipping> shippings);
 
     Observable<List<Shipping>> updateShippings();
@@ -48,6 +68,10 @@ public interface DataSource {
     Observable<List<Shipping>> getShippings();
 
     Shipping getShippingById(int id);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Condition
+    ///////////////////////////////////////////////////////////////////////////
 
     void saveConditions(@NonNull List<Condition> conditions);
 
@@ -57,6 +81,10 @@ public interface DataSource {
 
     Condition getConditionById(int id);
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Packaging
+    ///////////////////////////////////////////////////////////////////////////
+
     void savePackagings(@NonNull List<Packaging> packagings);
 
     Observable<List<Packaging>> updatePackagings();
@@ -64,6 +92,10 @@ public interface DataSource {
     Observable<List<Packaging>> getPackagings();
 
     Packaging getPackagingById(int id);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for OfferStatus
+    ///////////////////////////////////////////////////////////////////////////
 
     void saveOfferStatuses(@NonNull List<OfferStatus> statuses);
 
@@ -87,6 +119,10 @@ public interface DataSource {
 
     BusinessSubtype getBusinessSubtypeById(int id);
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Advert
+    ///////////////////////////////////////////////////////////////////////////
+
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
     Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter);
@@ -94,6 +130,16 @@ public interface DataSource {
     Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
 
     Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for AdvertSubscriber
+    ///////////////////////////////////////////////////////////////////////////
+
+    Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Offer
+    ///////////////////////////////////////////////////////////////////////////
 
     Observable<Offer> saveOffer(@NonNull Offer offer);
 
@@ -105,13 +151,25 @@ public interface DataSource {
 
     Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page);
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Question
+    ///////////////////////////////////////////////////////////////////////////
+
     Observable<Question> saveQuestion(@NonNull Question question);
 
     Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter);
 
     Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page);
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Answer
+    ///////////////////////////////////////////////////////////////////////////
+
     Observable<Answer> saveAnswer(@NonNull Answer answer);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for User
+    ///////////////////////////////////////////////////////////////////////////
 
     Observable<User> saveUser(@NonNull User user);
 

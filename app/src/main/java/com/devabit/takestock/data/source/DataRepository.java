@@ -318,6 +318,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getAdvertResultListPerPage(page);
     }
 
+    @Override public Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber) {
+        return mRemoteDataSource.addRemoveAdvertWatching(subscriber);
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Offer
     ///////////////////////////////////////////////////////////////////////////

@@ -9,27 +9,27 @@ import android.view.*;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.utils.DateUtil;
-import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static butterknife.ButterKnife.findById;
-import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 24/05/2016.
  */
-public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHolder> {
+public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAdapter.ViewHolder> {
 
-    private static final String TAG = makeLogTag(AdvertsAdapter.class);
+    private static final String TAG = makeLogTag(SellingAdvertsAdapter.class);
 
     private final LayoutInflater mLayoutInflater;
     private final List<Advert> mAdverts;
@@ -52,7 +52,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
     private static OnMenuItemClickListener sMenuItemClickListener;
 
-    public AdvertsAdapter(Context context) {
+    public SellingAdvertsAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
         mAdverts = new ArrayList<>();
     }
@@ -101,40 +101,33 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final Resources resources;
-        final Picasso picasso;
-        final ImageView imageView;
-        final TextView titleTextView;
-        final TextView guidePriceTextView;
-        final TextView qtyAvailableTextView;
-        final TextView dateUpdatedTextView;
-        final TextView offersCountTextView;
-        final TextView questionsCountTextView;
-        final TextView daysLeftCountTextView;
+        @BindView(R.id.photo_image_view) ImageView imageView;
+        @BindView(R.id.title_text_view) TextView titleTextView;
+        @BindView(R.id.guide_price_text_view) TextView guidePriceTextView;
+        @BindView(R.id.qty_available_text_view) TextView qtyAvailableTextView;
+        @BindView(R.id.date_updated_text_view) TextView dateUpdatedTextView;
+        @BindView(R.id.offers_count_text_view) TextView offersCountTextView;
+        @BindView(R.id.questions_count_text_view) TextView questionsCountTextView;
+        @BindView(R.id.days_left_count_text_view) TextView daysLeftCountTextView;
 
-        final Menu menu;
+        Resources resources;
+        PopupMenu popupMenu;
 
         Advert advert;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(ViewHolder.this, itemView);
             Context context = itemView.getContext();
             resources = context.getResources();
-            picasso = Picasso.with(context);
-            imageView = findById(itemView, R.id.photo_image_view);
-            titleTextView = findById(itemView, R.id.title_text_view);
-            guidePriceTextView = findById(itemView, R.id.guide_price_text_view);
-            qtyAvailableTextView = findById(itemView, R.id.qty_available_text_view);
-            dateUpdatedTextView = findById(itemView, R.id.date_updated_text_view);
-            offersCountTextView = findById(itemView, R.id.offers_count_text_view);
-            questionsCountTextView = findById(itemView, R.id.questions_count_text_view);
-            daysLeftCountTextView = findById(itemView, R.id.days_left_count_text_view);
+            setUpMenu();
+        }
 
+        private void setUpMenu() {
             ImageButton menuButton = findById(itemView, R.id.menu_button);
-            final PopupMenu popupMenu = new PopupMenu(context, menuButton);
+            popupMenu = new PopupMenu(itemView.getContext(), menuButton);
             MenuInflater menuInflater = popupMenu.getMenuInflater();
-            menu = popupMenu.getMenu();
-            menuInflater.inflate(R.menu.advert_item_menu, menu);
+            menuInflater.inflate(R.menu.advert_item_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(mMenuItemClickListener);
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -196,36 +189,34 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             titleTextView.setText(advert.getName());
             guidePriceTextView.setText(resources.getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
             qtyAvailableTextView.setText(resources.getString(R.string.available_kg, advert.getItemsCount()));
-            try {
-                Date date = DateUtil.API_FORMAT.parse(advert.getDateUpdatedAt());
-                String dateAsString = DateUtil.DEFAULT_FORMAT.format(date);
-                dateUpdatedTextView.setText(dateAsString);
-            } catch (ParseException e) {
-                LOGE(TAG, "BOOM:", e);
-            }
+            String date =DateUtil.formatToDefaultDate(advert.getDateUpdatedAt());
+            dateUpdatedTextView.setText(date);
 
             String offersCount = advert.getOffersCount();
             setMenuItemVisibility(R.id.action_manage_offers, !offersCount.equals("0"));
             offersCountTextView.setText(offersCount);
 
-            String questionsCount = advert.getQuestionsCount();
-            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
-            questionsCountTextView.setText(questionsCount);
+//            String questionsCount = advert.getQuestionsCount();
+//            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
+            setMenuItemVisibility(R.id.action_view_messages, false);
+//            questionsCountTextView.setText(questionsCount);
 
             daysLeftCountTextView.setText(advert.getDaysLeft());
         }
 
         void bindPhoto(Photo photo) {
-            picasso.load(photo.getImagePath())
-                    .placeholder(R.drawable.ic_image_48dp)
+            Glide.with(imageView.getContext())
+                    .load(photo.getImagePath())
+                    .placeholder(R.color.grey_400)
                     .error(R.drawable.ic_image_48dp)
                     .centerCrop()
-                    .fit()
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imageView);
         }
 
         void setMenuItemVisibility(@IdRes int itemId, boolean visible) {
-            MenuItem item = menu.findItem(itemId);
+            MenuItem item = popupMenu.getMenu().findItem(itemId);
             item.setVisible(visible);
         }
     }

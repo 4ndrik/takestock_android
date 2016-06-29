@@ -585,6 +585,38 @@ public class RemoteDataSource implements ApiRest, DataSource {
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    // Methods for Offer AdvertSubscriber
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber) {
+        final AdvertSubscriberJsonMapper jsonMapper = new AdvertSubscriberJsonMapper();
+        return Observable.just(subscriber)
+                .map(new Func1<AdvertSubscriber, String>() {
+                    @Override public String call(AdvertSubscriber subscriber) {
+                        try {
+                            return jsonMapper.toJsonString(subscriber);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        return Observable.fromCallable(createPOSTCallable(WATCHLIST, json));
+                    }
+                })
+                .map(new Func1<String, AdvertSubscriber>() {
+                    @Override public AdvertSubscriber call(String json) {
+                        try {
+                            return jsonMapper.fromJsonString(json);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
     // Methods for Offer
     ///////////////////////////////////////////////////////////////////////////
 

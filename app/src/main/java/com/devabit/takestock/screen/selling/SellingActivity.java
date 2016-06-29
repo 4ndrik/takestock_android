@@ -27,7 +27,7 @@ import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.advert.edit.AdvertEditActivity;
 import com.devabit.takestock.screen.answers.AnswersActivity;
 import com.devabit.takestock.screen.offers.OffersActivity;
-import com.devabit.takestock.screen.selling.adapters.AdvertsAdapter;
+import com.devabit.takestock.screen.selling.adapters.SellingAdvertsAdapter;
 import com.devabit.takestock.utils.FontCache;
 import com.devabit.takestock.utils.Logger;
 
@@ -48,7 +48,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
 
     private SellingContract.Presenter mPresenter;
-    private AdvertsAdapter mAdvertsAdapter;
+    private SellingAdvertsAdapter mAdvertsAdapter;
     private AdvertFilter mAdvertFilter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,8 +74,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 SellingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        mAdvertsAdapter = new AdvertsAdapter(SellingActivity.this);
-        mAdvertsAdapter.setOnEndPositionListener(new AdvertsAdapter.OnEndPositionListener() {
+        mAdvertsAdapter = new SellingAdvertsAdapter(SellingActivity.this);
+        mAdvertsAdapter.setOnEndPositionListener(new SellingAdvertsAdapter.OnEndPositionListener() {
             @Override public void onEndPosition(int position) {
                 mPresenter.fetchAdverts();
             }
@@ -94,8 +94,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         mPresenter.fetchAdvertsPerFilter(mAdvertFilter);
     }
 
-    private final AdvertsAdapter.OnMenuItemClickListener mMenuItemClickListener
-            = new AdvertsAdapter.OnMenuItemClickListener() {
+    private final SellingAdvertsAdapter.OnMenuItemClickListener mMenuItemClickListener
+            = new SellingAdvertsAdapter.OnMenuItemClickListener() {
         @Override public void manageOffers(Advert advert) {
             startOffersActivity(advert);
         }

@@ -3,6 +3,7 @@ package com.devabit.takestock.screen.search;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.Advert;
+import com.devabit.takestock.data.models.AdvertSubscriber;
 import com.devabit.takestock.data.models.ResultList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
@@ -11,6 +12,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.devabit.takestock.utils.Logger.LOGD;
 import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
@@ -75,6 +77,33 @@ public class SearchPresenter implements SearchContract.Presenter {
                 .getAdvertResultListPerFilter(filter)
                 .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
                 .subscribe(getSubscriber());
+        mSubscriptions.add(subscription);
+    }
+
+    @Override public void addRemoveWatchingAdvert(final int advertId) {
+        AdvertSubscriber subscriber = new AdvertSubscriber();
+        subscriber.setAdvertId(advertId);
+        Subscription subscription = mDataRepository.addRemoveAdvertWatching(subscriber)
+                .compose(RxTransformers.<AdvertSubscriber>applyObservableSchedulers())
+                .subscribe(new Subscriber<AdvertSubscriber>() {
+                    @Override public void onCompleted() {
+
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        LOGE(TAG, "BOOM:", e);
+                        mSearchView.showAdvertWatchingError(advertId);
+                    }
+
+                    @Override public void onNext(AdvertSubscriber subscriber) {
+                        LOGD(TAG, subscriber);
+                        if (subscriber.isSubscribed()) {
+                            mSearchView.showAdvertAddedToWatching(subscriber.getAdvertId());
+                        } else {
+                            mSearchView.showAdvertRemovedFromWatching(subscriber.getAdvertId());
+                        }
+                    }
+                });
         mSubscriptions.add(subscription);
     }
 

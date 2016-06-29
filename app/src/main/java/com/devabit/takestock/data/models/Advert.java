@@ -3,6 +3,7 @@ package com.devabit.takestock.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,8 +40,10 @@ public class Advert implements Parcelable {
     private String mOffersCount;
     private String mQuestionsCount;
     private String mDaysLeft;
+    private List<Integer> mSubscribers;
 
-    public Advert(){}
+    public Advert(){
+    }
 
     protected Advert(Parcel in) {
         mId = in.readInt();
@@ -72,6 +75,8 @@ public class Advert implements Parcelable {
         mOffersCount = in.readString();
         mQuestionsCount = in.readString();
         mDaysLeft = in.readString();
+        mSubscribers = new ArrayList<>();
+        in.readList(mSubscribers, Integer.class.getClassLoader());
     }
 
     @Override
@@ -105,6 +110,7 @@ public class Advert implements Parcelable {
         dest.writeString(mOffersCount);
         dest.writeString(mQuestionsCount);
         dest.writeString(mDaysLeft);
+        dest.writeList(mSubscribers);
     }
 
     @Override
@@ -356,6 +362,26 @@ public class Advert implements Parcelable {
         mDaysLeft = daysLeft;
     }
 
+    public List<Integer> getSubscribers() {
+        return mSubscribers;
+    }
+
+    public void setSubscribers(List<Integer> subscribers) {
+        mSubscribers = subscribers;
+    }
+
+    public void addSubscriber(Integer userId) {
+        mSubscribers.add(userId);
+    }
+
+    public void removeSubscriber(Integer userId) {
+        mSubscribers.remove(userId);
+    }
+
+    public boolean hasSubscriber(int userId) {
+        return mSubscribers.contains(userId);
+    }
+
     @Override public String toString() {
         return "Advert{" +
                 "mId=" + mId +
@@ -387,6 +413,7 @@ public class Advert implements Parcelable {
                 ", mOffersCount='" + mOffersCount + '\'' +
                 ", mQuestionsCount='" + mQuestionsCount + '\'' +
                 ", mDaysLeft='" + mDaysLeft + '\'' +
+                ", mSubscribers=" + mSubscribers +
                 '}';
     }
 }

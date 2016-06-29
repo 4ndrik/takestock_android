@@ -454,6 +454,10 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<AdvertFilter, RealmResults<AdvertEntity>>() {

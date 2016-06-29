@@ -1,7 +1,10 @@
-package com.devabit.takestock.screen.search.adapters;
+package com.devabit.takestock.screen.search.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
@@ -19,18 +24,19 @@ import com.devabit.takestock.utils.DateUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static butterknife.ButterKnife.findById;
-
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
-public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder> {
+public class SearchAdvertsAdapter extends RecyclerView.Adapter<SearchAdvertsAdapter.ViewHolder> {
 
     private static final int TYPE_HORIZONTAL = 0;
     private static final int TYPE_VERTICAL = 1;
 
+    private static int sUserId;
+
     private final LayoutInflater mLayoutInflater;
     private final List<Advert> mAdverts;
+    private final SparseArray<Advert> mAdvertsInProcessing;
 
     public interface OnEndPositionListener {
         void onEndPosition(int position);
@@ -44,9 +50,16 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
 
     private static OnItemClickListener sItemClickListener;
 
-    public AdvertAdapter(Context context) {
+    public interface OnWatchedChangeListener {
+        void onWatchedChanged(Advert advert, boolean isWatched);
+    }
+
+    private static OnWatchedChangeListener sWatchedChangeListener;
+
+    public SearchAdvertsAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
         mAdverts = new ArrayList<>();
+        mAdvertsInProcessing = new SparseArray<>();
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,7 +74,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
                 break;
         }
 
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView, mAdvertsInProcessing);
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
@@ -105,6 +118,20 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void startAdvertProcessing(Advert advert) {
+        mAdvertsInProcessing.append(advert.getId(), advert);
+        notifyDataSetChanged();
+    }
+
+    public void stopAdvertProcessing(int advertId) {
+        mAdvertsInProcessing.remove(advertId);
+        notifyDataSetChanged();
+    }
+
+    @Nullable public Advert getAdvertInProcessing(int advertId) {
+        return mAdvertsInProcessing.get(advertId, null);
+    }
+
     public List<Advert> getAdverts() {
         return mAdverts;
     }
@@ -113,22 +140,46 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         mEndPositionListener = endPositionListener;
     }
 
+    public void setUserId(int userId) {
+        sUserId = userId;
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         sItemClickListener = listener;
     }
 
+    public void setOnWatchedChangeListener(OnWatchedChangeListener watchedChangeListener) {
+        sWatchedChangeListener = watchedChangeListener;
+    }
+
+    public void destroy() {
+        sItemClickListener = null;
+        sWatchedChangeListener = null;
+        sUserId = -1;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final Context mContext;
+        private final SparseArray<Advert> mAdvertsInProcessing;
+        private final Resources mResources;
 
-        private final ImageView mPhotoImageView;
-        private final TextView mNameTextView;
-        private final TextView mLocationTextView;
-        private final TextView mDateTextView;
-        private final TextView mPriceTextView;
-        private final CheckBox mWatchingCheckBox;
+        @BindView(R.id.photo_image_view) ImageView photoImageView;
+        @BindView(R.id.name_text_view) TextView nameTextView;
+        @BindView(R.id.location_text_view) TextView locationTextView;
+        @BindView(R.id.date_text_view) TextView dateTextView;
+        @BindView(R.id.price_text_view) TextView priceTextView;
+        @BindView(R.id.watching_check_box) CheckBox watchingCheckBox;
 
         private Advert mAdvert;
+
+        public ViewHolder(View itemView, SparseArray<Advert> advertsInProcessing) {
+            super(itemView);
+            mResources = itemView.getResources();
+            ButterKnife.bind(ViewHolder.this, itemView);
+            itemView.setOnClickListener(mClickListener);
+            mAdvertsInProcessing = advertsInProcessing;
+            watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
+        }
 
         private final View.OnClickListener mClickListener
                 = new View.OnClickListener() {
@@ -137,41 +188,40 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
             }
         };
 
+        void bindAdvert(Advert advert) {
+            mAdvert = advert;
+            nameTextView.setText(mAdvert.getName());
+            locationTextView.setText(mAdvert.getLocation());
+            String priceString = mResources.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice());
+            priceTextView.setText(priceString);
+            watchingCheckBox.setOnCheckedChangeListener(null);
+            watchingCheckBox.setChecked(mAdvert.hasSubscriber(sUserId));
+            watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
+            dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getDateCreatedAt()));
+            bindPhoto(mAdvert.getPhotos());
+            setItemViewActive(!isAdvertProcessing(mAdvert));
+        }
+
         private final CheckBox.OnCheckedChangeListener mCheckedChangeListener
                 = new CompoundButton.OnCheckedChangeListener() {
             @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                if (sWatchedChangeListener != null) sWatchedChangeListener.onWatchedChanged(mAdvert, isChecked);
             }
         };
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(mClickListener);
-            mContext = itemView.getContext().getApplicationContext();
-            mPhotoImageView = findById(itemView, R.id.photo_image_view);
-            mNameTextView = findById(itemView, R.id.name_text_view);
-            mLocationTextView = findById(itemView, R.id.location_text_view);
-            mDateTextView = findById(itemView, R.id.date_text_view);
-            mPriceTextView = findById(itemView, R.id.price_text_view);
-            mWatchingCheckBox = findById(itemView, R.id.watching_check_box);
+        private void setItemViewActive(boolean isActive) {
+            itemView.setAlpha(isActive ? 1.0f : 0.5f);
+            itemView.setEnabled(isActive);
+            watchingCheckBox.setEnabled(isActive);
         }
 
-        void bindAdvert(Advert advert) {
-            mAdvert = advert;
-            mNameTextView.setText(mAdvert.getName());
-            mLocationTextView.setText(mAdvert.getLocation());
-            mPriceTextView.setText(mContext.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice()));
-            bindCreatedDate(mAdvert.getDateCreatedAt());
-            bindPhoto(mAdvert.getPhotos());
-        }
-
-        void bindCreatedDate(String date) {
-            mDateTextView.setText(DateUtil.formatToDefaultDate(date));
+        boolean isAdvertProcessing(Advert advert) {
+            return mAdvertsInProcessing.get(advert.getId(), null) != null;
         }
 
         void bindPhoto(List<Photo> photos) {
             if (photos.isEmpty()) {
-                mPhotoImageView.setImageResource(R.drawable.ic_image_48dp);
+                photoImageView.setImageResource(R.drawable.ic_image_48dp);
             } else {
                 Photo photo = photos.get(0);
                 loadPhoto(photo);
@@ -179,14 +229,14 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         }
 
         void loadPhoto(Photo photo) {
-            Glide.with(mContext)
+            Glide.with(photoImageView.getContext())
                     .load(photo.getImagePath())
                     .placeholder(R.color.grey_400)
                     .error(R.drawable.ic_image_48dp)
                     .centerCrop()
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(mPhotoImageView);
+                    .into(photoImageView);
         }
     }
 }

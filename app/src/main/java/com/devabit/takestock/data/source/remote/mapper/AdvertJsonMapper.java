@@ -48,6 +48,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
     private static final String OFFERS_COUNT = "offers_count";
     private static final String DAYS_LEFT = "days_left";
     private static final String QUESTIONS_COUNT = "questions_count";
+    private static final String SUBSCRIBERS = "subscribers";
 
     private final CertificationJsonMapper mCertificationMapper;
     private final UserJsonMapper mUserMapper;
@@ -121,6 +122,14 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
             photos.add(mPhotoMapper.fromJsonString(jsonPhotosArray.getString(i)));
         }
         advert.setPhotos(photos);
+
+        JSONArray jsonSubscribersArray = jsonObject.getJSONArray(SUBSCRIBERS);
+        List<Integer> subscribers = new ArrayList<>(jsonSubscribersArray.length());
+        for (int i = 0; i < jsonSubscribersArray.length(); i++) {
+            subscribers.add(jsonSubscribersArray.getInt(i));
+        }
+        advert.setSubscribers(subscribers);
+
         return advert;
     }
 

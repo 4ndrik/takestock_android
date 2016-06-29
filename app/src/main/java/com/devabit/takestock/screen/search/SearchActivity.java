@@ -1,5 +1,7 @@
 package com.devabit.takestock.screen.search;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -28,7 +30,8 @@ import com.devabit.takestock.data.filters.AdvertFilter;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.category.CategoriesDialog;
-import com.devabit.takestock.screen.search.adapters.AdvertAdapter;
+import com.devabit.takestock.screen.entry.EntryActivity;
+import com.devabit.takestock.screen.search.adapter.SearchAdvertsAdapter;
 import com.devabit.takestock.utils.FontCache;
 import com.devabit.takestock.widgets.AdvertSortView;
 
@@ -48,23 +51,27 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         return new Intent(context, SearchActivity.class);
     }
 
+    private static final int REQUEST_CODE_LACK_ACCOUNT = 100;
+
+    private static final int NO_USER = -1;
+
     @BindView(R.id.content_activity_search) protected View mContent;
     @BindView(R.id.result_count_text_view) protected TextView mResultCountTextView;
     @BindView(R.id.sort_view) protected AdvertSortView mSortView;
     @BindView(R.id.filter_button) protected Button mFilterButton;
     @BindView(R.id.sort_button) protected Button mSortButton;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
-    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view) protected RecyclerView mAdvertsRecyclerView;
 
     @BindViews({R.id.browse_categories_button, /*R.id.filter_button, R.id.newest_first_button*/})
     protected List<Button> mButtons;
 
-    private AdvertAdapter mAdvertAdapter;
+    private SearchAdvertsAdapter mAdvertsAdapter;
     private SearchContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_activity_search);
+        setContentView(R.layout.activity_search);
         ButterKnife.bind(SearchActivity.this);
 
         new SearchPresenter(
@@ -73,6 +80,39 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         final Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         final Typeface mediumTypeface = FontCache.getTypeface(this, R.string.font_brandon_medium);
 
+        setUpToolbar(boldTypeface);
+
+        ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
+            @Override public void apply(Button view, int index) {
+                view.setTypeface(mediumTypeface);
+            }
+        });
+
+        setUpAdvertsRecyclerView();
+
+        mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
+                mAdvertsAdapter.clearAdverts();
+                mPresenter.refreshAdverts();
+            }
+        });
+
+        mSortView.setOnOrderListener(new AdvertSortView.OnOrderListener() {
+            @Override public void onOrder(@AdvertFilter.Order int order) {
+                toggleSortView();
+                mAdvertsAdapter.clearAdverts();
+                AdvertFilter filter = getAdvertFilter(order);
+                mPresenter.fetchAdvertsPerFilter(filter);
+            }
+        });
+    }
+
+    @Override public void setPresenter(@NonNull SearchContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    private void setUpToolbar(Typeface boldTypeface) {
         Toolbar toolbar = ButterKnife.findById(SearchActivity.this, R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -82,46 +122,60 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         TextView titleToolbar = ButterKnife.findById(toolbar, R.id.toolbar_title);
         titleToolbar.setTypeface(boldTypeface);
         titleToolbar.setText(R.string.search);
+    }
 
-        ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
-            @Override public void apply(Button view, int index) {
-                view.setTypeface(mediumTypeface);
-            }
-        });
-
+    private void setUpAdvertsRecyclerView() {
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        mAdvertAdapter = new AdvertAdapter(SearchActivity.this);
-        mAdvertAdapter.setOnItemClickListener(new AdvertAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Advert advert) {
-                LOGD(TAG, "Advert: " + advert);
-                startActivity(AdvertDetailActivity.getStartIntent(SearchActivity.this, advert));
-            }
-        });
-        mAdvertAdapter.setOnEndPositionListener(new AdvertAdapter.OnEndPositionListener() {
+        mAdvertsRecyclerView.setLayoutManager(gridLayoutManager);
+        mAdvertsAdapter = new SearchAdvertsAdapter(SearchActivity.this);
+        mAdvertsAdapter.setUserId(getUserId());
+        mAdvertsAdapter.setOnEndPositionListener(new SearchAdvertsAdapter.OnEndPositionListener() {
             @Override public void onEndPosition(int position) {
                 fetchAdverts();
             }
         });
-        mRecyclerView.setAdapter(mAdvertAdapter);
-
-        mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override public void onRefresh() {
-                mAdvertAdapter.clearAdverts();
-                mPresenter.refreshAdverts();
+        mAdvertsAdapter.setOnItemClickListener(new SearchAdvertsAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Advert advert) {
+                startAdvertDetailActivity(advert);
             }
         });
-
-        mSortView.setOnOrderListener(new AdvertSortView.OnOrderListener() {
-            @Override public void onOrder(@AdvertFilter.Order int order) {
-                toggleSortView();
-                mAdvertAdapter.clearAdverts();
-                AdvertFilter filter = getAdvertFilter(order);
-                mPresenter.fetchAdvertsPerFilter(filter);
+        mAdvertsAdapter.setOnWatchedChangeListener(new SearchAdvertsAdapter.OnWatchedChangeListener() {
+            @Override public void onWatchedChanged(Advert advert, boolean isWatched) {
+                mAdvertsAdapter.startAdvertProcessing(advert);
+                if (getUserId() == NO_USER) {
+                    mAdvertsAdapter.stopAdvertProcessing(advert.getId());
+                    startEntryActivity();
+                } else {
+                    mPresenter.addRemoveWatchingAdvert(advert.getId());
+                }
             }
         });
+        mAdvertsRecyclerView.setAdapter(mAdvertsAdapter);
+    }
+
+    private void startAdvertDetailActivity(Advert advert) {
+        LOGD(TAG, "Advert: " + advert);
+        startActivity(AdvertDetailActivity.getStartIntent(SearchActivity.this, advert));
+    }
+
+    private void startEntryActivity() {
+        startActivityForResult(EntryActivity.getStartIntent(SearchActivity.this), REQUEST_CODE_LACK_ACCOUNT);
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_LACK_ACCOUNT && resultCode == RESULT_OK) {
+            mAdvertsAdapter.setUserId(getUserId());
+        }
+    }
+
+    private int getUserId() {
+        AccountManager accountManager = AccountManager.get(SearchActivity.this);
+        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
+        if (accounts.length == 0) return NO_USER;
+        String userId = accountManager.getUserData(accounts[0], getString(R.string.authenticator_user_id));
+        return Integer.valueOf(userId);
     }
 
     private AdvertFilter getAdvertFilter(@AdvertFilter.Order int order) {
@@ -144,7 +198,27 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     }
 
     @Override public void showAdvertsInView(List<Advert> adverts) {
-        mAdvertAdapter.addAdverts(adverts);
+        mAdvertsAdapter.addAdverts(adverts);
+    }
+
+    @Override public void showAdvertAddedToWatching(int advertId) {
+        Advert advert = mAdvertsAdapter.getAdvertInProcessing(advertId);
+        if (advert != null) {
+            advert.addSubscriber(getUserId());
+            mAdvertsAdapter.stopAdvertProcessing(advertId);
+        }
+    }
+
+    @Override public void showAdvertRemovedFromWatching(int advertId) {
+        Advert advert = mAdvertsAdapter.getAdvertInProcessing(advertId);
+        if (advert != null) {
+            advert.removeSubscriber(getUserId());
+            mAdvertsAdapter.stopAdvertProcessing(advertId);
+        }
+    }
+
+    @Override public void showAdvertWatchingError(int advertId) {
+        mAdvertsAdapter.stopAdvertProcessing(advertId);
     }
 
     @Override public void showNetworkConnectionError() {
@@ -161,10 +235,6 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
 
     @Override public void setProgressIndicator(boolean isActive) {
         mRefreshLayout.setRefreshing(isActive);
-    }
-
-    @Override public void setPresenter(@NonNull SearchContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @OnClick(R.id.browse_categories_button)
@@ -221,6 +291,6 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        mAdvertAdapter.setOnItemClickListener(null);
+        mAdvertsAdapter.destroy();
     }
 }
