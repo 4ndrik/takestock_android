@@ -36,6 +36,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
     private static final String MIN_ORDER_QUANTITY = "min_order_quantity";
     private static final String SIZE = "size";
     private static final String CERTIFICATION = "certification";
+    private static final String CERTIFICATION_ID = "certification_id";
     private static final String CERTIFICATION_EXTRA = "certification_extra";
     private static final String CONDITION = "condition";
     private static final String ITEMS_COUNT = "items_count";
@@ -95,13 +96,13 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
             Certification certification = mCertificationMapper.fromJsonString(jsonObject.getString(CERTIFICATION));
             advert.setCertification(certification);
         }
-//        if (!jsonObject.isNull(CERTIFICATION)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION));
+        if (!jsonObject.isNull(CERTIFICATION_ID)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION_ID));
         advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
         if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
         advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
         if (!jsonObject.isNull(PACKAGING_NAME)) advert.setPackagingName(jsonObject.getString(PACKAGING_NAME));
         advert.setOffersCount(jsonObject.getString(OFFERS_COUNT));
-        advert.setQuestionsCount(jsonObject.getString(QUESTIONS_COUNT));
+        if (jsonObject.has(QUESTIONS_COUNT)) advert.setQuestionsCount(jsonObject.getString(QUESTIONS_COUNT));
         advert.setDaysLeft(jsonObject.getString(DAYS_LEFT));
 
         JSONArray jsonTagsArray = jsonObject.getJSONArray(TAGS);
@@ -137,7 +138,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
         jsonObject.put(PACKAGING, target.getPackagingId());
         jsonObject.put(MIN_ORDER_QUANTITY, target.getMinOrderQuantity());
         jsonObject.put(SIZE, target.getSize());
-        jsonObject.put(CERTIFICATION, target.getCertificationId());
+        jsonObject.put(CERTIFICATION_ID, target.getCertificationId());
         jsonObject.put(CERTIFICATION_EXTRA, target.getCertificationExtra());
         jsonObject.put(CONDITION, target.getConditionId());
         jsonObject.put(ITEMS_COUNT, target.getItemsCount());

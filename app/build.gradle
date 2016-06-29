@@ -12,7 +12,7 @@ android {
 
     dexOptions {
         maxProcessCount 2
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "4g"
     }
 
     defaultConfig {
@@ -82,12 +82,11 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+
+    // RxJava dependencies
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.0'
-
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
 
     // ButterKnife dependencies
     compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"

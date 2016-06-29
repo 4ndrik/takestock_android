@@ -9,6 +9,10 @@ import android.view.*;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Offer;
@@ -17,13 +21,13 @@ import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.screen.buying.BuyingActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.Logger;
-import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static butterknife.ButterKnife.findById;
-import static com.devabit.takestock.utils.Logger.LOGE;
 
 /**
  * Created by Victor Artemyev on 31/05/2016.
@@ -94,31 +98,27 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final Resources resources;
-        final Picasso picasso;
+        @BindView(R.id.photo_image_view) ImageView imageView;
+        @BindView(R.id.title_text_view) TextView advertNameTextView;
+        @BindView(R.id.date_updated_text_view) TextView dateUpdatedTextView;
+        @BindView(R.id.offer_price_text_view) TextView priceTextView;
+        @BindView(R.id.status_text_view) TextView statusTextView;
 
-        final ImageView imageView;
-        final TextView advertNameTextView;
-        final TextView dateUpdatedTextView;
-        final TextView priceTextView;
-        final TextView statusTextView;
+        final Resources resources;
 
         private Advert mAdvert;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(ViewHolder.this, itemView);
             Context context = itemView.getContext();
-            resources = context.getResources();
-            picasso = Picasso.with(context);
+            this.resources = context.getResources();
+            setUpMenu();
+        }
 
-            imageView = findById(itemView, R.id.photo_image_view);
-            advertNameTextView = findById(itemView, R.id.title_text_view);
-            dateUpdatedTextView = findById(itemView, R.id.date_updated_text_view);
-            priceTextView = findById(itemView, R.id.offer_price_text_view);
-            statusTextView = findById(itemView, R.id.status_text_view);
-
+        void setUpMenu() {
             ImageButton menuButton = findById(itemView, R.id.menu_button);
-            final PopupMenu popupMenu = new PopupMenu(context, menuButton);
+            final PopupMenu popupMenu = new PopupMenu(itemView.getContext(), menuButton);
             MenuInflater menuInflater = popupMenu.getMenuInflater();
             menuInflater.inflate(R.menu.offer_item_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -140,20 +140,15 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
             });
         }
 
-        private void onViewAdvertAction() {
+        void onViewAdvertAction() {
             if (sMenuItemClickListener != null) sMenuItemClickListener.viewAdvert(mAdvert);
         }
 
         void bindOffer(Offer offer) {
-            try {
-                Date date = DateUtil.API_FORMAT.parse(offer.getDateUpdated());
-                String dateAsString = DateUtil.DEFAULT_FORMAT.format(date);
-                dateUpdatedTextView.setText(dateAsString);
-            } catch (ParseException e) {
-                LOGE(TAG, "BOOM:", e);
-            }
-            priceTextView.setText(resources.getString(
-                    R.string.offer_price_per_kg, offer.getPrice(), offer.getQuantity()));
+            String date = DateUtil.formatToDefaultDate(offer.getDateUpdated());
+            dateUpdatedTextView.setText(date);
+            String price = resources.getString(R.string.offer_price_per_kg, offer.getPrice(), offer.getQuantity());
+            priceTextView.setText(price);
         }
 
         void bindOfferStatus(OfferStatus status) {
@@ -175,11 +170,13 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
             if (photo == null) {
                 imageView.setImageResource(R.drawable.ic_image_48dp);
             } else {
-                picasso.load(photo.getImagePath())
-                        .placeholder(R.drawable.ic_image_48dp)
+                Glide.with(imageView.getContext())
+                        .load(photo.getImagePath())
+                        .placeholder(R.color.grey_400)
                         .error(R.drawable.ic_image_48dp)
                         .centerCrop()
-                        .fit()
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(imageView);
             }
         }

@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
@@ -32,7 +34,6 @@ import com.devabit.takestock.screen.offers.dialogs.counterOffer.CounterOfferDial
 import com.devabit.takestock.screen.offers.dialogs.rejectOffer.RejectOfferDialog;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FontCache;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -87,12 +88,13 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
     }
 
     private void loadAdvertPhoto(Photo photo) {
-        Picasso.with(OffersActivity.this)
+        Glide.with(OffersActivity.this)
                 .load(photo.getImagePath())
-                .placeholder(R.drawable.ic_image_48dp)
+                .placeholder(R.color.grey_400)
                 .error(R.drawable.ic_image_48dp)
                 .centerCrop()
-                .fit()
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mAdvertPhotoImageView);
     }
 

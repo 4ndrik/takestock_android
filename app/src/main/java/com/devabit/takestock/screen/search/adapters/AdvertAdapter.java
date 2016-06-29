@@ -9,11 +9,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.models.Advert;
 import com.devabit.takestock.data.models.Photo;
 import com.devabit.takestock.utils.DateUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,6 @@ import static butterknife.ButterKnife.findById;
  * Created by Victor Artemyev on 10/05/2016.
  */
 public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder> {
-
-    private static final String TAG = "AdvertAdapter";
 
     private static final int TYPE_HORIZONTAL = 0;
     private static final int TYPE_VERTICAL = 1;
@@ -119,8 +118,8 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+
         private final Context mContext;
-        private final Picasso mPicasso;
 
         private final ImageView mPhotoImageView;
         private final TextView mNameTextView;
@@ -148,8 +147,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(mClickListener);
-            mContext = itemView.getContext();
-            mPicasso = Picasso.with(mContext);
+            mContext = itemView.getContext().getApplicationContext();
             mPhotoImageView = findById(itemView, R.id.photo_image_view);
             mNameTextView = findById(itemView, R.id.name_text_view);
             mLocationTextView = findById(itemView, R.id.location_text_view);
@@ -181,11 +179,13 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.ViewHolder
         }
 
         void loadPhoto(Photo photo) {
-            mPicasso.load(photo.getImagePath())
-                    .placeholder(R.drawable.ic_image_48dp)
+            Glide.with(mContext)
+                    .load(photo.getImagePath())
+                    .placeholder(R.color.grey_400)
                     .error(R.drawable.ic_image_48dp)
                     .centerCrop()
-                    .fit()
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mPhotoImageView);
         }
     }
