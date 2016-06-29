@@ -28,7 +28,7 @@ ext {
     // App version
     versionMajor = 2016
     versionMinor = 06
-    versionPatch = 13
+    versionPatch = 27
 
     // Sdk and tools
     minSdkVersion = 19
@@ -37,7 +37,7 @@ ext {
     buildToolsVersion = '23.0.3'
 
     // App dependencies
-    supportLibraryVersion = '23.4.0'
+    supportLibraryVersion = '24.0.0'
     butterknifeVersion = '8.0.1'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
