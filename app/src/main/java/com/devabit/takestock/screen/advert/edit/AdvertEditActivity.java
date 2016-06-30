@@ -28,7 +28,7 @@ import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FileUtil;
 import com.devabit.takestock.utils.Logger;
-import com.devabit.takestock.widgets.CertificationRadioButtonGroupView;
+import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
 
 import java.io.File;
 import java.util.List;

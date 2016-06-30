@@ -7,7 +7,7 @@
              android:background="@color/black"
              tools:context=".screen.camera.CameraActivity">
 
-    <com.devabit.takestock.widgets.AutoFitTextureView
+    <com.devabit.takestock.widget.AutoFitTextureView
             android:id="@+id/texture_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

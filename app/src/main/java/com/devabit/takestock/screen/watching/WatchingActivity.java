@@ -77,20 +77,17 @@ public class WatchingActivity extends AppCompatActivity implements WatchingContr
                 WatchingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         mAdvertsAdapter = new WatchingAdvertsAdapter(WatchingActivity.this);
-
         mAdvertsAdapter.setOnItemClickListener(new WatchingAdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Advert advert) {
                 startAdvertDetailActivity(advert);
             }
         });
-
         mAdvertsAdapter.setOnWatchedChangeListener(new WatchingAdvertsAdapter.OnWatchedChangeListener() {
             @Override public void onRemoved(Advert advert) {
                 mAdvertsAdapter.startAdvertProcessing(advert);
                 mPresenter.removeWatchingAdvert(advert.getId());
             }
         });
-
         recyclerView.setAdapter(mAdvertsAdapter);
     }
 

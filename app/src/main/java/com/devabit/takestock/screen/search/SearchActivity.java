@@ -33,7 +33,8 @@ import com.devabit.takestock.screen.category.CategoriesDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.search.adapter.SearchAdvertsAdapter;
 import com.devabit.takestock.utils.FontCache;
-import com.devabit.takestock.widgets.AdvertSortView;
+import com.devabit.takestock.widget.AdvertSortView;
+import com.devabit.takestock.widget.SpaceItemDecoration;
 
 import java.util.List;
 
@@ -128,6 +129,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mAdvertsRecyclerView.setLayoutManager(gridLayoutManager);
+        mAdvertsRecyclerView.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.dimen_8dp)));
         mAdvertsAdapter = new SearchAdvertsAdapter(SearchActivity.this);
         mAdvertsAdapter.setUserId(getUserId());
         mAdvertsAdapter.setOnEndPositionListener(new SearchAdvertsAdapter.OnEndPositionListener() {

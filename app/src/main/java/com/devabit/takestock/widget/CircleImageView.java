@@ -1,4 +1,4 @@
-package com.devabit.takestock.widgets;
+package com.devabit.takestock.widget;
 
 /**
  * Created by Victor Artemyev on 08/06/2016.

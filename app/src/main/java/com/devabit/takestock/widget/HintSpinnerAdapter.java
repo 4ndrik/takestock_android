@@ -1,4 +1,4 @@
-package com.devabit.takestock.widgets;
+package com.devabit.takestock.widget;
 
 import android.content.Context;
 import android.database.DataSetObserver;

@@ -37,8 +37,8 @@ import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FileUtil;
 import com.devabit.takestock.utils.FontCache;
-import com.devabit.takestock.widgets.CertificationRadioButtonGroupView;
-import com.devabit.takestock.widgets.HintSpinnerAdapter;
+import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
+import com.devabit.takestock.widget.HintSpinnerAdapter;
 
 import java.io.File;
 import java.util.List;

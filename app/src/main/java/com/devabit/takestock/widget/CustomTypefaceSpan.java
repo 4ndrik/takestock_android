@@ -1,4 +1,4 @@
-package com.devabit.takestock.widgets;
+package com.devabit.takestock.widget;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
