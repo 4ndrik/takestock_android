@@ -24,7 +24,7 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.about.AboutActivity;
 import com.devabit.takestock.screen.help.HelpActivity;
 import com.devabit.takestock.screen.profile.edit.ProfileEditActivity;

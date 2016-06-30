@@ -3,8 +3,9 @@ package com.devabit.takestock.screen.advert.create;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataRepository;
+import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import com.devabit.takestock.utils.BitmapUtil;
 import rx.Observable;
@@ -45,9 +46,10 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     }
 
     @Override public void resume() {
+        fetchAdvertRelatedData();
     }
 
-    @Override public void fetchAdvertRelatedData() {
+   private void fetchAdvertRelatedData() {
         if (mIsAdvertRelatedDataShowed) return;
         mCreateView.setProgressIndicator(true);
         Subscription subscription = buildAdvertRelatedDataObservable()
@@ -161,7 +163,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
                         try {
                             File file = BitmapUtil.saveBitmapToFile(bitmap, photoFile);
                             Photo photo = new Photo();
-                            photo.setImagePath("file:" + file.getAbsolutePath());
+                            photo.setImagePath(file.getAbsolutePath());
                             return photo;
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -206,6 +208,11 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
                     @Override public void onError(Throwable e) {
                         LOGE(TAG, "BOOM:", e);
                         mCreateView.setProgressIndicator(false);
+                        if (e instanceof NetworkConnectionException) {
+                            mCreateView.showNetworkConnectionError();
+                        } else {
+                            mCreateView.showUnknownError();
+                        }
                     }
 
                     @Override public void onNext(Advert advert) {
@@ -218,15 +225,42 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean isAdvertDataValid(Advert advert) {
         return validatePhotos(advert)
                 && validateName(advert)
+                && validateCategory(advert)
                 && validateItemCount(advert)
                 && validateMinimumOrder(advert)
                 && validateGuidePrice(advert)
                 && validateDescription(advert)
                 && validateLocation(advert)
+                && validateShipping(advert)
+                && validateCondition(advert)
                 && validateExpiryDate(advert)
                 && validateSize(advert)
                 && validateCertification(advert)
                 && validateCertificationExtra(advert);
+    }
+
+    private boolean validateCategory(Advert advert) {
+        if (advert.getCategoryId() <= 0) {
+            mCreateView.showEmptyCategoryError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateShipping(Advert advert) {
+        if (advert.getShippingId() <= 0) {
+            mCreateView.showEmptyShippingError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateCondition(Advert advert) {
+        if (advert.getConditionId() <= 0) {
+            mCreateView.showEmptyConditionError();
+            return false;
+        }
+        return true;
     }
 
     private boolean validatePhotos(Advert advert) {

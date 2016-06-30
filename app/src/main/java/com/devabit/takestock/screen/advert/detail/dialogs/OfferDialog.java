@@ -14,8 +14,8 @@ import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Offer;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Offer;
 
 import static com.devabit.takestock.utils.Logger.LOGD;
 import static com.devabit.takestock.utils.Logger.makeLogTag;

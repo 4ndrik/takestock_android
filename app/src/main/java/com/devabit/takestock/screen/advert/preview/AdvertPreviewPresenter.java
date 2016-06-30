@@ -1,9 +1,9 @@
 package com.devabit.takestock.screen.advert.preview;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.models.Certification;
-import com.devabit.takestock.data.models.Condition;
-import com.devabit.takestock.data.models.Shipping;
+import com.devabit.takestock.data.model.Certification;
+import com.devabit.takestock.data.model.Condition;
+import com.devabit.takestock.data.model.Shipping;
 import com.devabit.takestock.data.source.DataRepository;
 import rx.subscriptions.CompositeSubscription;
 

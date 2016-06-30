@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.models.Certification;
+import com.devabit.takestock.data.model.Certification;
 import com.devabit.takestock.data.source.local.entity.CertificationEntity;
 import io.realm.RealmResults;
 

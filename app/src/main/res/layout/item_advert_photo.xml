@@ -5,6 +5,6 @@
         android:id="@+id/product_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:scaleType="centerCrop"
+        android:scaleType="centerCrop"
         tools:ignore="ContentDescription"
         tools:src="@drawable/test_image_2"/>

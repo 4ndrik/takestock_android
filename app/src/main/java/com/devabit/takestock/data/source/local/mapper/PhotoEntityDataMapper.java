@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.local.mapper;
 
 import android.support.annotation.Nullable;
-import com.devabit.takestock.data.models.Photo;
+import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.data.source.local.entity.PhotoEntity;
 
 /**

@@ -27,8 +27,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import butterknife.*;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.AuthToken;
-import com.devabit.takestock.data.models.UserCredentials;
+import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.UserCredentials;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 

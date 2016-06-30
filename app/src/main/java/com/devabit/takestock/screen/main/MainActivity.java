@@ -29,6 +29,7 @@ import com.devabit.takestock.screen.profile.account.ProfileAccountActivity;
 import com.devabit.takestock.screen.search.SearchActivity;
 import com.devabit.takestock.screen.advert.create.AdvertCreateActivity;
 import com.devabit.takestock.screen.selling.SellingActivity;
+import com.devabit.takestock.screen.watching.WatchingActivity;
 import com.devabit.takestock.utils.FontCache;
 
 import java.util.List;
@@ -147,8 +148,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onWatchingMenuItemClick() {
-//        if (lacksAccount()) startEntryActivity(REQUEST_CODE_WATCHING_ACTIVITY);
-        showNotYetImplementedSnackbar();
+        closeDrawer();
+        if (lacksAccount()) startEntryActivity(REQUEST_CODE_WATCHING_ACTIVITY);
+        else startWatchingActivity();
+    }
+
+    private void startWatchingActivity() {
+        startActivity(WatchingActivity.getStartIntent(MainActivity.this));
     }
 
     private void onBuyingMenuItemClick() {

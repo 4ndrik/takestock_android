@@ -2,8 +2,8 @@ package com.devabit.takestock.screen.offers;
 
 import android.support.annotation.NonNull;
 import android.util.Pair;
-import com.devabit.takestock.data.filters.OfferFilter;
-import com.devabit.takestock.data.models.Offer;
+import com.devabit.takestock.data.filter.OfferFilter;
+import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;

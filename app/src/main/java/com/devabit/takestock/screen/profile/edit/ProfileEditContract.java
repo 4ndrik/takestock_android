@@ -1,8 +1,8 @@
 package com.devabit.takestock.screen.profile.edit;
 
 import android.net.Uri;
-import com.devabit.takestock.data.models.BusinessType;
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.BusinessType;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

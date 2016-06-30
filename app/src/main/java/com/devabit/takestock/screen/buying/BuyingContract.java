@@ -1,9 +1,9 @@
 package com.devabit.takestock.screen.buying;
 
 import android.util.SparseArray;
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Offer;
-import com.devabit.takestock.data.models.OfferStatus;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.OfferStatus;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

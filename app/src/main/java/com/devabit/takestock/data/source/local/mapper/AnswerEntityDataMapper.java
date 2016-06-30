@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.models.Answer;
+import com.devabit.takestock.data.model.Answer;
 import com.devabit.takestock.data.source.local.entity.AnswerEntity;
 
 /**

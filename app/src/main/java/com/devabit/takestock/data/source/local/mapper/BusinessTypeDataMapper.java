@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.models.BusinessSubtype;
-import com.devabit.takestock.data.models.BusinessType;
+import com.devabit.takestock.data.model.BusinessSubtype;
+import com.devabit.takestock.data.model.BusinessType;
 import com.devabit.takestock.data.source.local.entity.BusinessSubtypeEntity;
 import com.devabit.takestock.data.source.local.entity.BusinessTypeEntity;
 import io.realm.RealmResults;

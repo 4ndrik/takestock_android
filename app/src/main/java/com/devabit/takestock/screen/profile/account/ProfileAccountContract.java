@@ -1,6 +1,6 @@
 package com.devabit.takestock.screen.profile.account;
 
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.source.local.entity.UserEntity;
 
 import java.util.ArrayList;

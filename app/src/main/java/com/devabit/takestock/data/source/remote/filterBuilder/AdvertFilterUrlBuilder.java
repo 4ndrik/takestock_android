@@ -1,11 +1,11 @@
 package com.devabit.takestock.data.source.remote.filterBuilder;
 
 import android.text.TextUtils;
-import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.filter.AdvertFilter;
 
 import java.util.Set;
 
-import static com.devabit.takestock.data.filters.AdvertFilter.*;
+import static com.devabit.takestock.data.filter.AdvertFilter.*;
 
 /**
  * Created by Victor Artemyev on 20/05/2016.
@@ -24,28 +24,43 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
     public static final String CREATED_AT_DESCENDING = "-created_at";
     public static final String GUIDE_PRICE = "guide_price";
     public static final String GUIDE_PRICE_DESCENDING = "-guide_price";
+    public static final String FILTER = "filter";
+    public static final String WATCHLIST = "watchlist";
 
     public AdvertFilterUrlBuilder(String baseUrl, AdvertFilter filter) {
         super(baseUrl, filter);
     }
 
     @Override public String buildUrl() {
+        int pageSize = mFilter.getPageSize();
+        if (pageSize > 0) {
+            appendQueryParameter(PAGE_SIZE, pageSize);
+        }
+
         int itemCount = mFilter.getItemCount();
         if (itemCount > 0) {
-            appendQueryParameter(ITEMS_COUNT, String.valueOf(itemCount));
+            appendQueryParameter(ITEMS_COUNT, itemCount);
         }
+
         int order = mFilter.getOrder();
         if (order > 0) {
             appendQueryParameter(ORDER, getOrderAsString(order));
         }
+
         int userId = mFilter.getAuthorId();
         if (userId > 0) {
-            appendQueryParameter(AUTHOR_ID, String.valueOf(userId));
+            appendQueryParameter(AUTHOR_ID, userId);
         }
+
         Set<Integer> ids = mFilter.getAdvertIds();
         if (!ids.isEmpty()) {
             appendQueryParameter(IDS, TextUtils.join(",", ids));
         }
+
+        if (mFilter.isWatchlist()) {
+            appendQueryParameter(FILTER, WATCHLIST);
+        }
+
         return mBuilder.toString();
     }
 

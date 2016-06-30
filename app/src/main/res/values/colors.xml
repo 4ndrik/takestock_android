@@ -16,6 +16,8 @@
 
     <color name="translucent_white">#80FFFFFF</color>
     <color name="translucent_lime_900">#80827717</color>
+    <color name="translucent_grey_600">#80757575</color>
+    <color name="translucent_black">#80000000</color>
 
     <color name="grey_200">#EEEEEE</color>
     <color name="grey_400">#BDBDBD</color>

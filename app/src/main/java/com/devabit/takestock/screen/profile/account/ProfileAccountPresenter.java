@@ -1,8 +1,8 @@
 package com.devabit.takestock.screen.profile.account;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.filters.UserFilter;
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.filter.UserFilter;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;

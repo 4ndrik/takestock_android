@@ -26,8 +26,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.filters.AdvertFilter;
-import com.devabit.takestock.data.models.Advert;
+import com.devabit.takestock.data.filter.AdvertFilter;
+import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.category.CategoriesDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
@@ -51,7 +51,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         return new Intent(context, SearchActivity.class);
     }
 
-    private static final int REQUEST_CODE_LACK_ACCOUNT = 100;
+    private static final int REQUEST_CODE_LACK_USER = 100;
 
     private static final int NO_USER = -1;
 
@@ -160,12 +160,12 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     }
 
     private void startEntryActivity() {
-        startActivityForResult(EntryActivity.getStartIntent(SearchActivity.this), REQUEST_CODE_LACK_ACCOUNT);
+        startActivityForResult(EntryActivity.getStartIntent(SearchActivity.this), REQUEST_CODE_LACK_USER);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_LACK_ACCOUNT && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_LACK_USER && resultCode == RESULT_OK) {
             mAdvertsAdapter.setUserId(getUserId());
         }
     }

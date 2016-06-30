@@ -9,9 +9,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.filters.AdvertFilter;
+import com.devabit.takestock.data.filter.AdvertFilter;
 
-import static com.devabit.takestock.data.filters.AdvertFilter.*;
+import static com.devabit.takestock.data.filter.AdvertFilter.*;
 
 /**
  * Created by Victor Artemyev on 19/05/2016.

@@ -19,8 +19,8 @@ import android.widget.ProgressBar;
 import butterknife.*;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.AuthToken;
-import com.devabit.takestock.data.models.UserCredentials;
+import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.screen.entry.fragments.signUp.SignUpFragment;
 import com.devabit.takestock.screen.entry.fragments.signUp.SignUpPresenter;
 

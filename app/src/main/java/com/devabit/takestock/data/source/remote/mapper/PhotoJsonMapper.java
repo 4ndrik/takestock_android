@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
-import com.devabit.takestock.data.models.Photo;
+import com.devabit.takestock.data.model.Photo;
 import org.json.JSONException;
 import org.json.JSONObject;
 

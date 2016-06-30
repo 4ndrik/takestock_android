@@ -1,7 +1,7 @@
 package com.devabit.takestock.screen.offers.dialogs.counterOffer;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.models.Offer;
+import com.devabit.takestock.data.model.Offer;
 
 import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Logger.makeLogTag;

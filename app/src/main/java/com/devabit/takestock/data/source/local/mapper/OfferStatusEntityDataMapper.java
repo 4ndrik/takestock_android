@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.models.OfferStatus;
+import com.devabit.takestock.data.model.OfferStatus;
 import com.devabit.takestock.data.source.local.entity.OfferStatusEntity;
 import io.realm.RealmResults;
 

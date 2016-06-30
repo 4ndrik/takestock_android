@@ -1,6 +1,6 @@
 package com.devabit.takestock.screen.questions;
 
-import com.devabit.takestock.data.models.Question;
+import com.devabit.takestock.data.model.Question;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

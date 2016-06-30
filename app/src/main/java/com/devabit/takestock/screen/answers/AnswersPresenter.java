@@ -1,10 +1,10 @@
 package com.devabit.takestock.screen.answers;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.filters.QuestionFilter;
-import com.devabit.takestock.data.models.Answer;
-import com.devabit.takestock.data.models.Question;
-import com.devabit.takestock.data.models.ResultList;
+import com.devabit.takestock.data.filter.QuestionFilter;
+import com.devabit.takestock.data.model.Answer;
+import com.devabit.takestock.data.model.Question;
+import com.devabit.takestock.data.model.ResultList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;

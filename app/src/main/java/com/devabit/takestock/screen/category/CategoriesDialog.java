@@ -18,7 +18,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Category;
+import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.screen.category.adapter.CategoriesAdapter;
 import com.devabit.takestock.screen.search.SearchActivity;
 

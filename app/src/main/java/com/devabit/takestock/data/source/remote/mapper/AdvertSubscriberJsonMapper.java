@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
-import com.devabit.takestock.data.models.AdvertSubscriber;
+import com.devabit.takestock.data.model.AdvertSubscriber;
 import org.json.JSONObject;
 
 /**

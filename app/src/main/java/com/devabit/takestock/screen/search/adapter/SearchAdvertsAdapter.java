@@ -17,8 +17,8 @@ import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Photo;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.utils.DateUtil;
 
 import java.util.ArrayList;

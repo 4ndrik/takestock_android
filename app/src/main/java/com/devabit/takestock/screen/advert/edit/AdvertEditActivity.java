@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.*;
-import com.devabit.takestock.screen.advert.adapters.*;
-import com.devabit.takestock.screen.advert.dialogs.AdvertPhotoPickerDialog;
+import com.devabit.takestock.data.model.*;
+import com.devabit.takestock.screen.advert.adapter.*;
+import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FileUtil;
 import com.devabit.takestock.utils.Logger;
@@ -148,7 +148,7 @@ public class AdvertEditActivity extends AppCompatActivity implements AdvertEditC
                 startCameraActivity();
             }
 
-            @Override public void onPickFromLibrary(AdvertPhotoPickerDialog dialog) {
+            @Override public void onPickFromStorage(AdvertPhotoPickerDialog dialog) {
                 dialog.dismiss();
                 startPhotoLibraryActivity();
             }

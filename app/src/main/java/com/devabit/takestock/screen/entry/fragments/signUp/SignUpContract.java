@@ -1,7 +1,7 @@
 package com.devabit.takestock.screen.entry.fragments.signUp;
 
-import com.devabit.takestock.data.models.AuthToken;
-import com.devabit.takestock.data.models.UserCredentials;
+import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

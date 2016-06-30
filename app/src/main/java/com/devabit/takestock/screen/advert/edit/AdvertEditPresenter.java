@@ -3,7 +3,7 @@ package com.devabit.takestock.screen.advert.edit;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.rx.RxTransformers;
 import com.devabit.takestock.utils.BitmapUtil;

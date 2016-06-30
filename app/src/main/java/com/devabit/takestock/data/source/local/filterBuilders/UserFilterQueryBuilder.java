@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.filterBuilders;
 
-import com.devabit.takestock.data.filters.UserFilter;
+import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.source.local.entity.UserEntity;
 import io.realm.Realm;
 import io.realm.RealmQuery;

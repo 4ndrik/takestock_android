@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.devabit.takestock.data.models.BusinessSubtype;
+import com.devabit.takestock.data.model.BusinessSubtype;
 import com.devabit.takestock.widgets.BaseSpinnerAdapter;
 
 import java.util.List;

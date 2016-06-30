@@ -5,7 +5,8 @@
         android:orientation="vertical"
         android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:background="@color/white">
 
     <TextView
             android:layout_width="wrap_content"
@@ -35,9 +36,12 @@
             android:id="@+id/category_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"/>
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            tools:listitem="@layout/item_spinner"/>
 
     <TextView
+            android:id="@+id/subcategory_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -46,9 +50,11 @@
 
     <Spinner
             android:id="@+id/subcategory_spinner"
-            android:background="@null"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            tools:listitem="@layout/item_spinner"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -66,9 +72,11 @@
 
     <Spinner
             android:id="@+id/packaging_spinner"
-            android:background="@null"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            tools:listitem="@layout/item_spinner"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -89,16 +97,17 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 tools:text="100"
-                style="@style/EditTextWeight"
+                style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView
+                android:id="@+id/sale_packaging_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:layout_gravity="center"
-                android:text="@string/kg"
                 android:textAppearance="@android:style/TextAppearance.Medium"
+                tools:text="@string/kg"
                 style="@style/TextViewGrey"/>
 
     </LinearLayout>
@@ -122,16 +131,17 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 tools:text="100"
-                style="@style/EditTextWeight"
+                style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView
+                android:id="@+id/order_packaging_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:layout_gravity="center"
-                android:text="@string/kg"
                 android:textAppearance="@android:style/TextAppearance.Medium"
+                tools:text="@string/kg"
                 style="@style/TextViewGrey"/>
     </LinearLayout>
 
@@ -153,17 +163,21 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="@string/currency"
-                style="@style/EditTextWeight"
+                android:imeOptions="actionNext"
+                android:drawableStart="@drawable/ic_great_britain_pound_grey600_12dp"
+                android:drawablePadding="8dp"
+                style="@style/EditTextRoundedCornersGrey"
+                tools:text="100"
                 tools:ignore="LabelFor"/>
 
         <TextView
+                android:id="@+id/price_packaging_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:layout_gravity="center"
-                android:text="@string/per_kg"
                 android:textAppearance="@android:style/TextAppearance.Medium"
+                tools:text="/ kg"
                 style="@style/TextViewGrey"/>
     </LinearLayout>
 
@@ -211,9 +225,10 @@
 
     <Spinner
             android:id="@+id/shipping_spinner"
-            android:background="@null"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -224,9 +239,10 @@
 
     <Spinner
             android:id="@+id/condition_spinner"
-            android:background="@null"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@null"/>
 
     <TextView
             android:layout_width="wrap_content"

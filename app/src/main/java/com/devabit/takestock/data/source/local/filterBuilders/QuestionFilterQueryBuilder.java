@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.local.filterBuilders;
 
-import com.devabit.takestock.data.filters.QuestionFilter;
+import com.devabit.takestock.data.filter.QuestionFilter;
 import com.devabit.takestock.data.source.local.entity.AdvertEntity;
 import com.devabit.takestock.data.source.local.entity.QuestionEntity;
 import io.realm.Realm;

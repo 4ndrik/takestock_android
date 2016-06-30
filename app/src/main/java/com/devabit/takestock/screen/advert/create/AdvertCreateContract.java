@@ -1,7 +1,7 @@
 package com.devabit.takestock.screen.advert.create;
 
 import android.net.Uri;
-import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 
@@ -15,9 +15,27 @@ public interface AdvertCreateContract {
 
     interface View extends BaseView<Presenter> {
 
+        void showCategoriesInView(List<Category> categories);
+
+        void showPackagingsInView(List<Packaging> packagings);
+
+        void showShippingsInView(List<Shipping> shippings);
+
+        void showConditionsInView(List<Condition> conditions);
+
+        void showSizesInView(List<Size> sizes);
+
+        void showCertificationsInView(List<Certification> certifications);
+
+        void showPhotoInView(Photo photo);
+
+        void setProgressIndicator(boolean isActive);
+
         void showEmptyPhotosError();
 
         void showEmptyTitleError();
+
+        void showEmptyCategoryError();
 
         void showEmptyItemCountError();
 
@@ -28,6 +46,10 @@ public interface AdvertCreateContract {
         void showEmptyDescriptionError();
 
         void showEmptyLocationError();
+
+        void showEmptyShippingError();
+
+        void showEmptyConditionError();
 
         void showEmptyExpiryDateError();
 
@@ -47,26 +69,9 @@ public interface AdvertCreateContract {
 
         void showAdvertSaved(Advert advert);
 
-        void showCategoriesInView(List<Category> categories);
-
-        void showPackagingsInView(List<Packaging> packagings);
-
-        void showShippingsInView(List<Shipping> shippings);
-
-        void showConditionsInView(List<Condition> conditions);
-
-        void showSizesInView(List<Size> sizes);
-
-        void showCertificationsInView(List<Certification> certifications);
-
-        void showPhotoInView(Photo photo);
-
-        void setProgressIndicator(boolean isActive);
     }
 
     interface Presenter extends BasePresenter {
-
-        void fetchAdvertRelatedData();
 
         void processPhotoUriToFile(Uri photoUri, File photoFile);
 

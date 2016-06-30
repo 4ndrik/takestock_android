@@ -1,8 +1,8 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
 import android.text.TextUtils;
-import com.devabit.takestock.data.models.Offer;
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.User;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

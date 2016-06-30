@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -29,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.*;
 import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
 import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
@@ -37,6 +38,7 @@ import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FileUtil;
 import com.devabit.takestock.utils.FontCache;
 import com.devabit.takestock.widgets.CertificationRadioButtonGroupView;
+import com.devabit.takestock.widgets.HintSpinnerAdapter;
 
 import java.io.File;
 import java.util.List;
@@ -56,12 +58,12 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         return new Intent(context, AdvertCreateActivity.class);
     }
 
-    private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;
+    private static final int REQUEST_CODE_PHOTO_STORAGE = 101;
     private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 103;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 104;
 
-    @BindView(R.id.content_activity_sell_something) protected View mContent;
+    @BindView(R.id.content) protected View mContent;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
     @BindView(R.id.content_input) protected ViewGroup mContentInput;
 
@@ -73,6 +75,11 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @BindView(R.id.shipping_spinner) protected Spinner mShippingSpinner;
     @BindView(R.id.condition_spinner) protected Spinner mConditionSpinner;
     @BindView(R.id.size_spinner) protected Spinner mSizeSpinner;
+
+    @BindView(R.id.subcategory_text_view) protected TextView mSubcategoryTextView;
+    @BindView(R.id.sale_packaging_text_view) protected TextView mSalePackagingTextView;
+    @BindView(R.id.order_packaging_text_view) protected TextView mOrderPackagingTextView;
+    @BindView(R.id.price_packaging_text_view) protected TextView mPricePackagingTextView;
 
     @BindView(R.id.title_edit_text) protected EditText mTitleEditText;
     @BindView(R.id.item_count_edit_text) protected EditText mItemCountEditText;
@@ -94,7 +101,6 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     List<Button> mButtons;
 
     private PhotoGalleryAdapter mPhotoGalleryAdapter;
-    private SubcategorySpinnerAdapter mSubcategoryAdapter;
 
     private AdvertCreateContract.Presenter mPresenter;
 
@@ -105,10 +111,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert_create);
         ButterKnife.bind(AdvertCreateActivity.this);
-
-        new AdvertCreatePresenter(
-                Injection.provideDataRepository(AdvertCreateActivity.this), AdvertCreateActivity.this);
-
+        setUpPresenter();
         final Typeface boldTypeface = FontCache.getTypeface(AdvertCreateActivity.this, R.string.font_brandon_bold);
         ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
             @Override public void apply(@NonNull Button button, int index) {
@@ -117,6 +120,15 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         });
         setUpToolbar(boldTypeface);
         setUpPhotosRecyclerView();
+    }
+
+    private void setUpPresenter() {
+        new AdvertCreatePresenter(
+                Injection.provideDataRepository(AdvertCreateActivity.this), AdvertCreateActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull AdvertCreateContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     private void setUpToolbar(Typeface typeface) {
@@ -202,12 +214,12 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     private void startPhotoStorageActivity() {
         Intent starter = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(starter, REQUEST_CODE_PHOTO_LIBRARY);
+        startActivityForResult(starter, REQUEST_CODE_PHOTO_STORAGE);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PHOTO_LIBRARY && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_PHOTO_STORAGE && resultCode == RESULT_OK) {
             mPhotoUri = uriFromPhotoLibraryResult(data);
             processPhotoUri(mPhotoUri);
         } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA && resultCode == RESULT_OK) {
@@ -244,13 +256,95 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         dialog.show();
     }
 
-    @Override public void setPresenter(@NonNull AdvertCreateContract.Presenter presenter) {
-        mPresenter = presenter;
-    }
-
     @Override protected void onStart() {
         super.onStart();
-        mPresenter.fetchAdvertRelatedData();
+        mPresenter.resume();
+    }
+
+    @Override public void showCategoriesInView(final List<Category> categories) {
+        CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
+        final HintSpinnerAdapter<Category> hintAdapter = new HintSpinnerAdapter<Category>(
+                adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+        mCategorySpinner.setAdapter(hintAdapter);
+        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Category category = hintAdapter.getItem(position);
+                showSubcategoriesInView(category);
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void showSubcategoriesInView(Category category) {
+        if (category == null || category.getSubcategories().isEmpty()) {
+            mSubcategorySpinner.setAdapter(null);
+            setSubcategoryContentVisibility(false);
+        } else {
+            SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(
+                    AdvertCreateActivity.this, category.getSubcategories());
+            HintSpinnerAdapter<Subcategory> nothingSelectedAdapter = new HintSpinnerAdapter<>(
+                    adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+            mSubcategorySpinner.setAdapter(nothingSelectedAdapter);
+            setSubcategoryContentVisibility(true);
+        }
+    }
+
+    private void setSubcategoryContentVisibility(boolean visible) {
+        mSubcategoryTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mSubcategorySpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override public void showPackagingsInView(List<Packaging> packagings) {
+        final PackagingSpinnerAdapter adapter = new PackagingSpinnerAdapter(AdvertCreateActivity.this, packagings);
+        mPackagingSpinner.setAdapter(adapter);
+        mPackagingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Packaging packaging = adapter.getItem(position);
+                setUpPackagingInViews(packaging);
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void setUpPackagingInViews(Packaging packaging) {
+        String type = packaging.getType();
+        mSalePackagingTextView.setText(type);
+        mOrderPackagingTextView.setText(type);
+        mPricePackagingTextView.setText(getString(R.string.per_packaging, type));
+    }
+
+    @Override public void showShippingsInView(List<Shipping> shippings) {
+        ShippingSpinnerAdapter adapter = new ShippingSpinnerAdapter(AdvertCreateActivity.this, shippings);
+        HintSpinnerAdapter<Shipping> hintAdapter = new HintSpinnerAdapter<>(
+                adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+        mShippingSpinner.setAdapter(hintAdapter);
+    }
+
+    @Override public void showConditionsInView(List<Condition> conditions) {
+        ConditionSpinnerAdapter adapter = new ConditionSpinnerAdapter(AdvertCreateActivity.this, conditions);
+        HintSpinnerAdapter<Condition> hintAdapter = new HintSpinnerAdapter<>(
+                adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+        mConditionSpinner.setAdapter(hintAdapter);
+    }
+
+    @Override public void showSizesInView(List<Size> sizes) {
+        SizeSpinnerAdapter adapter = new SizeSpinnerAdapter(AdvertCreateActivity.this, sizes);
+        mSizeSpinner.setAdapter(adapter);
+    }
+
+    @Override public void showCertificationsInView(List<Certification> certifications) {
+        mCertificationGroupView.setUpCertifications(certifications);
+    }
+
+    @Override public void showPhotoInView(Photo photo) {
+        mPhotoGalleryAdapter.addPhoto(photo);
+        mPhotosRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
     }
 
     @Override public void showEmptyPhotosError() {
@@ -261,6 +355,11 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @Override public void showEmptyTitleError() {
         mTitleEditText.setError(getText(R.string.error_empty_title));
         requestFocusOnView(mTitleEditText);
+    }
+
+    @Override public void showEmptyCategoryError() {
+        showSnack(R.string.error_catecory);
+        requestFocusOnView(mCategorySpinner);
     }
 
     @Override public void showEmptyItemCountError() {
@@ -286,6 +385,16 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @Override public void showEmptyLocationError() {
         mLocationEditText.setError(getText(R.string.error_empty_location));
         requestFocusOnView(mLocationEditText);
+    }
+
+    @Override public void showEmptyShippingError() {
+        showSnack(R.string.error_shipping);
+        requestFocusOnView(mShippingSpinner);
+    }
+
+    @Override public void showEmptyConditionError() {
+        showSnack(R.string.error_condition);
+        requestFocusOnView(mConditionSpinner);
     }
 
     @Override public void showEmptyExpiryDateError() {
@@ -339,69 +448,6 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         Snackbar.make(mContent, resId, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override public void showCategoriesInView(final List<Category> categories) {
-        final CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
-        mCategorySpinner.setAdapter(adapter);
-        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Category category = adapter.getItem(position);
-                showSubcategoriesInView(category.getSubcategories());
-            }
-
-            @Override public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    private void showSubcategoriesInView(List<Subcategory> subcategories) {
-        if (subcategories.isEmpty()) {
-            setSubcategorySpinnerVisibility(false);
-        } else {
-            setSubcategorySpinnerVisibility(true);
-            if (mSubcategoryAdapter == null) {
-                mSubcategoryAdapter = new SubcategorySpinnerAdapter(AdvertCreateActivity.this, subcategories);
-                mSubcategorySpinner.setAdapter(mSubcategoryAdapter);
-            } else {
-                mSubcategoryAdapter.clear();
-                mSubcategoryAdapter.addAll(subcategories);
-            }
-        }
-    }
-
-    private void setSubcategorySpinnerVisibility(boolean visible) {
-        mSubcategorySpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override public void showPackagingsInView(List<Packaging> packagings) {
-        PackagingSpinnerAdapter adapter = new PackagingSpinnerAdapter(AdvertCreateActivity.this, packagings);
-        mPackagingSpinner.setAdapter(adapter);
-    }
-
-    @Override public void showShippingsInView(List<Shipping> shippings) {
-        ShippingSpinnerAdapter adapter = new ShippingSpinnerAdapter(AdvertCreateActivity.this, shippings);
-        mShippingSpinner.setAdapter(adapter);
-    }
-
-    @Override public void showConditionsInView(List<Condition> conditions) {
-        ConditionSpinnerAdapter adapter = new ConditionSpinnerAdapter(AdvertCreateActivity.this, conditions);
-        mConditionSpinner.setAdapter(adapter);
-    }
-
-    @Override public void showSizesInView(List<Size> sizes) {
-        SizeSpinnerAdapter adapter = new SizeSpinnerAdapter(AdvertCreateActivity.this, sizes);
-        mSizeSpinner.setAdapter(adapter);
-    }
-
-    @Override public void showCertificationsInView(List<Certification> certifications) {
-        mCertificationGroupView.setUpCertifications(certifications);
-    }
-
-    @Override public void showPhotoInView(Photo photo) {
-        mPhotoGalleryAdapter.addPhoto(photo);
-        mPhotosRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
-    }
-
     @Override public void setProgressIndicator(boolean isActive) {
         setProgressBarActive(isActive);
         setTouchDisabled(isActive);
@@ -438,8 +484,14 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     @OnClick(R.id.save_and_put_on_hold_button)
     protected void onSaveButtonClick() {
+        hideKeyboard();
         Advert advert = getAdvert();
         mPresenter.saveAdvert(advert);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
     }
 
     private Advert getAdvert() {
@@ -474,17 +526,17 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private int getCategoryId() {
         Category category = (Category) mCategorySpinner.getSelectedItem();
-        return category.getId();
+        return category == null ? -1 : category.getId();
     }
 
     private int getSubcategoryId() {
         Subcategory subcategory = (Subcategory) mSubcategorySpinner.getSelectedItem();
-        return subcategory.getId();
+        return subcategory == null ? -1 : subcategory.getId();
     }
 
     private int getPackagingId() {
         Packaging packaging = (Packaging) mPackagingSpinner.getSelectedItem();
-        return packaging.getId();
+        return packaging == null ? -1 : packaging.getId();
     }
 
     private int getItemCount() {
@@ -513,12 +565,12 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private int getShippingId() {
         Shipping shipping = (Shipping) mShippingSpinner.getSelectedItem();
-        return shipping.getId();
+        return shipping == null ? -1 : shipping.getId();
     }
 
     private int getConditionId() {
         Condition condition = (Condition) mConditionSpinner.getSelectedItem();
-        return condition.getId();
+        return condition == null ? -1 : condition.getId();
     }
 
     private String getExpiryDate() {
@@ -537,8 +589,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private int getCertificationId() {
         Certification certification = mCertificationGroupView.getCertification();
-        if (certification == null) return 0;
-        return certification.getId();
+        return certification == null ? -1 : certification.getId();
     }
 
     private String getCertificationExtra() {

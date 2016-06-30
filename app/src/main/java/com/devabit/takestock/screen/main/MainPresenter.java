@@ -1,7 +1,7 @@
 package com.devabit.takestock.screen.main;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;

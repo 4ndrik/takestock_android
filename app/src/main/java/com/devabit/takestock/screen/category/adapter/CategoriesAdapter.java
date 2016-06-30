@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Category;
+import com.devabit.takestock.data.model.Category;
 
 import java.util.ArrayList;
 import java.util.List;

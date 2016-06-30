@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.remote.filterBuilder;
 
 import android.text.TextUtils;
-import com.devabit.takestock.data.filters.UserFilter;
+import com.devabit.takestock.data.filter.UserFilter;
 
 import java.util.Set;
 

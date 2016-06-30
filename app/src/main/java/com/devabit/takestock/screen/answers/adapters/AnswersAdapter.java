@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Answer;
-import com.devabit.takestock.data.models.Question;
+import com.devabit.takestock.data.model.Answer;
+import com.devabit.takestock.data.model.Question;
 
 import java.util.ArrayList;
 import java.util.List;

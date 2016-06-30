@@ -1,7 +1,7 @@
 package com.devabit.takestock.screen.advert.detail.dialogs;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.models.Offer;
+import com.devabit.takestock.data.model.Offer;
 
 import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Logger.makeLogTag;

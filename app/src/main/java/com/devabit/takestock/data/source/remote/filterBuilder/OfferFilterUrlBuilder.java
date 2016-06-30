@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.remote.filterBuilder;
 
-import com.devabit.takestock.data.filters.OfferFilter;
+import com.devabit.takestock.data.filter.OfferFilter;
 
 /**
  * Created by Victor Artemyev on 27/05/2016.

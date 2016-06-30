@@ -1,6 +1,6 @@
 package com.devabit.takestock.screen.offers.dialogs.rejectOffer;
 
-import com.devabit.takestock.data.models.Offer;
+import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

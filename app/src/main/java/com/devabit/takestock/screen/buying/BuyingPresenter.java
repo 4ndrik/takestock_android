@@ -2,12 +2,12 @@ package com.devabit.takestock.screen.buying;
 
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
-import com.devabit.takestock.data.filters.AdvertFilter;
-import com.devabit.takestock.data.filters.OfferFilter;
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Offer;
-import com.devabit.takestock.data.models.OfferStatus;
-import com.devabit.takestock.data.models.ResultList;
+import com.devabit.takestock.data.filter.AdvertFilter;
+import com.devabit.takestock.data.filter.OfferFilter;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.OfferStatus;
+import com.devabit.takestock.data.model.ResultList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;

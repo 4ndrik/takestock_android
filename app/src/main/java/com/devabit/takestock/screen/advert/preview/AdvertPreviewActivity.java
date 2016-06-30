@@ -16,11 +16,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Certification;
-import com.devabit.takestock.data.models.Condition;
-import com.devabit.takestock.data.models.Shipping;
-import com.devabit.takestock.screen.advert.adapters.AdvertPhotosAdapter;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Certification;
+import com.devabit.takestock.data.model.Condition;
+import com.devabit.takestock.data.model.Shipping;
+import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 
 import static com.devabit.takestock.utils.Logger.makeLogTag;

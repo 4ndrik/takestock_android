@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
-import com.devabit.takestock.data.models.Answer;
-import com.devabit.takestock.data.models.Question;
+import com.devabit.takestock.data.model.Answer;
+import com.devabit.takestock.data.model.Question;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

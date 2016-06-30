@@ -1,7 +1,7 @@
 package com.devabit.takestock.screen.advert.edit;
 
 import android.net.Uri;
-import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

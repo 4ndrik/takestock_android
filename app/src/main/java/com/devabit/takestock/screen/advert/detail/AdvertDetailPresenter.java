@@ -1,10 +1,10 @@
 package com.devabit.takestock.screen.advert.detail;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.models.Certification;
-import com.devabit.takestock.data.models.Condition;
-import com.devabit.takestock.data.models.Offer;
-import com.devabit.takestock.data.models.Shipping;
+import com.devabit.takestock.data.model.Certification;
+import com.devabit.takestock.data.model.Condition;
+import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.Shipping;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;

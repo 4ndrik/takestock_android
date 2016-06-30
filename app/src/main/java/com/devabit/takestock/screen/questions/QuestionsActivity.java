@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Question;
+import com.devabit.takestock.data.model.Question;
 import com.devabit.takestock.screen.questions.adapters.QuestionsAdapter;
 import com.devabit.takestock.utils.FontCache;
 

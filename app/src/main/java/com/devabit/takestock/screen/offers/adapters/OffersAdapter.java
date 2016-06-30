@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Offer;
-import com.devabit.takestock.data.models.OfferStatus;
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.OfferStatus;
+import com.devabit.takestock.data.model.User;
 
 import java.util.ArrayList;
 import java.util.List;

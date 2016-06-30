@@ -13,8 +13,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Answer;
-import com.devabit.takestock.data.models.Question;
+import com.devabit.takestock.data.model.Answer;
+import com.devabit.takestock.data.model.Question;
 
 /**
  * Created by Victor Artemyev on 02/06/2016.

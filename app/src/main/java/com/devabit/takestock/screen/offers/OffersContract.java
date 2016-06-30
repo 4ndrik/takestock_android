@@ -1,7 +1,7 @@
 package com.devabit.takestock.screen.offers;
 
 import android.util.Pair;
-import com.devabit.takestock.data.models.Offer;
+import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

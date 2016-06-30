@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:hint="Price"
-                style="@style/EditTextWeight"
+                style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:hint="Quantity"
-                style="@style/EditTextWeight"
+                style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView

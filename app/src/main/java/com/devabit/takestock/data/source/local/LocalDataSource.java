@@ -2,11 +2,11 @@ package com.devabit.takestock.data.source.local;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.filters.AdvertFilter;
-import com.devabit.takestock.data.filters.OfferFilter;
-import com.devabit.takestock.data.filters.QuestionFilter;
-import com.devabit.takestock.data.filters.UserFilter;
-import com.devabit.takestock.data.models.*;
+import com.devabit.takestock.data.filter.AdvertFilter;
+import com.devabit.takestock.data.filter.OfferFilter;
+import com.devabit.takestock.data.filter.QuestionFilter;
+import com.devabit.takestock.data.filter.UserFilter;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;

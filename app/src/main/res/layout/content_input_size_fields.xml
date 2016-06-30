@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="10"
-            style="@style/EditTextWeight"
+            style="@style/EditTextRoundedCornersPurple"
             android:ems="2"
             android:maxLength="2"
             tools:ignore="LabelFor"/>
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="10"
-            style="@style/EditTextWeight"
+            style="@style/EditTextRoundedCornersPurple"
             android:ems="2"
             android:maxLength="2"
             tools:ignore="LabelFor"/>
@@ -54,15 +54,16 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="5"
-            style="@style/EditTextWeight"
+            style="@style/EditTextRoundedCornersPurple"
             android:ems="2"
             android:maxLength="2"
             tools:ignore="LabelFor"/>
 
     <Spinner
             android:id="@+id/size_spinner"
-            android:background="@null"
             android:layout_width="80dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@null"/>
 
 </LinearLayout>

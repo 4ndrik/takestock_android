@@ -91,6 +91,9 @@
                 android:name=".screen.about.AboutActivity"
                 android:screenOrientation="portrait"/>
         <activity
+                android:name=".screen.watching.WatchingActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".screen.camera.CameraActivity"
                 android:theme="@style/AppTheme.Fullscreen"/>
 

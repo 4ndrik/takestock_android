@@ -1,6 +1,6 @@
 package com.devabit.takestock.screen.category;
 
-import com.devabit.takestock.data.models.Category;
+import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 

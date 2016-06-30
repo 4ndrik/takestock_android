@@ -8,7 +8,7 @@ import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Certification;
+import com.devabit.takestock.data.model.Certification;
 
 import java.util.List;
 

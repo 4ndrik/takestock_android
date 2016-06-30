@@ -1,6 +1,6 @@
 package com.devabit.takestock.data.source.remote.filterBuilder;
 
-import com.devabit.takestock.data.filters.QuestionFilter;
+import com.devabit.takestock.data.filter.QuestionFilter;
 
 /**
  * Created by Victor Artemyev on 30/05/2016.

@@ -11,9 +11,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Offer;
-import com.devabit.takestock.data.models.OfferStatus;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.OfferStatus;
 
 /**
  * Created by Victor Artemyev on 02/06/2016.

@@ -1,8 +1,8 @@
 package com.devabit.takestock.data.source.local.mapper;
 
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Photo;
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.source.local.entity.AdvertEntity;
 import com.devabit.takestock.data.source.local.entity.PhotoEntity;
 import com.devabit.takestock.data.source.local.entity.StringEntity;

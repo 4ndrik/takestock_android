@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.models.Answer;
-import com.devabit.takestock.data.models.Question;
+import com.devabit.takestock.data.model.Answer;
+import com.devabit.takestock.data.model.Question;
 
 import java.util.ArrayList;
 import java.util.List;

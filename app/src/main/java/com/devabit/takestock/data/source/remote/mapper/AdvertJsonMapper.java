@@ -1,9 +1,9 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
-import com.devabit.takestock.data.models.Advert;
-import com.devabit.takestock.data.models.Certification;
-import com.devabit.takestock.data.models.Photo;
-import com.devabit.takestock.data.models.User;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Certification;
+import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.utils.Encoder;
 import org.json.JSONArray;
 import org.json.JSONException;
