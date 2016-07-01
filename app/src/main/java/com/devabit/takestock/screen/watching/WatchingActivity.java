@@ -23,6 +23,7 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.watching.adapter.WatchingAdvertsAdapter;
 import com.devabit.takestock.utils.FontCache;
+import com.devabit.takestock.widget.ListSpacingItemDecoration;
 
 import java.util.List;
 
@@ -76,6 +77,8 @@ public class WatchingActivity extends AppCompatActivity implements WatchingContr
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 WatchingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.dimen_8dp));
+        recyclerView.addItemDecoration(itemDecoration);
         mAdvertsAdapter = new WatchingAdvertsAdapter(WatchingActivity.this);
         mAdvertsAdapter.setOnItemClickListener(new WatchingAdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Advert advert) {
