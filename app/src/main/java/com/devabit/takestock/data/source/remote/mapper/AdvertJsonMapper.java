@@ -100,7 +100,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
         if (!jsonObject.isNull(CERTIFICATION_ID)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION_ID));
         advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
         if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
-        advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
+        if (!jsonObject.isNull(ITEMS_COUNT)) advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
         if (!jsonObject.isNull(PACKAGING_NAME)) advert.setPackagingName(jsonObject.getString(PACKAGING_NAME));
         advert.setOffersCount(jsonObject.getString(OFFERS_COUNT));
         if (jsonObject.has(QUESTIONS_COUNT)) advert.setQuestionsCount(jsonObject.getString(QUESTIONS_COUNT));
@@ -151,10 +151,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
         jsonObject.put(CERTIFICATION_EXTRA, target.getCertificationExtra());
         jsonObject.put(CONDITION, target.getConditionId());
         jsonObject.put(ITEMS_COUNT, target.getItemsCount());
-        JSONArray array = new JSONArray();
-        array.put("tag");
-        array.put("tag");
-        jsonObject.put(TAGS, array);
+        jsonObject.put(TAGS, new JSONArray(target.getTags()));
         JSONArray jsonArray = new JSONArray();
         for (Photo photo : target.getPhotos()) {
             try {

@@ -43,7 +43,7 @@
     <string name="salsa">Salsa</string>
     <string name="brc">BRC</string>
     <string name="hint_other_certification_extra">Other certification extra</string>
-    <string name="add_keywords">Add keywords</string>
+    <string name="keywords">Keywords</string>
     <string name="hint_keywords">bargain, ingredients…</string>
     <string name="hint_keywords_description">List as many as you like. Keywords help customers find your product
     </string>
@@ -74,6 +74,7 @@
     <string name="offer_price_per_kg">£ %1$s per %2$d kg</string>
     <string name="add_expiry_date">Add expiry date</string>
     <string name="expiry_date">%1$d/%2$d/%3$s</string>
+    <string name="pay">Pay £%1$.2f</string>
 
     <!-- Strings related to errors -->
     <string name="error_unknown">Unknown error.</string>
@@ -171,7 +172,11 @@
     <string name="payment_details">Payment details</string>
     <string name="credit_card">0000 0000 0000 0000</string>
     <string name="select_one">Select one</string>
-    <string name="error_catecory">Category not selected.</string>
+    <string name="error_category">Category not selected.</string>
     <string name="error_shipping">Shipping not selected.</string>
     <string name="error_condition">Condition not selected.</string>
+    <string name="keyword">Keyword</string>
+    <string name="add">Add</string>
+    <string name="card_number">Card number</string>
+    <string name="payment">Payment</string>
 </resources>

@@ -16,8 +16,9 @@ public class OfferStatus implements Parcelable {
     public static final int REJECTED = 2;
     public static final int PENDING = 3;
     public static final int COUNTERED = 4;
+    public static final int PAYMENT_MADE = 5;
 
-    @IntDef({ACCEPTED, REJECTED, PENDING, COUNTERED})
+    @IntDef({ACCEPTED, REJECTED, PENDING, COUNTERED, PAYMENT_MADE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Status {}
 

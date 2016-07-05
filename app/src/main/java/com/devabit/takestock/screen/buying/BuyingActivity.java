@@ -27,21 +27,23 @@ import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.OfferStatus;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.buying.adapters.OfferAdvertPairsAdapter;
+import com.devabit.takestock.screen.payment.PaymentActivity;
 import com.devabit.takestock.utils.FontCache;
-import com.devabit.takestock.utils.Logger;
 
 import java.util.Map;
+
+import static com.devabit.takestock.utils.Logger.LOGD;
+import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 31/05/2016.
  */
 public class BuyingActivity extends AppCompatActivity implements BuyingContract.View {
 
-    private static final String TAG = Logger.makeLogTag(BuyingActivity.class);
+    private static final String TAG = makeLogTag(BuyingActivity.class);
 
     public static Intent getStartIntent(Context context) {
-        Intent starter = new Intent(context, BuyingActivity.class);
-        return starter;
+        return new Intent(context, BuyingActivity.class);
     }
 
     @BindView(R.id.content_activity_buying) protected View mContent;
@@ -63,6 +65,11 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
     private void initPresenter() {
         new BuyingPresenter(
                 Injection.provideDataRepository(BuyingActivity.this), BuyingActivity.this);
+
+    }
+
+    @Override public void setPresenter(@NonNull BuyingContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     private void setUpToolbar() {
@@ -108,19 +115,23 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
                 BuyingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         mOffersAdapter = new OfferAdvertPairsAdapter(BuyingActivity.this, statuses);
-        mOffersAdapter.setMenuItemClickListener(mMenuItemClickListener);
+        mOffersAdapter.setOnItemClickListener(new OfferAdvertPairsAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Advert advert, Offer offer) {
+                LOGD(TAG, advert);
+                LOGD(TAG, offer);
+//                startAdvertDetailActivity(advert);
+                startPaymentActivity(offer);
+            }
+        });
         recyclerView.setAdapter(mOffersAdapter);
     }
 
-    private final OfferAdvertPairsAdapter.OnMenuItemClickListener mMenuItemClickListener
-            = new OfferAdvertPairsAdapter.OnMenuItemClickListener() {
-        @Override public void viewAdvert(Advert advert) {
-            startAdvertDetailActivity(advert);
-        }
-    };
-
     private void startAdvertDetailActivity(Advert advert) {
         startActivity(AdvertDetailActivity.getStartIntent(BuyingActivity.this, advert));
+    }
+
+    private void startPaymentActivity(Offer offer) {
+        startActivity(PaymentActivity.getStartIntent(BuyingActivity.this, offer));
     }
 
     private void fetchOffers() {
@@ -152,10 +163,6 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
 
     @Override public void setProgressIndicator(boolean isActive) {
         mRefreshLayout.setRefreshing(isActive);
-    }
-
-    @Override public void setPresenter(@NonNull BuyingContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @Override protected void onStop() {

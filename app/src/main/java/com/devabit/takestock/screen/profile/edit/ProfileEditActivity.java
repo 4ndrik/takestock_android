@@ -59,7 +59,6 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
     @BindView(R.id.business_name_edit_text) protected EditText mBusinessNameEditText;
     @BindView(R.id.postcode_edit_text) protected EditText mPostcodeEditText;
     @BindView(R.id.vat_number_edit_text) protected EditText mVatNumberEditText;
-    @BindView(R.id.credit_card_edit_text) protected EditText mCreditCardEditText;
 
     @BindView(R.id.business_type_spinner) protected Spinner mBusinessTypeSpinner;
     @BindView(R.id.business_subtype_spinner) protected Spinner mBusinessSubtypeSpinner;
@@ -100,6 +99,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         });
         toolbar.setOnMenuItemClickListener(mMenuItemClickListener);
         toolbar.setTitle(R.string.edit_profile);
+        toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
         toolbar.inflateMenu(R.menu.profile_edit_menu);
         mMenu = toolbar.getMenu();
     }

@@ -401,4 +401,12 @@ public class DataRepository implements DataSource {
     @Override public Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
         return mRemoteDataSource.getUserResultListPerFilter(filter);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Payment
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public Observable<String> addPayment(@NonNull Payment payment) {
+        return mRemoteDataSource.addPayment(payment);
+    }
 }

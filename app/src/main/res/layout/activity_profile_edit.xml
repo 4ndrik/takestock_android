@@ -187,25 +187,6 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/payment_details"
-                    style="@style/TextViewLime"/>
-
-            <EditText
-                    android:id="@+id/credit_card_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:drawablePadding="8dp"
-                    android:drawableStart="@drawable/ic_credit_card_black_24dp"
-                    android:inputType="number"
-                    android:digits="0123456789"
-                    android:hint="@string/credit_card"
-                    style="@style/EditTextRoundedCornersGrey"/>
-
         </LinearLayout>
 
     </ScrollView>

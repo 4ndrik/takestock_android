@@ -28,4 +28,5 @@ public interface ApiRest {
     String USERS = API_BASE_URL + "users/";
     String ME = API_BASE_URL + "me/";
     String WATCHLIST = API_BASE_URL + "to_watchlist/";
+    String PAY = API_BASE_URL + "pay/";
 }

@@ -179,4 +179,10 @@ public interface DataSource {
 
     Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter);
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Payment
+    ///////////////////////////////////////////////////////////////////////////
+
+    Observable<String> addPayment(@NonNull Payment payment);
+
 }

@@ -72,6 +72,9 @@
                 android:name=".screen.buying.BuyingActivity"
                 android:screenOrientation="portrait"/>
         <activity
+                android:name=".screen.payment.PaymentActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".screen.offers.OffersActivity"
                 android:screenOrientation="portrait"/>
         <activity

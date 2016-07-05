@@ -2,15 +2,16 @@ package com.devabit.takestock.screen.buying.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
-import android.view.*;
-import android.widget.ImageButton;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
@@ -27,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static butterknife.ButterKnife.findById;
-
 /**
  * Created by Victor Artemyev on 31/05/2016.
  */
@@ -42,11 +41,11 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
 
     private Map<Offer, Advert> mOfferAdvertMap;
 
-    public interface OnMenuItemClickListener {
-        void viewAdvert(Advert advert);
+    public interface OnItemClickListener {
+        void onItemClick(Advert advert, Offer offer);
     }
 
-    private static OnMenuItemClickListener sMenuItemClickListener;
+    private static OnItemClickListener sItemClickListener;
 
     public OfferAdvertPairsAdapter(Context context, SparseArray<OfferStatus> statuses) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -92,8 +91,8 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
         notifyDataSetChanged();
     }
 
-    public void setMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
-        sMenuItemClickListener = menuItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        sItemClickListener = itemClickListener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -107,45 +106,18 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
         final Resources resources;
 
         private Advert mAdvert;
+        private Offer mOffer;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(ViewHolder.this, itemView);
             Context context = itemView.getContext();
             this.resources = context.getResources();
-            setUpMenu();
-        }
-
-        void setUpMenu() {
-            ImageButton menuButton = findById(itemView, R.id.menu_button);
-            final PopupMenu popupMenu = new PopupMenu(itemView.getContext(), menuButton);
-            MenuInflater menuInflater = popupMenu.getMenuInflater();
-            menuInflater.inflate(R.menu.offer_item_menu, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.action_view_advert:
-                            onViewAdvertAction();
-                            return true;
-
-                        default:
-                            return false;
-                    }
-                }
-            });
-            menuButton.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    popupMenu.show();
-                }
-            });
-        }
-
-        void onViewAdvertAction() {
-            if (sMenuItemClickListener != null) sMenuItemClickListener.viewAdvert(mAdvert);
         }
 
         void bindOffer(Offer offer) {
-            String date = DateUtil.formatToDefaultDate(offer.getDateUpdated());
+            mOffer = offer;
+            String date = DateUtil.formatToDefaultDate(mOffer.getDateUpdated());
             dateUpdatedTextView.setText(date);
             String price = resources.getString(R.string.offer_price_per_kg, offer.getPrice(), offer.getQuantity());
             priceTextView.setText(price);
@@ -180,9 +152,14 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
                         .into(imageView);
             }
         }
+
+        @OnClick(R.id.content) void onContentClick() {
+            if (sItemClickListener != null) sItemClickListener.onItemClick(mAdvert, mOffer);
+        }
     }
 
+
     public void destroy() {
-        sMenuItemClickListener = null;
+        sItemClickListener = null;
     }
 }

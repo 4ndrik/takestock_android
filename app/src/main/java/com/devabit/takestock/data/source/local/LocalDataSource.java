@@ -584,6 +584,14 @@ public class LocalDataSource implements DataSource {
         return null;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods for Payment
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public Observable<String> addPayment(@NonNull Payment payment) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     private <E extends RealmModel> List<E> saveOrUpdateEntities(Iterable<E> objects) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.beginTransaction();

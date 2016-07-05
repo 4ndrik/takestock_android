@@ -918,6 +918,29 @@ public class RemoteDataSource implements ApiRest, DataSource {
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    // Methods for Payment
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override public Observable<String> addPayment(@NonNull Payment payment) {
+        return Observable.just(payment)
+                .map(new Func1<Payment, String>() {
+                    @Override public String call(Payment payment) {
+                        try {
+                            return new PaymentJsonMapper().toJsonString(payment);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String json) {
+                        LOGD(TAG, "Payment json: " + json);
+                        return Observable.fromCallable(createPOSTCallable(PAY, json));
+                    }
+                });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
     // Methods for HTTP request
     ///////////////////////////////////////////////////////////////////////////
 
