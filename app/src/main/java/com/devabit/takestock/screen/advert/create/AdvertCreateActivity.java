@@ -33,14 +33,17 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.*;
 import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
+import com.devabit.takestock.screen.advert.dialog.KeywordDialog;
 import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FileUtil;
 import com.devabit.takestock.utils.FontCache;
 import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
+import com.devabit.takestock.widget.FlexboxLayout;
 import com.devabit.takestock.widget.HintSpinnerAdapter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.devabit.takestock.utils.Logger.LOGD;
@@ -91,7 +94,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @BindView(R.id.size_y_edit_text) protected EditText mSizeYEditText;
     @BindView(R.id.size_z_edit_text) protected EditText mSizeZEditText;
     @BindView(R.id.certification_extra_edit_text) protected EditText mCertificationExtraEditText;
-    @BindView(R.id.tags_edit_text) protected EditText mTagsEditText;
+
+    @BindView(R.id.keywords_flexbox_layout) protected FlexboxLayout mKeywordsFlexboxLayout;
 
     @BindView(R.id.expiry_date_text_view) protected TextView mExpiryDateTextView;
 
@@ -263,7 +267,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     @Override public void showCategoriesInView(final List<Category> categories) {
         CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
-        final HintSpinnerAdapter<Category> hintAdapter = new HintSpinnerAdapter<Category>(
+        final HintSpinnerAdapter<Category> hintAdapter = new HintSpinnerAdapter<>(
                 adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
         mCategorySpinner.setAdapter(hintAdapter);
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -358,7 +362,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showEmptyCategoryError() {
-        showSnack(R.string.error_catecory);
+        showSnack(R.string.error_category);
         requestFocusOnView(mCategorySpinner);
     }
 
@@ -476,6 +480,38 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         }
     }
 
+    @OnClick(R.id.add_word_text_view)
+    protected void onAddKeywordTextViewClick() {
+        displayKeywordDialog();
+    }
+
+    private void displayKeywordDialog() {
+        KeywordDialog dialog = KeywordDialog.newInstance();
+        dialog.setOnKeywordListener(new KeywordDialog.OnKeywordListener() {
+            @Override public void onAdd(KeywordDialog dialog, String word) {
+                dialog.dismiss();
+                addKeyword(word);
+            }
+        });
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
+    }
+
+    private void addKeyword(String word) {
+        TextView textView = inflateKeywordTextView();
+        textView.setText(word);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                mKeywordsFlexboxLayout.removeView(v);
+            }
+        });
+        mKeywordsFlexboxLayout.addView(textView);
+
+    }
+
+    private TextView inflateKeywordTextView() {
+        return (TextView) getLayoutInflater().inflate(R.layout.item_keyword, mKeywordsFlexboxLayout, false);
+    }
+
     @OnClick(R.id.preview_ad_button)
     protected void onPreviewButton() {
         Advert advert = getAdvert();
@@ -512,6 +548,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         advert.setSize(getSize());
         advert.setCertificationId(getCertificationId());
         advert.setCertificationExtra(getCertificationExtra());
+        advert.setTags(getKeywords());
         advert.setAuthorId(getUserId());
         return advert;
     }
@@ -596,8 +633,14 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         return mCertificationExtraEditText.getText().toString().trim();
     }
 
-    private String getTags() {
-        return mTagsEditText.getText().toString().trim();
+    private List<String> getKeywords() {
+        int wordsCount = mKeywordsFlexboxLayout.getChildCount();
+        List<String> result = new ArrayList<>(wordsCount);
+        for (int position = 0; position < wordsCount; position++) {
+            TextView textView = (TextView) mKeywordsFlexboxLayout.getChildAt(position);
+            result.add(textView.getText().toString());
+        }
+        return result;
     }
 
     private int getUserId() {

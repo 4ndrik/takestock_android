@@ -70,7 +70,7 @@ public class AdvertEditActivity extends AppCompatActivity implements AdvertEditC
     @BindView(R.id.size_y_edit_text) protected EditText mSizeYEditText;
     @BindView(R.id.size_z_edit_text) protected EditText mSizeZEditText;
     @BindView(R.id.certification_extra_edit_text) protected EditText mCertificationExtraEditText;
-    @BindView(R.id.tags_edit_text) protected EditText mTagsEditText;
+//    @BindView(R.id.tags_edit_text) protected EditText mTagsEditText;
     @BindView(R.id.expiry_date_text_view) protected TextView mExpiryDateTextView;
     @BindView(R.id.certification_group_view) protected CertificationRadioButtonGroupView mCertificationGroupView;
 
