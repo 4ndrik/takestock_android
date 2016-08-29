@@ -37,7 +37,7 @@ android {
         }
 
         debug {
-            buildConfigField("String", "API_URL", '"http://dev.takestock.com/api/v1/"')
+            buildConfigField("String", "API_URL", '"http://uat.takestock.com/api/v1/"')
             buildConfigField("String", "STRIPE_API_KEY", '"pk_test_vqadhDOynhijTjKgj7sEnybl"')
             buildConfigField("boolean", "LOGGING_ENABLED", "true")
             applicationIdSuffix ".debug"
@@ -49,7 +49,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 21
+            minSdkVersion rootProject.ext.minSdkVersion
         }
         mock {
             minSdkVersion 21
@@ -84,11 +84,11 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 
     // RxJava dependencies
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'io.reactivex:rxandroid:1.2.0'
+    compile 'io.reactivex:rxjava:1.1.9'
+    compile 'io.reactivex:rxandroid:1.2.1'
 
     // ButterKnife dependencies
     compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
