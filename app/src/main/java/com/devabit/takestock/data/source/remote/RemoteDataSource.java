@@ -237,8 +237,8 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .map(new Func1<String, List<Category>>() {
                     @Override public List<Category> call(String json) {
                         try {
-                            return new CategoryAndSubcategoryJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
+                            return new CategoryJsonMapper().fromJsonString(json);
+                        } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -742,6 +742,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .map(new Func1<String, ResultList<Offer>>() {
                     @Override public ResultList<Offer> call(String jsonString) {
                         try {
+                            LOGD(TAG, jsonString);
                             return new OfferResultListJsonMapper().fromJsonString(jsonString);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
