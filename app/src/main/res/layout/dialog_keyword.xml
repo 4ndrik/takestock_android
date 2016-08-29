@@ -4,8 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:padding="16dp"
-              android:focusableInTouchMode="true">
+              android:padding="16dp">
 
     <EditText
             android:id="@+id/keyword_edit_text"

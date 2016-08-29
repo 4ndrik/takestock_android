@@ -8,9 +8,10 @@
           android:paddingStart="12dp"
           android:paddingEnd="6dp"
           android:textSize="14sp"
+          android:singleLine="true"
           android:gravity="center"
           android:drawablePadding="6dp"
           android:textColor="@color/white"
-          android:drawableEnd="@drawable/ic_cancel_white8C_20dp"
+          android:drawableEnd="@drawable/ic_cancel_white8c_20dp"
           android:background="@drawable/rounded_corners_solid_dark_purple"
           tools:text="Word"/>
