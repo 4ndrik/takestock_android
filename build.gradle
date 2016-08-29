@@ -5,9 +5,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath "io.realm:realm-gradle-plugin:1.0.0"
+        classpath "io.realm:realm-gradle-plugin:1.2.0"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -27,18 +27,18 @@ ext {
 
     // App version
     versionMajor = 2016
-    versionMinor = 06
-    versionPatch = 27
+    versionMinor = 07
+    versionPatch = 06
 
     // Sdk and tools
     minSdkVersion = 19
     targetSdkVersion = 23
     compileSdkVersion = 23
-    buildToolsVersion = '23.0.3'
+    buildToolsVersion = '24.0.1'
 
     // App dependencies
-    supportLibraryVersion = '24.0.0'
-    butterknifeVersion = '8.0.1'
+    supportLibraryVersion = '24.1.1'
+    butterknifeVersion = '8.2.0'
     stripeVersion = '1.0.4'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
