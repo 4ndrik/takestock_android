@@ -1,18 +1,16 @@
 package com.devabit.takestock.screen.main;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
@@ -22,36 +20,29 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
+import com.devabit.takestock.screen.advert.create.AdvertCreateActivity;
 import com.devabit.takestock.screen.buying.BuyingActivity;
 import com.devabit.takestock.screen.category.CategoriesDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.profile.account.ProfileAccountActivity;
 import com.devabit.takestock.screen.search.SearchActivity;
-import com.devabit.takestock.screen.advert.create.AdvertCreateActivity;
 import com.devabit.takestock.screen.selling.SellingActivity;
 import com.devabit.takestock.screen.watching.WatchingActivity;
 import com.devabit.takestock.utils.FontCache;
 
 import java.util.List;
 
-import static com.devabit.takestock.utils.Logger.makeLogTag;
-
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
-    private static final String TAG = makeLogTag(MainActivity.class);
-
-    public static Intent getStartIntent(Context context) {
+    public static Intent getStartIntent(Context context, String action) {
         Intent starter = new Intent(context, MainActivity.class);
-//        starter.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        starter.setAction(action);
         return starter;
     }
-
-    private static final int REQUEST_CODE_MAIN_ACTIVITY = 100;
-    private static final int REQUEST_CODE_SELLING_ACTIVITY = 101;
-    private static final int REQUEST_CODE_PROFILE_ACTIVITY = 102;
-    private static final int REQUEST_CODE_NOTIFICATIONS_ACTIVITY = 103;
-    private static final int REQUEST_CODE_WATCHING_ACTIVITY = 104;
-    private static final int REQUEST_CODE_OFFERS_ACTIVITY = 105;
 
     private static final int INDEX_MAIN_CONTENT = 0;
     private static final int INDEX_NO_CONNECTION_CONTENT = 1;
@@ -69,14 +60,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             R.id.browse_categories_button, R.id.sell_something_button})
     protected List<View> mViews;
 
+    private TakeStockAccount mAccount;
     private MainContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        mAccount = TakeStockAccount.get(MainActivity.this);
         new MainPresenter(
                 Injection.provideDataRepository(MainActivity.this), MainActivity.this);
 
@@ -89,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         mSellSomethingButton.setTypeface(boldTypeface);
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override public boolean onNavigationItemSelected(MenuItem item) {
+            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 switch (itemId) {
                     case R.id.nav_profile:
@@ -131,25 +123,28 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setUpTitleNavigationView();
     }
 
+    @Override public void setPresenter(@NonNull MainContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
     private void onProfileMenuItemClick() {
         closeDrawer();
-        if (lacksAccount()) startEntryActivity(REQUEST_CODE_PROFILE_ACTIVITY);
+        if (lacksAccount()) startEntryActivity();
         else startProfileAccountActivity();
     }
 
     private void startProfileAccountActivity() {
-        startActivityForResult(ProfileAccountActivity.getStartIntent(MainActivity.this), REQUEST_CODE_PROFILE_ACTIVITY);
+        startActivity(ProfileAccountActivity.getStartIntent(MainActivity.this));
     }
 
     private void onNotificationMenuItemClick() {
 //        if (lacksAccount()) startEntryActivity(REQUEST_CODE_NOTIFICATIONS_ACTIVITY);
         showNotYetImplementedSnackbar();
-
     }
 
     private void onWatchingMenuItemClick() {
         closeDrawer();
-        if (lacksAccount()) startEntryActivity(REQUEST_CODE_WATCHING_ACTIVITY);
+        if (lacksAccount()) startEntryActivity();
         else startWatchingActivity();
     }
 
@@ -159,13 +154,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void onBuyingMenuItemClick() {
         closeDrawer();
-        if (lacksAccount()) startEntryActivity(REQUEST_CODE_OFFERS_ACTIVITY);
+        if (lacksAccount()) startEntryActivity();
         else startBuyingActivity();
     }
 
     private void onSellingMenuItemClick() {
         closeDrawer();
-        if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
+        if (lacksAccount()) startEntryActivity();
         else startSellingActivity();
     }
 
@@ -176,12 +171,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @OnClick(R.id.sell_something_button)
     protected void onSellSomethingButtonClick() {
         closeDrawer();
-        if (lacksAccount()) startEntryActivity(REQUEST_CODE_SELLING_ACTIVITY);
+        if (lacksAccount()) startEntryActivity();
         else startSellSomethingActivity();
     }
 
-    private void startEntryActivity(int requestCode) {
-        startActivityForResult(EntryActivity.getStartIntent(MainActivity.this), requestCode);
+    private void startEntryActivity() {
+        startActivity(EntryActivity.getStartIntent(MainActivity.this));
     }
 
     private void startSellingActivity() {
@@ -192,40 +187,35 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(AdvertCreateActivity.getStartIntent(MainActivity.this));
     }
 
-    private boolean lacksAccount() {
-        Account account = getAccountOrNull();
-        return account == null;
-    }
-
-    @Nullable private Account getAccountOrNull() {
-        AccountManager accountManager = AccountManager.get(MainActivity.this);
-        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-        if (accounts.length == 0) return null;
-        else return accounts[0];
-    }
-
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent == null || TextUtils.isEmpty(intent.getAction())) return;
+        String action = intent.getAction();
+        if (action.equals(getString(R.string.action_sign_in))
+                || action.equals(getString(R.string.action_sign_up))
+                || action.equals(getString(R.string.action_log_out))) {
             setUpTitleNavigationView();
         }
     }
 
     private void setUpTitleNavigationView() {
         TextView titleTextView = ButterKnife.findById(mNavigationView.getHeaderView(0), R.id.title_drawer_header_text_view);
-        Account account = getAccountOrNull();
-        if (account == null) {
-            titleTextView.setText(R.string.sign_up);
+        if (lacksAccount()) {
+            titleTextView.setText(R.string.sign_in);
             titleTextView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    startEntryActivity(REQUEST_CODE_MAIN_ACTIVITY);
                     closeDrawer();
+                    startEntryActivity();
                 }
             });
         } else {
-            titleTextView.setText(account.name);
+            titleTextView.setText(mAccount.getUserName());
             titleTextView.setOnClickListener(null);
         }
+    }
+
+    private boolean lacksAccount() {
+        return mAccount.lacksAccount();
     }
 
     private void startSearchActivity() {
@@ -273,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override public void showLoadingDataError() {
-        startEntryActivity(REQUEST_CODE_MAIN_ACTIVITY);
+        startEntryActivity();
     }
 
     @Override public void showNetworkConnectionError() {
@@ -319,10 +309,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             view.setAlpha(isActive ? 0.5f : 1.0f);
         }
     };
-
-    @Override public void setPresenter(@NonNull MainContract.Presenter presenter) {
-        mPresenter = presenter;
-    }
 
     @Override protected void onStop() {
         super.onStop();

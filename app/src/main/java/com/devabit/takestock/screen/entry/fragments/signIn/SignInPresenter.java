@@ -40,12 +40,11 @@ public class SignInPresenter implements SignInContract.Presenter {
 
     }
 
-    @Override public void obtainAuthToken(UserCredentials credentials) {
+    @Override public void signIn(UserCredentials credentials) {
         if (!isUserCredentialsValid(credentials)) return;
-
         mSignInView.setProgressIndicator(true);
         mSubscriptions.clear();
-        Subscription subscription = mDataRepository.obtainAuthTokenPerSignIn(credentials)
+        Subscription subscription = mDataRepository.signIn(credentials)
                 .compose(RxTransformers.<AuthToken>applyObservableSchedulers())
                 .subscribe(new Subscriber<AuthToken>() {
                     @Override public void onCompleted() {
@@ -66,7 +65,7 @@ public class SignInPresenter implements SignInContract.Presenter {
                     }
 
                     @Override public void onNext(AuthToken authToken) {
-                        mSignInView.processAuthToken(authToken);
+                        mSignInView.showSignInSuccess();
                     }
                 });
         mSubscriptions.add(subscription);

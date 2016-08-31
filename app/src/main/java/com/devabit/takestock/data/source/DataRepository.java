@@ -58,12 +58,12 @@ public class DataRepository implements DataSource {
     // Methods for AuthToken
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
-        return mRemoteDataSource.obtainAuthTokenPerSignUp(credentials);
+    @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
+        return mRemoteDataSource.signUp(credentials);
     }
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials) {
-        return mRemoteDataSource.obtainAuthTokenPerSignIn(credentials)
+    @Override public Observable<AuthToken> signIn(@NonNull UserCredentials credentials) {
+        return mRemoteDataSource.signIn(credentials)
                 .flatMap(new Func1<AuthToken, Observable<AuthToken>>() {
                     @Override public Observable<AuthToken> call(AuthToken authToken) {
                         return Observable.zip(Observable.just(authToken), mLocalDataSource.saveUser(authToken.user),

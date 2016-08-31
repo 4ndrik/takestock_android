@@ -1,13 +1,8 @@
 package com.devabit.takestock.screen.profile.account;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,35 +19,30 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.about.AboutActivity;
 import com.devabit.takestock.screen.help.HelpActivity;
+import com.devabit.takestock.screen.main.MainActivity;
 import com.devabit.takestock.screen.profile.edit.ProfileEditActivity;
-
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.
  */
 public class ProfileAccountActivity extends AppCompatActivity implements ProfileAccountContract.View {
 
-    private static final String TAG = makeLogTag(ProfileAccountActivity.class);
-
     public static Intent getStartIntent(Context context) {
         return new Intent(context, ProfileAccountActivity.class);
     }
 
-    private static final int REQUEST_CODE_ACTIVITY_EDIT_PROFILE = 101;
+    private static final int RC_EDIT_PROFILE = 101;
 
     @BindView(R.id.profile_image_view) protected ImageView mProfileImageView;
     @BindView(R.id.profile_name_text_view) protected TextView mProfileNameTextView;
 
     private ProfileAccountContract.Presenter mPresenter;
 
-    private AccountManager mAccountManager;
-    private Account mAccount;
+    private TakeStockAccount mAccount;
     private User mUser;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,8 +51,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         ButterKnife.bind(ProfileAccountActivity.this);
         setUpToolbar();
         setUpPresenter();
-        mAccountManager = AccountManager.get(ProfileAccountActivity.this);
-        mAccount = getAccount(mAccountManager);
+        mAccount = TakeStockAccount.get(ProfileAccountActivity.this);
     }
 
     private void setUpToolbar() {
@@ -93,12 +82,12 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
 
     private void startProfileEditActivity() {
         Intent starter = ProfileEditActivity.getStartIntent(ProfileAccountActivity.this, mUser);
-        startActivityForResult(starter, REQUEST_CODE_ACTIVITY_EDIT_PROFILE);
+        startActivityForResult(starter, RC_EDIT_PROFILE);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ACTIVITY_EDIT_PROFILE && resultCode == RESULT_OK) {
+        if (requestCode == RC_EDIT_PROFILE && resultCode == RESULT_OK) {
             User user = data.getParcelableExtra(User.class.getName());
             setUpUser(user);
         }
@@ -109,19 +98,9 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
                 Injection.provideDataRepository(ProfileAccountActivity.this), ProfileAccountActivity.this);
     }
 
-    private Account getAccount(AccountManager accountManager) {
-        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-        return accounts[0];
-    }
-
     @Override protected void onStart() {
         super.onStart();
-        mPresenter.fetchUserById(getAccountUserId());
-    }
-
-    private int getAccountUserId() {
-        String userId = mAccountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
-        return Integer.valueOf(userId);
+        mPresenter.fetchUserById(mAccount.getUserId());
     }
 
     @Override public void showUserInView(User user) {
@@ -200,27 +179,13 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
     }
 
     private void logOut() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            boolean isRemoved = mAccountManager.removeAccountExplicitly(mAccount);
-            LOGD(TAG, "account removed " + isRemoved);
-            finishActivity();
-        } else {
-            mAccountManager.removeAccount(mAccount, new AccountManagerCallback<Boolean>() {
-                @Override public void run(AccountManagerFuture<Boolean> future) {
-                    try {
-                        LOGD(TAG, "account removed " + future.getResult());
-                        finishActivity();
-                    } catch (Exception e) {
-                        LOGE(TAG, "Account removed error", e);
-                    }
+        mAccount.removeAccount(new TakeStockAccount.OnAccountRemovedListener() {
+            @Override public void onAccountRemoved(boolean isRemoved) {
+                if (isRemoved) {
+                    startActivity(MainActivity.getStartIntent(ProfileAccountActivity.this, getString(R.string.action_log_out)));
                 }
-            }, null);
-        }
-    }
-
-    private void finishActivity() {
-        setResult(RESULT_OK);
-        finish();
+            }
+        });
     }
 
     @Override protected void onStop() {

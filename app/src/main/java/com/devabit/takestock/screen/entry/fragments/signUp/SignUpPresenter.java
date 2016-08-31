@@ -13,7 +13,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.devabit.takestock.utils.Logger.LOGD;
 import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
@@ -41,11 +40,11 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
     }
 
-    @Override public void obtainAccessToken(UserCredentials userCredentials) {
+    @Override public void signUp(UserCredentials userCredentials) {
         if (!isUserCredentialsValid(userCredentials)) return;
         mSignUpView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .obtainAuthTokenPerSignUp(userCredentials)
+                .signUp(userCredentials)
                 .compose(RxTransformers.<AuthToken>applyObservableSchedulers())
                 .subscribe(new Subscriber<AuthToken>() {
                     @Override public void onCompleted() {
@@ -65,8 +64,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                     }
 
                     @Override public void onNext(AuthToken authToken) {
-                        LOGD(TAG, "Token: " + authToken);
-                        mSignUpView.processAuthToken(authToken);
+                        mSignUpView.showSingUpSuccess();
                     }
                 });
         mSubscriptions.add(subscription);

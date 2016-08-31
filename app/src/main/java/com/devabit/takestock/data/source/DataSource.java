@@ -19,9 +19,9 @@ public interface DataSource {
     // Methods for AuthToken
     ///////////////////////////////////////////////////////////////////////////
 
-    Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials);
+    Observable<AuthToken> signUp(@NonNull UserCredentials credentials);
 
-    Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials);
+    Observable<AuthToken> signIn(@NonNull UserCredentials credentials);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Category

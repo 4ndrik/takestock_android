@@ -1,13 +1,10 @@
 package com.devabit.takestock.data.source.remote;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.filter.OfferFilter;
 import com.devabit.takestock.data.filter.QuestionFilter;
@@ -36,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.devabit.takestock.utils.Logger.LOGD;
 import static com.devabit.takestock.utils.Logger.makeLogTag;
+import static timber.log.Timber.d;
 
 /**
  * Implementation for retrieving data from the network.
@@ -65,21 +63,13 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private static final int WRITE_TIMEOUT = 10;
     private static final int READ_TIMEOUT = 30;
 
-    private Context mContext;
+    private final TakeStockAccount mAccount;
     private final ConnectivityManager mConnectivityManager;
-
-    private final AccountManager mAccountManager;
-    private final String mAccountType;
-    private final String mTokenType;
-
     private final OkHttpClient mOkHttpClient;
 
     private RemoteDataSource(Context context) {
-        mContext = context.getApplicationContext();
-        mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mAccountManager = AccountManager.get(mContext);
-        mAccountType = mContext.getString(R.string.authenticator_account_type);
-        mTokenType = mContext.getString(R.string.authenticator_token_type);
+        mAccount = TakeStockAccount.get(context);
+        mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         mOkHttpClient = buildClient();
     }
 
@@ -99,18 +89,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 Request.Builder builder = request.newBuilder();
                 builder.header(HEADER_NAME_CONTENT_TYPE, HEADER_VALUE_JSON);
 
-                Account account = getAccountOrNull();
                 Response response;
-                if (account != null) {
-                    String authToken = getAuthToken(account);
-                    setAuthHeader(builder, authToken);
+                String accessToken = mAccount.getAccessToken();
+                if (!accessToken.isEmpty()) {
+                    setAuthHeader(builder, accessToken);
                     request = builder.build();
                     response = chain.proceed(request);
 
                     if (response.code() == 401) { //if unauthorized
-                        authToken = refreshAuthToken(authToken);
-                        setAuthToken(account, authToken);
-                        setAuthHeader(builder, authToken);
+                        accessToken = refreshAccessToken(accessToken);
+                        mAccount.setAccessToken(accessToken);
+                        setAuthHeader(builder, accessToken);
                     }
                 } else {
                     response = chain.proceed(request);
@@ -121,20 +110,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         };
     }
 
-    @Nullable private Account getAccountOrNull() {
-        Account[] accounts = mAccountManager.getAccountsByType(mAccountType);
-        if (accounts.length > 0) {
-            return accounts[0];
-        } else {
-            return null;
-        }
-    }
-
-    private String getAuthToken(Account account) {
-        return mAccountManager.peekAuthToken(account, mTokenType);
-    }
-
-    private String refreshAuthToken(String token) {
+    private String refreshAccessToken(String token) {
         synchronized (mOkHttpClient) {
             AuthToken authToken = new AuthToken();
             authToken.token = token;
@@ -148,10 +124,6 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    private void setAuthToken(Account account, String authToken) {
-        mAccountManager.setAuthToken(account, mTokenType, authToken);
     }
 
     private void setAuthHeader(Request.Builder builder, String authToken) {
@@ -173,7 +145,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     // Methods for AuthToken
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
+    @Override public Observable<AuthToken> signUp(@NonNull final UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
@@ -182,27 +154,43 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 }).map(new Func1<String, AuthToken>() {
                     @Override public AuthToken call(String json) {
                         try {
+                            d(json);
                             return new AuthTokenJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                    }
+                })
+                .doOnNext(new Action1<AuthToken>() {
+                    @Override public void call(AuthToken authToken) {
+                        d(authToken.toString());
+                        mAccount.createAccount(authToken, credentials.password);
                     }
                 });
     }
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials) {
+    @Override public Observable<AuthToken> signIn(@NonNull final UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
+                        d(json);
                         return Observable.fromCallable(createPOSTCallable(TOKEN_AUTH, json));
                     }
-                }).map(new Func1<String, AuthToken>() {
+                })
+                .map(new Func1<String, AuthToken>() {
                     @Override public AuthToken call(String json) {
                         try {
+                            d(json);
                             return new AuthTokenJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                    }
+                })
+                .doOnNext(new Action1<AuthToken>() {
+                    @Override public void call(AuthToken authToken) {
+                        d(authToken.toString());
+                        mAccount.createAccount(authToken, credentials.password);
                     }
                 });
     }
@@ -945,7 +933,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
     // Methods for HTTP request
     ///////////////////////////////////////////////////////////////////////////
 
-    /**POST*/
+    /**
+     * POST
+     */
     private Callable<String> createPOSTCallable(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
@@ -975,7 +965,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .build();
     }
 
-    /**GET*/
+    /**
+     * GET
+     */
     private Callable<String> createGETCallable(final String url) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
@@ -1004,7 +996,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .build();
     }
 
-    /**PUT*/
+    /**
+     * PUT
+     */
     private Callable<String> createPUTCallable(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {
@@ -1034,7 +1028,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .build();
     }
 
-    /**PATCH*/
+    /**
+     * PATCH
+     */
     private Callable<String> createPATCHCallable(final String url, final String json) {
         return new Callable<String>() {
             @Override public String call() throws Exception {

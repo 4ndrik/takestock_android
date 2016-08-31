@@ -1,7 +1,5 @@
 package com.devabit.takestock.screen.entry.fragments.signUp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -27,8 +25,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import butterknife.*;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.UserCredentials;
+import com.devabit.takestock.screen.main.MainActivity;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
@@ -111,7 +109,7 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
     protected void onSignUpButtonClick() {
         hideKeyboard();
         if (validateAgreement()) {
-            mPresenter.obtainAccessToken(getUserCredentials());
+            mPresenter.signUp(getUserCredentials());
         }
     }
 
@@ -148,6 +146,10 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
 
     private String getPassword() {
         return mPasswordEditText.getText().toString().trim();
+    }
+
+    @Override public void showSingUpSuccess() {
+        startActivity(MainActivity.getStartIntent(getActivity(), getString(R.string.action_sign_up)));
     }
 
     @Override public void showUserNameError() {
@@ -225,24 +227,6 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
             View view = mContentInput.getChildAt(i);
             view.setAlpha(isActive ? 1.0f : 0.5f);
         }
-    }
-
-    @Override public void processAuthToken(AuthToken authToken) {
-        AccountManager accountManager = AccountManager.get(getActivity());
-        Account account = new Account(getUserName(), getString(R.string.authenticator_account_type));
-        Bundle userData = new Bundle();
-        userData.putString(getString(R.string.authenticator_user_id), String.valueOf(authToken.userId));
-        userData.putString(getString(R.string.authenticator_user_name), String.valueOf(authToken.username));
-        userData.putString(getString(R.string.authenticator_user_email), String.valueOf(authToken.email));
-        accountManager.addAccountExplicitly(account, getPassword(), userData);
-        accountManager.setAuthToken(account, getString(R.string.authenticator_token_type), authToken.token);
-        finishActivityWithResult();
-    }
-
-    private void finishActivityWithResult() {
-        Activity activity = getActivity();
-        activity.setResult(Activity.RESULT_OK);
-        activity.finish();
     }
 
     @Override public void setPresenter(@NonNull SignUpContract.Presenter presenter) {
