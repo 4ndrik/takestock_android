@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataRepository;
-import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import com.devabit.takestock.utils.BitmapUtil;
 import rx.Observable;
@@ -194,34 +193,6 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
         mCreateView.showAdvertInPreview(advert);
     }
 
-    @Override public void saveAdvert(Advert advert) {
-        if(!isAdvertDataValid(advert)) return;
-        mCreateView.setProgressIndicator(true);
-        Subscription subscription = mDataRepository
-                .saveAdvert(advert)
-                .compose(RxTransformers.<Advert>applyObservableSchedulers())
-                .subscribe(new Subscriber<Advert>() {
-                    @Override public void onCompleted() {
-                        mCreateView.setProgressIndicator(false);
-                    }
-
-                    @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
-                        mCreateView.setProgressIndicator(false);
-                        if (e instanceof NetworkConnectionException) {
-                            mCreateView.showNetworkConnectionError();
-                        } else {
-                            mCreateView.showUnknownError();
-                        }
-                    }
-
-                    @Override public void onNext(Advert advert) {
-                        mCreateView.showAdvertSaved(advert);
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
-
     private boolean isAdvertDataValid(Advert advert) {
         return validatePhotos(advert)
                 && validateName(advert)
@@ -234,9 +205,9 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
                 && validateShipping(advert)
                 && validateCondition(advert)
                 && validateExpiryDate(advert)
-                && validateSize(advert)
-                && validateCertification(advert)
-                && validateCertificationExtra(advert);
+//                && validateSize(advert)
+                && validateCertification(advert);
+//                && validateCertificationExtra(advert);
     }
 
     private boolean validateCategory(Advert advert) {
@@ -348,7 +319,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
 
     private boolean validateCertification(Advert advert) {
         int certificationId = advert.getCertificationId();
-        if(certificationId == 0) {
+        if(certificationId <= 0) {
             mCreateView.showEmptyCertificationError();
             return false;
         }

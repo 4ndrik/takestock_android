@@ -67,8 +67,6 @@ public interface AdvertCreateContract {
 
         void showAdvertInPreview(Advert advert);
 
-        void showAdvertSaved(Advert advert);
-
     }
 
     interface Presenter extends BasePresenter {
@@ -76,7 +74,5 @@ public interface AdvertCreateContract {
         void processPhotoUriToFile(Uri photoUri, File photoFile);
 
         void previewAdvert(Advert advert);
-
-        void saveAdvert(Advert advert);
     }
 }

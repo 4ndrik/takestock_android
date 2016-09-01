@@ -1,12 +1,9 @@
 package com.devabit.takestock.screen.advert.create;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.*;
 import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
@@ -37,25 +35,21 @@ import com.devabit.takestock.screen.advert.dialog.KeywordDialog;
 import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.utils.FileUtil;
-import com.devabit.takestock.utils.FontCache;
 import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
 import com.devabit.takestock.widget.FlexboxLayout;
 import com.devabit.takestock.widget.HintSpinnerAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.PermissionChecker.*;
 
 /**
  * Created by Victor Artemyev on 07/04/2016.
  */
 public class AdvertCreateActivity extends AppCompatActivity implements AdvertCreateContract.View {
-
-    private static final String TAG = makeLogTag(AdvertCreateActivity.class);
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AdvertCreateActivity.class);
@@ -101,14 +95,13 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     @BindView(R.id.certification_group_view) protected CertificationRadioButtonGroupView mCertificationGroupView;
 
-    @BindViews({R.id.preview_ad_button, R.id.save_and_put_on_hold_button})
+    @BindViews({R.id.preview_button/*, R.id.save_and_put_on_hold_button*/})
     List<Button> mButtons;
 
     private PhotoGalleryAdapter mPhotoGalleryAdapter;
 
     private AdvertCreateContract.Presenter mPresenter;
 
-    private Account mAccount;
     private Uri mPhotoUri;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -116,13 +109,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         setContentView(R.layout.activity_advert_create);
         ButterKnife.bind(AdvertCreateActivity.this);
         setUpPresenter();
-        final Typeface boldTypeface = FontCache.getTypeface(AdvertCreateActivity.this, R.string.font_brandon_bold);
-        ButterKnife.apply(mButtons, new ButterKnife.Action<Button>() {
-            @Override public void apply(@NonNull Button button, int index) {
-                button.setTypeface(boldTypeface);
-            }
-        });
-        setUpToolbar(boldTypeface);
+        setUpToolbar();
         setUpPhotosRecyclerView();
     }
 
@@ -135,12 +122,9 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         mPresenter = presenter;
     }
 
-    private void setUpToolbar(Typeface typeface) {
+    private void setUpToolbar() {
         Toolbar toolbar = ButterKnife.findById(AdvertCreateActivity.this, R.id.toolbar);
         toolbar.setTitle(R.string.sell_something);
-//        TextView title = ButterKnife.findById(toolbar, R.id.toolbar_title);
-//        title.setTypeface(typeface);
-//        title.setText(R.string.sell_something);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
@@ -250,13 +234,18 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     private void displayDatePickerDialog() {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
         DatePickerDialog dialog = new DatePickerDialog(AdvertCreateActivity.this, R.style.DatePickerDialogTheme,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         mExpiryDateTextView.setError(null);
-                        mExpiryDateTextView.setText(getString(R.string.expiry_date, dayOfMonth, monthOfYear, year));
+                        mExpiryDateTextView.setText(getString(R.string.expiry_date, dayOfMonth, monthOfYear + 1, year));
                     }
-                }, 1987, 27, 12);
+                }, year, month, day);
         dialog.show();
     }
 
@@ -443,11 +432,6 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         startActivity(AdvertPreviewActivity.getStartIntent(AdvertCreateActivity.this, advert));
     }
 
-    @Override public void showAdvertSaved(Advert advert) {
-        LOGD(TAG, advert.toString());
-        Snackbar.make(mContent, "Advert saved.", Snackbar.LENGTH_LONG).show();
-    }
-
     private void showSnack(@StringRes int resId) {
         Snackbar.make(mContent, resId, Snackbar.LENGTH_SHORT).show();
     }
@@ -512,17 +496,10 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         return (TextView) getLayoutInflater().inflate(R.layout.item_keyword, mKeywordsFlexboxLayout, false);
     }
 
-    @OnClick(R.id.preview_ad_button)
+    @OnClick(R.id.preview_button)
     protected void onPreviewButton() {
         Advert advert = getAdvert();
         mPresenter.previewAdvert(advert);
-    }
-
-    @OnClick(R.id.save_and_put_on_hold_button)
-    protected void onSaveButtonClick() {
-        hideKeyboard();
-        Advert advert = getAdvert();
-        mPresenter.saveAdvert(advert);
     }
 
     private void hideKeyboard() {
@@ -644,10 +621,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     private int getUserId() {
-        AccountManager accountManager = AccountManager.get(AdvertCreateActivity.this);
-        mAccount = accountManager.getAccountsByType(getString(R.string.authenticator_account_type))[0];
-        String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
-        return Integer.valueOf(userId);
+        return TakeStockAccount.get(AdvertCreateActivity.this).getUserId();
     }
 
     @Override protected void onStop() {
