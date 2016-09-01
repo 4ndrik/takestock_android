@@ -13,4 +13,5 @@
     <dimen name="dimen_48dp">48dp</dimen>
     <dimen name="dimen_150dp">150dp</dimen>
     <dimen name="dimen_250dp">250dp</dimen>
+    <dimen name="advert_photos_rv_height">224dp</dimen>
 </resources>

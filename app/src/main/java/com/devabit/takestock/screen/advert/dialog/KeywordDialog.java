@@ -19,7 +19,8 @@ import static com.devabit.takestock.utils.Logger.makeLogTag;
 /**
  * Created by Victor Artemyev on 04/07/2016.
  */
-public class KeywordDialog extends DialogFragment implements DialogInterface.OnClickListener {
+public class
+KeywordDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     private static final String TAG = makeLogTag(KeywordDialog.class);
 
@@ -59,6 +60,9 @@ public class KeywordDialog extends DialogFragment implements DialogInterface.OnC
         mAddButtonActiveColor = mAddButton.getCurrentTextColor();
         mAddButtonInactiveColor = ContextCompat.getColor(mAddButton.getContext(), R.color.translucent_purple_dark_80);
         setPositiveButtonActive(false);
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override public void onClick(DialogInterface dialog, int which) {

@@ -19,10 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
@@ -88,15 +86,9 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @BindView(R.id.size_y_edit_text) protected EditText mSizeYEditText;
     @BindView(R.id.size_z_edit_text) protected EditText mSizeZEditText;
     @BindView(R.id.certification_extra_edit_text) protected EditText mCertificationExtraEditText;
-
     @BindView(R.id.keywords_flexbox_layout) protected FlexboxLayout mKeywordsFlexboxLayout;
-
     @BindView(R.id.expiry_date_text_view) protected TextView mExpiryDateTextView;
-
     @BindView(R.id.certification_group_view) protected CertificationRadioButtonGroupView mCertificationGroupView;
-
-    @BindViews({R.id.preview_button/*, R.id.save_and_put_on_hold_button*/})
-    List<Button> mButtons;
 
     private PhotoGalleryAdapter mPhotoGalleryAdapter;
 
@@ -502,11 +494,6 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         mPresenter.previewAdvert(advert);
     }
 
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-    }
-
     private Advert getAdvert() {
         Advert advert = new Advert();
         advert.setPhotos(getPhotos());
@@ -514,6 +501,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         advert.setCategoryId(getCategoryId());
         advert.setSubCategoryId(getSubcategoryId());
         advert.setPackagingId(getPackagingId());
+        advert.setPackagingName(getPackagingName());
         advert.setItemsCount(getItemCount());
         advert.setMinOrderQuantity(getMinimumOrder());
         advert.setGuidePrice(getGuidePrice());
@@ -551,6 +539,11 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     private int getPackagingId() {
         Packaging packaging = (Packaging) mPackagingSpinner.getSelectedItem();
         return packaging == null ? -1 : packaging.getId();
+    }
+
+    private String getPackagingName() {
+        Packaging packaging = (Packaging) mPackagingSpinner.getSelectedItem();
+        return packaging == null ? "" : packaging.getType();
     }
 
     private int getItemCount() {

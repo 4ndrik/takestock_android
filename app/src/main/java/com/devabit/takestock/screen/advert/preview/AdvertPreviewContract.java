@@ -1,5 +1,6 @@
 package com.devabit.takestock.screen.advert.preview;
 
+import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Certification;
 import com.devabit.takestock.data.model.Condition;
 import com.devabit.takestock.data.model.Shipping;
@@ -19,13 +20,17 @@ public interface AdvertPreviewContract {
 
         void showConditionInView(Condition condition);
 
+        void setProgressIndicator(boolean active);
+
+        void showAdvertSaved(Advert advert);
+
+        void showNetworkConnectionError();
+
+        void showUnknownError();
+
     }
 
     interface Presenter extends BasePresenter {
-        void fetchShippingById(int id);
-
-        void fetchCertificationById(int id);
-
-        void fetchConditionById(int id);
+        void saveAdvert();
     }
 }

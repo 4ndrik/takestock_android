@@ -5,32 +5,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.Certification;
-import com.devabit.takestock.data.model.Condition;
-import com.devabit.takestock.data.model.Shipping;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
-import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
+import com.devabit.takestock.screen.main.MainActivity;
+import com.devabit.takestock.utils.DateUtil;
 
-import static com.devabit.takestock.utils.Logger.makeLogTag;
+import java.util.List;
 
 /**
  * Created by Victor Artemyev on 23/05/2016.
  */
 public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPreviewContract.View {
-
-    private static final String TAG = makeLogTag(AdvertDetailActivity.class);
 
     public static Intent getStartIntent(Context context, Advert advert) {
         Intent starter = new Intent(context, AdvertPreviewActivity.class);
@@ -38,8 +40,7 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
         return starter;
     }
 
-    @BindView(R.id.content_product_detail) protected View mContent;
-    @BindView(R.id.advert_photos_recycler_view) protected RecyclerView mPhotosRecyclerView;
+    @BindView(R.id.content_product_detail) protected ViewGroup mContent;
     @BindView(R.id.guide_price_text_view) protected TextView mGuidePriceTextView;
     @BindView(R.id.minimum_order_text_view) protected TextView mMinimumOrderTextView;
     @BindView(R.id.qty_available_text_view) protected TextView mQtyAvailableTextView;
@@ -49,18 +50,34 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
     @BindView(R.id.expiry_date_text_view) protected TextView mExpiryTextView;
     @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
     @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
+    @BindView(R.id.content_preview) protected ViewGroup mPreviewContent;
 
     private AdvertPreviewContract.Presenter mPresenter;
+    private Advert mAdvert;
+    private boolean mIsSaved;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert_preview);
         ButterKnife.bind(AdvertPreviewActivity.this);
-        new AdvertPreviewPresenter(
-                Injection.provideDataRepository(AdvertPreviewActivity.this), AdvertPreviewActivity.this);
+        mAdvert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
+        setUpPresenter(mAdvert);
+        setUpToolbar(mAdvert);
+        setUpAdvertPhotos(mAdvert.getPhotos());
+        setUpAdvert(mAdvert);
+    }
 
-        final Advert advert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
+    private void setUpPresenter(Advert advert) {
+        new AdvertPreviewPresenter(advert,
+                Injection.provideDataRepository(AdvertPreviewActivity.this),
+                AdvertPreviewActivity.this);
+    }
 
+    @Override public void setPresenter(@NonNull AdvertPreviewContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    private void setUpToolbar(Advert advert) {
         Toolbar toolbar = ButterKnife.findById(AdvertPreviewActivity.this, R.id.toolbar);
         toolbar.setTitle(advert.getName());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -68,32 +85,30 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
                 onBackPressed();
             }
         });
-
-        mContent.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override public void onGlobalLayout() {
-                        mPhotosRecyclerView.getLayoutParams().height = mContent.getHeight() / 2;
-                        mContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        setUpAdvertPhotosToRecyclerView(advert);
-                    }
-                });
-        mGuidePriceTextView.setText(getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
-        mMinimumOrderTextView.setText(getString(R.string.minimum_order_kg, advert.getMinOrderQuantity()));
-        mQtyAvailableTextView.setText(getString(R.string.qty_available_kg, advert.getItemsCount()));
-        mDescriptionTextView.setText(advert.getDescription());
-        mLocationTextView.setText(advert.getLocation());
-
-        mPresenter.fetchShippingById(advert.getShippingId());
-        mPresenter.fetchCertificationById(advert.getCertificationId());
-        mPresenter.fetchConditionById(advert.getConditionId());
     }
 
-    private void setUpAdvertPhotosToRecyclerView(Advert advert) {
+    private void setUpAdvertPhotos(List<Photo> photos) {
+        RecyclerView recyclerView = ButterKnife.findById(AdvertPreviewActivity.this, R.id.advert_photos_recycler_view);
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(AdvertPreviewActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        mPhotosRecyclerView.setLayoutManager(layoutManager);
-        AdvertPhotosAdapter photosAdapter = new AdvertPhotosAdapter(AdvertPreviewActivity.this, advert.getPhotos());
-        mPhotosRecyclerView.setAdapter(photosAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        AdvertPhotosAdapter photosAdapter = new AdvertPhotosAdapter(AdvertPreviewActivity.this, photos);
+        recyclerView.setAdapter(photosAdapter);
+    }
+
+    private void setUpAdvert(Advert advert) {
+        String packaging = advert.getPackagingName();
+        mGuidePriceTextView.setText(getString(R.string.advert_preview_guide_price_per_unit, advert.getGuidePrice(), packaging));
+        mMinimumOrderTextView.setText(getString(R.string.advert_preview_minimum_order_unit, advert.getMinOrderQuantity(), packaging));
+        mQtyAvailableTextView.setText(getString(R.string.advert_preview_qty_available_unit, advert.getItemsCount(), packaging));
+        mDescriptionTextView.setText(advert.getDescription());
+        mLocationTextView.setText(advert.getLocation());
+        mExpiryTextView.setText(DateUtil.formatToExpiryDate(advert.getDateExpiresAt()));
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        mPresenter.resume();
     }
 
     @Override public void showShippingInView(Shipping shipping) {
@@ -108,7 +123,64 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
         mConditionTextView.setText(condition.getState());
     }
 
-    @Override public void setPresenter(@NonNull AdvertPreviewContract.Presenter presenter) {
-        mPresenter = presenter;
+    @Override public void setProgressIndicator(boolean active) {
+        setTouchDisabled(active);
+        setContentTransparency(active);
+    }
+
+    private void setTouchDisabled(boolean isActive) {
+        Window window = getWindow();
+        if (isActive) {
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    private void setContentTransparency(boolean isActive) {
+        for (int i = 0; i < mPreviewContent.getChildCount(); i++) {
+            View view = mPreviewContent.getChildAt(i);
+            view.setAlpha(isActive ? 0.5f : 1.0f);
+        }
+    }
+
+    @OnClick(R.id.make_live_button)
+    protected void onMakeLiveButtonClick() {
+        mPresenter.saveAdvert();
+    }
+
+    @Override public void showAdvertSaved(Advert advert) {
+        Button button = ButterKnife.findById(this, R.id.make_live_button);
+        button.setEnabled(false);
+        button.setAlpha(0.5f);
+        mIsSaved = true;
+        showSnack(R.string.advert_preview_advert_saved);
+    }
+
+    @Override public void showNetworkConnectionError() {
+        showSnack(R.string.error_no_network_connection);
+    }
+
+    @Override public void showUnknownError() {
+        showSnack(R.string.error_unknown);
+    }
+
+    private void showSnack(@StringRes int resId) {
+        Snackbar.make(mContent, resId, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override public void onBackPressed() {
+        if (mIsSaved) {
+            startActivity(MainActivity.getStartIntent(AdvertPreviewActivity.this, getString(R.string.action_advert_saved)));
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override protected void onPause() {
+        mPresenter.pause();
+        super.onPause();
     }
 }

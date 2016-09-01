@@ -198,4 +198,21 @@
     <string name="advert_create_preview_and_make_live"><![CDATA[Preview & make live]]></string>
     <!--advert create screen end-->
 
+    <!--advert preview screen start-->
+    <string name="advert_preview_guide_price">Guide price</string>
+    <string name="advert_preview_minimum_order">Minimum order</string>
+    <string name="advert_preview_qty_available">Qty available</string>
+    <string name="advert_preview_description">Description</string>
+    <string name="advert_preview_category">Category</string>
+    <string name="advert_preview_location">Location</string>
+    <string name="advert_preview_shipping">Shipping</string>
+    <string name="advert_preview_expiry">Expiry</string>
+    <string name="advert_preview_certification">Certification</string>
+    <string name="advert_preview_condition">Condition</string>
+    <string name="advert_preview_make_live">Make live</string>
+    <string name="advert_preview_guide_price_per_unit">£ %1$s/%2$s</string>
+    <string name="advert_preview_minimum_order_unit">%1$d %2$s</string>
+    <string name="advert_preview_qty_available_unit">%1$d %2$s</string>
+    <string name="advert_preview_advert_saved">Advert saved</string>
+    <!--advert create screen end-->
 </resources>
