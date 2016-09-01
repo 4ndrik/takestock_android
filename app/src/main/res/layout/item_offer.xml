@@ -121,7 +121,7 @@
                     android:text="@string/accept"
                     android:textStyle="bold"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:theme="@style/RaisedButtonLime"/>
+                    android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
             <Button
                     android:id="@+id/counter_button"
@@ -131,7 +131,7 @@
                     android:text="@string/counter"
                     android:textStyle="bold"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:theme="@style/RaisedButtonPurple"/>
+                    android:theme="@style/Widget.TakeStock.Button.Jam"/>
 
             <Button
                     android:id="@+id/reject_button"
@@ -141,7 +141,7 @@
                     android:text="@string/reject"
                     android:textStyle="bold"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:theme="@style/RaisedButtonRed"/>
+                    android:theme="@style/Widget.TakeStock.Button.Red"/>
 
         </LinearLayout>
 

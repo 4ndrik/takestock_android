@@ -301,7 +301,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/ask_away"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:theme="@style/RaisedButtonLime"/>
+                android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
         <Button
                 android:id="@+id/make_button"
@@ -312,7 +312,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/make_offer"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:theme="@style/RaisedButtonPurple"/>
+                android:theme="@style/Widget.TakeStock.Button.Jam"/>
 
     </LinearLayout>
 

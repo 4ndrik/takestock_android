@@ -41,18 +41,17 @@
                 android:inputType="text"
                 android:imeOptions="actionSearch"
                 android:hint="@string/search_products"
-                android:textAppearance="@android:style/TextAppearance.Medium"
-                android:theme="@style/EditTextPurple"/>
+                android:textAppearance="@android:style/TextAppearance.Medium"/>
 
         <Button
-                android:id="@+id/browse_categories_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/browse_categories"
-                android:theme="@style/FlatButtonPurple"
-                android:textAppearance="@android:style/TextAppearance.Small"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:id="@+id/browse_categories_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/browse_categories"
+            android:theme="@style/FlatButtonPurple"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
 
         <Button
                 android:id="@+id/sell_something_button"
@@ -63,7 +62,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/sell_something"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:theme="@style/RaisedButtonLime"/>
+                android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
     </LinearLayout>
 

@@ -72,6 +72,7 @@
             android:layout_margin="16dp"
             android:src="@drawable/ic_offer_white_24dp"
             app:borderWidth="0dp"
+            app:fabSize="normal"
             app:layout_anchor="@id/appbar_container"
             app:layout_anchorGravity="bottom|right|end"/>
 

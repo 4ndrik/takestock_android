@@ -7,50 +7,6 @@
 
     <include layout="@layout/toolbar_progress"/>
 
-    <include layout="@layout/content_advert_input_fields_2"/>
-
-    <!--<ScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-
-        <!--<LinearLayout-->
-                <!--android:id="@+id/content_input"-->
-                <!--android:orientation="vertical"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/white">-->
-
-            <!--<android.support.v7.widget.RecyclerView-->
-                    <!--android:id="@+id/recycler_view"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="350dp"/>-->
-
-            <!--<include layout="@layout/content_advert_input_fields"/>-->
-
-            <!--<Button-->
-                    <!--android:id="@+id/preview_ad_button"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginStart="32dp"-->
-                    <!--android:layout_marginEnd="32dp"-->
-                    <!--android:text="@string/preview_ad"-->
-                    <!--android:textAppearance="@android:style/TextAppearance.Small"-->
-                    <!--android:theme="@style/RaisedButtonLime"/>-->
-
-            <!--<Button-->
-                    <!--android:id="@+id/save_and_put_on_hold_button"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="8dp"-->
-                    <!--android:layout_marginBottom="16dp"-->
-                    <!--android:layout_marginStart="32dp"-->
-                    <!--android:layout_marginEnd="32dp"-->
-                    <!--android:text="@string/save_and_put_on_hold"-->
-                    <!--android:textAppearance="@android:style/TextAppearance.Small"-->
-                    <!--android:theme="@style/RaisedButtonGrey"/>-->
-
-        <!--</LinearLayout>-->
-
-    <!--</ScrollView>-->
+    <include layout="@layout/content_advert_input_fields"/>
 
 </LinearLayout>

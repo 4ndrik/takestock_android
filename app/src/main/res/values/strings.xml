@@ -170,4 +170,32 @@
     <string name="card_number">Card number</string>
     <string name="payment">Payment</string>
     <string name="add_payment">Add payment</string>
+
+    <!--advert create screen start-->
+    <string name="advert_create_product_title">Product title*</string>
+    <string name="advert_create_add_product_title">Add product title</string>
+    <string name="advert_create_category">Category*</string>
+    <string name="advert_create_subcategory">Subcategory*</string>
+    <string name="advert_create_quantities_and_guide_price">Quantities and guide price*</string>
+    <string name="advert_create_chose_unit">Choose unit / type of packaging</string>
+    <string name="advert_create_how_many_unit">How many [unit] are for sale?</string>
+    <string name="advert_create_minimum_order">Minimum order</string>
+    <string name="advert_create_guide_price">Guide price</string>
+    <string name="advert_create_product_description">Product description*</string>
+    <string name="advert_create_hint_product_description">Great tasting Chocolate Brownie Mix. Mix with Water and Butter for a luxury product. Recipe supplied with order…</string>
+    <string name="advert_create_location">Location*</string>
+    <string name="advert_create_hint_location">Brighton</string>
+    <string name="advert_create_shipping">Shipping*</string>
+    <string name="advert_create_condition">Condition*</string>
+    <string name="advert_create_expiry">Expiry*</string>
+    <string name="advert_create_add_expiry_date">Add expiry date</string>
+    <string name="advert_create_size">Size</string>
+    <string name="advert_create_certification">Certification*</string>
+    <string name="advert_create_hint_other_certification_extra">List any other certifications</string>
+    <string name="advert_create_keywords">Keywords</string>
+    <string name="advert_create_add_keyword">Add keyword</string>
+    <string name="advert_create_hint_keywords">List as many as you like. Keywords help customers find your product</string>
+    <string name="advert_create_preview_and_make_live"><![CDATA[Preview & make live]]></string>
+    <!--advert create screen end-->
+
 </resources>

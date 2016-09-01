@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/content_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -294,6 +295,16 @@
                     tools:text="New"/>
 
         </LinearLayout>
+
+        <Button
+                android:id="@+id/make_live_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="Make live"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:theme="@style/Widget.TakeStock.Button.Gold"/>
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

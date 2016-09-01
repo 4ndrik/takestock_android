@@ -92,7 +92,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/sign_up"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:theme="@style/RaisedButtonLime"/>
+                    android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
             <CheckBox
                     android:id="@+id/agreement_check_box"

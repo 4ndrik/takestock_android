@@ -8,7 +8,13 @@
     <string name="authenticator_account_type">com.devabit.takestock.ACCOUNT</string>
     <string name="authenticator_token_type">com.devabit.takestock.TOKEN</string>
     <string name="authenticator_user_id">com.devabit.takestock.USER_ID</string>
-    <string name="authenticator_user_name">com.devabit.takestock.USERNAME</string>
+    <string name="authenticator_user_name">com.devabit.takestock.USER_NAME</string>
     <string name="authenticator_user_email">com.devabit.takestock.USER_EMAIL</string>
+    <string name="authenticator_user_password">com.devabit.takestock.USER_PASSWORD</string>
+
+    <string name="action_sign_in">com.devabit.takestock.action.SIGN_IN</string>
+    <string name="action_sign_up">com.devabit.takestock.action.SIGN_UP</string>
+    <string name="action_log_out">com.devabit.takestock.action.LOG_OUT</string>
+    <string name="action_advert_saved">com.devabit.takestock.action.ADVERT_SAVED</string>
 
 </resources>

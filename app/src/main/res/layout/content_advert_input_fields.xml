@@ -1,347 +1,413 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:background="@color/white">
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product_title"
-            style="@style/TextViewPurple"/>
-
-    <EditText
-            android:id="@+id/title_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:inputType="textCapSentences"
-            android:imeOptions="actionNext"
-            android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
-            android:hint="@string/hint_add_product_title"
-            android:theme="@style/EditTextPurple"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/category"
-            style="@style/TextViewPurple"/>
-
-    <Spinner
-            android:id="@+id/category_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@null"
-            tools:listitem="@layout/item_spinner"/>
-
-    <TextView
-            android:id="@+id/subcategory_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/sub_category"
-            style="@style/TextViewPurple"/>
-
-    <Spinner
-            android:id="@+id/subcategory_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@null"
-            tools:listitem="@layout/item_spinner"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/quantities_and_guide_price"
-            style="@style/TextViewPurple"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/choose_unit"
-            style="@style/TextViewGrey"/>
-
-    <Spinner
-            android:id="@+id/packaging_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@null"
-            tools:listitem="@layout/item_spinner"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/how_many_unit"
-            style="@style/TextViewGrey"/>
+        android:layout_height="match_parent">
 
     <LinearLayout
+            android:id="@+id/content_input"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
+            android:background="@color/white">
 
-        <EditText
-                android:id="@+id/item_count_edit_text"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                tools:text="100"
-                style="@style/EditTextRoundedCornersGrey"
-                tools:ignore="LabelFor"/>
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:scrollbars="horizontal"
+                tools:listitem="@layout/item_button_gallery_selling"/>
 
         <TextView
-                android:id="@+id/sale_packaging_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_gravity="center"
-                android:textAppearance="@android:style/TextAppearance.Medium"
-                tools:text="@string/kg"
-                style="@style/TextViewGrey"/>
-
-    </LinearLayout>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/minimum_order"
-            style="@style/TextViewGrey"/>
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_product_title"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
 
         <EditText
-                android:id="@+id/minimum_order_edit_text"
-                android:layout_width="200dp"
+                android:id="@+id/title_edit_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                tools:text="100"
-                style="@style/EditTextRoundedCornersGrey"
-                tools:ignore="LabelFor"/>
-
-        <TextView
-                android:id="@+id/order_packaging_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_gravity="center"
-                android:textAppearance="@android:style/TextAppearance.Medium"
-                tools:text="@string/kg"
-                style="@style/TextViewGrey"/>
-    </LinearLayout>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/guide_price"
-            style="@style/TextViewGrey"/>
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
-
-        <EditText
-                android:id="@+id/guide_price_edit_text"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:singleLine="true"
+                android:inputType="textCapSentences"
                 android:imeOptions="actionNext"
-                android:drawableStart="@drawable/ic_great_britain_pound_grey600_12dp"
-                android:drawablePadding="8dp"
-                style="@style/EditTextRoundedCornersGrey"
-                tools:text="100"
-                tools:ignore="LabelFor"/>
+                android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
+                android:hint="@string/advert_create_add_product_title"
+              />
 
         <TextView
-                android:id="@+id/price_packaging_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_category"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <Spinner
+                android:id="@+id/category_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@null"
+                tools:listitem="@layout/item_spinner"/>
+
+        <TextView
+                android:id="@+id/subcategory_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_subcategory"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <Spinner
+                android:id="@+id/subcategory_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@null"
+                tools:listitem="@layout/item_spinner"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_quantities_and_guide_price"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_chose_unit"
+                android:textAppearance="@style/TextAppearance.Small.Black"/>
+
+        <Spinner
+                android:id="@+id/packaging_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@null"
+                tools:listitem="@layout/item_spinner"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_how_many_unit"
+                android:textAppearance="@style/TextAppearance.Small.Black"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
+
+            <EditText
+                    android:id="@+id/item_count_edit_text"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    tools:text="100"
+                    style="@style/EditTextRoundedCornersGrey"
+                    tools:ignore="LabelFor"/>
+
+            <TextView
+                    android:id="@+id/sale_packaging_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:layout_gravity="center"
+                    android:textAppearance="@style/TextAppearance.Medium.Black"
+                    tools:text="@string/kg"/>
+
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_minimum_order"
+                android:textAppearance="@style/TextAppearance.Small.Black"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+            <EditText
+                    android:id="@+id/minimum_order_edit_text"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:inputType="number"
+                    tools:text="100"
+                    style="@style/EditTextRoundedCornersGrey"
+                    tools:ignore="LabelFor"/>
+
+            <TextView
+                    android:id="@+id/order_packaging_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:layout_gravity="center"
+                    android:textAppearance="@style/TextAppearance.Medium.Black"
+                    tools:text="@string/kg"/>
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_guide_price"
+                android:textAppearance="@style/TextAppearance.Small.Black"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+            <EditText
+                    android:id="@+id/guide_price_edit_text"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:layout_marginStart="16dp"
+                    android:imeOptions="actionNext"
+                    android:drawableStart="@drawable/ic_great_britain_pound_grey600_12dp"
+                    android:drawablePadding="8dp"
+                    style="@style/EditTextRoundedCornersGrey"
+                    tools:text="100"
+                    tools:ignore="LabelFor"/>
+
+            <TextView
+                    android:id="@+id/price_packaging_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:layout_gravity="center"
+                    android:textAppearance="@style/TextAppearance.Medium.Black"
+                    tools:text="/ kg"/>
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_product_description"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <EditText
+                android:id="@+id/description_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:inputType="textCapSentences"
+                android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
+                android:hint="@string/advert_create_hint_product_description"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_location"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <EditText
+                android:id="@+id/location_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:singleLine="true"
+                android:inputType="textCapSentences"
+                android:drawableEnd="@drawable/ic_place_purple_dark_24dp"
+                android:hint="@string/hint_location"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_shipping"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <Spinner
+                android:id="@+id/shipping_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@null"
+                tools:listitem="@layout/item_spinner"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_condition"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <Spinner
+                android:id="@+id/condition_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@null"
+                tools:listitem="@layout/item_spinner"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_expiry"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <TextView
+                android:id="@+id/expiry_date_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_calendar_purple_dark_24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:padding="8dp"
-                android:layout_gravity="center"
                 android:textAppearance="@android:style/TextAppearance.Medium"
-                tools:text="/ kg"
-                style="@style/TextViewGrey"/>
+                android:hint="@string/advert_create_add_expiry_date"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_certification"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+        <com.devabit.takestock.widget.CertificationRadioButtonGroupView
+                android:id="@+id/certification_group_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"/>
+
+        <EditText
+                android:id="@+id/certification_extra_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
+                android:hint="@string/advert_create_hint_other_certification_extra"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/size"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Black"/>
+
+        <include layout="@layout/content_input_size_fields"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/advert_create_keywords"
+                android:textAppearance="@style/TextAppearance.Small.AllCaps.Black"/>
+
+        <com.devabit.takestock.widget.FlexboxLayout
+                android:id="@+id/keywords_flexbox_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:alignContent="flex_start"
+                app:alignItems="flex_start"
+                app:flexWrap="wrap"/>
+
+        <TextView
+                android:id="@+id/add_word_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/advert_create_add_keyword"
+                android:textColor="@color/grey_600"
+                android:background="@drawable/rounded_corners_dotted_grey"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/advert_create_hint_keywords"
+                android:textAppearance="@style/TextAppearance.Small.Black"/>
+
+        <Button
+                android:id="@+id/preview_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/advert_create_preview_and_make_live"
+                android:theme="@style/Widget.TakeStock.Button.Gold"/>
+
     </LinearLayout>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/product_description"
-            style="@style/TextViewPurple"/>
-
-    <EditText
-            android:id="@+id/description_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:inputType="textCapSentences"
-            android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
-            android:hint="@string/hint_product_description"
-            android:theme="@style/EditTextPurple"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/location"
-            style="@style/TextViewGrey"/>
-
-    <EditText
-            android:id="@+id/location_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:singleLine="true"
-            android:inputType="textCapSentences"
-            android:drawableEnd="@drawable/ic_place_purple_dark_24dp"
-            android:hint="@string/hint_location"
-            android:theme="@style/EditTextPurple"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/shipping"
-            style="@style/TextViewGrey"/>
-
-    <Spinner
-            android:id="@+id/shipping_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@null"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/condition"
-            style="@style/TextViewGrey"/>
-
-    <Spinner
-            android:id="@+id/condition_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@null"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/expiry"
-            style="@style/TextViewGrey"/>
-
-    <TextView
-            android:id="@+id/expiry_date_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_calendar_purple_dark_24dp"
-            android:layout_marginTop="4dp"
-            android:padding="8dp"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:textColorHint="@color/grey_400"
-            android:hint="@string/add_expiry_date"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/size"
-            style="@style/TextViewGrey"/>
-
-    <include layout="@layout/content_input_size_fields"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/certification"
-            style="@style/TextViewPurple"/>
-
-    <TextView
-            android:id="@+id/certification_info_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Loren ipsum sed amed in deo non qua plus ultra"
-            style="@style/TextViewGrey"/>
-
-    <com.devabit.takestock.widget.CertificationRadioButtonGroupView
-            android:id="@+id/certification_group_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center"/>
-
-    <EditText
-            android:id="@+id/certification_extra_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
-            android:hint="@string/hint_other_certification_extra"
-            android:theme="@style/EditTextPurple"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/keywords"/>
-
-    <com.devabit.takestock.widget.FlexboxLayout
-            android:id="@+id/keywords_flexbox_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:alignContent="flex_start"
-            app:alignItems="flex_start"
-            app:flexWrap="wrap"/>
-
-    <TextView
-            android:id="@+id/add_word_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="Add keyword"
-            android:textColor="@color/grey_600"
-            android:background="@drawable/rounded_corners_dotted_grey"/>
-
-    <!--<EditText-->
-    <!--android:id="@+id/tags_edit_text"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"-->
-    <!--android:hint="@string/hint_keywords"-->
-    <!--android:theme="@style/EditTextPurple"/>-->
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/hint_keywords_description"
-            style="@style/TextViewGrey"/>
-
-</LinearLayout>
+</ScrollView>

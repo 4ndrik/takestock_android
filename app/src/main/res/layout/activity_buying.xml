@@ -17,10 +17,8 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/grey_200"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                tools:listitem="@layout/item_offer_advert_pair"/>
+                android:background="@color/grey_400"
+                tools:listitem="@layout/item_buying_offer"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

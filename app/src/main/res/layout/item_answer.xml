@@ -35,7 +35,7 @@
                 android:layout_gravity="end"
                 android:textStyle="bold"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:theme="@style/RaisedButtonPurple"/>
+                android:theme="@style/Widget.TakeStock.Button.Jam"/>
 
         <TextView
                 android:id="@+id/answer_text_view"

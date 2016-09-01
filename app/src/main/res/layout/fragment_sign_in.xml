@@ -93,7 +93,7 @@
                         android:gravity="center"
                         android:text="@string/sign_in"
                         android:textAppearance="@android:style/TextAppearance.Small"
-                        android:theme="@style/RaisedButtonLime"/>
+                        android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
             </LinearLayout>
 
