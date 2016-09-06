@@ -10,12 +10,16 @@ import java.util.Objects;
  */
 public class Certification implements Parcelable {
 
-    private int mId;
-    private String mName;
-    private String mDescription;
-    private String mLogoUrl;
+    private final int mId;
+    private final String mName;
+    private final String mDescription;
+    private final String mLogoUrl;
 
-    public Certification() {
+    Certification(int id, String name, String description, String logoUrl) {
+        mId = id;
+        mName = name;
+        mDescription = description;
+        mLogoUrl = logoUrl;
     }
 
     protected Certification(Parcel in) {
@@ -23,19 +27,6 @@ public class Certification implements Parcelable {
         mName = in.readString();
         mDescription = in.readString();
         mLogoUrl = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mName);
-        dest.writeString(mDescription);
-        dest.writeString(mLogoUrl);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<Certification> CREATOR = new Creator<Certification>() {
@@ -50,37 +41,46 @@ public class Certification implements Parcelable {
         }
     };
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mName);
+        dest.writeString(mDescription);
+        dest.writeString(mLogoUrl);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public int getId() {
         return mId;
     }
 
-    public void setId(int id) {
-        mId = id;
-    }
+//    public void setId(int id) {
+//        mId = id;
+//    }
 
     public String getName() {
         return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
     }
 
     public String getDescription() {
         return mDescription;
     }
 
-    public void setDescription(String description) {
-        mDescription = description;
-    }
+//    public void setDescription(String description) {
+//        mDescription = description;
+//    }
 
     public String getLogoUrl() {
         return mLogoUrl;
     }
 
-    public void setLogoUrl(String logoUrl) {
-        mLogoUrl = logoUrl;
-    }
+//    public void setLogoUrl(String logoUrl) {
+//        mLogoUrl = logoUrl;
+//    }
 
     @Override public String toString() {
         return "Certification{" +
@@ -102,5 +102,37 @@ public class Certification implements Parcelable {
 
     @Override public int hashCode() {
         return Objects.hash(mId, mName, mDescription, mLogoUrl);
+    }
+
+    public static class Builder {
+
+        private int mId;
+        private String mName;
+        private String mDescription;
+        private String mLogoUrl;
+
+        public Builder setId(int id) {
+            mId = id;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            mName = name;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            mDescription = description;
+            return this;
+        }
+
+        public Builder setLogoUrl(String logoUrl) {
+            mLogoUrl = logoUrl;
+            return this;
+        }
+
+        public Certification build() {
+            return new Certification(mId, mName, mDescription, mLogoUrl);
+        }
     }
 }
