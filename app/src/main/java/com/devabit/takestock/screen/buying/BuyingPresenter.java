@@ -7,7 +7,7 @@ import com.devabit.takestock.data.filter.OfferFilter;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.OfferStatus;
-import com.devabit.takestock.data.model.ResultList;
+import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
@@ -39,6 +39,8 @@ public class BuyingPresenter implements BuyingContract.Presenter {
 
     private CompositeSubscription mSubscriptions;
 
+    private boolean mIsOffersStatusesShowed;
+
     public BuyingPresenter(@NonNull DataRepository dataRepository, @NonNull BuyingContract.View buyingView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mOffersView = checkNotNull(buyingView, "buyingView cannot be null.");
@@ -51,6 +53,7 @@ public class BuyingPresenter implements BuyingContract.Presenter {
     }
 
     private void fetchOfferStatuses() {
+        if (mIsOffersStatusesShowed) return;
         Subscription subscription = mDataRepository
                 .getOfferStatuses()
                 .map(new Func1<List<OfferStatus>, SparseArray<OfferStatus>>() {
@@ -66,19 +69,22 @@ public class BuyingPresenter implements BuyingContract.Presenter {
                 .subscribe(new Action1<SparseArray<OfferStatus>>() {
                     @Override public void call(SparseArray<OfferStatus> statuses) {
                         mOffersView.showOfferStatusesInView(statuses);
+                        mIsOffersStatusesShowed = true;
                     }
                 }, getOnError(), getOnCompleted());
         mSubscriptions.add(subscription);
+
     }
 
     @Override public void fetchOffersByUserId(int userId) {
         mOffersView.setProgressIndicator(true);
         OfferFilter filter = new OfferFilter();
         filter.setUserId(userId);
+        filter.setPageSize(Integer.MAX_VALUE);
         Subscription subscription = mDataRepository
                 .getOfferResultListPerFilter(filter)
-                .flatMap(new Func1<ResultList<Offer>, Observable<Map<Offer, Advert>>>() {
-                    @Override public Observable<Map<Offer, Advert>> call(ResultList<Offer> resultList) {
+                .flatMap(new Func1<PaginatedList<Offer>, Observable<Map<Offer, Advert>>>() {
+                    @Override public Observable<Map<Offer, Advert>> call(PaginatedList<Offer> resultList) {
                         List<Offer> offers = resultList.getResults();
                         return Observable.zip(Observable.just(offers), buildAdvertsPerOffersObservable(offers),
                                 new Func2<List<Offer>, SparseArray<Advert>, Map<Offer, Advert>>() {
@@ -118,7 +124,7 @@ public class BuyingPresenter implements BuyingContract.Presenter {
                 })
                 .flatMap(new Func1<AdvertFilter, Observable<List<Advert>>>() {
                     @Override public Observable<List<Advert>> call(AdvertFilter advertFilter) {
-                        return mDataRepository.getAdvertsPerFilter(advertFilter);
+                        return mDataRepository.getAdvertsWithFilter(advertFilter);
                     }
                 })
                 .map(new Func1<List<Advert>, SparseArray<Advert>>() {

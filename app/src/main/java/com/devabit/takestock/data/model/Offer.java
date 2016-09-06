@@ -12,7 +12,6 @@ public class Offer implements Parcelable {
 
     private int mId;
     private int mAdvertId;
-    private int mOfferId;
     private int mCounterOfferId;
     private String mPrice;
     private int mQuantity;
@@ -29,7 +28,6 @@ public class Offer implements Parcelable {
     protected Offer(Parcel in) {
         mId = in.readInt();
         mAdvertId = in.readInt();
-        mOfferId = in.readInt();
         mCounterOfferId = in.readInt();
         mPrice = in.readString();
         mQuantity = in.readInt();
@@ -46,7 +44,6 @@ public class Offer implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
         dest.writeInt(mAdvertId);
-        dest.writeInt(mOfferId);
         dest.writeInt(mCounterOfferId);
         dest.writeString(mPrice);
         dest.writeInt(mQuantity);
@@ -90,14 +87,6 @@ public class Offer implements Parcelable {
 
     public void setAdvertId(int advertId) {
         mAdvertId = advertId;
-    }
-
-    public int getOfferId() {
-        return mOfferId;
-    }
-
-    public void setOfferId(int offerId) {
-        mOfferId = offerId;
     }
 
     public String getPrice() {
@@ -186,7 +175,6 @@ public class Offer implements Parcelable {
         Offer offer = (Offer) o;
         return mId == offer.mId &&
                 mAdvertId == offer.mAdvertId &&
-                mOfferId == offer.mOfferId &&
                 mCounterOfferId == offer.mCounterOfferId &&
                 mQuantity == offer.mQuantity &&
                 mUserId == offer.mUserId &&
@@ -200,7 +188,7 @@ public class Offer implements Parcelable {
 
     @Override public int hashCode() {
         return Objects.hash(
-                mId, mAdvertId, mOfferId, mCounterOfferId, mPrice,
+                mId, mAdvertId, mCounterOfferId, mPrice,
                 mQuantity, mUserId, mOfferStatusId, mComment,
                 mStatusComment, mDateCreated, mDateUpdated);
     }
@@ -209,7 +197,6 @@ public class Offer implements Parcelable {
         return "Offer{" +
                 "mId=" + mId +
                 ", mAdvertId=" + mAdvertId +
-                ", mOfferId=" + mOfferId +
                 ", mCounterOfferId=" + mCounterOfferId +
                 ", mPrice='" + mPrice + '\'' +
                 ", mQuantity=" + mQuantity +

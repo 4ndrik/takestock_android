@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 13/05/2016.
  */
-public class ResultList<T> {
+public class PaginatedList<T> {
 
     private int mCount;
     private String mNext;

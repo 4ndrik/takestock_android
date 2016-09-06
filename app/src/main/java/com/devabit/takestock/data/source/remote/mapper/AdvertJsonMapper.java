@@ -23,7 +23,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
     private static final String CREATED_AT = "created_at";
     private static final String EXPIRES_AT = "expires_at";
     private static final String UPDATED_AT = "updated_at";
-    private static final String INTENDED_USE = "intended_use";
+//    private static final String INTENDED_USE = "intended_use";
     private static final String GUIDE_PRICE = "guide_price";
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
@@ -81,7 +81,7 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
         advert.setDateCreatedAt(jsonObject.getString(CREATED_AT));
         advert.setDateExpiresAt(jsonObject.getString(EXPIRES_AT));
         advert.setDateUpdatedAt(jsonObject.getString(UPDATED_AT));
-        advert.setIntendedUse(jsonObject.getString(INTENDED_USE));
+//        advert.setIntendedUse(jsonObject.getString(INTENDED_USE));
         advert.setGuidePrice(jsonObject.getString(GUIDE_PRICE));
         advert.setDescription(jsonObject.getString(DESCRIPTION));
         advert.setLocation(jsonObject.getString(LOCATION));

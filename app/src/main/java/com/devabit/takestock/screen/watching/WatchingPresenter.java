@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.AdvertSubscriber;
-import com.devabit.takestock.data.model.ResultList;
+import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
@@ -51,8 +51,8 @@ final class WatchingPresenter implements WatchingContract.Presenter {
         filter.setWatchlist(true);
         Subscription subscription = mDataRepository
                 .getAdvertResultListPerFilter(filter)
-                .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
-                .subscribe(new Subscriber<ResultList<Advert>>() {
+                .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
+                .subscribe(new Subscriber<PaginatedList<Advert>>() {
                     @Override public void onCompleted() {
                         mWatchingView.setProgressIndicator(false);
                     }
@@ -67,7 +67,7 @@ final class WatchingPresenter implements WatchingContract.Presenter {
                         }
                     }
 
-                    @Override public void onNext(ResultList<Advert> advertResultList) {
+                    @Override public void onNext(PaginatedList<Advert> advertResultList) {
                         List<Advert> adverts = advertResultList.getResults();
                         mWatchingView.showAdvertsInView(adverts);
                     }

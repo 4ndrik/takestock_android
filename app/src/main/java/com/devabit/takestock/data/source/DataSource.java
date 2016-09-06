@@ -125,11 +125,11 @@ public interface DataSource {
 
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
-    Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter);
+    Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter);
 
-    Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
+    Observable<PaginatedList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
 
-    Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page);
+    Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String page);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for AdvertSubscriber
@@ -147,9 +147,9 @@ public interface DataSource {
 
     Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter);
 
-    Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter);
+    Observable<PaginatedList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter);
 
-    Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page);
+    Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Question
@@ -157,9 +157,9 @@ public interface DataSource {
 
     Observable<Question> saveQuestion(@NonNull Question question);
 
-    Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter);
+    Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter);
 
-    Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page);
+    Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Answer
@@ -177,7 +177,7 @@ public interface DataSource {
 
     Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter);
 
-    Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter);
+    Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Payment

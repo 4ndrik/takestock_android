@@ -3,7 +3,7 @@ package com.devabit.takestock.screen.selling;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.ResultList;
+import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
@@ -26,7 +26,7 @@ public class SellingPresenter implements SellingContract.Presenter {
     private final SellingContract.View mSellingView;
 
     private CompositeSubscription mSubscriptions;
-    private ResultList<Advert> mAdvertResultList;
+    private PaginatedList<Advert> mAdvertPaginatedList;
 
     public SellingPresenter(@NonNull DataRepository dataRepository, @NonNull SellingContract.View sellingView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
@@ -43,24 +43,24 @@ public class SellingPresenter implements SellingContract.Presenter {
         mSellingView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
                 .getAdvertResultListPerFilter(filter)
-                .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
+                .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                 .subscribe(getSubscriber());
         mSubscriptions.add(subscription);
     }
 
     @Override public void fetchAdverts() {
-        if (mAdvertResultList != null && mAdvertResultList.hasNext()) {
+        if (mAdvertPaginatedList != null && mAdvertPaginatedList.hasNext()) {
             mSellingView.setProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getAdvertResultListPerPage(mAdvertResultList.getNext())
-                    .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
+                    .getAdvertResultListPerPage(mAdvertPaginatedList.getNext())
+                    .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                     .subscribe(getSubscriber());
             mSubscriptions.add(subscription);
         }
     }
 
-    private Subscriber<ResultList<Advert>> getSubscriber() {
-        return new Subscriber<ResultList<Advert>>() {
+    private Subscriber<PaginatedList<Advert>> getSubscriber() {
+        return new Subscriber<PaginatedList<Advert>>() {
             @Override public void onCompleted() {
                 mSellingView.setProgressIndicator(false);
             }
@@ -75,9 +75,9 @@ public class SellingPresenter implements SellingContract.Presenter {
                 }
             }
 
-            @Override public void onNext(ResultList<Advert> resultList) {
-                mAdvertResultList = resultList;
-                mSellingView.showAdvertsInView(resultList.getResults());
+            @Override public void onNext(PaginatedList<Advert> paginatedList) {
+                mAdvertPaginatedList = paginatedList;
+                mSellingView.showAdvertsInView(paginatedList.getResults());
             }
         };
     }

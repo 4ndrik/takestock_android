@@ -53,13 +53,13 @@ public class LocalDataSource implements DataSource {
     // Methods for AuthToken
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignUp(@NonNull UserCredentials credentials) {
+    @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
         // AccessToken from server.
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<AuthToken> obtainAuthTokenPerSignIn(@NonNull UserCredentials credentials) {
+    @Override public Observable<AuthToken> signIn(@NonNull UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
         // AccessToken from server.
         throw new UnsupportedOperationException("This operation not required.");
@@ -446,11 +446,11 @@ public class LocalDataSource implements DataSource {
                 });
     }
 
-    @Override public Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter) {
+    @Override public Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String link) {
+    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String link) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
@@ -458,7 +458,7 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
+    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<AdvertFilter, RealmResults<AdvertEntity>>() {
                     @Override public RealmResults<AdvertEntity> call(AdvertFilter advertFilter) {
@@ -470,11 +470,11 @@ public class LocalDataSource implements DataSource {
                     @Override public List<Advert> call(RealmResults<AdvertEntity> advertEntities) {
                         return new AdvertEntityDataMapper().transformFromEntitiesToList(advertEntities);
                     }
-                }).map(new Func1<List<Advert>, ResultList<Advert>>() {
-                    @Override public ResultList<Advert> call(List<Advert> adverts) {
-                        ResultList<Advert> resultList = new ResultList<>();
-                        resultList.setResults(adverts);
-                        return resultList;
+                }).map(new Func1<List<Advert>, PaginatedList<Advert>>() {
+                    @Override public PaginatedList<Advert> call(List<Advert> adverts) {
+                        PaginatedList<Advert> paginatedList = new PaginatedList<>();
+                        paginatedList.setResults(adverts);
+                        return paginatedList;
                     }
                 });
 
@@ -506,11 +506,11 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
+    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
@@ -522,11 +522,11 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
@@ -580,7 +580,7 @@ public class LocalDataSource implements DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
+    @Override public Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
         return null;
     }
 

@@ -26,9 +26,10 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.OfferStatus;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
-import com.devabit.takestock.screen.buying.adapters.OfferAdvertPairsAdapter;
+import com.devabit.takestock.screen.buying.adapters.BuyingOffersAdapter;
 import com.devabit.takestock.screen.payment.PaymentActivity;
 import com.devabit.takestock.utils.FontCache;
+import com.devabit.takestock.widget.ListSpacingItemDecoration;
 
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
 
     private BuyingContract.Presenter mPresenter;
 
-    private OfferAdvertPairsAdapter mOffersAdapter;
+    private BuyingOffersAdapter mOffersAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +66,6 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
     private void initPresenter() {
         new BuyingPresenter(
                 Injection.provideDataRepository(BuyingActivity.this), BuyingActivity.this);
-
     }
 
     @Override public void setPresenter(@NonNull BuyingContract.Presenter presenter) {
@@ -114,12 +114,17 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 BuyingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        mOffersAdapter = new OfferAdvertPairsAdapter(BuyingActivity.this, statuses);
-        mOffersAdapter.setOnItemClickListener(new OfferAdvertPairsAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Advert advert, Offer offer) {
+        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        recyclerView.addItemDecoration(itemDecoration);
+        mOffersAdapter = new BuyingOffersAdapter(BuyingActivity.this, statuses);
+        mOffersAdapter.setOnItemClickListener(new BuyingOffersAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Advert advert) {
                 LOGD(TAG, advert);
+                startAdvertDetailActivity(advert);
+            }
+
+            @Override public void onAddPaymentClick(Offer offer) {
                 LOGD(TAG, offer);
-//                startAdvertDetailActivity(advert);
                 startPaymentActivity(offer);
             }
         });

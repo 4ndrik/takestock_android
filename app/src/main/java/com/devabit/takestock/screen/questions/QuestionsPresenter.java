@@ -3,7 +3,7 @@ package com.devabit.takestock.screen.questions;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.QuestionFilter;
 import com.devabit.takestock.data.model.Question;
-import com.devabit.takestock.data.model.ResultList;
+import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
@@ -46,9 +46,9 @@ public class QuestionsPresenter implements QuestionsContract.Presenter {
         filter.setAdvertId(advertId);
         Subscription subscription = mDataRepository
                 .getQuestionResultListPerFilter(filter)
-                .compose(RxTransformers.<ResultList<Question>>applyObservableSchedulers())
-                .subscribe(new Action1<ResultList<Question>>() {
-                    @Override public void call(ResultList<Question> resultList) {
+                .compose(RxTransformers.<PaginatedList<Question>>applyObservableSchedulers())
+                .subscribe(new Action1<PaginatedList<Question>>() {
+                    @Override public void call(PaginatedList<Question> resultList) {
                         mQuestionView.showQuestionsInView(resultList.getResults());
                     }
                 }, getOnError(), getOnCompleted());

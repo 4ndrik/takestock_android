@@ -11,7 +11,7 @@ public class OfferEntity extends RealmObject {
     @PrimaryKey
     private int mId;
     private int mAdvertId;
-    private int mOfferId;
+    private int mCounterOfferId;
     private String mPrice;
     private int mQuantity;
     private int mUserId;
@@ -37,12 +37,12 @@ public class OfferEntity extends RealmObject {
         mAdvertId = advertId;
     }
 
-    public int getOfferId() {
-        return mOfferId;
+    public int getCounterOfferId() {
+        return mCounterOfferId;
     }
 
-    public void setOfferId(int offerId) {
-        mOfferId = offerId;
+    public void setCounterOfferId(int counterOfferId) {
+        mCounterOfferId = counterOfferId;
     }
 
     public String getPrice() {
@@ -113,7 +113,7 @@ public class OfferEntity extends RealmObject {
         return "OfferEntity{" +
                 "mId=" + mId +
                 ", mAdvertId=" + mAdvertId +
-                ", mOfferId=" + mOfferId +
+                ", mCounterOfferId=" + mCounterOfferId +
                 ", mPrice='" + mPrice + '\'' +
                 ", mQuantity=" + mQuantity +
                 ", mUserId=" + mUserId +

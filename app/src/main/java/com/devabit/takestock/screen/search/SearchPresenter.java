@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.AdvertSubscriber;
-import com.devabit.takestock.data.model.ResultList;
+import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
@@ -30,7 +30,7 @@ public class SearchPresenter implements SearchContract.Presenter {
     private CompositeSubscription mSubscriptions;
 
     private AdvertFilter mAdvertFilter;
-    private ResultList<Advert> mAdvertResultList;
+    private PaginatedList<Advert> mAdvertPaginatedList;
 
     public SearchPresenter(@NonNull DataRepository dataRepository, @NonNull SearchContract.View searchView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
@@ -44,7 +44,7 @@ public class SearchPresenter implements SearchContract.Presenter {
     }
 
     @Override public void refreshAdverts() {
-        mAdvertResultList = null;
+        mAdvertPaginatedList = null;
         if (mAdvertFilter == null) {
             fetchAdverts();
         } else {
@@ -53,18 +53,18 @@ public class SearchPresenter implements SearchContract.Presenter {
     }
 
     @Override public void fetchAdverts() {
-        if (mAdvertResultList == null) {
+        if (mAdvertPaginatedList == null) {
             mSearchView.setProgressIndicator(true);
             Subscription subscription = mDataRepository
                     .getAdvertResultListPerFilter(new AdvertFilter())
-                    .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
+                    .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                     .subscribe(getSubscriber());
             mSubscriptions.add(subscription);
-        } else if (mAdvertResultList.hasNext()) {
+        } else if (mAdvertPaginatedList.hasNext()) {
             mSearchView.setProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getAdvertResultListPerPage(mAdvertResultList.getNext())
-                    .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
+                    .getAdvertResultListPerPage(mAdvertPaginatedList.getNext())
+                    .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                     .subscribe(getSubscriber());
             mSubscriptions.add(subscription);
         }
@@ -75,7 +75,7 @@ public class SearchPresenter implements SearchContract.Presenter {
         mSearchView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
                 .getAdvertResultListPerFilter(filter)
-                .compose(RxTransformers.<ResultList<Advert>>applyObservableSchedulers())
+                .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                 .subscribe(getSubscriber());
         mSubscriptions.add(subscription);
     }
@@ -107,8 +107,8 @@ public class SearchPresenter implements SearchContract.Presenter {
         mSubscriptions.add(subscription);
     }
 
-    private Subscriber<ResultList<Advert>> getSubscriber() {
-        return new Subscriber<ResultList<Advert>>() {
+    private Subscriber<PaginatedList<Advert>> getSubscriber() {
+        return new Subscriber<PaginatedList<Advert>>() {
             @Override public void onCompleted() {
                 mSearchView.setProgressIndicator(false);
             }
@@ -123,10 +123,10 @@ public class SearchPresenter implements SearchContract.Presenter {
                 }
             }
 
-            @Override public void onNext(ResultList<Advert> resultList) {
-                mAdvertResultList = resultList;
-                mSearchView.showAdvertsCountInView(resultList.getCount());
-                mSearchView.showAdvertsInView(resultList.getResults());
+            @Override public void onNext(PaginatedList<Advert> paginatedList) {
+                mAdvertPaginatedList = paginatedList;
+                mSearchView.showAdvertsCountInView(paginatedList.getCount());
+                mSearchView.showAdvertsInView(paginatedList.getResults());
             }
         };
     }

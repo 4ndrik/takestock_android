@@ -15,6 +15,8 @@ public class OfferFilterUrlBuilder extends FilterUrlBuilder<OfferFilter> {
     }
 
     @Override public String buildUrl() {
+        int pageSize = mFilter.getPageSize();
+        if (pageSize > 0) appendQueryParameter(PAGE_SIZE, pageSize);
         int userId = mFilter.getUserId();
         if (userId > 0) appendQueryParameter(USER_ID, String.valueOf(userId));
         int advertId = mFilter.getAdvertId();

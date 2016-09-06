@@ -505,7 +505,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter) {
+    @Override public Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<AdvertFilter, String>() {
                     @Override public String call(AdvertFilter advertFilter) {
@@ -518,12 +518,12 @@ public class RemoteDataSource implements ApiRest, DataSource {
                             @Override public void call(Subscriber<? super List<Advert>> subscriber) {
                                 try {
                                     AdvertResultListJsonMapper jsonMapper = new AdvertResultListJsonMapper();
-                                    ResultList<Advert> resultList = jsonMapper.fromJsonString(createGET(page));
-                                    List<Advert> result = new ArrayList<>(resultList.getResults());
-                                    while (resultList.hasNext()) {
-                                        String nextPage = resultList.getNext();
-                                        resultList = jsonMapper.fromJsonString(createGET(nextPage));
-                                        result.addAll(resultList.getResults());
+                                    PaginatedList<Advert> paginatedList = jsonMapper.fromJsonString(createGET(page));
+                                    List<Advert> result = new ArrayList<>(paginatedList.getResults());
+                                    while (paginatedList.hasNext()) {
+                                        String nextPage = paginatedList.getNext();
+                                        paginatedList = jsonMapper.fromJsonString(createGET(nextPage));
+                                        result.addAll(paginatedList.getResults());
                                     }
                                     subscriber.onNext(result);
                                 } catch (Exception e) {
@@ -535,7 +535,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
+    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<AdvertFilter, String>() {
                     @Override public String call(AdvertFilter filter) {
@@ -547,17 +547,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         LOGD(TAG, url);
                     }
                 })
-                .flatMap(new Func1<String, Observable<ResultList<Advert>>>() {
-                    @Override public Observable<ResultList<Advert>> call(String url) {
+                .flatMap(new Func1<String, Observable<PaginatedList<Advert>>>() {
+                    @Override public Observable<PaginatedList<Advert>> call(String url) {
                         return getAdvertResultListPerPage(url);
                     }
                 });
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
         return Observable.fromCallable(createGETCallable(page))
-                .map(new Func1<String, ResultList<Advert>>() {
-                    @Override public ResultList<Advert> call(String json) {
+                .map(new Func1<String, PaginatedList<Advert>>() {
+                    @Override public PaginatedList<Advert> call(String json) {
                         try {
                             LOGD(TAG, json);
                             return new AdvertResultListJsonMapper().fromJsonString(json);
@@ -565,9 +565,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                             throw new RuntimeException(e);
                         }
                     }
-                }).doOnNext(new Action1<ResultList<Advert>>() {
-                    @Override public void call(ResultList<Advert> advertResultList) {
-                        LOGD(TAG, "ResultAdvertList: " + advertResultList);
+                }).doOnNext(new Action1<PaginatedList<Advert>>() {
+                    @Override public void call(PaginatedList<Advert> advertPaginatedList) {
+                        LOGD(TAG, "ResultAdvertList: " + advertPaginatedList);
                     }
                 });
     }
@@ -689,12 +689,12 @@ public class RemoteDataSource implements ApiRest, DataSource {
                             @Override public void call(Subscriber<? super List<Offer>> subscriber) {
                                 try {
                                     OfferResultListJsonMapper jsonMapper = new OfferResultListJsonMapper();
-                                    ResultList<Offer> resultList = jsonMapper.fromJsonString(createGET(page));
-                                    List<Offer> result = new ArrayList<>(resultList.getResults());
-                                    while (resultList.hasNext()) {
-                                        String nextPage = resultList.getNext();
-                                        resultList = jsonMapper.fromJsonString(createGET(nextPage));
-                                        result.addAll(resultList.getResults());
+                                    PaginatedList<Offer> paginatedList = jsonMapper.fromJsonString(createGET(page));
+                                    List<Offer> result = new ArrayList<>(paginatedList.getResults());
+                                    while (paginatedList.hasNext()) {
+                                        String nextPage = paginatedList.getNext();
+                                        paginatedList = jsonMapper.fromJsonString(createGET(nextPage));
+                                        result.addAll(paginatedList.getResults());
                                     }
                                     subscriber.onNext(result);
                                 } catch (Exception e) {
@@ -706,7 +706,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
+    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<OfferFilter, String>() {
                     @Override public String call(OfferFilter offerFilter) {
@@ -718,17 +718,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         LOGD(TAG, url);
                     }
                 })
-                .flatMap(new Func1<String, Observable<ResultList<Offer>>>() {
-                    @Override public Observable<ResultList<Offer>> call(String url) {
+                .flatMap(new Func1<String, Observable<PaginatedList<Offer>>>() {
+                    @Override public Observable<PaginatedList<Offer>> call(String url) {
                         return getOfferResultListPerPage(url);
                     }
                 });
     }
 
-    @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page) {
         return Observable.fromCallable(createGETCallable(page))
-                .map(new Func1<String, ResultList<Offer>>() {
-                    @Override public ResultList<Offer> call(String jsonString) {
+                .map(new Func1<String, PaginatedList<Offer>>() {
+                    @Override public PaginatedList<Offer> call(String jsonString) {
                         try {
                             LOGD(TAG, jsonString);
                             return new OfferResultListJsonMapper().fromJsonString(jsonString);
@@ -771,7 +771,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<QuestionFilter, String>() {
                     @Override public String call(QuestionFilter filter) {
@@ -783,17 +783,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         LOGD(TAG, url);
                     }
                 })
-                .flatMap(new Func1<String, Observable<ResultList<Question>>>() {
-                    @Override public Observable<ResultList<Question>> call(String page) {
+                .flatMap(new Func1<String, Observable<PaginatedList<Question>>>() {
+                    @Override public Observable<PaginatedList<Question>> call(String page) {
                         return getQuestionResultListPerPage(page);
                     }
                 });
     }
 
-    @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page) {
         return Observable.fromCallable(createGETCallable(page))
-                .map(new Func1<String, ResultList<Question>>() {
-                    @Override public ResultList<Question> call(String jsonString) {
+                .map(new Func1<String, PaginatedList<Question>>() {
+                    @Override public PaginatedList<Question> call(String jsonString) {
                         try {
                             return new QuestionResultListJsonMapper().fromJsonString(jsonString);
                         } catch (JSONException e) {
@@ -885,12 +885,12 @@ public class RemoteDataSource implements ApiRest, DataSource {
                             @Override public void call(Subscriber<? super List<User>> subscriber) {
                                 try {
                                     UserResultListJsonMapper jsonMapper = new UserResultListJsonMapper();
-                                    ResultList<User> resultList = jsonMapper.fromJsonString(createGET(page));
-                                    List<User> result = new ArrayList<>(resultList.getResults());
-                                    while (resultList.hasNext()) {
-                                        String nextPage = resultList.getNext();
-                                        resultList = jsonMapper.fromJsonString(createGET(nextPage));
-                                        result.addAll(resultList.getResults());
+                                    PaginatedList<User> paginatedList = jsonMapper.fromJsonString(createGET(page));
+                                    List<User> result = new ArrayList<>(paginatedList.getResults());
+                                    while (paginatedList.hasNext()) {
+                                        String nextPage = paginatedList.getNext();
+                                        paginatedList = jsonMapper.fromJsonString(createGET(nextPage));
+                                        result.addAll(paginatedList.getResults());
                                     }
                                     subscriber.onNext(result);
                                 } catch (Exception e) {
@@ -902,7 +902,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
+    @Override public Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
         return null;
     }
 

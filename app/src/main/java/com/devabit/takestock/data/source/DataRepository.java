@@ -74,7 +74,6 @@ public class DataRepository implements DataSource {
                                 });
                     }
                 });
-
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -293,9 +292,7 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getBusinessSubtypeById(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Advert
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Adverts Methods  ********/
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         return mRemoteDataSource.saveAdvert(advert)
@@ -306,15 +303,15 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    @Override public Observable<List<Advert>> getAdvertsPerFilter(@NonNull AdvertFilter filter) {
-        return mRemoteDataSource.getAdvertsPerFilter(filter);
+    @Override public Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter) {
+        return mRemoteDataSource.getAdvertsWithFilter(filter);
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
+    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
         return mRemoteDataSource.getAdvertResultListPerFilter(filter);
     }
 
-    @Override public Observable<ResultList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
         return mRemoteDataSource.getAdvertResultListPerPage(page);
     }
 
@@ -343,11 +340,11 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getOffersPerFilter(filter);
     }
 
-    @Override public Observable<ResultList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
+    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
         return mRemoteDataSource.getOfferResultListPerFilter(filter);
     }
 
-    @Override public Observable<ResultList<Offer>> getOfferResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page) {
         return mRemoteDataSource.getOfferResultListPerPage(page);
     }
 
@@ -359,11 +356,11 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.saveQuestion(question);
     }
 
-    @Override public Observable<ResultList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
         return mRemoteDataSource.getQuestionResultListPerFilter(filter);
     }
 
-    @Override public Observable<ResultList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page) {
         return mRemoteDataSource.getQuestionResultListPerPage(page);
     }
 
@@ -398,7 +395,7 @@ public class DataRepository implements DataSource {
         return Observable.concat(localUsers, remoteUsers).first();
     }
 
-    @Override public Observable<ResultList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
+    @Override public Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
         return mRemoteDataSource.getUserResultListPerFilter(filter);
     }
 

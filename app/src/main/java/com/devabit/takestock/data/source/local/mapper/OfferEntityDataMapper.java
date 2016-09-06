@@ -20,7 +20,7 @@ public class OfferEntityDataMapper {
         Offer offer = new Offer();
         offer.setId(entity.getId());
         offer.setAdvertId(entity.getAdvertId());
-        offer.setOfferId(entity.getOfferId());
+        offer.setCounterOfferId(entity.getCounterOfferId());
         offer.setPrice(entity.getPrice());
         offer.setQuantity(entity.getQuantity());
         offer.setUserId(entity.getUserId());
@@ -37,7 +37,7 @@ public class OfferEntityDataMapper {
         OfferEntity entity = new OfferEntity();
         entity.setId(offer.getId());
         entity.setAdvertId(offer.getAdvertId());
-        entity.setOfferId(offer.getOfferId());
+        entity.setCounterOfferId(offer.getCounterOfferId());
         entity.setPrice(offer.getPrice());
         entity.setQuantity(offer.getQuantity());
         entity.setUserId(offer.getUserId());

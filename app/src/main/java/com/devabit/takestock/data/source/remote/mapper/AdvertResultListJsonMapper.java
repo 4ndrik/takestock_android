@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.ResultList;
+import com.devabit.takestock.data.model.PaginatedList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,12 +12,12 @@ import java.util.List;
  */
 public class AdvertResultListJsonMapper extends ResultListJsonMapper<Advert> {
 
-    @Override public ResultList<Advert> fromJsonString(String json) throws JSONException {
+    @Override public PaginatedList<Advert> fromJsonString(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
-        ResultList<Advert> resultList = getResultList(jsonObject);
+        PaginatedList<Advert> paginatedList = getResultList(jsonObject);
         List<Advert> adverts = new AdvertJsonMapper()
                 .fromJsonStringToList(jsonObject.getString(RESULTS));
-        resultList.setResults(adverts);
-        return resultList;
+        paginatedList.setResults(adverts);
+        return paginatedList;
     }
 }

@@ -77,7 +77,7 @@ public class WatchingActivity extends AppCompatActivity implements WatchingContr
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 WatchingActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.dimen_8dp));
+        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         mAdvertsAdapter = new WatchingAdvertsAdapter(WatchingActivity.this);
         mAdvertsAdapter.setOnItemClickListener(new WatchingAdvertsAdapter.OnItemClickListener() {

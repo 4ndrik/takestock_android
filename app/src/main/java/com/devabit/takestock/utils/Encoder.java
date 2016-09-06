@@ -39,6 +39,6 @@ public class Encoder {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] encodedByte = baos.toByteArray();
-        return Base64.encodeToString(encodedByte, Base64.DEFAULT);
+        return Base64.encodeToString(encodedByte, Base64.NO_WRAP);
     }
 }

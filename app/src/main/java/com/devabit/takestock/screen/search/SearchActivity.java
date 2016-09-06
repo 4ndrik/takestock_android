@@ -129,7 +129,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mAdvertsRecyclerView.setLayoutManager(gridLayoutManager);
-        GridSpacingItemDecoration itemDecoration = new GridSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.dimen_4dp), 2);
+        GridSpacingItemDecoration itemDecoration = new GridSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_grid_space_4dp), 2);
         mAdvertsRecyclerView.addItemDecoration(itemDecoration);
         mAdvertsAdapter = new SearchAdvertsAdapter(SearchActivity.this);
         mAdvertsAdapter.setUserId(getUserId());

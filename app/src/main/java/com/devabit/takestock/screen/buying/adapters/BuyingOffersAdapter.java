@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Created by Victor Artemyev on 31/05/2016.
  */
-public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPairsAdapter.ViewHolder> {
+public class BuyingOffersAdapter extends RecyclerView.Adapter<BuyingOffersAdapter.ViewHolder> {
 
     private static final String TAG = Logger.makeLogTag(BuyingActivity.class);
 
@@ -42,19 +42,20 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
     private Map<Offer, Advert> mOfferAdvertMap;
 
     public interface OnItemClickListener {
-        void onItemClick(Advert advert, Offer offer);
+        void onItemClick(Advert advert);
+        void onAddPaymentClick(Offer offer);
     }
 
     private static OnItemClickListener sItemClickListener;
 
-    public OfferAdvertPairsAdapter(Context context, SparseArray<OfferStatus> statuses) {
+    public BuyingOffersAdapter(Context context, SparseArray<OfferStatus> statuses) {
         mLayoutInflater = LayoutInflater.from(context);
         mOfferStatuses = statuses;
         mOffers = new ArrayList<>();
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.item_offer_advert_pair, parent, false);
+        View view = mLayoutInflater.inflate(R.layout.item_buying_offer, parent, false);
         return new ViewHolder(view);
     }
 
@@ -95,11 +96,15 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
         sItemClickListener = itemClickListener;
     }
 
+    public void destroy() {
+        sItemClickListener = null;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.photo_image_view) ImageView imageView;
-        @BindView(R.id.title_text_view) TextView advertNameTextView;
-        @BindView(R.id.date_updated_text_view) TextView dateUpdatedTextView;
+        @BindView(R.id.name_text_view) TextView advertNameTextView;
+        @BindView(R.id.date_text_view) TextView dateTextView;
         @BindView(R.id.offer_price_text_view) TextView priceTextView;
         @BindView(R.id.status_text_view) TextView statusTextView;
 
@@ -118,7 +123,7 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
         void bindOffer(Offer offer) {
             mOffer = offer;
             String date = DateUtil.formatToDefaultDate(mOffer.getDateUpdated());
-            dateUpdatedTextView.setText(date);
+            dateTextView.setText(date);
             String price = resources.getString(R.string.offer_price_per_kg, offer.getPrice(), offer.getQuantity());
             priceTextView.setText(price);
         }
@@ -153,13 +158,13 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
             }
         }
 
-        @OnClick(R.id.content) void onContentClick() {
-            if (sItemClickListener != null) sItemClickListener.onItemClick(mAdvert, mOffer);
+        @OnClick(R.id.add_payment_button) void onAddPaymentButtonClick() {
+            if (sItemClickListener != null) sItemClickListener.onAddPaymentClick(mOffer);
         }
-    }
 
 
-    public void destroy() {
-        sItemClickListener = null;
+        @OnClick(R.id.content) void onContentClick() {
+            if (sItemClickListener != null) sItemClickListener.onItemClick(mAdvert);
+        }
     }
 }
