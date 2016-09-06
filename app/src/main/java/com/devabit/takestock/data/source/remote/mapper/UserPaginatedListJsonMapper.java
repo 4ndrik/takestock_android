@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 07/06/2016.
  */
-public class UserResultListJsonMapper extends ResultListJsonMapper<User> {
+public class UserPaginatedListJsonMapper extends PaginatedListJsonMapper<User> {
 
     @Override public PaginatedList<User> fromJsonString(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);

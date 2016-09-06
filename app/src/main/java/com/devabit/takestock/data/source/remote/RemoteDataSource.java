@@ -517,7 +517,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return Observable.create(new Observable.OnSubscribe<List<Advert>>() {
                             @Override public void call(Subscriber<? super List<Advert>> subscriber) {
                                 try {
-                                    AdvertResultListJsonMapper jsonMapper = new AdvertResultListJsonMapper();
+                                    AdvertPaginatedListJsonMapper jsonMapper = new AdvertPaginatedListJsonMapper();
                                     PaginatedList<Advert> paginatedList = jsonMapper.fromJsonString(createGET(page));
                                     List<Advert> result = new ArrayList<>(paginatedList.getResults());
                                     while (paginatedList.hasNext()) {
@@ -535,7 +535,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
+    @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<AdvertFilter, String>() {
                     @Override public String call(AdvertFilter filter) {
@@ -560,7 +560,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     @Override public PaginatedList<Advert> call(String json) {
                         try {
                             LOGD(TAG, json);
-                            return new AdvertResultListJsonMapper().fromJsonString(json);
+                            return new AdvertPaginatedListJsonMapper().fromJsonString(json);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -688,7 +688,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return Observable.create(new Observable.OnSubscribe<List<Offer>>() {
                             @Override public void call(Subscriber<? super List<Offer>> subscriber) {
                                 try {
-                                    OfferResultListJsonMapper jsonMapper = new OfferResultListJsonMapper();
+                                    OfferPaginatedListJsonMapper jsonMapper = new OfferPaginatedListJsonMapper();
                                     PaginatedList<Offer> paginatedList = jsonMapper.fromJsonString(createGET(page));
                                     List<Offer> result = new ArrayList<>(paginatedList.getResults());
                                     while (paginatedList.hasNext()) {
@@ -731,7 +731,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     @Override public PaginatedList<Offer> call(String jsonString) {
                         try {
                             LOGD(TAG, jsonString);
-                            return new OfferResultListJsonMapper().fromJsonString(jsonString);
+                            return new OfferPaginatedListJsonMapper().fromJsonString(jsonString);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -795,7 +795,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .map(new Func1<String, PaginatedList<Question>>() {
                     @Override public PaginatedList<Question> call(String jsonString) {
                         try {
-                            return new QuestionResultListJsonMapper().fromJsonString(jsonString);
+                            return new QuestionPaginatedListJsonMapper().fromJsonString(jsonString);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -884,7 +884,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return Observable.create(new Observable.OnSubscribe<List<User>>() {
                             @Override public void call(Subscriber<? super List<User>> subscriber) {
                                 try {
-                                    UserResultListJsonMapper jsonMapper = new UserResultListJsonMapper();
+                                    UserPaginatedListJsonMapper jsonMapper = new UserPaginatedListJsonMapper();
                                     PaginatedList<User> paginatedList = jsonMapper.fromJsonString(createGET(page));
                                     List<User> result = new ArrayList<>(paginatedList.getResults());
                                     while (paginatedList.hasNext()) {

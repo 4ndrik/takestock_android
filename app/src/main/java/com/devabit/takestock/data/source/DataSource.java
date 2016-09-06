@@ -127,7 +127,7 @@ public interface DataSource {
 
     Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter);
 
-    Observable<PaginatedList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter);
+    Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter);
 
     Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String page);
 

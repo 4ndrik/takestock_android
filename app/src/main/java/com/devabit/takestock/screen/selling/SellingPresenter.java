@@ -42,7 +42,7 @@ public class SellingPresenter implements SellingContract.Presenter {
     @Override public void fetchAdvertsPerFilter(AdvertFilter filter) {
         mSellingView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .getAdvertResultListPerFilter(filter)
+                .getPaginatedAdvertListWithFilter(filter)
                 .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                 .subscribe(getSubscriber());
         mSubscriptions.add(subscription);

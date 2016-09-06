@@ -50,7 +50,7 @@ final class WatchingPresenter implements WatchingContract.Presenter {
         filter.setPageSize(Integer.MAX_VALUE);
         filter.setWatchlist(true);
         Subscription subscription = mDataRepository
-                .getAdvertResultListPerFilter(filter)
+                .getPaginatedAdvertListWithFilter(filter)
                 .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                 .subscribe(new Subscriber<PaginatedList<Advert>>() {
                     @Override public void onCompleted() {

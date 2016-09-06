@@ -307,8 +307,8 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getAdvertsWithFilter(filter);
     }
 
-    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerFilter(@NonNull AdvertFilter filter) {
-        return mRemoteDataSource.getAdvertResultListPerFilter(filter);
+    @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter) {
+        return mRemoteDataSource.getPaginatedAdvertListWithFilter(filter);
     }
 
     @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String page) {

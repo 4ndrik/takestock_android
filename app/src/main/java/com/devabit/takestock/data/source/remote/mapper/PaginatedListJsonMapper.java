@@ -7,7 +7,7 @@ import org.json.JSONObject;
 /**
  * Created by Victor Artemyev on 27/05/2016.
  */
-public abstract class ResultListJsonMapper<T> implements JsonMapper<PaginatedList<T>> {
+public abstract class PaginatedListJsonMapper<T> implements JsonMapper<PaginatedList<T>> {
 
     protected static final String COUNT = "count";
     protected static final String NEXT = "next";
