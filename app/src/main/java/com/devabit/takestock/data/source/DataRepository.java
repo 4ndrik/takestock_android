@@ -54,9 +54,7 @@ public class DataRepository implements DataSource {
         sInstance = null;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for AuthToken
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Entries Methods  ********/
 
     @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
         return mRemoteDataSource.signUp(credentials);
@@ -76,31 +74,29 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Category
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Categories Methods  ********/
 
-    @Override public void saveCategories(@NonNull List<Category> categories) {
+    @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Category>> getCategories() {
         Observable<List<Category>> localCategories = mLocalDataSource.getCategories();
-        Observable<List<Category>> remoteCategories = updateCategories();
+        Observable<List<Category>> remoteCategories = refreshCategories();
         return Observable.concat(localCategories, remoteCategories).first();
     }
 
-    @Override public Observable<List<Category>> updateCategories() {
-        return mRemoteDataSource.updateCategories()
-                .doOnNext(new Action1<List<Category>>() {
-                    @Override public void call(List<Category> categories) {
-                        mLocalDataSource.saveCategories(categories);
+    @Override public Observable<List<Category>> refreshCategories() {
+        return mRemoteDataSource.refreshCategories()
+                .flatMap(new Func1<List<Category>, Observable<List<Category>>>() {
+                    @Override public Observable<List<Category>> call(List<Category> categories) {
+                        return mLocalDataSource.saveCategories(categories);
                     }
                 });
     }
 
-    @Override public Category getCategoryById(int id) {
-        return null;
+    @Override public Category getCategoryWithId(int id) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     ///////////////////////////////////////////////////////////////////////////

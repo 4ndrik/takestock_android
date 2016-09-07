@@ -15,25 +15,21 @@ import java.util.List;
  */
 public interface DataSource {
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for AuthToken
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Entries Methods  ********/
 
     Observable<AuthToken> signUp(@NonNull UserCredentials credentials);
 
     Observable<AuthToken> signIn(@NonNull UserCredentials credentials);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Category
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Categories Methods  ********/
 
-    void saveCategories(@NonNull List<Category> categories);
+    Observable<List<Category>> saveCategories(@NonNull List<Category> categories);
 
-    Observable<List<Category>> updateCategories();
+    Observable<List<Category>> refreshCategories();
 
     Observable<List<Category>> getCategories();
 
-    Category getCategoryById(int id);
+    Category getCategoryWithId(int id);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Size

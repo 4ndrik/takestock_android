@@ -8,6 +8,7 @@ import com.devabit.takestock.data.filter.QuestionFilter;
 import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
+import com.devabit.takestock.data.source.local.dao.CategoryRealmDao;
 import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
@@ -39,19 +40,20 @@ public class LocalDataSource implements DataSource {
         return sInstance;
     }
 
-    private static final String DATA_BASE_NAME = "takestock.realm";
+    private final RealmConfiguration mRealmConfiguration;
 
     private LocalDataSource(Context context) {
-        RealmConfiguration config = new RealmConfiguration.Builder(context)
-                .name(DATA_BASE_NAME)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(config);
+        mRealmConfiguration = buildRealmConfiguration(context);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for AuthToken
-    ///////////////////////////////////////////////////////////////////////////
+    private RealmConfiguration buildRealmConfiguration(Context context) {
+        return new RealmConfiguration.Builder(context)
+                .name("takestock.realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+    }
+
+    /********* Entries Methods  ********/
 
     @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
@@ -65,57 +67,33 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Category
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Categories Methods  ********/
 
-    @Override public void saveCategories(@NonNull List<Category> categories) {
-        CategoryEntityDataMapper categoryMapper = new CategoryEntityDataMapper();
-        try (Realm realm = Realm.getDefaultInstance()) {
-            realm.beginTransaction();
-            for (Category category : categories) {
-                CategoryEntity categoryEntity = categoryMapper.transformToEntity(category);
-                categoryEntity = realm.copyToRealmOrUpdate(categoryEntity);
-                RealmList<SubcategoryEntity> subcategoryEntities = categoryEntity.getSubcategories();
-                for (Subcategory subcategory : category.getSubcategories()) {
-                    SubcategoryEntity subcategoryEntity = categoryMapper.transformSubcategoryToEntity(subcategory);
-                    subcategoryEntities.add(subcategoryEntity);
-                }
-            }
-            realm.commitTransaction();
-        }
+    @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
+        return Observable.just(categories)
+                .doOnNext(new Action1<List<Category>>() {
+                    @Override public void call(List<Category> categories) {
+                        CategoryRealmDao dao = new CategoryRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateCategoryList(categories);
+                    }
+                });
     }
 
-    @Override public Observable<List<Category>> updateCategories() {
+    @Override public Observable<List<Category>> refreshCategories() {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Category>> getCategories() {
-        return Observable.fromCallable(new Callable<RealmResults<CategoryEntity>>() {
-            @Override public RealmResults<CategoryEntity> call() throws Exception {
-                return Realm.getDefaultInstance().where(CategoryEntity.class).findAll();
-            }
-        }).filter(new Func1<RealmResults<CategoryEntity>, Boolean>() {
-            @Override public Boolean call(RealmResults<CategoryEntity> categories) {
-                return !categories.isEmpty();
-            }
-        }).map(new Func1<RealmResults<CategoryEntity>, List<Category>>() {
-            @Override public List<Category> call(RealmResults<CategoryEntity> entities) {
-                return new CategoryEntityDataMapper().transformFromEntityList(entities);
-            }
-        }).doOnNext(new Action1<List<Category>>() {
-            @Override public void call(List<Category> categories) {
-                LOGD(TAG, "Categories from LocalDataSource " + categories);
+        return Observable.fromCallable(new Callable<List<Category>>() {
+            @Override public List<Category> call() throws Exception {
+                CategoryRealmDao dao = new CategoryRealmDao(mRealmConfiguration);
+                return dao.getCategoryList();
             }
         });
     }
 
-    @Override public Category getCategoryById(int id) {
-        CategoryEntity entity = Realm.getDefaultInstance()
-                .where(CategoryEntity.class)
-                .equalTo("mId", id)
-                .findFirst();
-        return new CategoryEntityDataMapper().transformFromEntity(entity);
+    @Override public Category getCategoryWithId(int id) {
+        return new CategoryRealmDao(mRealmConfiguration).getCategoryWithId(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////

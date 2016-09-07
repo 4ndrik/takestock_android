@@ -212,11 +212,11 @@ public class RemoteDataSource implements ApiRest, DataSource {
     // Methods for Category
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public void saveCategories(@NonNull List<Category> categories) {
+    @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Category>> updateCategories() {
+    @Override public Observable<List<Category>> refreshCategories() {
         return getCategories();
     }
 
@@ -238,7 +238,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Category getCategoryById(int id) {
+    @Override public Category getCategoryWithId(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
