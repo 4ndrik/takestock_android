@@ -363,7 +363,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Packaging>> updatePackagings() {
+    @Override public Observable<List<Packaging>> refreshPackagings() {
         return getPackagings();
     }
 

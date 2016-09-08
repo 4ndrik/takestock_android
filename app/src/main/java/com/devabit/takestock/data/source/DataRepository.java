@@ -193,21 +193,21 @@ public class DataRepository implements DataSource {
 
     /********** Packagings Methods ********/
 
-    @Override public void savePackagings(@NonNull List<Packaging> packagings) {
+    @Override public Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Packaging>> getPackagings() {
         Observable<List<Packaging>> localPackagings = mLocalDataSource.getPackagings();
-        Observable<List<Packaging>> remotePackagings = updatePackagings();
+        Observable<List<Packaging>> remotePackagings = refreshPackagings();
         return Observable.concat(localPackagings, remotePackagings).first();
     }
 
-    @Override public Observable<List<Packaging>> updatePackagings() {
-        return mRemoteDataSource.updatePackagings()
-                .doOnNext(new Action1<List<Packaging>>() {
-                    @Override public void call(List<Packaging> packagings) {
-                        mLocalDataSource.savePackagings(packagings);
+    @Override public Observable<List<Packaging>> refreshPackagings() {
+        return mRemoteDataSource.refreshPackagings()
+                .flatMap(new Func1<List<Packaging>, Observable<List<Packaging>>>() {
+                    @Override public Observable<List<Packaging>> call(List<Packaging> packagings) {
+                        return mLocalDataSource.savePackagings(packagings);
                     }
                 });
     }

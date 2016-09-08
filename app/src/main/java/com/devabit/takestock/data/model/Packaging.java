@@ -8,6 +8,11 @@ public class Packaging {
     private int mId;
     private String mType;
 
+    public Packaging(int id, String type) {
+        mId = id;
+        mType = type;
+    }
+
     public int getId() {
         return mId;
     }

@@ -72,11 +72,12 @@ public interface DataSource {
 
     Condition getConditionWithId(int id);
 
+
     /********* Packagings Methods  ********/
 
     Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings);
 
-    Observable<List<Packaging>> updatePackagings();
+    Observable<List<Packaging>> refreshPackagings();
 
     Observable<List<Packaging>> getPackagings();
 
