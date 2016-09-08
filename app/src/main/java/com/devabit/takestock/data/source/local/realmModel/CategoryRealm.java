@@ -50,10 +50,6 @@ public class CategoryRealm extends RealmObject {
         mName = name;
     }
 
-    public RealmList<SubcategoryRealm> getSubcategories() {
-        return mSubcategories;
-    }
-
     public Category getCategory() {
         Category category = new Category();
         category.setId(mId);
@@ -69,12 +65,4 @@ public class CategoryRealm extends RealmObject {
         }
         return list;
      }
-
-    @Override public String toString() {
-        return "CategoryRealm{" +
-                "mId=" + mId +
-                ", mName='" + mName + '\'' +
-                ", mSubcategories=" + mSubcategories +
-                '}';
-    }
 }

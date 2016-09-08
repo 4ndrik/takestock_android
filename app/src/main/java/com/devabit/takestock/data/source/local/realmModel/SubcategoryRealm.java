@@ -41,11 +41,4 @@ public class SubcategoryRealm extends RealmObject {
         subcategory.setName(mName);
         return subcategory;
     }
-
-    @Override public String toString() {
-        return "SubcategoryRealm{" +
-                "mId=" + mId +
-                ", mName='" + mName + '\'' +
-                '}';
-    }
 }

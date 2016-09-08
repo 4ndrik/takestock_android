@@ -52,6 +52,15 @@ public class CertificationRealmDao extends AbstractDao {
         return certificationList;
     }
 
+    public Certification getCertificationWithId(int id) {
+        Realm realm = Realm.getInstance(mRealmConfiguration);
+        CertificationRealm certificationRealm = realm
+                .where(CertificationRealm.class)
+                .equalTo("mId", id)
+                .findFirst();
+        return certificationRealm.getCertification();
+    }
+
     @Override public void clearDatabase() {
         Realm realm = Realm.getInstance(mRealmConfiguration);
         realm.executeTransaction(new Realm.Transaction() {

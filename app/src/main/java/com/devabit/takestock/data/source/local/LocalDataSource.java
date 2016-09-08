@@ -10,12 +10,12 @@ import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.dao.CategoryRealmDao;
 import com.devabit.takestock.data.source.local.dao.CertificationRealmDao;
+import com.devabit.takestock.data.source.local.dao.ShippingRealmDao;
 import com.devabit.takestock.data.source.local.dao.SizeRealmDao;
 import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.mapper.*;
-import com.devabit.takestock.data.source.local.realmModel.CertificationRealm;
 import io.realm.*;
 import rx.Observable;
 import rx.functions.Action1;
@@ -120,6 +120,7 @@ public class LocalDataSource implements DataSource {
             }
         });
     }
+
     /********** Certifications Methods ********/
 
     @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
@@ -145,53 +146,37 @@ public class LocalDataSource implements DataSource {
         });
     }
 
-    @Override public Certification getCertificationById(int id) {
-        CertificationRealm entity = Realm.getDefaultInstance()
-                .where(CertificationRealm.class)
-                .equalTo("mId", id)
-                .findFirst();
-        return entity.getCertification();
+    @Override public Certification getCertificationWithId(int id) {
+        return new CertificationRealmDao(mRealmConfiguration).getCertificationWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Shipping
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Shippings Methods ********/
 
-    @Override public void saveShippings(@NonNull List<Shipping> shippings) {
-        List<ShippingEntity> entities = new ShippingEntityDataMapper().transformToEntityList(shippings);
-        saveOrUpdateEntities(entities);
+    @Override public Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings) {
+        return Observable.just(shippings)
+                .doOnNext(new Action1<List<Shipping>>() {
+                    @Override public void call(List<Shipping> shippings) {
+                        ShippingRealmDao dao = new ShippingRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateShippingList(shippings);
+                    }
+                });
     }
 
-    @Override public Observable<List<Shipping>> updateShippings() {
+    @Override public Observable<List<Shipping>> refreshShippings() {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Shipping>> getShippings() {
-        return Observable.fromCallable(new Callable<RealmResults<ShippingEntity>>() {
-            @Override public RealmResults<ShippingEntity> call() throws Exception {
-                return Realm.getDefaultInstance().where(ShippingEntity.class).findAll();
-            }
-        }).filter(new Func1<RealmResults<ShippingEntity>, Boolean>() {
-            @Override public Boolean call(RealmResults<ShippingEntity> entities) {
-                return !entities.isEmpty();
-            }
-        }).map(new Func1<RealmResults<ShippingEntity>, List<Shipping>>() {
-            @Override public List<Shipping> call(RealmResults<ShippingEntity> entities) {
-                return new ShippingEntityDataMapper().transformFromEntityList(entities);
-            }
-        }).doOnNext(new Action1<List<Shipping>>() {
-            @Override public void call(List<Shipping> shippings) {
-                LOGD(TAG, "Shippings from LocalDataSource " + shippings);
+        return Observable.fromCallable(new Callable<List<Shipping>>() {
+            @Override public List<Shipping> call() throws Exception {
+                ShippingRealmDao dao = new ShippingRealmDao(mRealmConfiguration);
+                return dao.getShippingList();
             }
         });
     }
 
-    @Override public Shipping getShippingById(int id) {
-        ShippingEntity entity = Realm.getDefaultInstance()
-                .where(ShippingEntity.class)
-                .equalTo("mId", id)
-                .findFirst();
-        return new ShippingEntityDataMapper().transformFromEntity(entity);
+    @Override public Shipping getShippingWithId(int id) {
+        return new ShippingRealmDao(mRealmConfiguration).getShippingWithId(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////

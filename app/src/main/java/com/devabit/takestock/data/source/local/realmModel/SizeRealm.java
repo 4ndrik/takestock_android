@@ -11,26 +11,26 @@ import io.realm.annotations.PrimaryKey;
 
 public class SizeRealm extends RealmObject {
 
-    private @PrimaryKey int id;
-    private String type;
+    private @PrimaryKey int mId;
+    private String mType;
 
     public SizeRealm() {
     }
 
     public SizeRealm(Size size) {
-        this.id = size.getId();
-        this.type = size.getType();
+        mId = size.getId();
+        mType = size.getType();
     }
 
     public void setType(@NonNull String type) {
-        this.type = type;
+        this.mType = type;
     }
 
     public String getType() {
-        return type;
+        return mType;
     }
 
     public Size getSize() {
-        return new Size(id, type);
+        return new Size(mId, mType);
     }
 }

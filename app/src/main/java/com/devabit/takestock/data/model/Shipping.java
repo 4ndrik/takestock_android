@@ -10,6 +10,14 @@ public class Shipping {
     private int mId;
     private String mType;
 
+    public Shipping() {
+    }
+
+    public Shipping(int id, String type) {
+        mId = id;
+        mType = type;
+    }
+
     public int getId() {
         return mId;
     }
