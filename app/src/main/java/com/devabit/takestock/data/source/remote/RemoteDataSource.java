@@ -384,19 +384,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Packaging getPackagingById(int id) {
+    @Override public Packaging getPackagingWithId(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for OfferStatus
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Offer Statuses Methods  ********/
 
-    @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
+    @Override public Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<OfferStatus>> updateOfferStatuses() {
+    @Override public Observable<List<OfferStatus>> refreshOfferStatuses() {
         return getOfferStatuses();
     }
 
@@ -417,7 +415,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public OfferStatus getOfferStatusById(int id) {
+    @Override public OfferStatus getOfferStatusWithId(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 

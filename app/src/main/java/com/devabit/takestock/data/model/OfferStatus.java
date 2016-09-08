@@ -27,6 +27,11 @@ public class OfferStatus implements Parcelable {
 
     public OfferStatus(){}
 
+    public OfferStatus(int id, String type) {
+        mId = id;
+        mType = type;
+    }
+
     protected OfferStatus(Parcel in) {
         mId = in.readInt();
         mType = in.readString();
