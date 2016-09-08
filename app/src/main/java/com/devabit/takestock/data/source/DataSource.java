@@ -81,19 +81,18 @@ public interface DataSource {
 
     Observable<List<Packaging>> getPackagings();
 
-    Packaging getPackagingById(int id);
+    Packaging getPackagingWithId(int id);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for OfferStatus
-    ///////////////////////////////////////////////////////////////////////////
 
-    void saveOfferStatuses(@NonNull List<OfferStatus> statuses);
+    /********* OfferStatuses Methods  ********/
 
-    Observable<List<OfferStatus>> updateOfferStatuses();
+    Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses);
+
+    Observable<List<OfferStatus>> refreshOfferStatuses();
 
     Observable<List<OfferStatus>> getOfferStatuses();
 
-    OfferStatus getOfferStatusById(int id);
+    OfferStatus getOfferStatusWithId(int id);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for BusinessType

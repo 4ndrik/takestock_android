@@ -230,49 +230,37 @@ public class LocalDataSource implements DataSource {
         });
     }
 
-    @Override public Packaging getPackagingById(int id) {
+    @Override public Packaging getPackagingWithId(int id) {
         return new PackagingRealmDao(mRealmConfiguration).getPackagingWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for OfferStatus
-    ///////////////////////////////////////////////////////////////////////////
+    /********* OfferStatuses Methods  ********/
 
-    @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
-        List<OfferStatusEntity> entities = new OfferStatusEntityDataMapper().transformToEntityList(statuses);
-        saveOrUpdateEntities(entities);
+    @Override public Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
+        return Observable.just(statuses)
+                .doOnNext(new Action1<List<OfferStatus>>() {
+                    @Override public void call(List<OfferStatus> offerStatuses) {
+                        OfferStatusRealmDao dao = new OfferStatusRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateOfferStatusList(offerStatuses);
+                    }
+                });
     }
 
-    @Override public Observable<List<OfferStatus>> updateOfferStatuses() {
+    @Override public Observable<List<OfferStatus>> refreshOfferStatuses() {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<OfferStatus>> getOfferStatuses() {
-        return Observable.fromCallable(new Callable<RealmResults<OfferStatusEntity>>() {
-            @Override public RealmResults<OfferStatusEntity> call() throws Exception {
-                return Realm.getDefaultInstance().where(OfferStatusEntity.class).findAll();
-            }
-        }).filter(new Func1<RealmResults<OfferStatusEntity>, Boolean>() {
-            @Override public Boolean call(RealmResults<OfferStatusEntity> entities) {
-                return !entities.isEmpty();
-            }
-        }).map(new Func1<RealmResults<OfferStatusEntity>, List<OfferStatus>>() {
-            @Override public List<OfferStatus> call(RealmResults<OfferStatusEntity> entities) {
-                return new OfferStatusEntityDataMapper().transformFromEntityList(entities);
-            }
-        }).doOnNext(new Action1<List<OfferStatus>>() {
-            @Override public void call(List<OfferStatus> statuses) {
-                LOGD(TAG, "OfferStatuses from LocalDataSource " + statuses);
+        return Observable.fromCallable(new Callable<List<OfferStatus>>() {
+            @Override public List<OfferStatus> call() throws Exception {
+                OfferStatusRealmDao dao = new OfferStatusRealmDao(mRealmConfiguration);
+                return dao.getOfferStatusList();
             }
         });
     }
 
-    @Override public OfferStatus getOfferStatusById(int id) {
-        OfferStatusEntity entity = Realm.getDefaultInstance()
-                .where(OfferStatusEntity.class)
-                .equalTo("mId", id)
-                .findFirst();
-        return new OfferStatusEntityDataMapper().transformFromEntity(entity);
+    @Override public OfferStatus getOfferStatusWithId(int id) {
+        return new OfferStatusRealmDao(mRealmConfiguration).getOfferStatusWithId(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////

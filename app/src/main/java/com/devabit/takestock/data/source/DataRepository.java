@@ -212,35 +212,33 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    @Override public Packaging getPackagingById(int id) {
-        return mLocalDataSource.getPackagingById(id);
+    @Override public Packaging getPackagingWithId(int id) {
+        return mLocalDataSource.getPackagingWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for OfferStatus
-    ///////////////////////////////////////////////////////////////////////////
+    /********* OfferStatuses Methods  ********/
 
-    @Override public void saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
+    @Override public Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<OfferStatus>> updateOfferStatuses() {
-        return mRemoteDataSource.updateOfferStatuses()
-                .doOnNext(new Action1<List<OfferStatus>>() {
-                    @Override public void call(List<OfferStatus> statuses) {
-                        mLocalDataSource.saveOfferStatuses(statuses);
-                    }
-                });
+    @Override public Observable<List<OfferStatus>> refreshOfferStatuses() {
+        return mRemoteDataSource.refreshOfferStatuses()
+             .flatMap(new Func1<List<OfferStatus>, Observable<List<OfferStatus>>>() {
+                 @Override public Observable<List<OfferStatus>> call(List<OfferStatus> offerStatuses) {
+                     return mLocalDataSource.saveOfferStatuses(offerStatuses);
+                 }
+             });
     }
 
     @Override public Observable<List<OfferStatus>> getOfferStatuses() {
         Observable<List<OfferStatus>> localStatuses = mLocalDataSource.getOfferStatuses();
-        Observable<List<OfferStatus>> remoteStatuses = updateOfferStatuses();
+        Observable<List<OfferStatus>> remoteStatuses = refreshOfferStatuses();
         return Observable.concat(localStatuses, remoteStatuses).first();
     }
 
-    @Override public OfferStatus getOfferStatusById(int id) {
-        return mLocalDataSource.getOfferStatusById(id);
+    @Override public OfferStatus getOfferStatusWithId(int id) {
+        return mLocalDataSource.getOfferStatusWithId(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////
