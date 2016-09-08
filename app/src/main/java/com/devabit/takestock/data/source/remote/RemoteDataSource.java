@@ -261,9 +261,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Certification
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Certifications Methods  ********/
 
     @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -291,19 +289,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Certification getCertificationById(int id) {
+    @Override public Certification getCertificationWithId(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Shipping
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Shippings Methods  ********/
 
-    @Override public void saveShippings(@NonNull List<Shipping> shippings) {
+    @Override public Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Shipping>> updateShippings() {
+    @Override public Observable<List<Shipping>> refreshShippings() {
         return getShippings();
     }
 
@@ -324,7 +320,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Shipping getShippingById(int id) {
+    @Override public Shipping getShippingWithId(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 

@@ -137,35 +137,33 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    @Override public Certification getCertificationById(int id) {
-        return mLocalDataSource.getCertificationById(id);
+    @Override public Certification getCertificationWithId(int id) {
+        return mLocalDataSource.getCertificationWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Shipping
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Shipping Methods ********/
 
-    @Override public void saveShippings(@NonNull List<Shipping> shippings) {
+    @Override public Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Shipping>> getShippings() {
         Observable<List<Shipping>> localShippings = mLocalDataSource.getShippings();
-        Observable<List<Shipping>> remoteShippings = updateShippings();
+        Observable<List<Shipping>> remoteShippings = refreshShippings();
         return Observable.concat(localShippings, remoteShippings).first();
     }
 
-    @Override public Observable<List<Shipping>> updateShippings() {
-        return mRemoteDataSource.updateShippings()
-                .doOnNext(new Action1<List<Shipping>>() {
-                    @Override public void call(List<Shipping> shippings) {
-                        mLocalDataSource.saveShippings(shippings);
+    @Override public Observable<List<Shipping>> refreshShippings() {
+        return mRemoteDataSource.refreshShippings()
+                .flatMap(new Func1<List<Shipping>, Observable<List<Shipping>>>() {
+                    @Override public Observable<List<Shipping>> call(List<Shipping> shippings) {
+                        return mLocalDataSource.saveShippings(shippings);
                     }
                 });
     }
 
-    @Override public Shipping getShippingById(int id) {
-        return mLocalDataSource.getShippingById(id);
+    @Override public Shipping getShippingWithId(int id) {
+        return mLocalDataSource.getShippingWithId(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////

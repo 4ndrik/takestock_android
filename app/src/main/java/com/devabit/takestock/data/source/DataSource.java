@@ -48,19 +48,18 @@ public interface DataSource {
 
     Observable<List<Certification>> getCertifications();
 
-    Certification getCertificationById(int id);
+    Certification getCertificationWithId(int id);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Shipping
-    ///////////////////////////////////////////////////////////////////////////
 
-    void saveShippings(@NonNull List<Shipping> shippings);
+    /********* Shippings Methods  ********/
 
-    Observable<List<Shipping>> updateShippings();
+    Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings);
+
+    Observable<List<Shipping>> refreshShippings();
 
     Observable<List<Shipping>> getShippings();
 
-    Shipping getShippingById(int id);
+    Shipping getShippingWithId(int id);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Condition
