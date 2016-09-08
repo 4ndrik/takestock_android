@@ -1,6 +1,7 @@
 package com.devabit.takestock.data.source.remote.jsonModel.deserializer;
 
 import com.devabit.takestock.data.model.Size;
+import com.devabit.takestock.data.source.remote.jsonModel.SizeJson;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -10,9 +11,9 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 07/09/2016.
  */
-public class SizeJsonDeserializer implements JsonDeserializer<List<Size>> {
+public class SizeJsonDeserializer implements JsonDeserializer<SizeJson> {
 
-    @Override public List<Size> deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
+    @Override public SizeJson deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.get("types").getAsJsonArray();
@@ -23,6 +24,6 @@ public class SizeJsonDeserializer implements JsonDeserializer<List<Size>> {
             Size size = new Size(id, type);
             sizes.add(size);
         }
-        return sizes;
+        return new SizeJson(sizes);
     }
 }

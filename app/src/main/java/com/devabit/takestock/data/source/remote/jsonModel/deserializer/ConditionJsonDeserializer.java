@@ -1,6 +1,7 @@
 package com.devabit.takestock.data.source.remote.jsonModel.deserializer;
 
 import com.devabit.takestock.data.model.Condition;
+import com.devabit.takestock.data.source.remote.jsonModel.ConditionJson;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -10,8 +11,8 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class ConditionJsonDeserializer implements JsonDeserializer<List<Condition>> {
-    @Override public List<Condition> deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
+public class ConditionJsonDeserializer implements JsonDeserializer<ConditionJson> {
+    @Override public ConditionJson deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.get("conditions").getAsJsonArray();
@@ -22,6 +23,6 @@ public class ConditionJsonDeserializer implements JsonDeserializer<List<Conditio
             Condition condition = new Condition(id, state);
             conditions.add(condition);
         }
-        return conditions;
+        return new ConditionJson(conditions);
     }
 }
