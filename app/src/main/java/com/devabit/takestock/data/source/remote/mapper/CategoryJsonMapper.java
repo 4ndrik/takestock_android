@@ -30,7 +30,7 @@ public class CategoryJsonMapper implements JsonMapper<List<Category>> {
         List<Category> result = new ArrayList<>(length);
         for (int index = 0; index < length; index++) {
             JSONObject jsonObject = jsonArray.getJSONObject(index);
-            Category category = new Category();
+            Category category = new Category.Builder().build();
             category.setId(jsonObject.getInt(ID));
             category.setName(jsonObject.getString(NAME));
             List<Subcategory> subcategories = mSubcategoryMapper.fromJsonString(jsonObject.getString(SUBCATEGORIES));

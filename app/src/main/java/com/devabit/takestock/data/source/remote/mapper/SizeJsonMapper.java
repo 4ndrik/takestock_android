@@ -20,11 +20,10 @@ public class SizeJsonMapper implements JsonMapper<List<Size>> {
         JSONArray jsonArray = jsonObject.getJSONArray(TYPES);
         int length = jsonArray.length();
         List<Size> result = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
+        for (int i = 1; i <= length; i++) {
             JSONObject typeJson = jsonArray.getJSONObject(i);
-            String type = typeJson.getString(Integer.toString(i + 1));
-            Size size = new Size();
-            size.setType(type);
+            String type = typeJson.getString(Integer.toString(i));
+            Size size = new Size(i, type);
             result.add(size);
         }
         return result;

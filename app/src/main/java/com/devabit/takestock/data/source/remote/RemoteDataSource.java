@@ -82,10 +82,11 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private Gson buildGson() {
         final GsonBuilder builder = new GsonBuilder()
                 .registerTypeAdapter(CategoryListJson.class, new CategoryJsonDeserializer())
+                .registerTypeAdapter(CertificationListJson.class, new CertificationListJsonDeserializer())
                 .registerTypeAdapter(ConditionListJson.class, new ConditionJsonDeserializer())
                 .registerTypeAdapter(OfferStatusListJson.class, new OfferStatusJsonDeserializer())
                 .registerTypeAdapter(PackagingListJson.class, new PackagingJsonDeserializer())
-                .registerTypeAdapter(ShippingJsonDeserializer.class, new ShippingJsonDeserializer())
+                .registerTypeAdapter(ShippingListJson.class, new ShippingJsonDeserializer())
                 .registerTypeAdapter(SizeListJson.class, new SizeJsonDeserializer());
         return builder.create();
     }
@@ -235,15 +236,6 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<List<Category>> getCategories() {
         return Observable.fromCallable(createGETCallable(CATEGORY))
-//                .map(new Func1<String, List<Category>>() {
-//                    @Override public List<Category> call(String json) {
-//                        try {
-//                            return new CategoryJsonMapper().fromJsonString(json);
-//                        } catch (Exception e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    }
-//                })
                 .map(new Func1<String, List<Category>>() {
                     @Override public List<Category> call(String jsonString) {
                         d(jsonString);
@@ -270,15 +262,6 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<List<Size>> getSizes() {
         return Observable.fromCallable(createGETCallable(SIZE_TYPES))
-//                .map(new Func1<String, List<Size>>() {
-//                    @Override public List<Size> call(String json) {
-//                        try {
-//                            return new SizeJsonMapper().fromJsonString(json);
-//                        } catch (JSONException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    }
-//                })
                 .map(new Func1<String, List<Size>>() {
                     @Override public List<Size> call(String jsonString) {
                         d(jsonString);
@@ -305,25 +288,16 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<List<Certification>> getCertifications() {
         return Observable.fromCallable(createGETCallable(CERTIFICATIONS))
-//                .map(new Func1<String, List<Certification>>() {
-//                    @Override public List<Certification> call(String json) {
-//                        try {
-//                            return new CertificationJsonMapper().fromJsonStringToList(json);
-//                        } catch (JSONException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    }
-//                })
                 .map(new Func1<String, List<Certification>>() {
                     @Override public List<Certification> call(String jsonString) {
                         d(jsonString);
-                        CertificationJson json = mGson.fromJson(jsonString, CertificationJson.class);
-                        return null;
+                        CertificationListJson json = mGson.fromJson(jsonString, CertificationListJson.class);
+                        return json.getCertifications();
                     }
                 })
                 .doOnNext(new Action1<List<Certification>>() {
                     @Override public void call(List<Certification> certifications) {
-                        LOGD(TAG, "Certifications from RemoteDataSource " + certifications);
+                        d(certifications.toString());
                     }
                 });
     }
@@ -345,16 +319,15 @@ public class RemoteDataSource implements ApiRest, DataSource {
     @Override public Observable<List<Shipping>> getShippings() {
         return Observable.fromCallable(createGETCallable(SHIPPING))
                 .map(new Func1<String, List<Shipping>>() {
-                    @Override public List<Shipping> call(String json) {
-                        try {
-                            return new ShippingJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public List<Shipping> call(String jsonString) {
+                        d(jsonString);
+                        ShippingListJson json = mGson.fromJson(jsonString, ShippingListJson.class);
+                        return json.getShippings();
                     }
-                }).doOnNext(new Action1<List<Shipping>>() {
+                })
+                .doOnNext(new Action1<List<Shipping>>() {
                     @Override public void call(List<Shipping> shippings) {
-                        LOGD(TAG, "Shippings from RemoteDataSource " + shippings);
+                        d(shippings.toString());
                     }
                 });
     }
@@ -376,16 +349,14 @@ public class RemoteDataSource implements ApiRest, DataSource {
     @Override public Observable<List<Condition>> getConditions() {
         return Observable.fromCallable(createGETCallable(CONDITIONS))
                 .map(new Func1<String, List<Condition>>() {
-                    @Override public List<Condition> call(String json) {
-                        try {
-                            return new ConditionJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException();
-                        }
+                    @Override public List<Condition> call(String jsonString) {
+                        d(jsonString);
+                        ConditionListJson json = mGson.fromJson(jsonString, ConditionListJson.class);
+                        return json.getConditions();
                     }
                 }).doOnNext(new Action1<List<Condition>>() {
                     @Override public void call(List<Condition> conditions) {
-                        LOGD(TAG, "Conditions from RemoteDataSource " + conditions);
+                        d(conditions.toString());
                     }
                 });
     }
@@ -394,9 +365,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Packaging
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Packagings Methods  ********/
 
     @Override public Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -409,16 +378,14 @@ public class RemoteDataSource implements ApiRest, DataSource {
     @Override public Observable<List<Packaging>> getPackagings() {
         return Observable.fromCallable(createGETCallable(PACKAGING))
                 .map(new Func1<String, List<Packaging>>() {
-                    @Override public List<Packaging> call(String json) {
-                        try {
-                            return new PackagingJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException();
-                        }
+                    @Override public List<Packaging> call(String jsonString) {
+                        d(jsonString);
+                        PackagingListJson json = mGson.fromJson(jsonString, PackagingListJson.class);
+                        return json.getPackagings();
                     }
                 }).doOnNext(new Action1<List<Packaging>>() {
                     @Override public void call(List<Packaging> packagings) {
-                        LOGD(TAG, "Packaging from RemoteDataSource " + packagings);
+                        d(packagings.toString());
                     }
                 });
     }
@@ -427,7 +394,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* Offer Statuses Methods  ********/
+    /********* OfferStatuses Methods  ********/
 
     @Override public Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -440,16 +407,14 @@ public class RemoteDataSource implements ApiRest, DataSource {
     @Override public Observable<List<OfferStatus>> getOfferStatuses() {
         return Observable.fromCallable(createGETCallable(OFFER_STATUS))
                 .map(new Func1<String, List<OfferStatus>>() {
-                    @Override public List<OfferStatus> call(String json) {
-                        try {
-                            return new OfferStatusJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public List<OfferStatus> call(String jsonString) {
+                        d(jsonString);
+                        OfferStatusListJson json = mGson.fromJson(jsonString, OfferStatusListJson.class);
+                        return json.getOfferStatuses();
                     }
                 }).doOnNext(new Action1<List<OfferStatus>>() {
                     @Override public void call(List<OfferStatus> statuses) {
-                        LOGD(TAG, "Offer Statuses from RemoteDataSource " + statuses);
+                        d(statuses.toString());
                     }
                 });
     }

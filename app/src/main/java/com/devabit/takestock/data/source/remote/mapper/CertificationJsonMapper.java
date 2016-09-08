@@ -37,13 +37,13 @@ public class CertificationJsonMapper implements JsonMapper<Certification> {
         String description = jsonObject.getString(DESCRIPTION);
         String logo = jsonObject.getString(LOGO);
 
-        Certification certification = new Certification();
-        certification.setId(id);
-        certification.setName(name);
-        certification.setDescription(description);
-        certification.setLogoUrl(logo);
+        Certification.Builder builder = new Certification.Builder()
+                .setId(id)
+                .setName(name)
+                .setDescription(description)
+                .setLogoUrl(logo);
 
-        return certification;
+        return builder.build();
     }
 
     @Override public String toJsonString(Certification target) throws JSONException {

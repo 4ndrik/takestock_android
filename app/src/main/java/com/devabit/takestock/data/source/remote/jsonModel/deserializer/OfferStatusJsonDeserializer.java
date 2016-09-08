@@ -18,8 +18,9 @@ public class OfferStatusJsonDeserializer implements JsonDeserializer<OfferStatus
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.get("status").getAsJsonArray();
         List<OfferStatus> statuses = new ArrayList<>(jsonArray.size());
-        for (int id = 1; id <= jsonArray.size(); id++) {
-            JsonObject object = jsonArray.get(id).getAsJsonObject();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JsonObject object = jsonArray.get(i).getAsJsonObject();
+            int id = i + 1;
             String type = object.get(String.valueOf(id)).getAsString();
             OfferStatus offerStatus = new OfferStatus(id, type);
             statuses.add(offerStatus);

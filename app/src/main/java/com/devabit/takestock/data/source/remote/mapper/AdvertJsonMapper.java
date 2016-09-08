@@ -1,9 +1,7 @@
 package com.devabit.takestock.data.source.remote.mapper;
 
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.Certification;
 import com.devabit.takestock.data.model.Photo;
-import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.utils.Encoder;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +21,6 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
     private static final String CREATED_AT = "created_at";
     private static final String EXPIRES_AT = "expires_at";
     private static final String UPDATED_AT = "updated_at";
-//    private static final String INTENDED_USE = "intended_use";
     private static final String GUIDE_PRICE = "guide_price";
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
@@ -73,77 +70,77 @@ public class AdvertJsonMapper implements JsonMapper<Advert> {
     }
 
     @Override public Advert fromJsonString(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
+//        JSONObject jsonObject = new JSONObject(json);
+//
+//        Advert advert = new Advert();
+//        advert.setId(jsonObject.getInt(ID));
+//        advert.setName(jsonObject.getString(NAME));
+//        advert.setCreatedAt(jsonObject.getString(CREATED_AT));
+//        advert.setExpiresAt(jsonObject.getString(EXPIRES_AT));
+//        advert.setUpdatedAt(jsonObject.getString(UPDATED_AT));
+//        advert.setGuidePrice(jsonObject.getString(GUIDE_PRICE));
+//        advert.setDescription(jsonObject.getString(DESCRIPTION));
+//        advert.setLocation(jsonObject.getString(LOCATION));
+//        if (!jsonObject.isNull(SHIPPING)) advert.setShippingId(jsonObject.getInt(SHIPPING));
+//        advert.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
+//        advert.setAuthorId(jsonObject.getInt(AUTHOR));
+//        advert.setCategoryId(jsonObject.getInt(CATEGORY));
+//        if (!jsonObject.isNull(SUBCATEGORY)) advert.setSubCategoryId(jsonObject.getInt(SUBCATEGORY));
+//        if (!jsonObject.isNull(PACKAGING)) advert.setPackagingId(jsonObject.getInt(PACKAGING));
+//        advert.setMinOrderQuantity(jsonObject.getInt(MIN_ORDER_QUANTITY));
+//        advert.setSize(jsonObject.getString(SIZE));
+//        if (!jsonObject.isNull(CERTIFICATION))  {
+//            Certification certification = mCertificationMapper.fromJsonString(jsonObject.getString(CERTIFICATION));
+//            advert.setCertification(certification);
+//        }
+//        if (!jsonObject.isNull(CERTIFICATION_ID)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION_ID));
+//        advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
+//        if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
+//        if (!jsonObject.isNull(ITEMS_COUNT)) advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
+//        if (!jsonObject.isNull(PACKAGING_NAME)) advert.setPackagingName(jsonObject.getString(PACKAGING_NAME));
+//        advert.setOffersCount(jsonObject.getString(OFFERS_COUNT));
+//        if (jsonObject.has(QUESTIONS_COUNT)) advert.setQuestionsCount(jsonObject.getString(QUESTIONS_COUNT));
+//        advert.setDaysLeft(jsonObject.getString(DAYS_LEFT));
+//
+//        JSONArray jsonTagsArray = jsonObject.getJSONArray(TAGS);
+//        List<String> tags = new ArrayList<>(jsonTagsArray.length());
+//        for (int i = 0; i < jsonTagsArray.length(); i++) {
+//            tags.add(jsonTagsArray.getString(i));
+//        }
+//        advert.setTags(tags);
+//
+//        User user = mUserMapper.fromJsonString(jsonObject.getString(AUTHOR_DETAILED));
+//        advert.setUser(user);
+//
+//        JSONArray jsonPhotosArray = jsonObject.getJSONArray(PHOTOS);
+//        List<Photo> photos = new ArrayList<>(jsonPhotosArray.length());
+//        for (int i = 0; i < jsonPhotosArray.length(); i++) {
+//            photos.add(mPhotoMapper.fromJsonString(jsonPhotosArray.getString(i)));
+//        }
+//        advert.setPhotos(photos);
+//
+//        JSONArray jsonSubscribersArray = jsonObject.getJSONArray(SUBSCRIBERS);
+//        List<Integer> subscribers = new ArrayList<>(jsonSubscribersArray.length());
+//        for (int i = 0; i < jsonSubscribersArray.length(); i++) {
+//            subscribers.add(jsonSubscribersArray.getInt(i));
+//        }
+//        advert.setSubscribers(subscribers);
 
-        Advert advert = new Advert();
-        advert.setId(jsonObject.getInt(ID));
-        advert.setName(jsonObject.getString(NAME));
-        advert.setDateCreatedAt(jsonObject.getString(CREATED_AT));
-        advert.setDateExpiresAt(jsonObject.getString(EXPIRES_AT));
-        advert.setDateUpdatedAt(jsonObject.getString(UPDATED_AT));
-//        advert.setIntendedUse(jsonObject.getString(INTENDED_USE));
-        advert.setGuidePrice(jsonObject.getString(GUIDE_PRICE));
-        advert.setDescription(jsonObject.getString(DESCRIPTION));
-        advert.setLocation(jsonObject.getString(LOCATION));
-        if (!jsonObject.isNull(SHIPPING)) advert.setShippingId(jsonObject.getInt(SHIPPING));
-        advert.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
-        advert.setAuthorId(jsonObject.getInt(AUTHOR));
-        advert.setCategoryId(jsonObject.getInt(CATEGORY));
-        if (!jsonObject.isNull(SUBCATEGORY)) advert.setSubCategoryId(jsonObject.getInt(SUBCATEGORY));
-        if (!jsonObject.isNull(PACKAGING)) advert.setPackagingId(jsonObject.getInt(PACKAGING));
-        advert.setMinOrderQuantity(jsonObject.getInt(MIN_ORDER_QUANTITY));
-        advert.setSize(jsonObject.getString(SIZE));
-        if (!jsonObject.isNull(CERTIFICATION))  {
-            Certification certification = mCertificationMapper.fromJsonString(jsonObject.getString(CERTIFICATION));
-            advert.setCertification(certification);
-        }
-        if (!jsonObject.isNull(CERTIFICATION_ID)) advert.setCertificationId(jsonObject.getInt(CERTIFICATION_ID));
-        advert.setCertificationExtra(jsonObject.getString(CERTIFICATION_EXTRA));
-        if (!jsonObject.isNull(CONDITION)) advert.setConditionId(jsonObject.getInt(CONDITION));
-        if (!jsonObject.isNull(ITEMS_COUNT)) advert.setItemsCount(jsonObject.getInt(ITEMS_COUNT));
-        if (!jsonObject.isNull(PACKAGING_NAME)) advert.setPackagingName(jsonObject.getString(PACKAGING_NAME));
-        advert.setOffersCount(jsonObject.getString(OFFERS_COUNT));
-        if (jsonObject.has(QUESTIONS_COUNT)) advert.setQuestionsCount(jsonObject.getString(QUESTIONS_COUNT));
-        advert.setDaysLeft(jsonObject.getString(DAYS_LEFT));
-
-        JSONArray jsonTagsArray = jsonObject.getJSONArray(TAGS);
-        List<String> tags = new ArrayList<>(jsonTagsArray.length());
-        for (int i = 0; i < jsonTagsArray.length(); i++) {
-            tags.add(jsonTagsArray.getString(i));
-        }
-        advert.setTags(tags);
-
-        User user = mUserMapper.fromJsonString(jsonObject.getString(AUTHOR_DETAILED));
-        advert.setUser(user);
-
-        JSONArray jsonPhotosArray = jsonObject.getJSONArray(PHOTOS);
-        List<Photo> photos = new ArrayList<>(jsonPhotosArray.length());
-        for (int i = 0; i < jsonPhotosArray.length(); i++) {
-            photos.add(mPhotoMapper.fromJsonString(jsonPhotosArray.getString(i)));
-        }
-        advert.setPhotos(photos);
-
-        JSONArray jsonSubscribersArray = jsonObject.getJSONArray(SUBSCRIBERS);
-        List<Integer> subscribers = new ArrayList<>(jsonSubscribersArray.length());
-        for (int i = 0; i < jsonSubscribersArray.length(); i++) {
-            subscribers.add(jsonSubscribersArray.getInt(i));
-        }
-        advert.setSubscribers(subscribers);
-
-        return advert;
+//        return advert;
+        return null;
     }
 
     @Override public String toJsonString(Advert target) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(NAME, target.getName());
-        jsonObject.put(EXPIRES_AT, target.getDateExpiresAt());
+        jsonObject.put(EXPIRES_AT, target.getExpiresAt());
         jsonObject.put(GUIDE_PRICE, target.getGuidePrice());
         jsonObject.put(DESCRIPTION, target.getDescription());
         jsonObject.put(LOCATION, target.getLocation());
         jsonObject.put(SHIPPING, target.getShippingId());
         jsonObject.put(AUTHOR, target.getAuthorId());
         jsonObject.put(CATEGORY, target.getCategoryId());
-        jsonObject.put(SUBCATEGORY, target.getSubCategoryId());
+//        jsonObject.put(SUBCATEGORY, target.getSubCategoryId());
         jsonObject.put(PACKAGING, target.getPackagingId());
         jsonObject.put(MIN_ORDER_QUANTITY, target.getMinOrderQuantity());
         jsonObject.put(SIZE, target.getSize());

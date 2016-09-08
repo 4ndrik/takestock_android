@@ -21,13 +21,17 @@ public class CertificationListJsonDeserializer implements JsonDeserializer<Certi
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             int id = jsonObject.get("pk").getAsInt();
             String name = jsonObject.get("name").getAsString();
-            String description = jsonObject.get("description").getAsString();
-            String logo = jsonObject.get("logo").getAsString();
+            JsonElement descriptionElement = jsonObject.get("description");
+            String description = descriptionElement.isJsonNull() ? "" : descriptionElement.getAsString();
+            JsonElement logoElement = jsonObject.get("logo");
+            String logo = logoElement.isJsonNull() ? "" : logoElement.getAsString();
+
             Certification.Builder builder = new Certification.Builder()
                     .setId(id)
                     .setName(name)
                     .setDescription(description)
                     .setLogoUrl(logo);
+
             certifications.add(builder.build());
         }
         return new CertificationListJson(certifications);

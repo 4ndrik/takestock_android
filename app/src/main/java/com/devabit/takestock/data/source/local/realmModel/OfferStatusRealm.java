@@ -12,8 +12,7 @@ public class OfferStatusRealm extends RealmObject {
     private @PrimaryKey int mId;
     private String mType;
 
-    public OfferStatusRealm() {
-    }
+    public OfferStatusRealm() {}
 
     public OfferStatusRealm(OfferStatus offerStatus) {
         mId = offerStatus.getId();

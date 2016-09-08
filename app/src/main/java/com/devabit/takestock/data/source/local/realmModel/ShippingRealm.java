@@ -12,8 +12,7 @@ public class ShippingRealm extends RealmObject {
     private @PrimaryKey int mId;
     private String mType;
 
-    public ShippingRealm() {
-    }
+    public ShippingRealm() {}
 
     public ShippingRealm(Shipping shipping) {
         mId = shipping.getId();

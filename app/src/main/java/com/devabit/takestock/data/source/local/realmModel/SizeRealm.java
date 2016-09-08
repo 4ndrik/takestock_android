@@ -14,8 +14,7 @@ public class SizeRealm extends RealmObject {
     private @PrimaryKey int mId;
     private String mType;
 
-    public SizeRealm() {
-    }
+    public SizeRealm() {}
 
     public SizeRealm(Size size) {
         mId = size.getId();

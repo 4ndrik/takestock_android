@@ -12,8 +12,7 @@ public class ConditionRealm extends RealmObject {
     private @PrimaryKey int mId;
     private String mState;
 
-    public ConditionRealm() {
-    }
+    public ConditionRealm() {}
 
     public ConditionRealm(Condition condition) {
         mId = condition.getId();

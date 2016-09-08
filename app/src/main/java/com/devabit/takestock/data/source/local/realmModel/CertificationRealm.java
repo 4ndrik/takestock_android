@@ -14,8 +14,7 @@ public class CertificationRealm extends RealmObject {
     private String mDescription;
     private String mLogoUrl;
 
-    public CertificationRealm() {
-    }
+    public CertificationRealm() {}
 
     public CertificationRealm(Certification certification) {
         mId = certification.getId();

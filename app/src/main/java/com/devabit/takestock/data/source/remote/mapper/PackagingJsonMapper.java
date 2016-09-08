@@ -22,9 +22,7 @@ public class PackagingJsonMapper implements JsonMapper<List<Packaging>> {
         List<Packaging> result = new ArrayList<>(length);
         for (int index = 0; index < length; index++) {
             JSONObject jsonObject = jsonArray.getJSONObject(index);
-            Packaging packaging = new Packaging();
-            packaging.setId(jsonObject.getInt(ID));
-            packaging.setType(jsonObject.getString(NAME));
+            Packaging packaging = new Packaging(jsonObject.getInt(ID), jsonObject.getString(NAME));
             result.add(packaging);
         }
         return result;

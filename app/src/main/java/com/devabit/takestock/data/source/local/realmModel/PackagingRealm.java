@@ -12,6 +12,9 @@ public class PackagingRealm extends RealmObject {
     private @PrimaryKey int mId;
     private String mType;
 
+    public PackagingRealm() {
+    }
+
     public PackagingRealm(Packaging packaging) {
         mId = packaging.getId();
         mType = packaging.getType();
