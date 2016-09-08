@@ -141,9 +141,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for AuthToken
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Entries Methods  ********/
 
     @Override public Observable<AuthToken> signUp(@NonNull final UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
@@ -208,9 +206,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Category
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Categories Methods  ********/
 
     @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -238,19 +234,13 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Category getCategoryWithId(int id) {
+    /********* Sizes Methods  ********/
+
+    @Override public Observable<List<Size>> saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Size
-    ///////////////////////////////////////////////////////////////////////////
-
-    @Override public void saveSizes(@NonNull List<Size> sizes) {
-        throw new UnsupportedOperationException("This operation not required.");
-    }
-
-    @Override public Observable<List<Size>> updateSizes() {
+    @Override public Observable<List<Size>> refreshSizes() {
         return getSizes();
     }
 
@@ -275,11 +265,11 @@ public class RemoteDataSource implements ApiRest, DataSource {
     // Methods for Certification
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public void saveCertifications(@NonNull List<Certification> certifications) {
+    @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Certification>> updateCertifications() {
+    @Override public Observable<List<Certification>> refreshCertifications() {
         return getCertifications();
     }
 

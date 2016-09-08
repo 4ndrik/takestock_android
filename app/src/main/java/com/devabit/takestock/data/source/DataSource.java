@@ -21,6 +21,7 @@ public interface DataSource {
 
     Observable<AuthToken> signIn(@NonNull UserCredentials credentials);
 
+
     /********* Categories Methods  ********/
 
     Observable<List<Category>> saveCategories(@NonNull List<Category> categories);
@@ -29,25 +30,21 @@ public interface DataSource {
 
     Observable<List<Category>> getCategories();
 
-    Category getCategoryWithId(int id);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Size
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Sizes Methods  ********/
 
-    void saveSizes(@NonNull List<Size> sizes);
+    Observable<List<Size>> saveSizes(@NonNull List<Size> sizes);
 
-    Observable<List<Size>> updateSizes();
+    Observable<List<Size>> refreshSizes();
 
     Observable<List<Size>> getSizes();
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Certification
-    ///////////////////////////////////////////////////////////////////////////
 
-    void saveCertifications(@NonNull List<Certification> certifications);
+    /********* Certifications Methods  ********/
 
-    Observable<List<Certification>> updateCertifications();
+    Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications);
+
+    Observable<List<Certification>> refreshCertifications();
 
     Observable<List<Certification>> getCertifications();
 

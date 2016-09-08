@@ -9,10 +9,13 @@ import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.dao.CategoryRealmDao;
+import com.devabit.takestock.data.source.local.dao.CertificationRealmDao;
+import com.devabit.takestock.data.source.local.dao.SizeRealmDao;
 import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.mapper.*;
+import com.devabit.takestock.data.source.local.realmModel.CertificationRealm;
 import io.realm.*;
 import rx.Observable;
 import rx.functions.Action1;
@@ -44,6 +47,7 @@ public class LocalDataSource implements DataSource {
 
     private LocalDataSource(Context context) {
         mRealmConfiguration = buildRealmConfiguration(context);
+        Realm.setDefaultConfiguration(mRealmConfiguration);
     }
 
     private RealmConfiguration buildRealmConfiguration(Context context) {
@@ -53,7 +57,7 @@ public class LocalDataSource implements DataSource {
                 .build();
     }
 
-    /********* Entries Methods  ********/
+    /********** Entries Methods ********/
 
     @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
@@ -67,7 +71,7 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* Categories Methods  ********/
+    /********** Categories Methods ********/
 
     @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
         return Observable.just(categories)
@@ -92,83 +96,61 @@ public class LocalDataSource implements DataSource {
         });
     }
 
-    @Override public Category getCategoryWithId(int id) {
-        return new CategoryRealmDao(mRealmConfiguration).getCategoryWithId(id);
+    /********** Sizes Methods ********/
+
+    @Override public Observable<List<Size>> saveSizes(@NonNull List<Size> sizes) {
+        return Observable.just(sizes)
+                .doOnNext(new Action1<List<Size>>() {
+                    @Override public void call(List<Size> sizes) {
+                        SizeRealmDao dao = new SizeRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateSizeList(sizes);
+                    }
+                });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Size
-    ///////////////////////////////////////////////////////////////////////////
-
-    @Override public void saveSizes(@NonNull List<Size> sizes) {
-        List<SizeEntity> entities = new SizeEntityDataMapper().transformToEntityList(sizes);
-        saveOrUpdateEntities(entities);
-    }
-
-    @Override public Observable<List<Size>> updateSizes() {
+    @Override public Observable<List<Size>> refreshSizes() {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Size>> getSizes() {
-        return Observable.fromCallable(new Callable<RealmResults<SizeEntity>>() {
-            @Override public RealmResults<SizeEntity> call() throws Exception {
-                return Realm.getDefaultInstance().where(SizeEntity.class).findAll();
-            }
-        }).filter(new Func1<RealmResults<SizeEntity>, Boolean>() {
-            @Override public Boolean call(RealmResults<SizeEntity> entities) {
-                return !entities.isEmpty();
-            }
-        }).map(new Func1<RealmResults<SizeEntity>, List<Size>>() {
-            @Override public List<Size> call(RealmResults<SizeEntity> entities) {
-                return new SizeEntityDataMapper().transformFromEntityList(entities);
-            }
-        }).doOnNext(new Action1<List<Size>>() {
-            @Override public void call(List<Size> sizes) {
-                LOGD(TAG, "Sizes from LocalDataSource " + sizes);
+        return Observable.fromCallable(new Callable<List<Size>>() {
+            @Override public List<Size> call() throws Exception {
+                SizeRealmDao dao = new SizeRealmDao(mRealmConfiguration);
+                return dao.getSizeList();
             }
         });
     }
+    /********** Certifications Methods ********/
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Certification
-    ///////////////////////////////////////////////////////////////////////////
-
-    @Override public void saveCertifications(@NonNull List<Certification> certifications) {
-        List<CertificationEntity> entities = new CertificationEntityDataMapper()
-                .transformToEntityList(certifications);
-        saveOrUpdateEntities(entities);
+    @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
+        return Observable.just(certifications)
+                .doOnNext(new Action1<List<Certification>>() {
+                    @Override public void call(List<Certification> certifications) {
+                        CertificationRealmDao dao = new CertificationRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateCertificationList(certifications);
+                    }
+                });
     }
 
-    @Override public Observable<List<Certification>> updateCertifications() {
+    @Override public Observable<List<Certification>> refreshCertifications() {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Certification>> getCertifications() {
-        return Observable.fromCallable(new Callable<RealmResults<CertificationEntity>>() {
-            @Override public RealmResults<CertificationEntity> call() throws Exception {
-                return Realm.getDefaultInstance().where(CertificationEntity.class).findAll();
-            }
-        }).filter(new Func1<RealmResults<CertificationEntity>, Boolean>() {
-            @Override public Boolean call(RealmResults<CertificationEntity> entities) {
-                return !entities.isEmpty();
-            }
-        }).map(new Func1<RealmResults<CertificationEntity>, List<Certification>>() {
-            @Override public List<Certification> call(RealmResults<CertificationEntity> entities) {
-                return new CertificationEntityDataMapper().transformFromEntityList(entities);
-            }
-        }).doOnNext(new Action1<List<Certification>>() {
-            @Override public void call(List<Certification> certifications) {
-                LOGD(TAG, "Certifications from LocalDataSource " + certifications);
+        return Observable.fromCallable(new Callable<List<Certification>>() {
+            @Override public List<Certification> call() throws Exception {
+                CertificationRealmDao dao = new CertificationRealmDao(mRealmConfiguration);
+                return dao.getCertificationList();
             }
         });
     }
 
     @Override public Certification getCertificationById(int id) {
-        CertificationEntity entity = Realm.getDefaultInstance()
-                .where(CertificationEntity.class)
+        CertificationRealm entity = Realm.getDefaultInstance()
+                .where(CertificationRealm.class)
                 .equalTo("mId", id)
                 .findFirst();
-        return new CertificationEntityDataMapper().transformFromEntity(entity);
+        return entity.getCertification();
     }
 
     ///////////////////////////////////////////////////////////////////////////

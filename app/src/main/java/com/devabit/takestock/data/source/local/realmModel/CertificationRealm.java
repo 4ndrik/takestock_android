@@ -1,18 +1,28 @@
-package com.devabit.takestock.data.source.local.entity;
+package com.devabit.takestock.data.source.local.realmModel;
 
+import com.devabit.takestock.data.model.Certification;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class CertificationEntity extends RealmObject {
+public class CertificationRealm extends RealmObject {
 
-    @PrimaryKey
-    private int mId;
+    private @PrimaryKey int mId;
     private String mName;
     private String mDescription;
     private String mLogoUrl;
+
+    public CertificationRealm() {
+    }
+
+    public CertificationRealm(Certification certification) {
+        mId = certification.getId();
+        mName = certification.getName();
+        mDescription = certification.getDescription();
+        mLogoUrl = certification.getLogoUrl();
+    }
 
     public int getId() {
         return mId;
@@ -46,11 +56,12 @@ public class CertificationEntity extends RealmObject {
         mLogoUrl = logoUrl;
     }
 
-    @Override public String toString() {
-        return "Certification{" +
-                "mId=" + mId +
-                ", mDescription='" + mDescription + '\'' +
-                ", mLogoUrl='" + mLogoUrl + '\'' +
-                '}';
+    public Certification getCertification() {
+        return new Certification.Builder()
+                .setId(mId)
+                .setName(mName)
+                .setDescription(mDescription)
+                .setLogoUrl(mLogoUrl)
+                .build();
     }
 }

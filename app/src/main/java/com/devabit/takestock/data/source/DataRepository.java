@@ -95,49 +95,41 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    @Override public Category getCategoryWithId(int id) {
-        throw new UnsupportedOperationException("This operation not required.");
-    }
+    /********* Sizes Methods  ********/
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Size
-    ///////////////////////////////////////////////////////////////////////////
-
-    @Override public void saveSizes(@NonNull List<Size> sizes) {
+    @Override public Observable<List<Size>> saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Size>> getSizes() {
         Observable<List<Size>> localSizes = mLocalDataSource.getSizes();
-        Observable<List<Size>> remoteSizes = updateSizes();
+        Observable<List<Size>> remoteSizes = refreshSizes();
         return Observable.concat(localSizes, remoteSizes).first();
     }
 
-    @Override public Observable<List<Size>> updateSizes() {
-        return mRemoteDataSource.updateSizes()
-                .doOnNext(new Action1<List<Size>>() {
-                    @Override public void call(List<Size> sizes) {
-                        mLocalDataSource.saveSizes(sizes);
+    @Override public Observable<List<Size>> refreshSizes() {
+        return mRemoteDataSource.refreshSizes()
+                .flatMap(new Func1<List<Size>, Observable<List<Size>>>() {
+                    @Override public Observable<List<Size>> call(List<Size> sizes) {
+                        return mLocalDataSource.saveSizes(sizes);
                     }
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Certification
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Certifications Methods  ********/
 
-    @Override public void saveCertifications(@NonNull List<Certification> certifications) {
+    @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Certification>> getCertifications() {
         Observable<List<Certification>> localCertifications = mLocalDataSource.getCertifications();
-        Observable<List<Certification>> remoteCertifications = updateCertifications();
+        Observable<List<Certification>> remoteCertifications = refreshCertifications();
         return Observable.concat(localCertifications, remoteCertifications).first();
     }
 
-    @Override public Observable<List<Certification>> updateCertifications() {
-        return mRemoteDataSource.updateCertifications()
+    @Override public Observable<List<Certification>> refreshCertifications() {
+        return mRemoteDataSource.refreshCertifications()
                 .doOnNext(new Action1<List<Certification>>() {
                     @Override public void call(List<Certification> certifications) {
                         mLocalDataSource.saveCertifications(certifications);
