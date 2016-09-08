@@ -8,19 +8,34 @@ import android.support.annotation.NonNull;
 
 public class Size {
 
-    private String type;
+    private int mId;
+    private String mType;
+
+    public Size(int id, String type) {
+        mId = id;
+        mType = type;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
+    }
 
     public void setType(@NonNull String type) {
-        this.type = type;
+        this.mType = type;
     }
 
     public String getType() {
-        return type;
+        return mType;
     }
 
     @Override public String toString() {
         return "Size{" +
-                "type='" + type + '\'' +
+                "mId=" + mId +
+                ", mType='" + mType + '\'' +
                 '}';
     }
 }
