@@ -13,7 +13,6 @@ import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.mapper.*;
-import com.devabit.takestock.data.source.local.realmModel.ConditionRealm;
 import io.realm.*;
 import rx.Observable;
 import rx.functions.Action1;
@@ -208,41 +207,31 @@ public class LocalDataSource implements DataSource {
 
     /********** Packagings Methods ********/
 
-    @Override public void savePackagings(@NonNull List<Packaging> packagings) {
-        List<PackagingEntity> entities = new PackagingsEntityDataMaper().transformToEntityList(packagings);
-        saveOrUpdateEntities(entities);
+    @Override public Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings) {
+        return Observable.just(packagings)
+                .doOnNext(new Action1<List<Packaging>>() {
+                    @Override public void call(List<Packaging> packagings) {
+                        PackagingRealmDao dao = new PackagingRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdatePackagingList(packagings);
+                    }
+                });
     }
 
-    @Override public Observable<List<Packaging>> updatePackagings() {
+    @Override public Observable<List<Packaging>> refreshPackagings() {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Packaging>> getPackagings() {
-        return Observable.fromCallable(new Callable<RealmResults<PackagingEntity>>() {
-            @Override public RealmResults<PackagingEntity> call() throws Exception {
-                return Realm.getDefaultInstance().where(PackagingEntity.class).findAll();
-            }
-        }).filter(new Func1<RealmResults<PackagingEntity>, Boolean>() {
-            @Override public Boolean call(RealmResults<PackagingEntity> packagingEntities) {
-                return !packagingEntities.isEmpty();
-            }
-        }).map(new Func1<RealmResults<PackagingEntity>, List<Packaging>>() {
-            @Override public List<Packaging> call(RealmResults<PackagingEntity> packagingEntities) {
-                return new PackagingsEntityDataMaper().transformFromEntityList(packagingEntities);
-            }
-        }).doOnNext(new Action1<List<Packaging>>() {
-            @Override public void call(List<Packaging> packagingList) {
-                LOGD(TAG, "Packagings from LocalDataSource " + packagingList);
+        return Observable.fromCallable(new Callable<List<Packaging>>() {
+            @Override public List<Packaging> call() throws Exception {
+                PackagingRealmDao dao = new PackagingRealmDao(mRealmConfiguration);
+                return dao.getPackagingList();
             }
         });
     }
 
     @Override public Packaging getPackagingById(int id) {
-        PackagingEntity entity = Realm.getDefaultInstance()
-                .where(PackagingEntity.class)
-                .equalTo("mId", id)
-                .findFirst();
-        return new PackagingsEntityDataMaper().transformFromEntity(entity);
+        return new PackagingRealmDao(mRealmConfiguration).getPackagingWithId(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////
