@@ -2,7 +2,7 @@ package com.devabit.takestock.data.source.remote.jsonModel.deserializer;
 
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
-import com.devabit.takestock.data.source.remote.jsonModel.CategoryJson;
+import com.devabit.takestock.data.source.remote.jsonModel.CategoryListJson;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class CategoryJsonDeserializer implements JsonDeserializer<CategoryJson> {
+public class CategoryJsonDeserializer implements JsonDeserializer<CategoryListJson> {
 
-    @Override public CategoryJson deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    @Override public CategoryListJson deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         JsonArray jsonArray = json.getAsJsonArray();
         List<Category> categories = new ArrayList<>(jsonArray.size());
@@ -33,7 +33,7 @@ public class CategoryJsonDeserializer implements JsonDeserializer<CategoryJson> 
 
             categories.add(builder.build());
         }
-        return new CategoryJson(categories);
+        return new CategoryListJson(categories);
     }
 
     private List<Subcategory> toSubcategoryList(JsonArray jsonArray) {

@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class OfferStatusJson implements JsonModel {
+public class OfferStatusListJson implements JsonModel {
 
     private final List<OfferStatus> offerStatuses;
 
-    public OfferStatusJson(List<OfferStatus> offerStatuses) {
+    public OfferStatusListJson(List<OfferStatus> offerStatuses) {
         this.offerStatuses = offerStatuses;
     }
 

@@ -16,6 +16,7 @@ public class CategoryRealm extends RealmObject {
 
     private @PrimaryKey int mId;
     private String mName;
+    private boolean mIsFood;
     private RealmList<SubcategoryRealm> mSubcategories;
 
     public CategoryRealm() {}
@@ -23,6 +24,7 @@ public class CategoryRealm extends RealmObject {
     public CategoryRealm(Category category) {
         mId = category.getId();
         mName = category.getName();
+        mIsFood = category.isFood();
         mSubcategories = toRealmList(category.getSubcategories());
     }
 
@@ -51,11 +53,12 @@ public class CategoryRealm extends RealmObject {
     }
 
     public Category getCategory() {
-        Category category = new Category();
-        category.setId(mId);
-        category.setName(mName);
-        category.setSubcategories(toSubcategoryList(mSubcategories));
-        return category;
+        return new Category.Builder()
+                .setId(mId)
+                .setName(mName)
+                .setIsFood(mIsFood)
+                .setSubcategories(toSubcategoryList(mSubcategories))
+                .build();
     }
 
     private List<Subcategory> toSubcategoryList(RealmList<SubcategoryRealm> realmList) {

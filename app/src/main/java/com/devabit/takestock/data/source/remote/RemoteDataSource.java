@@ -15,9 +15,13 @@ import com.devabit.takestock.data.source.remote.filterBuilder.AdvertFilterUrlBui
 import com.devabit.takestock.data.source.remote.filterBuilder.OfferFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.filterBuilder.QuestionFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.filterBuilder.UserFilterUrlBuilder;
+import com.devabit.takestock.data.source.remote.jsonModel.*;
+import com.devabit.takestock.data.source.remote.jsonModel.deserializer.*;
 import com.devabit.takestock.data.source.remote.mapper.*;
 import com.devabit.takestock.exception.HttpResponseException;
 import com.devabit.takestock.exception.NetworkConnectionException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import org.json.JSONException;
 import rx.Observable;
@@ -65,12 +69,25 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     private final TakeStockAccount mAccount;
     private final ConnectivityManager mConnectivityManager;
+    private final Gson mGson;
     private final OkHttpClient mOkHttpClient;
 
     private RemoteDataSource(Context context) {
         mAccount = TakeStockAccount.get(context);
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mGson = buildGson();
         mOkHttpClient = buildClient();
+    }
+
+    private Gson buildGson() {
+        final GsonBuilder builder = new GsonBuilder()
+                .registerTypeAdapter(CategoryListJson.class, new CategoryJsonDeserializer())
+                .registerTypeAdapter(ConditionListJson.class, new ConditionJsonDeserializer())
+                .registerTypeAdapter(OfferStatusListJson.class, new OfferStatusJsonDeserializer())
+                .registerTypeAdapter(PackagingListJson.class, new PackagingJsonDeserializer())
+                .registerTypeAdapter(ShippingJsonDeserializer.class, new ShippingJsonDeserializer())
+                .registerTypeAdapter(SizeListJson.class, new SizeJsonDeserializer());
+        return builder.create();
     }
 
     private OkHttpClient buildClient() {
@@ -218,18 +235,25 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<List<Category>> getCategories() {
         return Observable.fromCallable(createGETCallable(CATEGORY))
+//                .map(new Func1<String, List<Category>>() {
+//                    @Override public List<Category> call(String json) {
+//                        try {
+//                            return new CategoryJsonMapper().fromJsonString(json);
+//                        } catch (Exception e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                })
                 .map(new Func1<String, List<Category>>() {
-                    @Override public List<Category> call(String json) {
-                        try {
-                            return new CategoryJsonMapper().fromJsonString(json);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public List<Category> call(String jsonString) {
+                        d(jsonString);
+                        CategoryListJson json = mGson.fromJson(jsonString, CategoryListJson.class);
+                        return json.getCategories();
                     }
                 })
                 .doOnNext(new Action1<List<Category>>() {
                     @Override public void call(List<Category> categories) {
-                        LOGD(TAG, "Categories from RemoteDataSource " + categories);
+                       d(categories.toString());
                     }
                 });
     }
@@ -246,17 +270,25 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<List<Size>> getSizes() {
         return Observable.fromCallable(createGETCallable(SIZE_TYPES))
+//                .map(new Func1<String, List<Size>>() {
+//                    @Override public List<Size> call(String json) {
+//                        try {
+//                            return new SizeJsonMapper().fromJsonString(json);
+//                        } catch (JSONException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                })
                 .map(new Func1<String, List<Size>>() {
-                    @Override public List<Size> call(String json) {
-                        try {
-                            return new SizeJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public List<Size> call(String jsonString) {
+                        d(jsonString);
+                        SizeListJson json = mGson.fromJson(jsonString, SizeListJson.class);
+                        return json.getSizes();
                     }
-                }).doOnNext(new Action1<List<Size>>() {
+                })
+                .doOnNext(new Action1<List<Size>>() {
                     @Override public void call(List<Size> sizes) {
-                        LOGD(TAG, "Sizes from RemoteDataSource " + sizes);
+                        d(sizes.toString());
                     }
                 });
     }
@@ -273,13 +305,20 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<List<Certification>> getCertifications() {
         return Observable.fromCallable(createGETCallable(CERTIFICATIONS))
+//                .map(new Func1<String, List<Certification>>() {
+//                    @Override public List<Certification> call(String json) {
+//                        try {
+//                            return new CertificationJsonMapper().fromJsonStringToList(json);
+//                        } catch (JSONException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                })
                 .map(new Func1<String, List<Certification>>() {
-                    @Override public List<Certification> call(String json) {
-                        try {
-                            return new CertificationJsonMapper().fromJsonStringToList(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public List<Certification> call(String jsonString) {
+                        d(jsonString);
+                        CertificationJson json = mGson.fromJson(jsonString, CertificationJson.class);
+                        return null;
                     }
                 })
                 .doOnNext(new Action1<List<Certification>>() {

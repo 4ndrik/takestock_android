@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class ShippingJson implements JsonModel {
+public class ShippingListJson implements JsonModel {
 
     private final List<Shipping> shippings;
 
-    public ShippingJson(List<Shipping> shippings) {
+    public ShippingListJson(List<Shipping> shippings) {
         this.shippings = shippings;
     }
 

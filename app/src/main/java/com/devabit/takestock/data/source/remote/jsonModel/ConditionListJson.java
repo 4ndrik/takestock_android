@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class ConditionJson {
+public class ConditionListJson {
 
     private final List<Condition> conditions;
 
-    public ConditionJson(List<Condition> conditions) {
+    public ConditionListJson(List<Condition> conditions) {
         this.conditions = conditions;
     }
 

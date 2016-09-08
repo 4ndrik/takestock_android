@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 07/09/2016.
  */
-public class CategoryJson implements JsonModel {
+public class CategoryListJson implements JsonModel {
 
     private final List<Category> categories;
 
-    public CategoryJson(List<Category> categories) {
+    public CategoryListJson(List<Category> categories) {
         this.categories = categories;
     }
 

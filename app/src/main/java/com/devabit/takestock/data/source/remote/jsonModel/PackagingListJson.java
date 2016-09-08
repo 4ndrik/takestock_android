@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class PackagingJson {
+public class PackagingListJson {
 
     private final List<Packaging> packagings;
 
-    public PackagingJson(List<Packaging> packagings) {
+    public PackagingListJson(List<Packaging> packagings) {
         this.packagings = packagings;
     }
 

@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.remote.jsonModel.deserializer;
 
 import com.devabit.takestock.data.model.OfferStatus;
-import com.devabit.takestock.data.source.remote.jsonModel.OfferStatusJson;
+import com.devabit.takestock.data.source.remote.jsonModel.OfferStatusListJson;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -11,9 +11,9 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class OfferStatusJsonDeserializer implements JsonDeserializer<OfferStatusJson> {
+public class OfferStatusJsonDeserializer implements JsonDeserializer<OfferStatusListJson> {
 
-    @Override public OfferStatusJson deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
+    @Override public OfferStatusListJson deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.get("status").getAsJsonArray();
@@ -24,6 +24,6 @@ public class OfferStatusJsonDeserializer implements JsonDeserializer<OfferStatus
             OfferStatus offerStatus = new OfferStatus(id, type);
             statuses.add(offerStatus);
         }
-        return new OfferStatusJson(statuses);
+        return new OfferStatusListJson(statuses);
     }
 }

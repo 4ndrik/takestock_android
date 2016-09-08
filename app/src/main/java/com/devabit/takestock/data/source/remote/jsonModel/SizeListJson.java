@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class SizeJson implements JsonModel {
+public class SizeListJson implements JsonModel {
 
     private final List<Size> sizes;
 
-    public SizeJson(List<Size> sizes) {
+    public SizeListJson(List<Size> sizes) {
         this.sizes = sizes;
     }
 

@@ -1,7 +1,7 @@
 package com.devabit.takestock.data.source.remote.jsonModel.deserializer;
 
 import com.devabit.takestock.data.model.Shipping;
-import com.devabit.takestock.data.source.remote.jsonModel.ShippingJson;
+import com.devabit.takestock.data.source.remote.jsonModel.ShippingListJson;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -11,8 +11,8 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/09/2016.
  */
-public class ShippingJsonDeserializer implements JsonDeserializer<ShippingJson> {
-    @Override public ShippingJson deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
+public class ShippingJsonDeserializer implements JsonDeserializer<ShippingListJson> {
+    @Override public ShippingListJson deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.get("shipping").getAsJsonArray();
@@ -23,6 +23,6 @@ public class ShippingJsonDeserializer implements JsonDeserializer<ShippingJson> 
             Shipping shipping = new Shipping(id, type);
             shippings.add(shipping);
         }
-        return new ShippingJson(shippings);
+        return new ShippingListJson(shippings);
     }
 }
