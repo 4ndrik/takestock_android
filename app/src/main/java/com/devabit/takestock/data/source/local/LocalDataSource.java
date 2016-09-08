@@ -8,14 +8,12 @@ import com.devabit.takestock.data.filter.QuestionFilter;
 import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
-import com.devabit.takestock.data.source.local.dao.CategoryRealmDao;
-import com.devabit.takestock.data.source.local.dao.CertificationRealmDao;
-import com.devabit.takestock.data.source.local.dao.ShippingRealmDao;
-import com.devabit.takestock.data.source.local.dao.SizeRealmDao;
+import com.devabit.takestock.data.source.local.dao.*;
 import com.devabit.takestock.data.source.local.entity.*;
 import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.mapper.*;
+import com.devabit.takestock.data.source.local.realmModel.ConditionRealm;
 import io.realm.*;
 import rx.Observable;
 import rx.functions.Action1;
@@ -179,51 +177,36 @@ public class LocalDataSource implements DataSource {
         return new ShippingRealmDao(mRealmConfiguration).getShippingWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Condition
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Conditions Methods ********/
 
-    @Override public void saveConditions(@NonNull List<Condition> conditionList) {
-        List<ConditionEntity> entities = new ConditionEntityDataMapper()
-                .transformToEntityList(conditionList);
-        saveOrUpdateEntities(entities);
+    @Override public Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditionList) {
+       return Observable.just(conditionList)
+               .doOnNext(new Action1<List<Condition>>() {
+                   @Override public void call(List<Condition> conditionList) {
+                       ConditionRealmDao dao = new ConditionRealmDao(mRealmConfiguration);
+                       dao.storeOrUpdateConditionList(conditionList);
+                   }
+               });
     }
 
-    @Override public Observable<List<Condition>> updateConditions() {
+    @Override public Observable<List<Condition>> refreshConditions() {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Condition>> getConditions() {
-        return Observable.fromCallable(new Callable<RealmResults<ConditionEntity>>() {
-            @Override public RealmResults<ConditionEntity> call() throws Exception {
-                return Realm.getDefaultInstance().where(ConditionEntity.class).findAll();
-            }
-        }).filter(new Func1<RealmResults<ConditionEntity>, Boolean>() {
-            @Override public Boolean call(RealmResults<ConditionEntity> conditionEntities) {
-                return !conditionEntities.isEmpty();
-            }
-        }).map(new Func1<RealmResults<ConditionEntity>, List<Condition>>() {
-            @Override public List<Condition> call(RealmResults<ConditionEntity> conditionEntities) {
-                return new ConditionEntityDataMapper().transformFromEntityList(conditionEntities);
-            }
-        }).doOnNext(new Action1<List<Condition>>() {
-            @Override public void call(List<Condition> conditionList) {
-                LOGD(TAG, "Conditions from LocalDataSource " + conditionList);
+        return Observable.fromCallable(new Callable<List<Condition>>() {
+            @Override public List<Condition> call() throws Exception {
+                ConditionRealmDao dao = new ConditionRealmDao(mRealmConfiguration);
+                return dao.getConditionList();
             }
         });
     }
 
-    @Override public Condition getConditionById(int id) {
-        ConditionEntity entity = Realm.getDefaultInstance()
-                .where(ConditionEntity.class)
-                .equalTo("mId", id)
-                .findFirst();
-        return new ConditionEntityDataMapper().transformFromEntity(entity);
+    @Override public Condition getConditionWithId(int id) {
+        return new ConditionRealmDao(mRealmConfiguration).getConditionWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Packaging
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Packagings Methods ********/
 
     @Override public void savePackagings(@NonNull List<Packaging> packagings) {
         List<PackagingEntity> entities = new PackagingsEntityDataMaper().transformToEntityList(packagings);

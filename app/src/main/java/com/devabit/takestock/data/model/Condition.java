@@ -8,6 +8,13 @@ public class Condition {
     private int mId;
     private String mState;
 
+    public Condition(){}
+
+    public Condition(int id, String state) {
+        mId = id;
+        mState = state;
+    }
+
     public int getId() {
         return mId;
     }
