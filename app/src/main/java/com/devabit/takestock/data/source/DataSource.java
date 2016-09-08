@@ -61,23 +61,20 @@ public interface DataSource {
 
     Shipping getShippingWithId(int id);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Condition
-    ///////////////////////////////////////////////////////////////////////////
 
-    void saveConditions(@NonNull List<Condition> conditions);
+    /********* Conditions Methods  ********/
 
-    Observable<List<Condition>> updateConditions();
+    Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditions);
+
+    Observable<List<Condition>> refreshConditions();
 
     Observable<List<Condition>> getConditions();
 
-    Condition getConditionById(int id);
+    Condition getConditionWithId(int id);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Packaging
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Packagings Methods  ********/
 
-    void savePackagings(@NonNull List<Packaging> packagings);
+    Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings);
 
     Observable<List<Packaging>> updatePackagings();
 

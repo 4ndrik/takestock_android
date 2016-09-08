@@ -166,36 +166,32 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getShippingWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Condition
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Conditions Methods ********/
 
-    @Override public void saveConditions(@NonNull List<Condition> conditions) {
+    @Override public Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Condition>> getConditions() {
         Observable<List<Condition>> localConditions = mLocalDataSource.getConditions();
-        Observable<List<Condition>> remoteConditions = updateConditions();
+        Observable<List<Condition>> remoteConditions = refreshConditions();
         return Observable.concat(localConditions, remoteConditions).first();
     }
 
-    @Override public Observable<List<Condition>> updateConditions() {
-        return mRemoteDataSource.updateConditions()
-                .doOnNext(new Action1<List<Condition>>() {
-                    @Override public void call(List<Condition> conditions) {
-                        mLocalDataSource.saveConditions(conditions);
+    @Override public Observable<List<Condition>> refreshConditions() {
+        return mRemoteDataSource.refreshConditions()
+                .flatMap(new Func1<List<Condition>, Observable<List<Condition>>>() {
+                    @Override public Observable<List<Condition>> call(List<Condition> conditionList) {
+                        return mLocalDataSource.saveConditions(conditionList);
                     }
                 });
     }
 
-    @Override public Condition getConditionById(int id) {
-        return mLocalDataSource.getConditionById(id);
+    @Override public Condition getConditionWithId(int id) {
+        return mLocalDataSource.getConditionWithId(id);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Packaging
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Packagings Methods ********/
 
     @Override public void savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");

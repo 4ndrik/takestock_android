@@ -15,13 +15,13 @@ public class ShippingJsonDeserializer implements JsonDeserializer<List<Shipping>
             throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.get("shipping").getAsJsonArray();
-        List<Shipping> sizes = new ArrayList<>(jsonArray.size());
+        List<Shipping> shippings = new ArrayList<>(jsonArray.size());
         for (int id = 1; id <= jsonArray.size(); id++) {
             JsonObject object = jsonArray.get(id).getAsJsonObject();
             String type = object.get(String.valueOf(id)).getAsString();
             Shipping shipping = new Shipping(id, type);
-            sizes.add(shipping);
+            shippings.add(shipping);
         }
-        return sizes;
+        return shippings;
     }
 }

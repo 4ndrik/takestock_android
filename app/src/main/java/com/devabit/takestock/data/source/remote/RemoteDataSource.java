@@ -324,15 +324,13 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Condition
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Conditions Methods  ********/
 
-    @Override public void saveConditions(@NonNull List<Condition> conditions) {
+    @Override public Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Condition>> updateConditions() {
+    @Override public Observable<List<Condition>> refreshConditions() {
         return getConditions();
     }
 
@@ -353,7 +351,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Condition getConditionById(int id) {
+    @Override public Condition getConditionWithId(int id) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
@@ -361,7 +359,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     // Methods for Packaging
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public void savePackagings(@NonNull List<Packaging> packagings) {
+    @Override public Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
