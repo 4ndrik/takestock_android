@@ -23,7 +23,7 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.screen.advert.create.AdvertCreateActivity;
 import com.devabit.takestock.screen.buying.BuyingActivity;
-import com.devabit.takestock.screen.category.CategoriesDialog;
+import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.profile.account.ProfileAccountActivity;
 import com.devabit.takestock.screen.search.SearchActivity;
@@ -229,12 +229,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @OnClick(R.id.browse_categories_button)
     protected void onBrowseCategoriesButtonClick() {
-        displayCategoriesDialog();
-    }
-
-    private void displayCategoriesDialog() {
-        CategoriesDialog dialog = CategoriesDialog.newInstance();
-        dialog.show(getFragmentManager(), dialog.getClass().getCanonicalName());
+        startActivity(CategoriesActivity.getStartIntent(MainActivity.this));
     }
 
     @OnClick(R.id.menu_button)

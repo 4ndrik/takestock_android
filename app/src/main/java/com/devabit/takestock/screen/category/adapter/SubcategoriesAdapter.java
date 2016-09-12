@@ -7,57 +7,52 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.Category;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.devabit.takestock.data.model.Subcategory;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
+public class SubcategoriesAdapter extends RecyclerView.Adapter<SubcategoriesAdapter.ViewHolder> {
 
     private final LayoutInflater mLayoutInflater;
-    private final List<Category> mCategories;
+    private Subcategory[] mSubcategories;
 
-    public interface OnCategorySelectedListener {
-        void onCategorySelected(Category category);
+    public interface OnSubcategorySelectedListener {
+        void onSubcategorySelected(Subcategory subcategory);
     }
 
-    private static OnCategorySelectedListener sListener;
+    private static OnSubcategorySelectedListener sListener;
 
-    public CategoriesAdapter(Context context) {
+    public SubcategoriesAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
-        mCategories = new ArrayList<>();
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mLayoutInflater.inflate(R.layout.item_category, parent, false);
+        View itemView = mLayoutInflater.inflate(R.layout.item_subcategory, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindCategory(mCategories.get(position));
+        holder.bindSubcategory(mSubcategories[position]);
     }
 
     @Override public int getItemCount() {
-        return mCategories.size();
+        return mSubcategories == null ? 0 : mSubcategories.length;
     }
 
-    public void setCategories(List<Category> categories) {
-        mCategories.clear();
-        mCategories.addAll(categories);
+    public void setSubcategories(Subcategory[] subcategories) {
+        mSubcategories = subcategories;
         notifyDataSetChanged();
     }
 
-    public void setOnCategorySelectedListener(OnCategorySelectedListener itemClickListener) {
-        sListener = itemClickListener;
+    public void setOnSubcategorySelectedListener(OnSubcategorySelectedListener listener) {
+        sListener = listener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView mNameTextView;
-        private Category mCategory;
+        private Subcategory mSubcategory;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -65,13 +60,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             mNameTextView.setOnClickListener(ViewHolder.this);
         }
 
-        void bindCategory(Category category) {
-            mCategory = category;
-            mNameTextView.setText(mCategory.getName());
+        void bindSubcategory(Subcategory subcategory) {
+            mSubcategory = subcategory;
+            mNameTextView.setText(mSubcategory.getName());
         }
 
         @Override public void onClick(View v) {
-            if (sListener != null) sListener.onCategorySelected(mCategory);
+            if (sListener != null) sListener.onSubcategorySelected(mSubcategory);
         }
     }
 }

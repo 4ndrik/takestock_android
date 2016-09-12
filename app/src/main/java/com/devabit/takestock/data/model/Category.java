@@ -1,11 +1,14 @@
 package com.devabit.takestock.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class Category {
+public class Category implements Parcelable {
 
     private int mId;
     private String mName;
@@ -21,6 +24,36 @@ public class Category {
         mIsFood = isFood;
         mSubcategories = subcategories;
     }
+
+    protected Category(Parcel in) {
+        mId = in.readInt();
+        mName = in.readString();
+        mIsFood = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mName);
+        dest.writeByte((byte) (mIsFood ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Category> CREATOR = new Creator<Category>() {
+        @Override
+        public Category createFromParcel(Parcel in) {
+            return new Category(in);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 
     public int getId() {
         return mId;
