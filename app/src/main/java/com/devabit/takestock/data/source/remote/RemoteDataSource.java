@@ -461,9 +461,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Advert
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Adverts Methods  ********/
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         final AdvertJsonMapper jsonMapper = new AdvertJsonMapper();
@@ -528,32 +526,21 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return new AdvertFilterUrlBuilder(ADVERTS, filter).buildUrl();
                     }
                 })
-                .doOnNext(new Action1<String>() {
-                    @Override public void call(String url) {
-                        LOGD(TAG, url);
-                    }
-                })
                 .flatMap(new Func1<String, Observable<PaginatedList<Advert>>>() {
                     @Override public Observable<PaginatedList<Advert>> call(String url) {
-                        return getAdvertResultListPerPage(url);
+                        d(url);
+                        return getPaginatedAdvertListPerPage(url);
                     }
                 });
     }
 
-    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListPerPage(@NonNull String page) {
         return Observable.fromCallable(createGETCallable(page))
                 .map(new Func1<String, PaginatedList<Advert>>() {
-                    @Override public PaginatedList<Advert> call(String json) {
-                        try {
-                            LOGD(TAG, json);
-                            return new AdvertPaginatedListJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }).doOnNext(new Action1<PaginatedList<Advert>>() {
-                    @Override public void call(PaginatedList<Advert> advertPaginatedList) {
-                        LOGD(TAG, "ResultAdvertList: " + advertPaginatedList);
+                    @Override public PaginatedList<Advert> call(String jsonString) {
+                        d(jsonString);
+                        PaginatedAdvertListJson json = mGson.fromJson(jsonString, PaginatedAdvertListJson.class);
+                        return json.toPaginatedList();
                     }
                 });
     }

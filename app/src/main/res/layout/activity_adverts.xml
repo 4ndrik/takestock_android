@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:titleTextColor="@color/black"
+            app:subtitleTextColor="@color/translucent_black_80"
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"/>
+
+    <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                <Button
+                        android:id="@+id/filter_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:text="@string/filter"
+                        android:drawableEnd="@drawable/ic_expand_down_lime_8dp"
+                        android:theme="@style/FlatButtonLime"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        style="@style/Widget.AppCompat.Button.Borderless"/>
+
+                <Button
+                        android:id="@+id/sort_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:text="@string/sort"
+                        android:drawableEnd="@drawable/ic_expand_down_lime_8dp"
+                        android:drawablePadding="8dp"
+                        android:theme="@style/FlatButtonLime"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            </LinearLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>

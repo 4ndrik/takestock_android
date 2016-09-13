@@ -5,7 +5,9 @@ package com.devabit.takestock.data.filter;
  */
 public abstract class Filter {
 
-    private int mPageSize;
+    public static final int DEFAULT_PAGE_SIZE = 25;
+
+    protected int mPageSize;
 
     public int getPageSize() {
         return mPageSize;

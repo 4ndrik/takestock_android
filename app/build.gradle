@@ -38,6 +38,7 @@ android {
 
         debug {
             buildConfigField("String", "API_URL", '"http://uat.takestock.com/api/v1"')
+            buildConfigField("String", "IMAGE_URL", '"http://uat.takestock.com"')
             buildConfigField("String", "STRIPE_API_KEY", '"pk_test_vqadhDOynhijTjKgj7sEnybl"')
             buildConfigField("boolean", "LOGGING_ENABLED", "true")
             applicationIdSuffix ".debug"

@@ -8,7 +8,7 @@ import com.devabit.takestock.data.model.Photo;
  */
 public class PhotoJson implements JsonModel {
 
-    private static final String BASE_URL = BuildConfig.API_URL;
+    private static final String IMAGE_URL = BuildConfig.IMAGE_URL;
 
     public int id;
     public String image;
@@ -16,10 +16,10 @@ public class PhotoJson implements JsonModel {
     public String width;
     public String height;
 
-    public Photo getPhoto() {
+    public Photo toPhoto() {
         return new Photo.Builder()
                 .setId(id)
-                .setImage(BASE_URL + image)
+                .setImage(IMAGE_URL + image)
                 .setIsMain(is_main)
                 .setWidth(Integer.valueOf(width))
                 .setHeight(Integer.valueOf(height))

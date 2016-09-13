@@ -355,7 +355,7 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String link) {
+    @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListPerPage(@NonNull String link) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 

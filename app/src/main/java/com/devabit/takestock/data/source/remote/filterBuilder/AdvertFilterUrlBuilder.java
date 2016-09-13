@@ -14,6 +14,7 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
 
     private static final String ITEMS_COUNT = "items_count";
     private static final String CATEGORY = "category";
+    private static final String SUBCATEGORY = "subcategory";
     private static final String AUTHOR_ID = "author_id";
     private static final String ORDER = "o";
     private static final String IDS = "ids";
@@ -35,6 +36,16 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
         int pageSize = mFilter.getPageSize();
         if (pageSize > 0) {
             appendQueryParameter(PAGE_SIZE, pageSize);
+        }
+
+        int categoryId = mFilter.getCategoryId();
+        if (categoryId > 0) {
+            appendQueryParameter(CATEGORY, categoryId);
+        }
+
+        int subcategoryId = mFilter.getSubcategoryId();
+        if (subcategoryId > 0) {
+            appendQueryParameter(SUBCATEGORY, subcategoryId);
         }
 
         int itemCount = mFilter.getItemCount();

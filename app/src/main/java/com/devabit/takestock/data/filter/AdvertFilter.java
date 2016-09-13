@@ -11,6 +11,11 @@ import java.util.Set;
  */
 public class AdvertFilter extends Filter {
 
+    @IntDef({
+            ORDER_DEFAULT, ORDER_EXPIRES_AT, ORDER_EXPIRES_AT_DESCENDING, ORDER_CREATED_AT,
+            ORDER_CREATED_AT_DESCENDING, ORDER_GUIDE_PRICE, ORDER_GUIDE_PRICE_DESCENDING})
+    public @interface Order {}
+
     public static final int ORDER_DEFAULT = -1;
     public static final int ORDER_EXPIRES_AT = 1;
     public static final int ORDER_EXPIRES_AT_DESCENDING = 2;
@@ -19,19 +24,27 @@ public class AdvertFilter extends Filter {
     public static final int ORDER_GUIDE_PRICE = 5;
     public static final int ORDER_GUIDE_PRICE_DESCENDING = 6;
 
-    @IntDef({
-            ORDER_DEFAULT,
-            ORDER_EXPIRES_AT, ORDER_EXPIRES_AT_DESCENDING,
-            ORDER_CREATED_AT, ORDER_CREATED_AT_DESCENDING,
-            ORDER_GUIDE_PRICE, ORDER_GUIDE_PRICE_DESCENDING})
-    public @interface Order {}
-
     private Set<Integer> mAdvertIds = new HashSet<>(0);
     private int mItemCount;
     private int mCategoryId;
+    private int mSubcategoryId;
     private int mAuthorId;
     @Order private int mOrder;
     private boolean mIsWatchlist;
+
+    public AdvertFilter() {
+    }
+
+    AdvertFilter(int itemCount, int categoryId, int subcategoryId,
+                 int authorId, int order, int pageSize, boolean isWatchlist) {
+        mItemCount = itemCount;
+        mCategoryId = categoryId;
+        mSubcategoryId = subcategoryId;
+        mAuthorId = authorId;
+        mOrder = order;
+        mPageSize = pageSize;
+        mIsWatchlist = isWatchlist;
+    }
 
     public Set<Integer> getAdvertIds() {
         return mAdvertIds;
@@ -57,6 +70,14 @@ public class AdvertFilter extends Filter {
         mCategoryId = categoryId;
     }
 
+    public int getSubcategoryId() {
+        return mSubcategoryId;
+    }
+
+    public void setSubcategoryId(int subcategoryId) {
+        mSubcategoryId = subcategoryId;
+    }
+
     public int getAuthorId() {
         return mAuthorId;
     }
@@ -79,5 +100,55 @@ public class AdvertFilter extends Filter {
 
     public void setWatchlist(boolean watchlist) {
         mIsWatchlist = watchlist;
+    }
+
+    public static class Builder {
+
+        private int mItemCount;
+        private int mCategoryId;
+        private int mSubcategoryId;
+        private int mAuthorId;
+        private int mOrder;
+        private int mPageSize = DEFAULT_PAGE_SIZE;
+        private boolean mIsWatchlist;
+
+        public Builder setItemCount(int itemCount) {
+            mItemCount = itemCount;
+            return this;
+        }
+
+        public Builder setCategoryId(int categoryId) {
+            mCategoryId = categoryId;
+            return this;
+        }
+
+        public Builder setSubcategoryId(int subcategoryId) {
+            mSubcategoryId = subcategoryId;
+            return this;
+        }
+
+        public Builder setAuthorId(int authorId) {
+            mAuthorId = authorId;
+            return this;
+        }
+
+        public Builder setOrder(int order) {
+            mOrder = order;
+            return this;
+        }
+
+        public Builder setPageSize(int pageSize) {
+            mPageSize = pageSize;
+            return this;
+        }
+
+        public Builder setIsWatchlist(boolean isWatchlist) {
+            mIsWatchlist = isWatchlist;
+            return this;
+        }
+
+        public AdvertFilter create() {
+            return new AdvertFilter(mItemCount, mCategoryId, mSubcategoryId, mAuthorId, mOrder, mPageSize, mIsWatchlist);
+        }
     }
 }

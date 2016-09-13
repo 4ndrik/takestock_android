@@ -55,7 +55,7 @@ public class AdvertJson implements JsonModel {
     public String escaped_description;
     public String category_name;
 
-    public Advert getAdvert() {
+    public Advert toAdvert() {
         return new Advert.Builder()
                 .setId(id)
                 .setName(name)
@@ -104,7 +104,7 @@ public class AdvertJson implements JsonModel {
     private List<Photo> getPhotos() {
         List<Photo> photos = new ArrayList<>(this.photos.length);
         for (PhotoJson json : this.photos) {
-            photos.add(json.getPhoto());
+            photos.add(json.toPhoto());
         }
         return photos;
     }

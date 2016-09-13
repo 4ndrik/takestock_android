@@ -108,9 +108,7 @@ public interface DataSource {
 
     BusinessSubtype getBusinessSubtypeById(int id);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Advert
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Adverts Methods  ********/
 
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
@@ -118,7 +116,7 @@ public interface DataSource {
 
     Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter);
 
-    Observable<PaginatedList<Advert>> getAdvertResultListPerPage(@NonNull String page);
+    Observable<PaginatedList<Advert>> getPaginatedAdvertListPerPage(@NonNull String page);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for AdvertSubscriber

@@ -51,6 +51,9 @@
         <!--</activity>-->
 
         <activity
+                android:name=".screen.adverts.AdvertsActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".screen.category.CategoriesActivity"
                 android:screenOrientation="portrait"/>
         <activity
