@@ -22,13 +22,13 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 12/09/2016.
  */
-public class CategoriesFragment extends Fragment implements CategoryContract.View {
+public class CategoriesFragment extends Fragment implements CategoriesContract.View {
 
     public static CategoriesFragment newInstance() {
         return new CategoriesFragment();
     }
 
-    private CategoryContract.Presenter mPresenter;
+    private CategoriesContract.Presenter mPresenter;
     private CategoriesAdapter mCategoriesAdapter;
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,7 +37,6 @@ public class CategoriesFragment extends Fragment implements CategoryContract.Vie
 
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
         Context context = view.getContext();
-        new CategoryPresenter(Injection.provideDataRepository(context), CategoriesFragment.this);
         RecyclerView recyclerView = (RecyclerView) view;
         LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -51,12 +50,16 @@ public class CategoriesFragment extends Fragment implements CategoryContract.Vie
                 ((CategoriesActivity)getActivity()).setSelectedCategory(category);
             }
         });
-
-        mPresenter.fetchCategories();
+        createPresenter();
     }
 
-    @Override public void setPresenter(@NonNull CategoryContract.Presenter presenter) {
+    private void createPresenter() {
+        new CategoriesPresenter(Injection.provideDataRepository(getActivity()), CategoriesFragment.this);
+    }
+
+    @Override public void setPresenter(@NonNull CategoriesContract.Presenter presenter) {
         mPresenter = presenter;
+        mPresenter.fetchCategories();
     }
 
     @Override public void showCategoriesInView(List<Category> categories) {

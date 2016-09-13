@@ -9,19 +9,21 @@ import android.widget.TextView;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Subcategory;
 
+import java.util.List;
+
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
 public class SubcategoriesAdapter extends RecyclerView.Adapter<SubcategoriesAdapter.ViewHolder> {
 
     private final LayoutInflater mLayoutInflater;
-    private Subcategory[] mSubcategories;
+    private List<Subcategory> mSubcategories;
 
     public interface OnSubcategorySelectedListener {
         void onSubcategorySelected(Subcategory subcategory);
     }
 
-    private static OnSubcategorySelectedListener sListener;
+    OnSubcategorySelectedListener mListener;
 
     public SubcategoriesAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -33,23 +35,23 @@ public class SubcategoriesAdapter extends RecyclerView.Adapter<SubcategoriesAdap
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindSubcategory(mSubcategories[position]);
+        holder.bindSubcategory(mSubcategories.get(position));
     }
 
     @Override public int getItemCount() {
-        return mSubcategories == null ? 0 : mSubcategories.length;
+        return mSubcategories == null ? 0 : mSubcategories.size();
     }
 
-    public void setSubcategories(Subcategory[] subcategories) {
+    public void setSubcategories(List<Subcategory> subcategories) {
         mSubcategories = subcategories;
         notifyDataSetChanged();
     }
 
     public void setOnSubcategorySelectedListener(OnSubcategorySelectedListener listener) {
-        sListener = listener;
+        mListener = listener;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView mNameTextView;
         private Subcategory mSubcategory;
@@ -66,7 +68,7 @@ public class SubcategoriesAdapter extends RecyclerView.Adapter<SubcategoriesAdap
         }
 
         @Override public void onClick(View v) {
-            if (sListener != null) sListener.onSubcategorySelected(mSubcategory);
+            if (mListener != null) mListener.onSubcategorySelected(mSubcategory);
         }
     }
 }

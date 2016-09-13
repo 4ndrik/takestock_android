@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.devabit.takestock.R;
+import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
+import com.devabit.takestock.screen.adverts.AdvertsActivity;
 import com.devabit.takestock.screen.category.adapter.SubcategoriesAdapter;
 import com.devabit.takestock.widget.DividerItemDecoration;
 
@@ -20,17 +22,23 @@ import com.devabit.takestock.widget.DividerItemDecoration;
  */
 public class SubcategoriesFragment extends Fragment {
 
-    private static final String KEY_SUBCATEGORIES = "SUBCATEGORIES";
+    private static final String KEY_CATEGORY = "CATEGORY";
 
-    public static SubcategoriesFragment newInstance(Subcategory[] subcategories) {
+    public static SubcategoriesFragment newInstance(Category category) {
         Bundle args = new Bundle();
-        args.putParcelableArray(KEY_SUBCATEGORIES, subcategories);
+        args.putParcelable(KEY_CATEGORY, category);
         SubcategoriesFragment fragment = new SubcategoriesFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
+    private Category mCategory;
     private SubcategoriesAdapter mSubcategoriesAdapter;
+
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mCategory = getArguments().getParcelable(KEY_CATEGORY);
+    }
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_subcategories, container, false);
@@ -45,12 +53,12 @@ public class SubcategoriesFragment extends Fragment {
         DividerItemDecoration itemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(context, R.drawable.divider_grey300));
         recyclerView.addItemDecoration(itemDecoration);
         mSubcategoriesAdapter = new SubcategoriesAdapter(context);
-        Subcategory[] subcategories = (Subcategory[]) getArguments().getParcelableArray(KEY_SUBCATEGORIES);
-        mSubcategoriesAdapter.setSubcategories(subcategories);
+        mSubcategoriesAdapter.setSubcategories(mCategory.getSubcategories());
         recyclerView.setAdapter(mSubcategoriesAdapter);
         mSubcategoriesAdapter.setOnSubcategorySelectedListener(new SubcategoriesAdapter.OnSubcategorySelectedListener() {
             @Override public void onSubcategorySelected(Subcategory subcategory) {
-
+                startActivity(AdvertsActivity.getStartIntent(getActivity(), mCategory, subcategory));
+                getActivity().finish();
             }
         });
     }

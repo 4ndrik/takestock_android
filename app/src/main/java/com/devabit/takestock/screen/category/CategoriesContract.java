@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
-public interface CategoryContract {
+public interface CategoriesContract {
 
     interface View extends BaseView<Presenter> {
 

@@ -11,9 +11,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Category;
-import com.devabit.takestock.data.model.Subcategory;
-
-import java.util.List;
 
 /**
  * Created by Victor Artemyev on 12/09/2016.
@@ -43,13 +40,11 @@ public class CategoriesActivity extends AppCompatActivity {
 
     public void setSelectedCategory(Category category) {
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        List<Subcategory> subcategoryList = category.getSubcategories();
-        Subcategory[] subcategoryArray = subcategoryList.toArray(new Subcategory[subcategoryList.size()]);
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(
                         R.anim.enter_from_right, R.anim.exit_to_left)
-                .replace(R.id.fragment_container_layout, SubcategoriesFragment.newInstance(subcategoryArray))
+                .replace(R.id.fragment_container_layout, SubcategoriesFragment.newInstance(category))
                 .addToBackStack(SubcategoriesFragment.class.getName())
                 .commit();
     }

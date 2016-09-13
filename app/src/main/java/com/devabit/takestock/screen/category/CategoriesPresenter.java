@@ -18,20 +18,20 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
-public class CategoryPresenter implements CategoryContract.Presenter {
+public class CategoriesPresenter implements CategoriesContract.Presenter {
 
-    private static final String TAG = makeLogTag(CategoryPresenter.class);
+    private static final String TAG = makeLogTag(CategoriesPresenter.class);
 
     private final DataRepository mDataRepository;
-    private final CategoryContract.View mCategoriesView;
+    private final CategoriesContract.View mCategoriesView;
 
     private CompositeSubscription mSubscriptions;
 
-    public CategoryPresenter(@NonNull DataRepository dataRepository, @NonNull CategoryContract.View categoriesView) {
+    public CategoriesPresenter(@NonNull DataRepository dataRepository, @NonNull CategoriesContract.View categoriesView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mCategoriesView = checkNotNull(categoriesView, "categoriesView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mCategoriesView.setPresenter(CategoryPresenter.this);
+        mCategoriesView.setPresenter(CategoriesPresenter.this);
     }
 
     @Override public void resume() {
