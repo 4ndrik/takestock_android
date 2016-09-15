@@ -196,7 +196,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             watchingCheckBox.setOnCheckedChangeListener(null);
 //            watchingCheckBox.setChecked(mAdvert.hasSubscriber(sUserId));
             watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
-            dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getCreatedAt()));
+            dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getExpiresAt()));
             bindPhoto(mAdvert.getPhotos());
             setItemViewActive(!isAdvertProcessing(mAdvert));
         }

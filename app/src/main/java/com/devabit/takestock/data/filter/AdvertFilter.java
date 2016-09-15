@@ -1,6 +1,8 @@
 package com.devabit.takestock.data.filter;
 
 import android.support.annotation.IntDef;
+import com.devabit.takestock.data.model.Category;
+import com.devabit.takestock.data.model.Subcategory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,24 +28,26 @@ public class AdvertFilter extends Filter {
 
     private Set<Integer> mAdvertIds = new HashSet<>(0);
     private int mItemCount;
-    private int mCategoryId;
-    private int mSubcategoryId;
+    private Category mCategory;
+    private Subcategory mSubcategory;
     private int mAuthorId;
-    @Order private int mOrder;
     private boolean mIsWatchlist;
+    private String mQuery;
+    @Order private int mOrder;
 
     public AdvertFilter() {
     }
 
-    AdvertFilter(int itemCount, int categoryId, int subcategoryId,
-                 int authorId, int order, int pageSize, boolean isWatchlist) {
+    AdvertFilter(int itemCount, Category category, Subcategory subcategory, int authorId,
+                 int order, int pageSize, boolean isWatchlist, String query) {
         mItemCount = itemCount;
-        mCategoryId = categoryId;
-        mSubcategoryId = subcategoryId;
+        mCategory = category;
+        mSubcategory = subcategory;
         mAuthorId = authorId;
         mOrder = order;
         mPageSize = pageSize;
         mIsWatchlist = isWatchlist;
+        mQuery = query;
     }
 
     public Set<Integer> getAdvertIds() {
@@ -62,20 +66,20 @@ public class AdvertFilter extends Filter {
         mItemCount = itemCount;
     }
 
-    public int getCategoryId() {
-        return mCategoryId;
+    public Category getCategory() {
+        return mCategory;
     }
 
-    public void setCategoryId(int categoryId) {
-        mCategoryId = categoryId;
+    public void setCategory(Category category) {
+        mCategory = category;
     }
 
-    public int getSubcategoryId() {
-        return mSubcategoryId;
+    public Subcategory getSubcategory() {
+        return mSubcategory;
     }
 
-    public void setSubcategoryId(int subcategoryId) {
-        mSubcategoryId = subcategoryId;
+    public void setSubcategory(Subcategory subcategory) {
+        mSubcategory = subcategory;
     }
 
     public int getAuthorId() {
@@ -102,28 +106,33 @@ public class AdvertFilter extends Filter {
         mIsWatchlist = watchlist;
     }
 
+    public String getQuery() {
+        return mQuery;
+    }
+
     public static class Builder {
 
         private int mItemCount;
-        private int mCategoryId;
-        private int mSubcategoryId;
+        private Category mCategory;
+        private Subcategory mSubcategory;
         private int mAuthorId;
         private int mOrder;
         private int mPageSize = DEFAULT_PAGE_SIZE;
         private boolean mIsWatchlist;
+        private String mQuery = "";
 
         public Builder setItemCount(int itemCount) {
             mItemCount = itemCount;
             return this;
         }
 
-        public Builder setCategoryId(int categoryId) {
-            mCategoryId = categoryId;
+        public Builder setCategory(Category category) {
+            mCategory = category;
             return this;
         }
 
-        public Builder setSubcategoryId(int subcategoryId) {
-            mSubcategoryId = subcategoryId;
+        public Builder setSubcategory(Subcategory subcategory) {
+            mSubcategory = subcategory;
             return this;
         }
 
@@ -132,7 +141,7 @@ public class AdvertFilter extends Filter {
             return this;
         }
 
-        public Builder setOrder(int order) {
+        public Builder setOrder(@Order int order) {
             mOrder = order;
             return this;
         }
@@ -147,8 +156,15 @@ public class AdvertFilter extends Filter {
             return this;
         }
 
+        public Builder setQuery(String query) {
+            mQuery = query;
+            return this;
+        }
+
         public AdvertFilter create() {
-            return new AdvertFilter(mItemCount, mCategoryId, mSubcategoryId, mAuthorId, mOrder, mPageSize, mIsWatchlist);
+            return new AdvertFilter(
+                    mItemCount, mCategory, mSubcategory,
+                    mAuthorId, mOrder, mPageSize, mIsWatchlist, mQuery);
         }
     }
 }

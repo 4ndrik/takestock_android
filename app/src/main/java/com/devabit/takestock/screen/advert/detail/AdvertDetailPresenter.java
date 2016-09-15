@@ -40,19 +40,19 @@ public class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
     }
 
     @Override public void fetchShippingById(int id) {
-        Shipping shipping = mDataRepository.getShippingById(id);
+        Shipping shipping = mDataRepository.getShippingWithId(id);
         if (shipping == null) return;
         mAdvertView.showShippingInView(shipping);
     }
 
     @Override public void fetchCertificationById(int id) {
-        Certification certification = mDataRepository.getCertificationById(id);
+        Certification certification = mDataRepository.getCertificationWithId(id);
         if (certification == null) return;
         mAdvertView.showCertificationInView(certification);
     }
 
     @Override public void fetchConditionById(int id) {
-        Condition condition = mDataRepository.getConditionById(id);
+        Condition condition = mDataRepository.getConditionWithId(id);
         if (condition == null) return;
         mAdvertView.showConditionInView(condition);
     }

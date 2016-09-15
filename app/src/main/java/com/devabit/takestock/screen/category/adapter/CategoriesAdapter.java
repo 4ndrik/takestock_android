@@ -24,7 +24,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         void onCategorySelected(Category category);
     }
 
-    private static OnCategorySelectedListener sListener;
+    OnCategorySelectedListener mListener;
 
     public CategoriesAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -45,16 +45,16 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     }
 
     public void setCategories(List<Category> categories) {
-        mCategories.clear();
+        mCategories.add(Category.ALL);
         mCategories.addAll(categories);
         notifyDataSetChanged();
     }
 
     public void setOnCategorySelectedListener(OnCategorySelectedListener itemClickListener) {
-        sListener = itemClickListener;
+        mListener = itemClickListener;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView mNameTextView;
         private Category mCategory;
@@ -71,7 +71,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         }
 
         @Override public void onClick(View v) {
-            if (sListener != null) sListener.onCategorySelected(mCategory);
+            if (mListener != null) mListener.onCategorySelected(mCategory);
         }
     }
 }

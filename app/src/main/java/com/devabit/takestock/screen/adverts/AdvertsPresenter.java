@@ -67,6 +67,7 @@ class AdvertsPresenter implements AdvertsContract.Presenter {
                     @Override public void onNext(PaginatedList<Advert> paginatedList) {
                         mView.setRefreshingProgressIndicator(false);
                         mPaginatedList = paginatedList;
+                        mView.showTotalAdvertsCountInView(paginatedList.getCount());
                         mView.showRefreshedAdvertsInView(paginatedList.getResults());
                     }
                 });
@@ -78,7 +79,7 @@ class AdvertsPresenter implements AdvertsContract.Presenter {
         if (mPaginatedList != null && mPaginatedList.hasNext()) {
             mView.setLoadingProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getPaginatedAdvertListWithFilter(mFilter)
+                    .getPaginatedAdvertListPerPage(mPaginatedList.getNext())
                     .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                     .subscribe(new Subscriber<PaginatedList<Advert>>() {
                         @Override public void onCompleted() {

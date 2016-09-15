@@ -33,12 +33,13 @@
                     app:layout_scrollFlags="scroll|enterAlways|snap">
 
                 <Button
-                        android:id="@+id/filter_button"
+                        android:id="@+id/categories_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
-                        android:text="@string/filter"
+                        android:text="@string/categories"
                         android:drawableEnd="@drawable/ic_expand_down_lime_8dp"
+                        android:drawablePadding="8dp"
                         android:theme="@style/FlatButtonLime"
                         android:textStyle="bold"
                         android:textAllCaps="false"
@@ -78,6 +79,19 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
+        <TextView
+                android:id="@+id/count_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/bg_advert_count_text_view"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:layout_gravity="bottom|start"
+                android:text="@string/adverts_count_default"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

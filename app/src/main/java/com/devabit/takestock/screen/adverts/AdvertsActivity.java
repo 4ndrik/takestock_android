@@ -1,21 +1,31 @@
 package com.devabit.takestock.screen.adverts;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
@@ -24,6 +34,7 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
 import com.devabit.takestock.screen.adverts.adapter.AdvertsAdapter;
+import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.widget.GridSpacingItemDecoration;
 import timber.log.Timber;
@@ -35,45 +46,73 @@ import java.util.List;
  */
 public class AdvertsActivity extends AppCompatActivity implements AdvertsContract.View {
 
-    private static final String EXTRA_CATEGORY = Category.class.getName();
-    private static final String EXTRA_SUBCATEGORY = Subcategory.class.getName();
+    private static final String ACTION_SEARCHING = "ACTION_SEARCHING";
+    private static final String ACTION_BROWSING = "ACTION_BROWSING";
 
-    public static Intent getStartIntent(Context context, Category category, Subcategory subcategory) {
+    private static final String EXTRA_CATEGORY = "EXTRA_CATEGORY";
+    private static final String EXTRA_SUBCATEGORY = "EXTRA_SUBCATEGORY";
+    private static final String EXTRA_QUERY = "EXTRA_QUERY";
+
+    public static Intent getSearchingStartIntent(Context context, String query) {
         Intent starter = new Intent(context, AdvertsActivity.class);
+        starter.setAction(ACTION_SEARCHING);
+        starter.putExtra(EXTRA_QUERY, query);
+        starter.putExtra(EXTRA_CATEGORY, Category.ALL);
+        return starter;
+    }
+
+    public static Intent getBrowsingStartIntent(Context context, Category category, Subcategory subcategory) {
+        Intent starter = new Intent(context, AdvertsActivity.class);
+        starter.setAction(ACTION_BROWSING);
         starter.putExtra(EXTRA_CATEGORY, category);
         starter.putExtra(EXTRA_SUBCATEGORY, subcategory);
         return starter;
     }
 
     @BindView(R.id.content) protected ViewGroup mContent;
+    @BindView(R.id.toolbar) protected Toolbar mToolbar;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.count_text_view) protected TextView mCountTextView;
 
     TakeStockAccount mAccount;
+    Category mCategory;
+    Subcategory mSubcategory;
+    String mQuery;
     AdvertsAdapter mAdvertsAdapter;
     AdvertsContract.Presenter mPresenter;
+
+    int totalAdvertsCount;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adverts);
         ButterKnife.bind(AdvertsActivity.this);
         mAccount = TakeStockAccount.get(AdvertsActivity.this);
-        Category category = getIntent().getParcelableExtra(EXTRA_CATEGORY);
-        Subcategory subcategory = getIntent().getParcelableExtra(EXTRA_SUBCATEGORY);
-        setUpToolbar(category, subcategory);
+        initDataFromIntent(getIntent());
+        setUpToolbar();
         setUpRefreshLayout();
         setUpRecyclerView();
-        AdvertFilter filter = new AdvertFilter.Builder()
-                .setCategoryId(category.getId())
-                .setSubcategoryId(subcategory.getId())
-                .create();
-        createPresenter(filter);
+        createPresenter(createFilter());
     }
 
-    private void setUpToolbar(Category category, Subcategory subcategory) {
-        Toolbar toolbar = ButterKnife.findById(AdvertsActivity.this, R.id.toolbar);
-        toolbar.setTitle(category.getName());
-        toolbar.setSubtitle(subcategory.getName());
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+    private void initDataFromIntent(Intent intent) {
+        mCategory = intent.getParcelableExtra(EXTRA_CATEGORY);
+        mSubcategory = intent.getParcelableExtra(EXTRA_SUBCATEGORY);
+        if (intent.hasExtra(EXTRA_QUERY)) {
+            mQuery = intent.getStringExtra(EXTRA_QUERY);
+        }
+    }
+
+    private void setUpToolbar() {
+        if (TextUtils.isEmpty(mQuery)) {
+            mToolbar.setTitle(mCategory.getName());
+        } else {
+            mToolbar.setTitle(getString(R.string.adverts_query_toolbar_title, mQuery, mCategory.getName()));
+        }
+        if (mSubcategory != null) {
+            mToolbar.setSubtitle(mSubcategory.getName());
+        }
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
@@ -99,12 +138,12 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy <= 0) return;
+                int[] pastVisibleItems = layoutManager.findFirstVisibleItemPositions(new int[2]);
+                setAdvertsCount(pastVisibleItems[0]);
+                if (dy <= 0 || isLoading) return;
                 int visibleItemCount = layoutManager.getChildCount();
                 int totalItemCount = layoutManager.getItemCount();
-                int[] pastVisibleItems = layoutManager.findFirstVisibleItemPositions(new int[2]);
-                if (isLoading) return;
-                if ((visibleItemCount + pastVisibleItems[1]) >= totalItemCount) {
+                if ((visibleItemCount + pastVisibleItems[0]) >= totalItemCount) {
                     isLoading = true;
                     mPresenter.loadAdverts();
                 }
@@ -147,6 +186,13 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         mPresenter.refreshAdverts();
     }
 
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        initDataFromIntent(intent);
+        setUpToolbar();
+        loadAdvertsWithFilter(createFilter());
+    }
+
     @Override public void showRefreshedAdvertsInView(List<Advert> adverts) {
         mAdvertsAdapter.refreshAdverts(adverts);
     }
@@ -154,6 +200,19 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     @Override public void showLoadedAdvertsInView(List<Advert> adverts) {
         isLoading = false;
         mAdvertsAdapter.addAdverts(adverts);
+    }
+
+    @Override public void showTotalAdvertsCountInView(int count) {
+        totalAdvertsCount = count;
+        setAdvertsCount(0);
+    }
+
+    void setAdvertsCount(int count) {
+        String visibleCountText = String.valueOf(count);
+        String countText = getString(R.string.adverts_count, visibleCountText, totalAdvertsCount);
+        SpannableString spString = new SpannableString(countText);
+        spString.setSpan(new ForegroundColorSpan(Color.BLACK), 0, visibleCountText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mCountTextView.setText(spString);
     }
 
     @Override public void showAdvertAddedToWatching(int advertId) {
@@ -193,6 +252,59 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
 
     @Override public void setRefreshingProgressIndicator(boolean isActive) {
         mRefreshLayout.setRefreshing(isActive);
+    }
+
+    @OnClick(R.id.categories_button)
+    protected void onCategoriesButtonClick() {
+        startActivity(CategoriesActivity.getStartIntent(AdvertsActivity.this));
+    }
+
+    int mSortOrder = AdvertFilter.ORDER_DEFAULT;
+    int mSortOrderCheckedItem = -1;
+
+    private final static SparseIntArray SORT_VALUES = new SparseIntArray();
+
+    static {
+        SORT_VALUES.append(R.string.sort_created_at, AdvertFilter.ORDER_CREATED_AT);
+        SORT_VALUES.append(R.string.sort_created_at_descending, AdvertFilter.ORDER_CREATED_AT_DESCENDING);
+        SORT_VALUES.append(R.string.sort_expires_at, AdvertFilter.ORDER_EXPIRES_AT);
+        SORT_VALUES.append(R.string.sort_expires_at_descending, AdvertFilter.ORDER_EXPIRES_AT_DESCENDING);
+        SORT_VALUES.append(R.string.sort_guide_price, AdvertFilter.ORDER_GUIDE_PRICE);
+        SORT_VALUES.append(R.string.sort_guide_price_descending, AdvertFilter.ORDER_GUIDE_PRICE_DESCENDING);
+    }
+
+    @OnClick(R.id.sort_button)
+    protected void onSortButtonClick() {
+
+        final CharSequence[] sortNames = new CharSequence[SORT_VALUES.size()];
+        for (int i = 0; i < SORT_VALUES.size(); i++) {
+            sortNames[i] = getString(SORT_VALUES.keyAt(i));
+        }
+
+        new AlertDialog.Builder(AdvertsActivity.this)
+                .setSingleChoiceItems(sortNames, mSortOrderCheckedItem, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mSortOrderCheckedItem = which;
+                        int key = SORT_VALUES.keyAt(mSortOrderCheckedItem);
+                        mSortOrder = SORT_VALUES.get(key);
+                        loadAdvertsWithFilter(createFilter());
+                    }
+                })
+                .show();
+    }
+
+    private void loadAdvertsWithFilter(AdvertFilter filter) {
+        mPresenter.loadAdvertsWithFilter(filter);
+    }
+
+    private AdvertFilter createFilter() {
+        return new AdvertFilter.Builder()
+                .setCategory(mCategory)
+                .setSubcategory(mSubcategory)
+                .setQuery(mQuery)
+                .setOrder(mSortOrder)
+                .create();
     }
 
     @Override protected void onPause() {

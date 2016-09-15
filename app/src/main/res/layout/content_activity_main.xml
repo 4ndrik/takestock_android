@@ -50,7 +50,6 @@
             android:layout_marginTop="16dp"
             android:text="@string/browse_categories"
             android:theme="@style/FlatButtonPurple"
-            android:textAppearance="@android:style/TextAppearance.Small"
             style="@style/Widget.AppCompat.Button.Borderless"/>
 
         <Button
@@ -61,7 +60,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/sell_something"
-                android:textAppearance="@android:style/TextAppearance.Small"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
     </LinearLayout>

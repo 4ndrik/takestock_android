@@ -11,6 +11,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Category;
+import com.devabit.takestock.screen.adverts.AdvertsActivity;
+import com.devabit.takestock.screen.category.fragment.CategoriesFragment;
+import com.devabit.takestock.screen.category.fragment.SubcategoriesFragment;
 
 /**
  * Created by Victor Artemyev on 12/09/2016.
@@ -39,6 +42,11 @@ public class CategoriesActivity extends AppCompatActivity {
     }
 
     public void setSelectedCategory(Category category) {
+        if (Category.ALL.equals(category)) {
+            startActivity(AdvertsActivity.getBrowsingStartIntent(CategoriesActivity.this, category, null));
+            finish();
+            return;
+        }
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         getSupportFragmentManager()
                 .beginTransaction()

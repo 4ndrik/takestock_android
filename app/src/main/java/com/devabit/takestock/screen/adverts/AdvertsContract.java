@@ -19,6 +19,8 @@ public interface AdvertsContract {
 
         void showLoadedAdvertsInView(List<Advert> adverts);
 
+        void showTotalAdvertsCountInView(int count);
+
         void showAdvertAddedToWatching(int advertId);
 
         void showAdvertRemovedFromWatching(int advertId);

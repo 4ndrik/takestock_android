@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.category;
+package com.devabit.takestock.screen.category.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Category;
+import com.devabit.takestock.screen.category.CategoriesActivity;
+import com.devabit.takestock.screen.category.CategoriesContract;
+import com.devabit.takestock.screen.category.CategoriesPresenter;
 import com.devabit.takestock.screen.category.adapter.CategoriesAdapter;
 import com.devabit.takestock.widget.DividerItemDecoration;
 

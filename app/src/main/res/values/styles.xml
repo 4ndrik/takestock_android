@@ -156,7 +156,7 @@
         <item name="textColorAlertDialogListItem">@android:color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@android:color/black</item>
-        <item name="android:windowBackground">@drawable/background_date_picker_dialog</item>
+        <item name="android:windowBackground">@drawable/bg_date_picker_dialog</item>
     </style>
 
     <style name="SortTextView" parent="android:Widget.TextView">

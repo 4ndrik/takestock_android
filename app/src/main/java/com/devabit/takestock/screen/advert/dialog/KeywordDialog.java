@@ -58,7 +58,7 @@ KeywordDialog extends DialogFragment implements DialogInterface.OnClickListener 
         super.onStart();
         mAddButton = (Button) getDialog().findViewById(android.R.id.button1);
         mAddButtonActiveColor = mAddButton.getCurrentTextColor();
-        mAddButtonInactiveColor = ContextCompat.getColor(mAddButton.getContext(), R.color.translucent_purple_dark_80);
+        mAddButtonInactiveColor = ContextCompat.getColor(mAddButton.getContext(), R.color.translucent_jam_80);
         setPositiveButtonActive(false);
 
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

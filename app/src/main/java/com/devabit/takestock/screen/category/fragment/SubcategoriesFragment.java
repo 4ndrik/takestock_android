@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.category;
+package com.devabit.takestock.screen.category.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -57,7 +57,7 @@ public class SubcategoriesFragment extends Fragment {
         recyclerView.setAdapter(mSubcategoriesAdapter);
         mSubcategoriesAdapter.setOnSubcategorySelectedListener(new SubcategoriesAdapter.OnSubcategorySelectedListener() {
             @Override public void onSubcategorySelected(Subcategory subcategory) {
-                startActivity(AdvertsActivity.getStartIntent(getActivity(), mCategory, subcategory));
+                startActivity(AdvertsActivity.getBrowsingStartIntent(getActivity(), mCategory, subcategory));
                 getActivity().finish();
             }
         });

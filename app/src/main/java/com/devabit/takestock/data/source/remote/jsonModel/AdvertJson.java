@@ -75,7 +75,7 @@ public class AdvertJson implements JsonModel {
                 .setPackagingId(packaging)
                 .setMinOrderQuantity(min_order_quantity)
                 .setSize(size)
-                .setCertification(certification.getCertification())
+                .setCertification(certification == null ? null : certification.getCertification())
                 .setCertificationExtra(certification_extra)
                 .setCertificationId(certification_id)
                 .setConditionId(condition)

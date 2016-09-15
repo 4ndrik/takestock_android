@@ -3,12 +3,15 @@ package com.devabit.takestock.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
 public class Category implements Parcelable {
+
+    public static final Category ALL = new Category(0, "All", false, Collections.<Subcategory>emptyList());
 
     private int mId;
     private String mName;

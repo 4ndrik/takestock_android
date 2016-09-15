@@ -2,7 +2,6 @@ package com.devabit.takestock.screen.main;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,14 +21,13 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.screen.advert.create.AdvertCreateActivity;
+import com.devabit.takestock.screen.adverts.AdvertsActivity;
 import com.devabit.takestock.screen.buying.BuyingActivity;
 import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.profile.account.ProfileAccountActivity;
-import com.devabit.takestock.screen.search.SearchActivity;
 import com.devabit.takestock.screen.selling.SellingActivity;
 import com.devabit.takestock.screen.watching.WatchingActivity;
-import com.devabit.takestock.utils.FontCache;
 
 import java.util.List;
 
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @BindView(R.id.content_activity_main) protected View mContent;
     @BindView(R.id.view_switcher) protected ViewSwitcher mViewSwitcher;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
-    @BindView(R.id.search_products_edit_text) protected EditText mSearchProductsEditText;
+    @BindView(R.id.search_products_edit_text) protected EditText mSearchEditText;
     @BindView(R.id.browse_categories_button) protected Button mBrowseProductsButton;
     @BindView(R.id.sell_something_button) protected Button mSellSomethingButton;
 
@@ -68,18 +66,31 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(MainActivity.this);
         mAccount = TakeStockAccount.get(MainActivity.this);
+        createPresenter();
+//        Typeface mediumTypeface = FontCache.getTypeface(MainActivity.this, R.string.font_brandon_medium);
+//        mSearchEditText.setTypeface(mediumTypeface);
+//
+//        Typeface boldTypeface = FontCache.getTypeface(MainActivity.this, R.string.font_brandon_bold);
+//        mBrowseProductsButton.setTypeface(boldTypeface);
+//        mSellSomethingButton.setTypeface(boldTypeface);
+
+        setUpNavigationView();
+        setUpSearchEditText();
+        setUpTitleNavigationView();
+    }
+
+    private void createPresenter() {
         new MainPresenter(
                 Injection.provideDataRepository(MainActivity.this), MainActivity.this);
+    }
 
-        ButterKnife.bind(MainActivity.this);
-        Typeface mediumTypeface = FontCache.getTypeface(MainActivity.this, R.string.font_brandon_medium);
-        mSearchProductsEditText.setTypeface(mediumTypeface);
+    @Override public void setPresenter(@NonNull MainContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
 
-        Typeface boldTypeface = FontCache.getTypeface(MainActivity.this, R.string.font_brandon_bold);
-        mBrowseProductsButton.setTypeface(boldTypeface);
-        mSellSomethingButton.setTypeface(boldTypeface);
-
+    private void setUpNavigationView() {
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
@@ -109,22 +120,37 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 }
             }
         });
+    }
 
-        mSearchProductsEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    private void setUpSearchEditText() {
+        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    startSearchActivity();
+                    String query = mSearchEditText.getText().toString().trim();
+                    if (TextUtils.isEmpty(query)) return false;
+                    startAdvertsActivity(query);
                     return true;
                 }
                 return false;
             }
         });
 
-        setUpTitleNavigationView();
-    }
+        mSearchEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_END = 2;
 
-    @Override public void setPresenter(@NonNull MainContract.Presenter presenter) {
-        mPresenter = presenter;
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (mSearchEditText.getRight() - mSearchEditText.getCompoundDrawables()[DRAWABLE_END].getBounds().width())) {
+                        String query = mSearchEditText.getText().toString().trim();
+                        if (TextUtils.isEmpty(query)) return false;
+                        startAdvertsActivity(query);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private void onProfileMenuItemClick() {
@@ -218,8 +244,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         return mAccount.lacksAccount();
     }
 
-    private void startSearchActivity() {
-        startActivity(SearchActivity.getStartIntent(MainActivity.this));
+    private void startAdvertsActivity(String qyery) {
+        startActivity(AdvertsActivity.getSearchingStartIntent(MainActivity.this, qyery));
     }
 
     @Override protected void onStart() {
