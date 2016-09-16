@@ -6,11 +6,7 @@
     <string name="sell_something">Sell Something</string>
     <string name="home">home</string>
     <string name="add_photo">Add photo</string>
-    <string name="product_title">Product Title*</string>
     <string name="cancel">Cancel</string>
-    <string name="category">Category*</string>
-    <string name="sub_category">Sub-category*</string>
-    <string name="quantities_and_guide_price">Quantities and guide price*</string>
     <string name="choose_unit">Choose unit / type of packaging</string>
     <string name="how_many_unit">How many [unit] are for sale?</string>
     <string name="hint_add_product_title">Add product title</string>
@@ -109,13 +105,6 @@
     <string name="forgot_password">Forgot Password?</string>
 
     <!--Sort menu-->
-    <string name="sort_created_at">Created at</string>
-    <string name="sort_created_at_descending">Created at (descending)</string>
-    <string name="sort_expires_at">Expires at</string>
-    <string name="sort_expires_at_descending">Expires at (descending)</string>
-    <string name="sort_guide_price">Guide price</string>
-    <string name="sort_guide_price_descending">Guide price (descending)</string>
-    <string name="description">Description</string>
 
 
     <string name="total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
@@ -218,6 +207,12 @@
     <string name="adverts_count">%1$s / %2$d</string>
     <string name="adverts_count_default">0 / 0</string>
     <string name="adverts_cancel">Cancel</string>
+    <string name="adverts_sort_created_at">Created at</string>
+    <string name="adverts_sort_created_at_descending">Created at (descending)</string>
+    <string name="adverts_sort_expires_at">Expires at</string>
+    <string name="adverts_sort_expires_at_descending">Expires at (descending)</string>
+    <string name="adverts_sort_guide_price">Guide price</string>
+    <string name="adverts_sort_guide_price_descending">Guide price (descending)</string>
     <!--adverts screen end-->
 
     <!--adverts detail start-->

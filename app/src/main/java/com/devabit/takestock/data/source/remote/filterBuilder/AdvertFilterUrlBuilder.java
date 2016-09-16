@@ -2,6 +2,8 @@ package com.devabit.takestock.data.source.remote.filterBuilder;
 
 import android.text.TextUtils;
 import com.devabit.takestock.data.filter.AdvertFilter;
+import com.devabit.takestock.data.model.Category;
+import com.devabit.takestock.data.model.Subcategory;
 
 import java.util.Set;
 
@@ -18,6 +20,7 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
     private static final String AUTHOR_ID = "author_id";
     private static final String ORDER = "o";
     private static final String IDS = "ids";
+    private static final String QUERY = "q";
 
     public static final String EXPIRES_AT = "expires_at";
     public static final String EXPIRES_AT_DESCENDING = "-expires_at";
@@ -38,14 +41,19 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
             appendQueryParameter(PAGE_SIZE, pageSize);
         }
 
-        int categoryId = mFilter.getCategoryId();
-        if (categoryId > 0) {
-            appendQueryParameter(CATEGORY, categoryId);
+        Category category = mFilter.getCategory();
+        if (category != null && category.getId() > 0) {
+            appendQueryParameter(CATEGORY, category.getId());
         }
 
-        int subcategoryId = mFilter.getSubcategoryId();
-        if (subcategoryId > 0) {
-            appendQueryParameter(SUBCATEGORY, subcategoryId);
+        Subcategory subcategory = mFilter.getSubcategory();
+        if (subcategory != null) {
+            appendQueryParameter(SUBCATEGORY, subcategory.getId());
+        }
+
+        String query = mFilter.getQuery();
+        if (!TextUtils.isEmpty(query)) {
+            appendQueryParameter(QUERY, query);
         }
 
         int itemCount = mFilter.getItemCount();

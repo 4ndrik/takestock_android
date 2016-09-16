@@ -269,12 +269,12 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     private final static SparseIntArray SORT_VALUES = new SparseIntArray();
 
     static {
-        SORT_VALUES.append(R.string.sort_created_at, AdvertFilter.ORDER_CREATED_AT);
-        SORT_VALUES.append(R.string.sort_created_at_descending, AdvertFilter.ORDER_CREATED_AT_DESCENDING);
-        SORT_VALUES.append(R.string.sort_expires_at, AdvertFilter.ORDER_EXPIRES_AT);
-        SORT_VALUES.append(R.string.sort_expires_at_descending, AdvertFilter.ORDER_EXPIRES_AT_DESCENDING);
-        SORT_VALUES.append(R.string.sort_guide_price, AdvertFilter.ORDER_GUIDE_PRICE);
-        SORT_VALUES.append(R.string.sort_guide_price_descending, AdvertFilter.ORDER_GUIDE_PRICE_DESCENDING);
+        SORT_VALUES.append(R.string.adverts_sort_created_at, AdvertFilter.ORDER_CREATED_AT);
+        SORT_VALUES.append(R.string.adverts_sort_created_at_descending, AdvertFilter.ORDER_CREATED_AT_DESCENDING);
+        SORT_VALUES.append(R.string.adverts_sort_expires_at, AdvertFilter.ORDER_EXPIRES_AT);
+        SORT_VALUES.append(R.string.adverts_sort_expires_at_descending, AdvertFilter.ORDER_EXPIRES_AT_DESCENDING);
+        SORT_VALUES.append(R.string.adverts_sort_guide_price, AdvertFilter.ORDER_GUIDE_PRICE);
+        SORT_VALUES.append(R.string.adverts_sort_guide_price_descending, AdvertFilter.ORDER_GUIDE_PRICE_DESCENDING);
     }
 
     @OnClick(R.id.sort_button)
