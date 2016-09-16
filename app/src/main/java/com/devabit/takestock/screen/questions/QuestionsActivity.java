@@ -1,15 +1,13 @@
 package com.devabit.takestock.screen.questions;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,28 +16,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Question;
 import com.devabit.takestock.screen.questions.adapters.QuestionsAdapter;
-import com.devabit.takestock.utils.FontCache;
+import com.devabit.takestock.widget.DividerItemDecoration;
 
 import java.util.List;
-
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 30/05/2016.
  */
 public class QuestionsActivity extends AppCompatActivity implements QuestionsContract.View {
-
-    private static final String TAG = makeLogTag(QuestionsActivity.class);
 
     private static final String EXTRA_ADVERT_ID = "ADVERT_ID";
 
@@ -55,8 +48,8 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
     @BindView(R.id.send_question_button) protected ImageButton mSendQuestionButton;
 
     private int mAdvertId;
+    private TakeStockAccount mAccount;
     private QuestionsAdapter mQuestionsAdapter;
-
     private QuestionsContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,70 +57,67 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
         setContentView(R.layout.activity_question);
         ButterKnife.bind(QuestionsActivity.this);
         mAdvertId = getIntent().getIntExtra(EXTRA_ADVERT_ID, 0);
-        initPresenter();
+        mAccount = TakeStockAccount.get(QuestionsActivity.this);
         setUpToolbar();
         setUpRefreshLayout();
-        setUpQuestionRecyclerView();
+        setUpRecyclerView();
+        createPresenter();
     }
 
-    private void initPresenter() {
+    private void createPresenter() {
         new QuestionsPresenter(
                 Injection.provideDataRepository(QuestionsActivity.this), QuestionsActivity.this);
     }
 
+    @Override public void setPresenter(@NonNull QuestionsContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.fetchQuestionsWithAdvertId(mAdvertId);
+    }
+
     private void setUpToolbar() {
-        final Typeface boldTypeface = FontCache.getTypeface(this, R.string.font_brandon_bold);
         Toolbar toolbar = ButterKnife.findById(QuestionsActivity.this, R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
         });
-        TextView titleToolbar = ButterKnife.findById(toolbar, R.id.toolbar_title);
-        titleToolbar.setTypeface(boldTypeface);
-        titleToolbar.setText(R.string.questions);
     }
 
     private void setUpRefreshLayout() {
         mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
-                fetchQuestions();
+                refreshQuestions();
             }
         });
     }
 
-    private void setUpQuestionRecyclerView() {
+    private void refreshQuestions() {
+        mPresenter.fetchQuestionsWithAdvertId(mAdvertId);
+    }
+
+    private void setUpRecyclerView() {
         RecyclerView recyclerView = ButterKnife.findById(QuestionsActivity.this, R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(
-                QuestionsActivity.this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(QuestionsActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(QuestionsActivity.this, R.drawable.divider_grey300));
+        recyclerView.addItemDecoration(itemDecoration);
         mQuestionsAdapter = new QuestionsAdapter(QuestionsActivity.this);
         recyclerView.setAdapter(mQuestionsAdapter);
     }
 
-    @Override protected void onStart() {
-        super.onStart();
-        fetchQuestions();
-    }
-
-    private void fetchQuestions() {
-        mPresenter.fetchQuestionsByAdvertId(mAdvertId);
-    }
-
     @OnTextChanged(R.id.question_edit_text)
     protected void onQuestionTextChanged(CharSequence text) {
-        LOGD(TAG, text.toString());
-        setSenQuestionButtonVisibility(text.length() > 0);
+        setSentQuestionButtonVisibility(text.length() > 0);
     }
 
-    private void setSenQuestionButtonVisibility(boolean isVisible) {
+    private void setSentQuestionButtonVisibility(boolean isVisible) {
         mSendQuestionButton.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override public void showQuestionsInView(List<Question> questions) {
-        mQuestionsAdapter.clearQuestions();
-        mQuestionsAdapter.addQuestions(questions);
+        mQuestionsAdapter.refreshQuestions(questions);
     }
 
     @Override public void showQuestionInView(Question question) {
@@ -141,17 +131,10 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
 
     private Question getQuestion() {
         Question question = new Question();
-        question.setUserId(getUserId());
+        question.setUserId(mAccount.getUserId());
         question.setAdvertId(mAdvertId);
         question.setMessage(getMessage());
         return question;
-    }
-
-    private int getUserId() {
-        AccountManager accountManager = AccountManager.get(QuestionsActivity.this);
-        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-        String userId = accountManager.getUserData(accounts[0], getString(R.string.authenticator_user_id));
-        return Integer.valueOf(userId);
     }
 
     private String getMessage() {
@@ -172,10 +155,6 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
 
     @Override public void setProgressIndicator(boolean isActive) {
         mRefreshLayout.setRefreshing(isActive);
-    }
-
-    @Override public void setPresenter(@NonNull QuestionsContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @Override protected void onStop() {

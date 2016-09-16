@@ -50,12 +50,10 @@
     <string name="back">back</string>
     <string name="user_name">User name</string>
     <string name="action_settings">Settings</string>
-    <string name="ask_away">Ask away</string>
     <string name="qty_available">Qty available</string>
     <string name="per_packaging">/ %1$s</string>
     <string name="hint_qty_you_want">Qty you want</string>
     <string name="hint_offer_price">£ Offer price</string>
-    <string name="make_offer">Make offer</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="user_name_or_email">Username or email</string>
@@ -124,7 +122,6 @@
     <string name="no_connection">No connection</string>
     <string name="retry">Retry</string>
     <string name="make">Make</string>
-    <string name="write_question">Write a question…</string>
     <string name="questions">Questions</string>
     <string name="buying">Buying</string>
     <string name="accept">Accept</string>
@@ -220,6 +217,31 @@
     <string name="adverts_query_toolbar_title">%1$s in %2$s</string>
     <string name="adverts_count">%1$s / %2$d</string>
     <string name="adverts_count_default">0 / 0</string>
+    <string name="adverts_cancel">Cancel</string>
     <!--adverts screen end-->
+
+    <!--adverts detail start-->
+    <string name="advert_detail_guide_price_per_unit">£ %1$s/%2$s</string>
+    <string name="advert_detail_minimum_order_unit">%1$d %2$s</string>
+    <string name="advert_detail_qty_available_unit">%1$d %2$s</string>
+    <string name="advert_detail_guide_price">Guide price</string>
+    <string name="advert_detail_minimum_order">Minimum order</string>
+    <string name="advert_detail_qty_available">Qty available</string>
+    <string name="advert_detail_description">Description</string>
+    <string name="advert_detail_category">Category</string>
+    <string name="advert_detail_location">Location</string>
+    <string name="advert_detail_shipping">Shipping</string>
+    <string name="advert_detail_expiry">Expiry</string>
+    <string name="advert_detail_certification">Certification</string>
+    <string name="advert_detail_condition">Condition</string>
+    <string name="advert_detail_ask_away">Ask away</string>
+    <string name="advert_detail_make_offer">Make offer</string>
+    <string name="advert_detail_offer_made">Offer made</string>
+    <!--adverts detail start-->
+
+    <!--questions start-->
+    <string name="questions_toolbar_title">Questions</string>
+    <string name="questions_write_question">Write a question…</string>
+    <!--questions end-->
 
 </resources>

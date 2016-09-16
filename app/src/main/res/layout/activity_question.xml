@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:id="@+id/content_activity_questions"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_base"/>
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:title="@string/questions_toolbar_title"
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
@@ -19,6 +27,7 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scrollbars="vertical"
                 tools:listitem="@layout/item_question"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -29,7 +38,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/grey_50"
             android:padding="8dp"
             android:gravity="center"
             android:orientation="horizontal">
@@ -44,7 +53,7 @@
                 android:maxLines="3"
                 android:padding="8dp"
                 android:inputType="textCapSentences|textMultiLine"
-                android:hint="@string/write_question"
+                android:hint="@string/questions_write_question"
                 android:background="@null"/>
 
         <ImageButton

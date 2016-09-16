@@ -35,12 +35,11 @@ public class QuestionsPresenter implements QuestionsContract.Presenter {
         mQuestionView.setPresenter(QuestionsPresenter.this);
     }
 
-
     @Override public void resume() {
 
     }
 
-    @Override public void fetchQuestionsByAdvertId(int advertId) {
+    @Override public void fetchQuestionsWithAdvertId(int advertId) {
         mQuestionView.setProgressIndicator(true);
         QuestionFilter filter = new QuestionFilter();
         filter.setAdvertId(advertId);

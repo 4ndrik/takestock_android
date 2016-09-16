@@ -27,7 +27,7 @@ public interface QuestionsContract {
 
     interface Presenter extends BasePresenter {
 
-        void fetchQuestionsByAdvertId(int advertId);
+        void fetchQuestionsWithAdvertId(int advertId);
 
         void makeQuestion(Question question);
     }

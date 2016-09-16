@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Answer;
@@ -47,33 +48,32 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
 
     public void addQuestion(Question question) {
         mQuestions.add(question);
-        notifyDataSetChanged();
+        notifyItemInserted(mQuestions.size());
     }
 
-    public void clearQuestions() {
+    public void refreshQuestions(List<Question> questions) {
         mQuestions.clear();
+        mQuestions.addAll(questions);
         notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView questionTextView;
-        final TextView answerTextView;
+        @BindView(R.id.question_text_view) TextView questionTextView;
+        @BindView(R.id.answer_text_view) TextView answerTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            questionTextView = ButterKnife.findById(itemView, R.id.question_text_view);
-            answerTextView = ButterKnife.findById(itemView, R.id.answer_text_view);
+            ButterKnife.bind(ViewHolder.this, itemView);
         }
 
         void bindQuestion(Question question) {
             questionTextView.setText(question.getMessage());
             Answer answer = question.getAnswer();
             if (answer == null) {
-//                setAnswerTextViewVisibility(false);
-                answerTextView.setText("There should be an answer.");
+                setAnswerTextViewVisibility(false);
             } else {
-//                setAnswerTextViewVisibility(true);
+                setAnswerTextViewVisibility(true);
                 answerTextView.setText(answer.getMessage());
             }
         }
