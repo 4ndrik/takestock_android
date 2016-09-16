@@ -20,7 +20,6 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.screen.entry.fragments.signUp.SignUpFragment;
 import com.devabit.takestock.screen.entry.fragments.signUp.SignUpPresenter;
-import com.devabit.takestock.screen.main.MainActivity;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
@@ -94,7 +93,9 @@ public class SignInFragment extends Fragment implements SignInContract.View {
     }
 
     @Override public void showSignInSuccess() {
-        startActivity(MainActivity.getStartIntent(getActivity(), getString(R.string.action_sign_in)));
+//        startActivity(MainActivity.getStartIntent(getActivity(), getString(R.string.action_sign_in)));
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override public void showUserNameError() {

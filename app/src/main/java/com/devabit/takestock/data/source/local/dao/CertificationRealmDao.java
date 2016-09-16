@@ -58,7 +58,8 @@ public class CertificationRealmDao extends AbstractDao {
                 .where(CertificationRealm.class)
                 .equalTo("mId", id)
                 .findFirst();
-        return certificationRealm.getCertification();
+        if (certificationRealm == null) return null;
+        else return certificationRealm.getCertification();
     }
 
     @Override public void clearDatabase() {

@@ -1,6 +1,5 @@
 package com.devabit.takestock.screen.advert.detail;
 
-import com.devabit.takestock.data.model.Certification;
 import com.devabit.takestock.data.model.Condition;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Shipping;
@@ -15,8 +14,6 @@ public interface AdvertDetailContract {
     interface View extends BaseView<Presenter> {
 
         void showShippingInView(Shipping shipping);
-
-        void showCertificationInView(Certification certification);
 
         void showConditionInView(Condition condition);
 
@@ -33,8 +30,6 @@ public interface AdvertDetailContract {
     interface Presenter extends BasePresenter {
 
         void fetchShippingById(int id);
-
-        void fetchCertificationById(int id);
 
         void fetchConditionById(int id);
 

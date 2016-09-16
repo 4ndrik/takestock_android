@@ -30,7 +30,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:text="@string/guide_price"/>
+                    android:text="@string/advert_detail_guide_price"/>
 
             <TextView
                     android:id="@+id/guide_price_text_view"
@@ -62,7 +62,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:text="@string/minimum_order"/>
+                    android:text="@string/advert_detail_minimum_order"/>
 
             <TextView
                     android:id="@+id/minimum_order_text_view"
@@ -94,7 +94,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:text="@string/qty_available"/>
+                    android:text="@string/advert_detail_qty_available"/>
 
             <TextView
                     android:id="@+id/qty_available_text_view"
@@ -119,7 +119,7 @@
                 android:textColor="@color/grey_600"
                 android:fontFamily="sans-serif-light"
                 android:textAppearance="@android:style/TextAppearance.Medium"
-                android:text="@string/description"/>
+                android:text="@string/advert_detail_description"/>
 
         <TextView
                 android:id="@+id/description_text_view"
@@ -146,7 +146,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="@string/location"/>
+                    android:text="@string/advert_detail_location"/>
 
             <TextView
                     android:id="@+id/location_text_view"
@@ -178,7 +178,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="@string/shipping"/>
+                    android:text="@string/advert_detail_shipping"/>
 
             <TextView
                     android:id="@+id/shipping_text_view"
@@ -210,7 +210,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="@string/expiry"/>
+                    android:text="@string/advert_detail_expiry"/>
 
             <TextView
                     android:id="@+id/expiry_date_text_view"
@@ -242,7 +242,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="@string/certification"/>
+                    android:text="@string/advert_detail_certification"/>
 
             <TextView
                     android:id="@+id/certification_text_view"
@@ -274,7 +274,7 @@
                     android:textColor="@color/grey_600"
                     android:fontFamily="sans-serif-light"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="@string/condition"/>
+                    android:text="@string/advert_detail_condition"/>
 
             <TextView
                     android:id="@+id/condition_text_view"
@@ -299,8 +299,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/ask_away"
-                android:textAppearance="@android:style/TextAppearance.Small"
+                android:text="@string/advert_detail_ask_away"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
         <Button
@@ -310,8 +309,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/make_offer"
-                android:textAppearance="@android:style/TextAppearance.Small"
+                android:text="@string/advert_detail_make_offer"
                 android:theme="@style/Widget.TakeStock.Button.Jam"/>
 
     </LinearLayout>

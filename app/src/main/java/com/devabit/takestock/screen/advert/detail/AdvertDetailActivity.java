@@ -1,13 +1,9 @@
 package com.devabit.takestock.screen.advert.detail;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -26,21 +20,18 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
 import com.devabit.takestock.screen.advert.detail.dialogs.OfferDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.questions.QuestionsActivity;
-import com.devabit.takestock.utils.FontCache;
+import com.devabit.takestock.utils.DateUtil;
+import timber.log.Timber;
 
 import java.util.List;
 
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
-
 public class AdvertDetailActivity extends AppCompatActivity implements AdvertDetailContract.View {
-
-    private static final String TAG = makeLogTag(AdvertDetailActivity.class);
 
     public static Intent getStartIntent(Context context, Advert advert) {
         Intent starter = new Intent(context, AdvertDetailActivity.class);
@@ -48,7 +39,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         return starter;
     }
 
-    private static final int REQUEST_CODE_LACK_ACCOUNT = 100;
+    private static final int RC_ENTRY = 100;
 
     @BindView(R.id.content_product_detail) protected View mContent;
     @BindView(R.id.guide_price_text_view) protected TextView mGuidePriceTextView;
@@ -61,10 +52,10 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
     @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
 
-    @BindViews({R.id.advert_photos_recycler_view, R.id.make_offer_fab, R.id.ask_button, R.id.make_button})
+    @BindViews({R.id.recycler_view, R.id.make_offer_fab, R.id.ask_button, R.id.make_button})
     protected List<View> mViews;
 
-    private Account mAccount;
+    private TakeStockAccount mAccount;
     private Advert mAdvert;
     private AdvertDetailContract.Presenter mPresenter;
 
@@ -74,63 +65,55 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         setContentView(R.layout.activity_advert_detail);
         ButterKnife.bind(AdvertDetailActivity.this);
 
-        new AdvertDetailPresenter(
-                Injection.provideDataRepository(AdvertDetailActivity.this), AdvertDetailActivity.this);
-
-        mAccount = getAccountOrNull();
+        mAccount = TakeStockAccount.get(AdvertDetailActivity.this);
         mAdvert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
 
+        setUpToolbar(mAdvert);
+        setUpRecyclerView(mAdvert);
+        setUpAdvertDetail(mAdvert);
+        createPresenter();
+    }
+
+    private void setUpToolbar(Advert advert) {
         Toolbar toolbar = ButterKnife.findById(AdvertDetailActivity.this, R.id.toolbar);
-        toolbar.setTitle(mAdvert.getName());
+        toolbar.setTitle(advert.getName());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
         });
+    }
 
-        mGuidePriceTextView.setText(getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice()));
-        mMinimumOrderTextView.setText(getString(R.string.minimum_order_kg, mAdvert.getMinOrderQuantity()));
-        mQtyAvailableTextView.setText(getString(R.string.qty_available_kg, mAdvert.getItemsCount()));
-        mDescriptionTextView.setText(mAdvert.getDescription());
-        mLocationTextView.setText(mAdvert.getLocation());
-        setPhotosToRecyclerView(mAdvert.getPhotos());
-        Typeface boldTypeface = FontCache.getTypeface(AdvertDetailActivity.this, R.string.font_brandon_bold);
-        setTypefaceToButtons(boldTypeface);
+    private void setUpAdvertDetail(Advert advert) {
+        String packaging = advert.getPackagingName();
+        mGuidePriceTextView.setText(getString(R.string.advert_detail_guide_price_per_unit, advert.getGuidePrice(), packaging));
+        mMinimumOrderTextView.setText(getString(R.string.advert_detail_minimum_order_unit, advert.getMinOrderQuantity(), packaging));
+        mQtyAvailableTextView.setText(getString(R.string.advert_detail_qty_available_unit, advert.getItemsCount(), packaging));
+        mDescriptionTextView.setText(advert.getDescription());
+        mExpiryTextView.setText(DateUtil.formatToExpiryDate(advert.getExpiresAt()));
+        Certification certification = advert.getCertification();
+        mCertificationTextView.setText(certification == null ? "" : certification.getName());
+        mLocationTextView.setText(advert.getLocation());
+    }
 
+    private void setUpRecyclerView(Advert advert) {
+        RecyclerView recyclerView = ButterKnife.findById(AdvertDetailActivity.this, R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(AdvertDetailActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(layoutManager);
+        AdvertPhotosAdapter adapter = new AdvertPhotosAdapter(AdvertDetailActivity.this, advert.getPhotos());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void createPresenter() {
+        new AdvertDetailPresenter(
+                Injection.provideDataRepository(AdvertDetailActivity.this), AdvertDetailActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull AdvertDetailContract.Presenter presenter) {
+        mPresenter = presenter;
         mPresenter.fetchShippingById(mAdvert.getShippingId());
-        mPresenter.fetchCertificationById(mAdvert.getCertificationId());
         mPresenter.fetchConditionById(mAdvert.getConditionId());
-    }
-
-    @Nullable private Account getAccountOrNull() {
-        AccountManager accountManager = AccountManager.get(AdvertDetailActivity.this);
-        Account[] accounts = accountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-        if (accounts.length == 0) return null;
-        else return accounts[0];
-    }
-
-    private void setPhotosToRecyclerView(final List<Photo> photos) {
-        final RecyclerView recyclerView = ButterKnife.findById(
-                AdvertDetailActivity.this, R.id.advert_photos_recycler_view);
-        mContent.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override public void onGlobalLayout() {
-                        recyclerView.getLayoutParams().height = mContent.getHeight() / 2;
-                        mContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        LinearLayoutManager layoutManager =
-                                new LinearLayoutManager(AdvertDetailActivity.this, LinearLayoutManager.HORIZONTAL, false);
-                        recyclerView.setLayoutManager(layoutManager);
-                        AdvertPhotosAdapter photosAdapter = new AdvertPhotosAdapter(AdvertDetailActivity.this, photos);
-                        recyclerView.setAdapter(photosAdapter);
-                    }
-                });
-    }
-
-    private void setTypefaceToButtons(Typeface typeface) {
-        Button askButton = ButterKnife.findById(AdvertDetailActivity.this, R.id.ask_button);
-        askButton.setTypeface(typeface);
-        Button makeOfferButton = ButterKnife.findById(AdvertDetailActivity.this, R.id.make_button);
-        makeOfferButton.setTypeface(typeface);
     }
 
     @OnClick(R.id.make_offer_fab)
@@ -144,45 +127,33 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     private void displayOfferMakerDialog() {
-        if (lacksAccount()) startEntryActivity();
-        OfferDialog dialog = OfferDialog.newInstance(getUserId(), mAdvert);
-        dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
-        dialog.setOnOfferListener(new OfferDialog.OnOfferListener() {
-            @Override public void onOfferMade(OfferDialog dialog, Offer offer) {
-                dialog.dismiss();
-                mPresenter.makeOffer(offer);
-            }
-        });
-    }
-
-    private boolean lacksAccount() {
-        return mAccount == null;
+        if (mAccount.lacksAccount()) {
+            startEntryActivity();
+        } else {
+            OfferDialog dialog = OfferDialog.newInstance(mAccount.getUserId(), mAdvert);
+            dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
+            dialog.setOnOfferListener(new OfferDialog.OnOfferListener() {
+                @Override public void onOfferMade(OfferDialog dialog, Offer offer) {
+                    dialog.dismiss();
+                    mPresenter.makeOffer(offer);
+                }
+            });
+        }
     }
 
     private void startEntryActivity() {
-        startActivityForResult(
-                EntryActivity.getStartIntent(AdvertDetailActivity.this), REQUEST_CODE_LACK_ACCOUNT);
+        startActivityForResult(EntryActivity.getStartIntent(AdvertDetailActivity.this), RC_ENTRY);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_LACK_ACCOUNT && resultCode == RESULT_OK) {
-            mAccount = getAccountOrNull();
+        if (requestCode == RC_ENTRY && resultCode == RESULT_OK) {
+            Timber.d("Entry is successful.");
         }
-    }
-
-    private int getUserId() {
-        AccountManager accountManager = AccountManager.get(AdvertDetailActivity.this);
-        String userId = accountManager.getUserData(mAccount, getString(R.string.authenticator_user_id));
-        return Integer.valueOf(userId);
     }
 
     @Override public void showShippingInView(Shipping shipping) {
         mShippingTextView.setText(shipping.getType());
-    }
-
-    @Override public void showCertificationInView(Certification certification) {
-        mCertificationTextView.setText(certification.getName());
     }
 
     @Override public void showConditionInView(Condition condition) {
@@ -190,8 +161,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     @Override public void showOfferMade(Offer offer) {
-        LOGD(TAG, "Offer made: " + offer);
-        Snackbar.make(mContent, "Offer made.", Snackbar.LENGTH_LONG).show();
+        showSnack(R.string.advert_detail_offer_made);
     }
 
     @Override public void showNetworkConnectionError() {
@@ -231,7 +201,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     @OnClick(R.id.ask_button)
     protected void onAskButtonClick() {
-        if (lacksAccount()) startEntryActivity();
+        if (mAccount.lacksAccount()) startEntryActivity();
         else startQuestionActivity();
     }
 
@@ -239,12 +209,8 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         startActivity(QuestionsActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
     }
 
-    @Override public void setPresenter(@NonNull AdvertDetailContract.Presenter presenter) {
-        mPresenter = presenter;
-    }
-
     @Override protected void onPause() {
-        super.onPause();
         mPresenter.pause();
+        super.onPause();
     }
 }

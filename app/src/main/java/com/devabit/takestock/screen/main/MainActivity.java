@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         return starter;
     }
 
+    private static final int RC_ENTRY = 100;
+
     private static final int INDEX_MAIN_CONTENT = 0;
     private static final int INDEX_NO_CONNECTION_CONTENT = 1;
 
@@ -202,7 +204,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void startEntryActivity() {
-        startActivity(EntryActivity.getStartIntent(MainActivity.this));
+//        startActivity(EntryActivity.getStartIntent(MainActivity.this));
+        startActivityForResult(EntryActivity.getStartIntent(MainActivity.this), RC_ENTRY);
     }
 
     private void startSellingActivity() {
@@ -211,6 +214,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void startSellSomethingActivity() {
         startActivity(AdvertCreateActivity.getStartIntent(MainActivity.this));
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_ENTRY && resultCode == RESULT_OK) {
+            setUpTitleNavigationView();
+        }
     }
 
     @Override protected void onNewIntent(Intent intent) {

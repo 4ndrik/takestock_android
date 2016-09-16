@@ -33,11 +33,11 @@ import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
+import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.adverts.adapter.AdvertsAdapter;
 import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.widget.GridSpacingItemDecoration;
-import timber.log.Timber;
 
 import java.util.List;
 
@@ -156,7 +156,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext());
         mAdvertsAdapter.setOnItemClickListener(new AdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Advert advert) {
-                Timber.d(advert.toString());
+                startAdvertDetailActivity(advert);
             }
         });
         mAdvertsAdapter.setOnWatchingChangedListener(new AdvertsAdapter.OnWatchingChangedListener() {
@@ -171,6 +171,10 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
             }
         });
         recyclerView.setAdapter(mAdvertsAdapter);
+    }
+
+    private void startAdvertDetailActivity(Advert advert) {
+        startActivity(AdvertDetailActivity.getStartIntent(AdvertsActivity.this, advert));
     }
 
     private void startEntryActivity() {
@@ -282,6 +286,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         }
 
         new AlertDialog.Builder(AdvertsActivity.this)
+                .setNegativeButton(R.string.adverts_cancel, null)
                 .setSingleChoiceItems(sortNames, mSortOrderCheckedItem, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

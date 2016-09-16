@@ -1,7 +1,6 @@
 package com.devabit.takestock.screen.advert.detail;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.model.Certification;
 import com.devabit.takestock.data.model.Condition;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Shipping;
@@ -30,7 +29,7 @@ public class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
 
     public AdvertDetailPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertDetailContract.View advertView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
-        mAdvertView = checkNotNull(advertView, "sellingView cannot be null.");
+        mAdvertView = checkNotNull(advertView, "view cannot be null.");
         mSubscriptions = new CompositeSubscription();
         mAdvertView.setPresenter(AdvertDetailPresenter.this);
     }
@@ -43,12 +42,6 @@ public class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
         Shipping shipping = mDataRepository.getShippingWithId(id);
         if (shipping == null) return;
         mAdvertView.showShippingInView(shipping);
-    }
-
-    @Override public void fetchCertificationById(int id) {
-        Certification certification = mDataRepository.getCertificationWithId(id);
-        if (certification == null) return;
-        mAdvertView.showCertificationInView(certification);
     }
 
     @Override public void fetchConditionById(int id) {

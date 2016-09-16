@@ -26,7 +26,6 @@ import android.widget.ProgressBar;
 import butterknife.*;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.UserCredentials;
-import com.devabit.takestock.screen.main.MainActivity;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
@@ -149,7 +148,9 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
     }
 
     @Override public void showSingUpSuccess() {
-        startActivity(MainActivity.getStartIntent(getActivity(), getString(R.string.action_sign_up)));
+//        startActivity(MainActivity.getStartIntent(getActivity(), getString(R.string.action_sign_up)));
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override public void showUserNameError() {
