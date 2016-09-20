@@ -294,17 +294,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.addRemoveAdvertWatching(advertId);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Offer
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Adverts Methods  ********/
 
-    @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
-        return mRemoteDataSource.saveOffer(offer)
-                .flatMap(new Func1<Offer, Observable<Offer>>() {
-                    @Override public Observable<Offer> call(Offer offer) {
-                        return mLocalDataSource.saveOffer(offer);
-                    }
-                });
+    @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
+        return mRemoteDataSource.makeOffer(offer);
     }
 
     @Override public Observable<Offer> updateOffer(@NonNull Offer offer) {
@@ -315,12 +308,12 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getOffersPerFilter(filter);
     }
 
-    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
-        return mRemoteDataSource.getOfferResultListPerFilter(filter);
+    @Override public Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter) {
+        return mRemoteDataSource.getPaginatedOfferListWithFilter(filter);
     }
 
-    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page) {
-        return mRemoteDataSource.getOfferResultListPerPage(page);
+    @Override public Observable<PaginatedList<Offer>> getPaginatedOfferListPerPage(@NonNull String page) {
+        return mRemoteDataSource.getPaginatedOfferListPerPage(page);
     }
 
     /********* Questions Methods  ********/

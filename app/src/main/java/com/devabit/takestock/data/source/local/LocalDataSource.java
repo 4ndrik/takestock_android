@@ -385,11 +385,9 @@ public class LocalDataSource implements DataSource {
 
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Offer
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Offers Methods  ********/
 
-    @Override public Observable<Offer> saveOffer(@NonNull Offer offer) {
+    @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
         return Observable.just(offer)
                 .doOnNext(new Action1<Offer>() {
                     @Override public void call(Offer offer) {
@@ -411,11 +409,11 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter) {
+    @Override public Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Offer>> getPaginatedOfferListPerPage(@NonNull String page) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 

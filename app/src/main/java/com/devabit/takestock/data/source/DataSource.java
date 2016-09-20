@@ -120,19 +120,17 @@ public interface DataSource {
 
     Observable<Advert.Subscriber> addRemoveAdvertWatching(int advertId);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Offer
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Offers Methods  ********/
 
-    Observable<Offer> saveOffer(@NonNull Offer offer);
+    Observable<Offer> makeOffer(@NonNull Offer offer);
 
     Observable<Offer> updateOffer(@NonNull Offer offer);
 
     Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter);
 
-    Observable<PaginatedList<Offer>> getOfferResultListPerFilter(@NonNull OfferFilter filter);
+    Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter);
 
-    Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page);
+    Observable<PaginatedList<Offer>> getPaginatedOfferListPerPage(@NonNull String page);
 
     /********* Questions Methods  ********/
 

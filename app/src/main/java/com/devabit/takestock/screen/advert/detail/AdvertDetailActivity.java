@@ -130,7 +130,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         if (mAccount.lacksAccount()) {
             startEntryActivity();
         } else {
-            OfferDialog dialog = OfferDialog.newInstance(mAccount.getUserId(), mAdvert);
+            OfferDialog dialog = OfferDialog.newInstance(mAdvert);
             dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
             dialog.setOnOfferListener(new OfferDialog.OnOfferListener() {
                 @Override public void onOfferMade(OfferDialog dialog, Offer offer) {

@@ -10,24 +10,21 @@ import com.devabit.takestock.rx.RxTransformers;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
-
-    private static final String TAG = makeLogTag(AdvertDetailPresenter.class);
+class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
 
     private final DataRepository mDataRepository;
     private final AdvertDetailContract.View mAdvertView;
 
     private CompositeSubscription mSubscriptions;
 
-    public AdvertDetailPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertDetailContract.View advertView) {
+    AdvertDetailPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertDetailContract.View advertView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mAdvertView = checkNotNull(advertView, "view cannot be null.");
         mSubscriptions = new CompositeSubscription();
@@ -53,17 +50,17 @@ public class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
     @Override public void makeOffer(Offer offer) {
         mAdvertView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .saveOffer(offer)
+                .makeOffer(offer)
                 .compose(RxTransformers.<Offer>applyObservableSchedulers())
                 .subscribe(new Subscriber<Offer>() {
                     @Override public void onCompleted() {
                         mAdvertView.setProgressIndicator(false);
                     }
 
-                    @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
+                    @Override public void onError(Throwable throwable) {
+                        Timber.e(throwable);
                         mAdvertView.setProgressIndicator(false);
-                        if (e instanceof NetworkConnectionException) {
+                        if (throwable instanceof NetworkConnectionException) {
                             mAdvertView.showNetworkConnectionError();
                         } else {
                             mAdvertView.showUnknownError();

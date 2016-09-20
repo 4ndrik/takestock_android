@@ -14,26 +14,22 @@ import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
+import static timber.log.Timber.d;
 
 /**
  * Created by Victor Artemyev on 14/04/2016.
  */
 public class OfferDialog extends DialogFragment implements OfferContract.View {
 
-    private static final String TAG = makeLogTag(OfferDialog.class);
-
-    private static final String ARG_USER_ID = "USER_ID";
     private static final String ARG_ADVERT = "ADVERT";
 
-    public static OfferDialog newInstance(int userId, Advert advert) {
+    public static OfferDialog newInstance(Advert advert) {
         Bundle args = new Bundle();
         OfferDialog dialog = new OfferDialog();
-        args.putInt(ARG_USER_ID, userId);
         args.putParcelable(ARG_ADVERT, advert);
         dialog.setArguments(args);
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
@@ -41,7 +37,6 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
         return dialog;
     }
 
-    private int mUserId;
     private Advert mAdvert;
 
     public interface OnOfferListener {
@@ -55,22 +50,31 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
 
     @BindView(R.id.quantity_edit_text) protected EditText mQuantityEditText;
     @BindView(R.id.price_edit_text) protected EditText mPriceEditText;
+    @BindView(R.id.packaging_text_view) protected TextView mPackagingTextView;
+    @BindView(R.id.per_packaging_text_view) protected TextView mPerPackagingTextView;
     @BindView(R.id.total_price_text_view) protected TextView mTotalPriceTextView;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mUserId = args.getInt(ARG_USER_ID);
         mAdvert = args.getParcelable(ARG_ADVERT);
+        createPresenter();
+    }
+
+    private void createPresenter() {
         new OfferPresenter(OfferDialog.this);
+    }
+
+    @Override public void setPresenter(@NonNull OfferContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         Activity parentActivity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity, R.style.AppTheme_Dialog_Alert_Purple);
-        builder.setTitle(R.string.offer);
-        builder.setPositiveButton(R.string.make, null);
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setTitle(R.string.offer_dialog_title);
+        builder.setPositiveButton(R.string.offer_dialog_make, null);
+        builder.setNegativeButton(R.string.offer_dialog_cancel, null);
         builder.setView(R.layout.dialog_offer);
         return builder.create();
     }
@@ -95,6 +99,8 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
         });
         View content = ButterKnife.findById(dialog, R.id.content);
         mUnbinder = ButterKnife.bind(OfferDialog.this, content);
+        mPackagingTextView.setText(mAdvert.getPackagingName());
+        mPerPackagingTextView.setText(getString(R.string.offer_dialog_per_packaging, mAdvert.getPackagingName()));
         calculateTotalPrice();
     }
 
@@ -108,13 +114,17 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
     }
 
     private Offer createOffer() {
-        Offer offer = new Offer();
-        offer.setAdvertId(mAdvert.getId());
-        offer.setUserId(mUserId);
-        offer.setQuantity(getQuantityAsInt());
-        offer.setPrice(getPrice());
-        offer.setOfferStatusId(3);
-        return offer;
+        return new Offer.Builder()
+                .setAdvertId(mAdvert.getId())
+                .setUserId(getUserId())
+                .setQuantity(getQuantityAsInt())
+                .setPrice(getPrice())
+                .setStatus(Offer.Status.PENDING)
+                .create();
+    }
+
+    private int getUserId() {
+        return TakeStockAccount.get(getActivity()).getUserId();
     }
 
     private int getQuantityAsInt() {
@@ -124,13 +134,13 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
 
     @OnTextChanged(R.id.quantity_edit_text)
     protected void onQuantityTextChanged(CharSequence text) {
-        LOGD(TAG, "onQuantityTextChanged: " + text);
+        d("onQuantityTextChanged: %s", text);
         calculateTotalPrice();
     }
 
     @OnTextChanged(R.id.price_edit_text)
     protected void onPriceTextChanged(CharSequence text) {
-        LOGD(TAG, "onPriceTextChanged: " + text);
+        d("onPriceTextChanged: %s", text);
         calculateTotalPrice();
     }
 
@@ -151,19 +161,15 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
     }
 
     @Override public void showTotalPriceInView(String quantity, double totalPrice) {
-        mTotalPriceTextView.setText(getString(R.string.total_price, quantity, totalPrice));
+        mTotalPriceTextView.setText(getString(R.string.offer_dialog_total_price, quantity, totalPrice));
     }
 
     @Override public void showEmptyQuantityError() {
-        mQuantityEditText.setError(getText(R.string.error_empty_quantity));
+        mQuantityEditText.setError(getText(R.string.offer_dialog_error_quantity));
     }
 
     @Override public void showEmptyPriceError() {
-        mPriceEditText.setError(getText(R.string.error_empty_price));
-    }
-
-    @Override public void setPresenter(@NonNull OfferContract.Presenter presenter) {
-        mPresenter = presenter;
+        mPriceEditText.setError(getText(R.string.offer_dialog_error_price));
     }
 
     public void setOnOfferListener(OnOfferListener offerListener) {

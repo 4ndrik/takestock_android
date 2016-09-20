@@ -22,14 +22,14 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
     private static final String IDS = "ids";
     private static final String QUERY = "q";
 
-    public static final String EXPIRES_AT = "expires_at";
-    public static final String EXPIRES_AT_DESCENDING = "-expires_at";
-    public static final String CREATED_AT = "created_at";
-    public static final String CREATED_AT_DESCENDING = "-created_at";
-    public static final String GUIDE_PRICE = "guide_price";
-    public static final String GUIDE_PRICE_DESCENDING = "-guide_price";
-    public static final String FILTER = "filter";
-    public static final String WATCHLIST = "watchlist";
+    private static final String EXPIRES_AT = "expires_at";
+    private static final String EXPIRES_AT_DESCENDING = "-expires_at";
+    private static final String CREATED_AT = "created_at";
+    private static final String CREATED_AT_DESCENDING = "-created_at";
+    private static final String GUIDE_PRICE = "guide_price";
+    private static final String GUIDE_PRICE_DESCENDING = "-guide_price";
+    private static final String FILTER = "filter";
+    private static final String WATCHLIST = "watchlist";
 
     public AdvertFilterUrlBuilder(String baseUrl, AdvertFilter filter) {
         super(baseUrl, filter);

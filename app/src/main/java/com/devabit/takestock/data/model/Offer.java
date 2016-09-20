@@ -3,12 +3,24 @@ package com.devabit.takestock.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Objects;
-
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
 public class Offer implements Parcelable {
+
+    public static class Status {
+        public static final int ACCEPTED = 1;
+        public static final int REJECTED = 2;
+        public static final int PENDING = 3;
+        public static final int COUNTERED = 4;
+        public static final int PAYMENT_MADE = 5;
+        public static final int COUNTERED_BY_BUYER = 6;
+        public static final int ADDRESS_RECEIVED = 7;
+        public static final int AWAIT_CONFIRM_STOCK_DISPATCHED = 8;
+        public static final int STOCK_IN_TRANSIT = 9;
+        public static final int GOODS_RECEIVED = 10;
+        public static final int IN_DISPUTE = 11;
+    }
 
     private int mId;
     private int mAdvertId;
@@ -16,14 +28,41 @@ public class Offer implements Parcelable {
     private String mPrice;
     private int mQuantity;
     private int mUserId;
-    private int mOfferStatusId;
+    private int mStatus;
     private String mComment;
     private String mStatusComment;
-    private String mDateCreated;
-    private String mDateUpdated;
-    private User mUser;
+    private String mCreatedAt;
+    private String mUpdatedAt;
+    private Author mAuthor;
 
-    public Offer(){}
+    public Offer() {
+    }
+
+    private Offer(int id,
+                  int advertId,
+                  int counterOfferId,
+                  String price,
+                  int quantity,
+                  int userId,
+                  int status,
+                  String comment,
+                  String statusComment,
+                  String createdAt,
+                  String updatedAt,
+                  Author author) {
+        mId = id;
+        mAdvertId = advertId;
+        mCounterOfferId = counterOfferId;
+        mPrice = price;
+        mQuantity = quantity;
+        mUserId = userId;
+        mStatus = status;
+        mComment = comment;
+        mStatusComment = statusComment;
+        mCreatedAt = createdAt;
+        mUpdatedAt = updatedAt;
+        mAuthor = author;
+    }
 
     protected Offer(Parcel in) {
         mId = in.readInt();
@@ -32,12 +71,12 @@ public class Offer implements Parcelable {
         mPrice = in.readString();
         mQuantity = in.readInt();
         mUserId = in.readInt();
-        mOfferStatusId = in.readInt();
+        mStatus = in.readInt();
         mComment = in.readString();
         mStatusComment = in.readString();
-        mDateCreated = in.readString();
-        mDateUpdated = in.readString();
-        mUser = in.readParcelable(User.class.getClassLoader());
+        mCreatedAt = in.readString();
+        mUpdatedAt = in.readString();
+        mAuthor = in.readParcelable(User.class.getClassLoader());
     }
 
     @Override
@@ -48,12 +87,12 @@ public class Offer implements Parcelable {
         dest.writeString(mPrice);
         dest.writeInt(mQuantity);
         dest.writeInt(mUserId);
-        dest.writeInt(mOfferStatusId);
+        dest.writeInt(mStatus);
         dest.writeString(mComment);
         dest.writeString(mStatusComment);
-        dest.writeString(mDateCreated);
-        dest.writeString(mDateUpdated);
-        dest.writeParcelable(mUser, flags);
+        dest.writeString(mCreatedAt);
+        dest.writeString(mUpdatedAt);
+        dest.writeParcelable(mAuthor, flags);
     }
 
     @Override
@@ -77,120 +116,86 @@ public class Offer implements Parcelable {
         return mId;
     }
 
-    public void setId(int id) {
-        mId = id;
-    }
-
     public int getAdvertId() {
         return mAdvertId;
-    }
-
-    public void setAdvertId(int advertId) {
-        mAdvertId = advertId;
     }
 
     public String getPrice() {
         return mPrice;
     }
 
-    public void setPrice(String price) {
-        mPrice = price;
-    }
-
     public int getQuantity() {
         return mQuantity;
-    }
-
-    public void setQuantity(int quantity) {
-        mQuantity = quantity;
     }
 
     public int getUserId() {
         return mUserId;
     }
 
-    public void setUserId(int userId) {
-        mUserId = userId;
-    }
-
-    public int getOfferStatusId() {
-        return mOfferStatusId;
-    }
-
-    public void setOfferStatusId(int offerStatusId) {
-        mOfferStatusId = offerStatusId;
+    public int getStatus() {
+        return mStatus;
     }
 
     public String getComment() {
         return mComment;
     }
 
-    public void setComment(String comment) {
-        mComment = comment;
+    public String getCreatedAt() {
+        return mCreatedAt;
     }
 
-    public String getDateCreated() {
-        return mDateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        mDateCreated = dateCreated;
-    }
-
-    public String getDateUpdated() {
-        return mDateUpdated;
-    }
-
-    public void setDateUpdated(String dateUpdated) {
-        mDateUpdated = dateUpdated;
+    public String getUpdatedAt() {
+        return mUpdatedAt;
     }
 
     public int getCounterOfferId() {
         return mCounterOfferId;
     }
 
-    public void setCounterOfferId(int counterOfferId) {
-        mCounterOfferId = counterOfferId;
-    }
-
     public String getStatusComment() {
         return mStatusComment;
     }
 
-    public void setStatusComment(String statusComment) {
-        mStatusComment = statusComment;
-    }
-
-    public User getUser() {
-        return mUser;
-    }
-
-    public void setUser(User user) {
-        mUser = user;
+    public Author getAuthor() {
+        return mAuthor;
     }
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Offer offer = (Offer) o;
-        return mId == offer.mId &&
-                mAdvertId == offer.mAdvertId &&
-                mCounterOfferId == offer.mCounterOfferId &&
-                mQuantity == offer.mQuantity &&
-                mUserId == offer.mUserId &&
-                mOfferStatusId == offer.mOfferStatusId &&
-                Objects.equals(mPrice, offer.mPrice) &&
-                Objects.equals(mComment, offer.mComment) &&
-                Objects.equals(mStatusComment, offer.mStatusComment) &&
-                Objects.equals(mDateCreated, offer.mDateCreated) &&
-                Objects.equals(mDateUpdated, offer.mDateUpdated);
+
+        if (mId != offer.mId) return false;
+        if (mAdvertId != offer.mAdvertId) return false;
+        if (mCounterOfferId != offer.mCounterOfferId) return false;
+        if (mQuantity != offer.mQuantity) return false;
+        if (mUserId != offer.mUserId) return false;
+        if (mStatus != offer.mStatus) return false;
+        if (mPrice != null ? !mPrice.equals(offer.mPrice) : offer.mPrice != null) return false;
+        if (mComment != null ? !mComment.equals(offer.mComment) : offer.mComment != null) return false;
+        if (mStatusComment != null ? !mStatusComment.equals(offer.mStatusComment) : offer.mStatusComment != null)
+            return false;
+        if (mCreatedAt != null ? !mCreatedAt.equals(offer.mCreatedAt) : offer.mCreatedAt != null) return false;
+        if (mUpdatedAt != null ? !mUpdatedAt.equals(offer.mUpdatedAt) : offer.mUpdatedAt != null) return false;
+        return mAuthor != null ? mAuthor.equals(offer.mAuthor) : offer.mAuthor == null;
+
     }
 
     @Override public int hashCode() {
-        return Objects.hash(
-                mId, mAdvertId, mCounterOfferId, mPrice,
-                mQuantity, mUserId, mOfferStatusId, mComment,
-                mStatusComment, mDateCreated, mDateUpdated);
+        int result = mId;
+        result = 31 * result + mAdvertId;
+        result = 31 * result + mCounterOfferId;
+        result = 31 * result + (mPrice != null ? mPrice.hashCode() : 0);
+        result = 31 * result + mQuantity;
+        result = 31 * result + mUserId;
+        result = 31 * result + mStatus;
+        result = 31 * result + (mComment != null ? mComment.hashCode() : 0);
+        result = 31 * result + (mStatusComment != null ? mStatusComment.hashCode() : 0);
+        result = 31 * result + (mCreatedAt != null ? mCreatedAt.hashCode() : 0);
+        result = 31 * result + (mUpdatedAt != null ? mUpdatedAt.hashCode() : 0);
+        result = 31 * result + (mAuthor != null ? mAuthor.hashCode() : 0);
+        return result;
     }
 
     @Override public String toString() {
@@ -201,12 +206,93 @@ public class Offer implements Parcelable {
                 ", mPrice='" + mPrice + '\'' +
                 ", mQuantity=" + mQuantity +
                 ", mUserId=" + mUserId +
-                ", mOfferStatusId=" + mOfferStatusId +
+                ", mStatus=" + mStatus +
                 ", mComment='" + mComment + '\'' +
                 ", mStatusComment='" + mStatusComment + '\'' +
-                ", mDateCreated='" + mDateCreated + '\'' +
-                ", mDateUpdated='" + mDateUpdated + '\'' +
-                ", mUser=" + mUser +
+                ", mCreatedAt='" + mCreatedAt + '\'' +
+                ", mUpdatedAt='" + mUpdatedAt + '\'' +
+                ", mAuthor=" + mAuthor +
                 '}';
+    }
+
+    public static class Builder {
+
+        private int mId;
+        private int mAdvertId;
+        private int mCounterOfferId;
+        private String mPrice;
+        private int mQuantity;
+        private int mUserId;
+        private int mStatus;
+        private String mComment;
+        private String mStatusComment;
+        private String mCreatedAt;
+        private String mUpdatedAt;
+        private Author mAuthor;
+
+        public Builder setId(int id) {
+            mId = id;
+            return this;
+        }
+
+        public Builder setAdvertId(int advertId) {
+            mAdvertId = advertId;
+            return this;
+        }
+
+        public Builder setCounterOfferId(int counterOfferId) {
+            mCounterOfferId = counterOfferId;
+            return this;
+        }
+
+        public Builder setPrice(String price) {
+            mPrice = price;
+            return this;
+        }
+
+        public Builder setQuantity(int quantity) {
+            mQuantity = quantity;
+            return this;
+        }
+
+        public Builder setUserId(int userId) {
+            mUserId = userId;
+            return this;
+        }
+
+        public Builder setStatus(int status) {
+            mStatus = status;
+            return this;
+        }
+
+        public Builder setComment(String comment) {
+            mComment = comment;
+            return this;
+        }
+
+        public Builder setStatusComment(String statusComment) {
+            mStatusComment = statusComment;
+            return this;
+        }
+
+        public Builder setCreatedAt(String createdAt) {
+            mCreatedAt = createdAt;
+            return this;
+        }
+
+        public Builder setUpdatedAt(String updatedAt) {
+            mUpdatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder setAuthor(Author author) {
+            mAuthor = author;
+            return this;
+        }
+
+        public Offer create() {
+            return new Offer(mId, mAdvertId, mCounterOfferId, mPrice, mQuantity, mUserId,
+                    mStatus, mComment, mStatusComment, mCreatedAt, mUpdatedAt, mAuthor);
+        }
     }
 }

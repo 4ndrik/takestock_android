@@ -48,8 +48,6 @@
     <string name="action_settings">Settings</string>
     <string name="qty_available">Qty available</string>
     <string name="per_packaging">/ %1$s</string>
-    <string name="hint_qty_you_want">Qty you want</string>
-    <string name="hint_offer_price">£ Offer price</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="user_name_or_email">Username or email</string>
@@ -67,11 +65,8 @@
     <string name="error_incorrect_username">User name is incorrect</string>
     <string name="error_incorrect_password">Password is incorrect</string>
     <string name="error_incorrect_email">Email address is incorrect</string>
-    <string name="error_user_exists">A user with that username already exists.</string>
+    <string name="error_user_exists">A author with that username already exists.</string>
     <string name="error_no_camera_app">Need camera app.</string>
-
-    <string name="error_empty_quantity">Add quantity</string>
-    <string name="error_empty_price">Add price</string>
     <string name="error_photo">Processing photo failed.</string>
 
     <string name="count_results_for">%1$d results for</string>
@@ -94,8 +89,6 @@
     <string name="settings">Settings</string>
     <string name="new_to_takestock">New to Takestock?</string>
     <string name="forgot_password">Forgot Password?</string>
-
-    <string name="total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
     <string name="no_connection">No connection</string>
     <string name="retry">Retry</string>
     <string name="make">Make</string>
@@ -232,6 +225,18 @@
     <string name="advert_detail_make_offer">Make offer</string>
     <string name="advert_detail_offer_made">Offer made</string>
     <!--adverts detail start-->
+
+    <!--offer dialog start-->
+    <string name="offer_dialog_title">Offer</string>
+    <string name="offer_dialog_make">Make</string>
+    <string name="offer_dialog_cancel">Cancel</string>
+    <string name="offer_dialog_per_packaging">/%1$s</string>
+    <string name="offer_dialog_total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
+    <string name="offer_dialog_hint_qty_you_want">Qty you want</string>
+    <string name="offer_dialog_hint_offer_price">Offer price</string>
+    <string name="offer_dialog_error_price">Price not added</string>
+    <string name="offer_dialog_error_quantity">Quantity not added</string>
+    <!--offer dialog end-->
 
     <!--questions start-->
     <string name="questions_toolbar_title">Questions</string>

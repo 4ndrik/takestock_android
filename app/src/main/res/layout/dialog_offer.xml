@@ -6,7 +6,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:padding="16dp"
+              android:paddingTop="16dp"
+              android:paddingBottom="16dp"
               android:focusableInTouchMode="true">
 
     <LinearLayout
@@ -19,19 +20,20 @@
                 android:layout_width="156dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="@string/hint_qty_you_want"
+                android:hint="@string/offer_dialog_hint_qty_you_want"
                 style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView
+                android:id="@+id/packaging_text_view"
                 android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/kg"
                 android:textAppearance="@android:style/TextAppearance.Medium"
+                tools:text="@string/kg"
                 style="@style/TextViewGrey"/>
 
     </LinearLayout>
@@ -47,19 +49,23 @@
                 android:layout_width="156dp"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
-                android:hint="@string/hint_offer_price"
+                android:drawableStart="@drawable/ic_great_britain_pound_grey600_12dp"
+                android:drawablePadding="4dp"
+                android:gravity="center|start"
+                android:hint="@string/offer_dialog_hint_offer_price"
                 style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView
+                android:id="@+id/per_packaging_text_view"
                 android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif-light"
                 android:layout_gravity="center"
-                android:text="@string/per_packaging"
                 android:textAppearance="@android:style/TextAppearance.Medium"
+                tools:text="/ kg"
                 style="@style/TextViewGrey"/>
 
     </LinearLayout>
@@ -72,6 +78,6 @@
             android:textColor="@color/black"
             android:gravity="center"
             android:textAppearance="@android:style/TextAppearance.Small"
-            tools:text="@string/total_price"/>
+            tools:text="@string/offer_dialog_total_price"/>
 
 </LinearLayout>
