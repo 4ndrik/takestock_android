@@ -52,10 +52,12 @@ android {
         dev {
             minSdkVersion 21
         }
+
         mock {
             minSdkVersion 21
             applicationIdSuffix = ".mock"
         }
+
         prod {
             // The actual minSdkVersion for the application.
             minSdkVersion rootProject.ext.minSdkVersion
