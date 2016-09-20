@@ -159,7 +159,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         }
     }
 
-    /********* Entries Methods  ********/
+    /********** Entries Methods **********/
 
     @Override public Observable<AuthToken> signUp(@NonNull final UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
@@ -224,7 +224,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    /********* Categories Methods  ********/
+    /********** Categories Methods **********/
 
     @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -245,12 +245,12 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 })
                 .doOnNext(new Action1<List<Category>>() {
                     @Override public void call(List<Category> categories) {
-                       d(categories.toString());
+                        d(categories.toString());
                     }
                 });
     }
 
-    /********* Sizes Methods  ********/
+    /********** Sizes Methods **********/
 
     @Override public Observable<List<Size>> saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -276,7 +276,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    /********* Certifications Methods  ********/
+    /********** Certifications Methods **********/
 
     @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -306,7 +306,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* Shippings Methods  ********/
+    /********** Shippings Methods **********/
 
     @Override public Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -336,7 +336,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* Conditions Methods  ********/
+    /********** Conditions Methods **********/
 
     @Override public Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -365,7 +365,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* Packagings Methods  ********/
+    /********** Packagings Methods **********/
 
     @Override public Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -394,7 +394,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* OfferStatuses Methods  ********/
+    /********** OfferStatuses Methods **********/
 
     @Override public Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -461,30 +461,35 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* Adverts Methods  ********/
+    /********** Adverts Methods **********/
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
-        final AdvertJsonMapper jsonMapper = new AdvertJsonMapper();
         return Observable.just(advert)
-                .map(new Func1<Advert, String>() {
-                    @Override public String call(Advert advert) {
+                .map(new Func1<Advert, AdvertCreateJson>() {
+                    @Override public AdvertCreateJson call(Advert advert) {
                         try {
-                            return jsonMapper.toJsonString(advert);
-                        } catch (JSONException e) {
-                            throw new RuntimeException();
-                        }
-                    }
-                }).flatMap(new Func1<String, Observable<String>>() {
-                    @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOSTCallable(ADVERTS, json));
-                    }
-                }).map(new Func1<String, Advert>() {
-                    @Override public Advert call(String jsonString) {
-                        try {
-                            return jsonMapper.fromJsonString(jsonString);
-                        } catch (JSONException e) {
+                            return new AdvertCreateJson(advert);
+                        } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
+                    }
+                })
+                .map(new Func1<AdvertCreateJson, String>() {
+                    @Override public String call(AdvertCreateJson json) {
+                        return mGson.toJson(json);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(ADVERTS, jsonString));
+                    }
+                })
+                .map(new Func1<String, Advert>() {
+                    @Override public Advert call(String jsonString) {
+                        d(jsonString);
+                        AdvertJson json = mGson.fromJson(jsonString, AdvertJson.class);
+                        return json.toAdvert();
                     }
                 });
     }
@@ -545,20 +550,12 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Offer AdvertSubscriber
-    ///////////////////////////////////////////////////////////////////////////
-
-    @Override public Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber) {
-        final AdvertSubscriberJsonMapper jsonMapper = new AdvertSubscriberJsonMapper();
-        return Observable.just(subscriber)
-                .map(new Func1<AdvertSubscriber, String>() {
-                    @Override public String call(AdvertSubscriber subscriber) {
-                        try {
-                            return jsonMapper.toJsonString(subscriber);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
+    @Override public Observable<Advert.Subscriber> addRemoveAdvertWatching(int advertId) {
+        AdvertSubscriberJson json = new AdvertSubscriberJson(advertId);
+        return Observable.just(json)
+                .map(new Func1<AdvertSubscriberJson, String>() {
+                    @Override public String call(AdvertSubscriberJson json) {
+                        return mGson.toJson(json);
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
@@ -566,13 +563,10 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return Observable.fromCallable(createPOSTCallable(WATCHLIST, json));
                     }
                 })
-                .map(new Func1<String, AdvertSubscriber>() {
-                    @Override public AdvertSubscriber call(String json) {
-                        try {
-                            return jsonMapper.fromJsonString(json);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
+                .map(new Func1<String, Advert.Subscriber>() {
+                    @Override public Advert.Subscriber call(String jsonString) {
+                        AdvertSubscriberJson json = mGson.fromJson(jsonString, AdvertSubscriberJson.class);
+                        return json.toSubscriber();
                     }
                 });
     }
@@ -712,20 +706,18 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Question
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Questions Methods **********/
 
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
-        final QuestionJsonMapper jsonMapper = new QuestionJsonMapper();
         return Observable.just(question)
-                .map(new Func1<Question, String>() {
-                    @Override public String call(Question question) {
-                        try {
-                            return jsonMapper.toJsonString(question);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                .map(new Func1<Question, QuestionCreateJson>() {
+                    @Override public QuestionCreateJson call(Question question) {
+                        return new QuestionCreateJson(question);
+                    }
+                })
+                .map(new Func1<QuestionCreateJson, String>() {
+                    @Override public String call(QuestionCreateJson json) {
+                        return mGson.toJson(json);
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
@@ -734,44 +726,34 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     }
                 })
                 .map(new Func1<String, Question>() {
-                    @Override public Question call(String json) {
-                        try {
-                            return jsonMapper.fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public Question call(String jsonString) {
+                        d(jsonString);
+                        QuestionJson json = mGson.fromJson(jsonString, QuestionJson.class);
+                        return json.toQuestion();
                     }
                 });
     }
 
-    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+    @Override public Observable<PaginatedList<Question>> getPaginatedQuestionListWithFilter(@NonNull QuestionFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<QuestionFilter, String>() {
                     @Override public String call(QuestionFilter filter) {
                         return new QuestionFilterUrlBuilder(QUESTIONS, filter).buildUrl();
                     }
                 })
-                .doOnNext(new Action1<String>() {
-                    @Override public void call(String url) {
-                        LOGD(TAG, url);
-                    }
-                })
                 .flatMap(new Func1<String, Observable<PaginatedList<Question>>>() {
                     @Override public Observable<PaginatedList<Question>> call(String page) {
-                        return getQuestionResultListPerPage(page);
+                        return getPaginatedQuestionListPerPage(page);
                     }
                 });
     }
 
-    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Question>> getPaginatedQuestionListPerPage(@NonNull String page) {
         return Observable.fromCallable(createGETCallable(page))
                 .map(new Func1<String, PaginatedList<Question>>() {
                     @Override public PaginatedList<Question> call(String jsonString) {
-                        try {
-                            return new QuestionPaginatedListJsonMapper().fromJsonString(jsonString);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        PaginatedQuestionListJson json = mGson.fromJson(jsonString, PaginatedQuestionListJson.class);
+                        return json.toPaginatedList();
                     }
                 });
     }
@@ -920,7 +902,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private String createPOST(String url, String json) throws Exception {
         if (isThereInternetConnection()) {
             Request request = buildPOSTRequest(url, json);
-            LOGD(TAG, request.toString());
+            d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
             try (ResponseBody body = response.body()) {
                 return body.string();
@@ -952,7 +934,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private String createGET(String url) throws Exception {
         if (isThereInternetConnection()) {
             Request request = buildGETRequest(url);
-            LOGD(TAG, request.toString());
+            d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
             try (ResponseBody body = response.body()) {
                 return body.string();
@@ -983,7 +965,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private String createPUT(String url, String json) throws Exception {
         if (isThereInternetConnection()) {
             Request request = buildPUTRequest(url, json);
-            LOGD(TAG, request.toString());
+            d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
             try (ResponseBody body = response.body()) {
                 return body.string();
@@ -1015,7 +997,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private String createPATCH(String url, String json) throws Exception {
         if (isThereInternetConnection()) {
             Request request = buildPATCHRequest(url, json);
-            LOGD(TAG, request.toString());
+            d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
             try (ResponseBody body = response.body()) {
                 return body.string();

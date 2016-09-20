@@ -34,15 +34,15 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     private static final int TYPE_HORIZONTAL = 1;
     private static final int TYPE_VERTICAL = 2;
 
-    final LayoutInflater mLayoutInflater;
-    final List<Advert> mAdverts;
-    final SparseArray<Advert> mAdvertsInProcessing;
+    private final LayoutInflater mLayoutInflater;
+    private final List<Advert> mAdverts;
+    private final SparseArray<Advert> mAdvertsInProcessing;
 
     public interface OnItemClickListener {
         void onItemClick(Advert advert);
     }
 
-    OnItemClickListener mItemClickListener;
+    private OnItemClickListener mItemClickListener;
 
     public interface OnWatchingChangedListener {
         void onWatchingChanged(Advert advert, boolean isWatched);
@@ -154,7 +154,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     }
 
     class ProgressViewHolder extends ViewHolder {
-        public ProgressViewHolder(View itemView) {
+        ProgressViewHolder(View itemView) {
             super(itemView);
         }
     }
@@ -172,7 +172,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
         private Advert mAdvert;
 
-        public AdvertViewHolder(View itemView) {
+        AdvertViewHolder(View itemView) {
             super(itemView);
             mResources = itemView.getResources();
             ButterKnife.bind(AdvertViewHolder.this, itemView);

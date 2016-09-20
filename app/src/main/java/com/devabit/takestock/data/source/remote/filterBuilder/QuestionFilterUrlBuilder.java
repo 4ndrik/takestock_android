@@ -7,7 +7,7 @@ import com.devabit.takestock.data.filter.QuestionFilter;
  */
 public class QuestionFilterUrlBuilder extends FilterUrlBuilder<QuestionFilter> {
 
-    private static final String ADVERT_ID = "advert_id";
+    private static final String ADVERTS = "adverts";
 
     public QuestionFilterUrlBuilder(String baseUrl, QuestionFilter filter) {
         super(baseUrl, filter);
@@ -15,7 +15,7 @@ public class QuestionFilterUrlBuilder extends FilterUrlBuilder<QuestionFilter> {
 
     @Override public String buildUrl() {
         int advertId = mFilter.getAdvertId();
-        if (advertId > 0) appendQueryParameter(ADVERT_ID, String.valueOf(advertId));
+        if (advertId > 0) appendQueryParameter(ADVERTS, String.valueOf(advertId));
         return mBuilder.toString();
     }
 }

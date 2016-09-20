@@ -2,6 +2,7 @@ package com.devabit.takestock.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.StringDef;
 
 import java.util.Arrays;
 import java.util.List;
@@ -682,13 +683,49 @@ public class Advert implements Parcelable {
             return this;
         }
 
-        public Advert build() {
+        public Advert create() {
             return new Advert(mId, mName, mCreatedAt, mExpiresAt, mUpdatedAt, mGuidePrice, mDescription, mLocation,
                     mShippingId, mShippingDisplay, mIsVatExempt, mPhotos, mAuthorId, mCategoryId, mSubcategoryId,
                     mPackagingId, mMinOrderQuantity, mSize, mCertification, mCertificationExtra, mCertificationId,
                     mConditionId, mConditionDisplay, mItemsCount, mItemsCountNow, mTags, mAuthor, mPackagingName,
                     mOffersCount, mQuestionsCount, mDaysLeft, mSubscribers, mInDrafts, mAdvertsViews, mCanOffer,
                     mNotifications, mNewQuestionsCount, mNewOffersCount, mIsFood, mState, mEscapedDescription, mCategoryName);
+        }
+    }
+
+    public static class Subscriber {
+
+        private static final String SUBSCRIBED = "subscribed";
+        private static final String UNSUBSCRIBED = "unsubscribed";
+
+        @StringDef({SUBSCRIBED, UNSUBSCRIBED})
+        public @interface Status {}
+
+        private int mAdvertId;
+        private String mStatus;
+
+        public Subscriber(int advertId, String status) {
+            mAdvertId = advertId;
+            mStatus = status;
+        }
+
+        public int getAdvertId() {
+            return mAdvertId;
+        }
+
+        public @Status String getStatus() {
+            return mStatus;
+        }
+
+        public boolean isSubscribed() {
+            return SUBSCRIBED.equals(mStatus);
+        }
+
+        @Override public String toString() {
+            return "Subscriber{" +
+                    "mAdvertId=" + mAdvertId +
+                    ", mStatus='" + mStatus + '\'' +
+                    '}';
         }
     }
 }

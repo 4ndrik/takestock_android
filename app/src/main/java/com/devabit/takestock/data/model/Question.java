@@ -13,11 +13,20 @@ public class Question implements Parcelable {
     private int mAdvertId;
     private String mMessage;
     private boolean mIsNew;
-    private String mDateCreated;
+    private String mCreatedAt;
     private String mUserName;
     private Answer mAnswer;
 
-    public Question() {}
+    protected Question(int id, int userId, int advertId, String message, boolean isNew, String createdAt, String userName, Answer answer) {
+        mId = id;
+        mUserId = userId;
+        mAdvertId = advertId;
+        mMessage = message;
+        mIsNew = isNew;
+        mCreatedAt = createdAt;
+        mUserName = userName;
+        mAnswer = answer;
+    }
 
     protected Question(Parcel in) {
         mId = in.readInt();
@@ -25,7 +34,7 @@ public class Question implements Parcelable {
         mAdvertId = in.readInt();
         mMessage = in.readString();
         mIsNew = in.readByte() != 0;
-        mDateCreated = in.readString();
+        mCreatedAt = in.readString();
         mUserName = in.readString();
     }
 
@@ -36,7 +45,7 @@ public class Question implements Parcelable {
         dest.writeInt(mAdvertId);
         dest.writeString(mMessage);
         dest.writeByte((byte) (mIsNew ? 1 : 0));
-        dest.writeString(mDateCreated);
+        dest.writeString(mCreatedAt);
         dest.writeString(mUserName);
     }
 
@@ -61,64 +70,32 @@ public class Question implements Parcelable {
         return mId;
     }
 
-    public void setId(int id) {
-        mId = id;
-    }
-
     public int getUserId() {
         return mUserId;
-    }
-
-    public void setUserId(int userId) {
-        mUserId = userId;
     }
 
     public int getAdvertId() {
         return mAdvertId;
     }
 
-    public void setAdvertId(int advertId) {
-        mAdvertId = advertId;
-    }
-
     public String getMessage() {
         return mMessage;
-    }
-
-    public void setMessage(String message) {
-        mMessage = message;
     }
 
     public boolean isNew() {
         return mIsNew;
     }
 
-    public void setNew(boolean aNew) {
-        mIsNew = aNew;
-    }
-
-    public String getDateCreated() {
-        return mDateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        mDateCreated = dateCreated;
+    public String getCreatedAt() {
+        return mCreatedAt;
     }
 
     public String getUserName() {
         return mUserName;
     }
 
-    public void setUserName(String userName) {
-        mUserName = userName;
-    }
-
     public Answer getAnswer() {
         return mAnswer;
-    }
-
-    public void setAnswer(Answer answer) {
-        mAnswer = answer;
     }
 
     @Override public String toString() {
@@ -128,9 +105,65 @@ public class Question implements Parcelable {
                 ", mAdvertId=" + mAdvertId +
                 ", mMessage='" + mMessage + '\'' +
                 ", mIsNew=" + mIsNew +
-                ", mDateCreated='" + mDateCreated + '\'' +
+                ", mCreatedAt='" + mCreatedAt + '\'' +
                 ", mUserName='" + mUserName + '\'' +
                 ", mAnswer=" + mAnswer +
                 '}';
+    }
+
+    public static class Builder {
+
+        private int mId;
+        private int mUserId;
+        private int mAdvertId;
+        private String mMessage;
+        private boolean mIsNew;
+        private String mCreatedAt;
+        private String mUserName;
+        private Answer mAnswer;
+
+        public Builder setId(int id) {
+            mId = id;
+            return this;
+        }
+
+        public Builder setUserId(int userId) {
+            mUserId = userId;
+            return this;
+        }
+
+        public Builder setAdvertId(int advertId) {
+            mAdvertId = advertId;
+            return this;
+        }
+
+        public Builder setMessage(String message) {
+            mMessage = message;
+            return this;
+        }
+
+        public Builder setIsNew(boolean isNew) {
+            mIsNew = isNew;
+            return this;
+        }
+
+        public Builder setCreatedAt(String dateCreated) {
+            mCreatedAt = dateCreated;
+            return this;
+        }
+
+        public Builder setUserName(String userName) {
+            mUserName = userName;
+            return this;
+        }
+
+        public Builder setAnswer(Answer answer) {
+            mAnswer = answer;
+            return this;
+        }
+
+        public Question create() {
+            return new Question(mId, mUserId, mAdvertId, mMessage, mIsNew, mCreatedAt, mUserName, mAnswer);
+        }
     }
 }

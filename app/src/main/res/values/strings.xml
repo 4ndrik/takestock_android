@@ -69,16 +69,7 @@
     <string name="error_incorrect_email">Email address is incorrect</string>
     <string name="error_user_exists">A user with that username already exists.</string>
     <string name="error_no_camera_app">Need camera app.</string>
-    <string name="error_empty_photos">Please, add photos.</string>
-    <string name="error_empty_title">Please, add product title.</string>
-    <string name="error_empty_item_count">Please, add unit amount.</string>
-    <string name="error_empty_minimum_order">Please, add minimum order.</string>
-    <string name="error_empty_guide_price">Please, add guide price.</string>
-    <string name="error_empty_description">Please, add description.</string>
-    <string name="error_empty_location">Please, add location.</string>
-    <string name="error_empty_expiry_date">Please, add expiry date.</string>
-    <string name="error_empty_certification">Please, pick certification.</string>
-    <string name="error_empty_certification_extra">Please, add certification extra.</string>
+
     <string name="error_empty_quantity">Add quantity</string>
     <string name="error_empty_price">Add price</string>
     <string name="error_photo">Processing photo failed.</string>
@@ -103,9 +94,6 @@
     <string name="settings">Settings</string>
     <string name="new_to_takestock">New to Takestock?</string>
     <string name="forgot_password">Forgot Password?</string>
-
-    <!--Sort menu-->
-
 
     <string name="total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
     <string name="no_connection">No connection</string>
@@ -158,6 +146,7 @@
     <string name="add_payment">Add payment</string>
 
     <!--advert create screen start-->
+    <string name="advert_create_toolbar_title">Create advert</string>
     <string name="advert_create_product_title">Product title*</string>
     <string name="advert_create_add_product_title">Add product title</string>
     <string name="advert_create_category">Category*</string>
@@ -182,6 +171,16 @@
     <string name="advert_create_add_keyword">Add keyword</string>
     <string name="advert_create_hint_keywords">List as many as you like. Keywords help customers find your product</string>
     <string name="advert_create_preview_and_make_live"><![CDATA[Preview & make live]]></string>
+    <string name="advert_create_error_photo">Photo not added</string>
+    <string name="advert_create_error_title">Product title not added</string>
+    <string name="advert_create_error_item_count">Unit amount not added</string>
+    <string name="advert_create_error_minimum_order">Minimum order not added</string>
+    <string name="advert_create_error_guide_price">Guide price not added</string>
+    <string name="advert_create_error_description">Description not added</string>
+    <string name="advert_create_error_location">Location not added</string>
+    <string name="advert_create_error_expiry_date">Expiry date not added</string>
+    <string name="advert_create_error_certification">Certification not picked</string>
+    <string name="advert_create_error_certification_extra">Certification extra not added</string>
     <!--advert create screen end-->
 
     <!--advert preview screen start-->

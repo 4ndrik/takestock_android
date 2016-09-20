@@ -130,11 +130,11 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<List<Certification>> refreshCertifications() {
         return mRemoteDataSource.refreshCertifications()
-                .doOnNext(new Action1<List<Certification>>() {
-                    @Override public void call(List<Certification> certifications) {
-                        mLocalDataSource.saveCertifications(certifications);
-                    }
-                });
+               .flatMap(new Func1<List<Certification>, Observable<List<Certification>>>() {
+                   @Override public Observable<List<Certification>> call(List<Certification> certifications) {
+                       return mLocalDataSource.saveCertifications(certifications);
+                   }
+               });
     }
 
     @Override public Certification getCertificationWithId(int id) {
@@ -275,12 +275,7 @@ public class DataRepository implements DataSource {
     /********* Adverts Methods  ********/
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
-        return mRemoteDataSource.saveAdvert(advert)
-                .flatMap(new Func1<Advert, Observable<Advert>>() {
-                    @Override public Observable<Advert> call(Advert advert) {
-                        return mLocalDataSource.saveAdvert(advert);
-                    }
-                });
+        return mRemoteDataSource.saveAdvert(advert);
     }
 
     @Override public Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter) {
@@ -295,8 +290,8 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getPaginatedAdvertListPerPage(page);
     }
 
-    @Override public Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber) {
-        return mRemoteDataSource.addRemoveAdvertWatching(subscriber);
+    @Override public Observable<Advert.Subscriber> addRemoveAdvertWatching(int advertId) {
+        return mRemoteDataSource.addRemoveAdvertWatching(advertId);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -328,20 +323,18 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getOfferResultListPerPage(page);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Question
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Questions Methods  ********/
 
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         return mRemoteDataSource.saveQuestion(question);
     }
 
-    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
-        return mRemoteDataSource.getQuestionResultListPerFilter(filter);
+    @Override public Observable<PaginatedList<Question>> getPaginatedQuestionListWithFilter(@NonNull QuestionFilter filter) {
+        return mRemoteDataSource.getPaginatedQuestionListWithFilter(filter);
     }
 
-    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page) {
-        return mRemoteDataSource.getQuestionResultListPerPage(page);
+    @Override public Observable<PaginatedList<Question>> getPaginatedQuestionListPerPage(@NonNull String page) {
+        return mRemoteDataSource.getPaginatedQuestionListPerPage(page);
     }
 
     ///////////////////////////////////////////////////////////////////////////

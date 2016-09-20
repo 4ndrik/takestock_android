@@ -98,7 +98,7 @@ public class AdvertJson implements JsonModel {
                 .setIsFood(is_food)
                 .setEscapedDescription(escaped_description)
                 .setCategoryName(category_name)
-                .build();
+                .create();
     }
 
     private List<Photo> getPhotos() {

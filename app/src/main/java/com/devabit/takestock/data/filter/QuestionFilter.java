@@ -5,13 +5,13 @@ package com.devabit.takestock.data.filter;
  */
 public class QuestionFilter extends Filter {
 
-    private int mAdvertId;
+    private final int mAdvertId;
+
+    public QuestionFilter(int advertId) {
+        mAdvertId = advertId;
+    }
 
     public int getAdvertId() {
         return mAdvertId;
-    }
-
-    public void setAdvertId(int advertId) {
-        mAdvertId = advertId;
     }
 }

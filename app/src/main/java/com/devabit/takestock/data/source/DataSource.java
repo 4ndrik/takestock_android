@@ -108,7 +108,7 @@ public interface DataSource {
 
     BusinessSubtype getBusinessSubtypeById(int id);
 
-    /********* Adverts Methods  ********/
+    /********* Advert Methods  ********/
 
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
@@ -118,11 +118,7 @@ public interface DataSource {
 
     Observable<PaginatedList<Advert>> getPaginatedAdvertListPerPage(@NonNull String page);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for AdvertSubscriber
-    ///////////////////////////////////////////////////////////////////////////
-
-    Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber);
+    Observable<Advert.Subscriber> addRemoveAdvertWatching(int advertId);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Offer
@@ -138,15 +134,13 @@ public interface DataSource {
 
     Observable<PaginatedList<Offer>> getOfferResultListPerPage(@NonNull String page);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Question
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Questions Methods  ********/
 
     Observable<Question> saveQuestion(@NonNull Question question);
 
-    Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter);
+    Observable<PaginatedList<Question>> getPaginatedQuestionListWithFilter(@NonNull QuestionFilter filter);
 
-    Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page);
+    Observable<PaginatedList<Question>> getPaginatedQuestionListPerPage(@NonNull String page);
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Answer

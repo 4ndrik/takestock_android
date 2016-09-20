@@ -44,6 +44,7 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
 
     @BindView(R.id.content_activity_questions) protected View mContent;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
     @BindView(R.id.question_edit_text) protected EditText mQuestionEditText;
     @BindView(R.id.send_question_button) protected ImageButton mSendQuestionButton;
 
@@ -97,14 +98,14 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
     }
 
     private void setUpRecyclerView() {
-        RecyclerView recyclerView = ButterKnife.findById(QuestionsActivity.this, R.id.recycler_view);
+        mRecyclerView = ButterKnife.findById(QuestionsActivity.this, R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(QuestionsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(QuestionsActivity.this, R.drawable.divider_grey300));
-        recyclerView.addItemDecoration(itemDecoration);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mQuestionsAdapter = new QuestionsAdapter(QuestionsActivity.this);
-        recyclerView.setAdapter(mQuestionsAdapter);
+        mRecyclerView.setAdapter(mQuestionsAdapter);
     }
 
     @OnTextChanged(R.id.question_edit_text)
@@ -122,19 +123,21 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
 
     @Override public void showQuestionInView(Question question) {
         mQuestionsAdapter.addQuestion(question);
+        mRecyclerView.smoothScrollToPosition(mQuestionsAdapter.getItemCount() - 1);
+        mQuestionEditText.getText().clear();
     }
 
     @OnClick(R.id.send_question_button)
     protected void onQuestionSendButtonClick() {
-        mPresenter.makeQuestion(getQuestion());
+        mPresenter.makeQuestion(createQuestion());
     }
 
-    private Question getQuestion() {
-        Question question = new Question();
-        question.setUserId(mAccount.getUserId());
-        question.setAdvertId(mAdvertId);
-        question.setMessage(getMessage());
-        return question;
+    private Question createQuestion() {
+        return new Question.Builder()
+                .setUserId(mAccount.getUserId())
+                .setAdvertId(mAdvertId)
+                .setMessage(getMessage())
+                .create();
     }
 
     private String getMessage() {

@@ -105,8 +105,29 @@ class AdvertsPresenter implements AdvertsContract.Presenter {
         }
     }
 
-    @Override public void addOrRemoveWatchingAdvert(int advertId) {
+    @Override public void addOrRemoveWatchingAdvert(final int advertId) {
+        Subscription subscription = mDataRepository.addRemoveAdvertWatching(advertId)
+                .compose(RxTransformers.<Advert.Subscriber>applyObservableSchedulers())
+                .subscribe(new Subscriber<Advert.Subscriber>() {
+                    @Override public void onCompleted() {
 
+                    }
+
+                    @Override public void onError(Throwable throwable) {
+                        e(throwable);
+                        mView.showAdvertWatchingError(advertId);
+                    }
+
+                    @Override public void onNext(Advert.Subscriber subscriber) {
+                        e(subscriber.toString());
+                        if (subscriber.isSubscribed()) {
+                            mView.showAdvertAddedToWatching(subscriber.getAdvertId());
+                        } else {
+                            mView.showAdvertRemovedFromWatching(subscriber.getAdvertId());
+                        }
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
     @Override public void pause() {

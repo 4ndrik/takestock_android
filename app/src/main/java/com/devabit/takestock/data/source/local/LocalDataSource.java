@@ -359,7 +359,7 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<AdvertSubscriber> addRemoveAdvertWatching(@NonNull AdvertSubscriber subscriber) {
+    @Override public Observable<Advert.Subscriber> addRemoveAdvertWatching(int advertId) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
@@ -419,19 +419,17 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Question
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Questions Methods  ********/
 
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerFilter(@NonNull QuestionFilter filter) {
+    @Override public Observable<PaginatedList<Question>> getPaginatedQuestionListWithFilter(@NonNull QuestionFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<PaginatedList<Question>> getQuestionResultListPerPage(@NonNull String page) {
+    @Override public Observable<PaginatedList<Question>> getPaginatedQuestionListPerPage(@NonNull String page) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
