@@ -67,9 +67,6 @@
                 android:name=".screen.search.SearchActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.photoLibrary.PhotoLibraryActivity"
-                android:screenOrientation="portrait"/>
-        <activity
                 android:name=".screen.selling.SellingActivity"
                 android:screenOrientation="portrait"/>
         <activity
