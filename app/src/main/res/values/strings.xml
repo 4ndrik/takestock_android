@@ -138,7 +138,7 @@
     <string name="payment">Payment</string>
     <string name="add_payment">Add payment</string>
 
-    <!--advert create screen start-->
+    <!--advert create activity start-->
     <string name="advert_create_toolbar_title">Create advert</string>
     <string name="advert_create_product_title">Product title*</string>
     <string name="advert_create_add_product_title">Add product title</string>
@@ -174,9 +174,9 @@
     <string name="advert_create_error_expiry_date">Expiry date not added</string>
     <string name="advert_create_error_certification">Certification not picked</string>
     <string name="advert_create_error_certification_extra">Certification extra not added</string>
-    <!--advert create screen end-->
+    <!--advert create activity end-->
 
-    <!--advert preview screen start-->
+    <!--advert preview activity start-->
     <string name="advert_preview_guide_price">Guide price</string>
     <string name="advert_preview_minimum_order">Minimum order</string>
     <string name="advert_preview_qty_available">Qty available</string>
@@ -192,9 +192,9 @@
     <string name="advert_preview_minimum_order_unit">%1$d %2$s</string>
     <string name="advert_preview_qty_available_unit">%1$d %2$s</string>
     <string name="advert_preview_advert_saved">Advert saved</string>
-    <!--advert preview screen end-->
+    <!--advert preview activity end-->
 
-    <!--adverts screen start-->
+    <!--adverts activity start-->
     <string name="adverts_query_toolbar_title">%1$s in %2$s</string>
     <string name="adverts_count">%1$s / %2$d</string>
     <string name="adverts_count_default">0 / 0</string>
@@ -205,9 +205,9 @@
     <string name="adverts_sort_expires_at_descending">Expires at (descending)</string>
     <string name="adverts_sort_guide_price">Guide price</string>
     <string name="adverts_sort_guide_price_descending">Guide price (descending)</string>
-    <!--adverts screen end-->
+    <!--adverts activity end-->
 
-    <!--adverts detail start-->
+    <!--adverts detail activity start-->
     <string name="advert_detail_guide_price_per_unit">£ %1$s/%2$s</string>
     <string name="advert_detail_minimum_order_unit">%1$d %2$s</string>
     <string name="advert_detail_qty_available_unit">%1$d %2$s</string>
@@ -224,7 +224,7 @@
     <string name="advert_detail_ask_away">Ask away</string>
     <string name="advert_detail_make_offer">Make offer</string>
     <string name="advert_detail_offer_made">Offer made</string>
-    <!--adverts detail start-->
+    <!--adverts detail activity start-->
 
     <!--offer dialog start-->
     <string name="offer_dialog_title">Offer</string>
@@ -238,9 +238,13 @@
     <string name="offer_dialog_error_quantity">Quantity not added</string>
     <!--offer dialog end-->
 
-    <!--questions start-->
+    <!--questions activity start-->
     <string name="questions_toolbar_title">Questions</string>
     <string name="questions_write_question">Write a question…</string>
-    <!--questions end-->
+    <!--questions activity end-->
+
+    <!--selling activity start-->
+    <string name="selling_toolbar_title">Selling</string>
+    <!--selling activity end-->
 
 </resources>

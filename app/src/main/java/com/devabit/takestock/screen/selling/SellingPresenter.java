@@ -11,24 +11,23 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
+import static timber.log.Timber.e;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class SellingPresenter implements SellingContract.Presenter {
+class SellingPresenter implements SellingContract.Presenter {
 
-    private static final String TAG = makeLogTag(SellingPresenter.class);
-
+    private final int mUserId;
     private final DataRepository mDataRepository;
     private final SellingContract.View mSellingView;
 
     private CompositeSubscription mSubscriptions;
     private PaginatedList<Advert> mAdvertPaginatedList;
 
-    public SellingPresenter(@NonNull DataRepository dataRepository, @NonNull SellingContract.View sellingView) {
+    SellingPresenter(int userId, @NonNull DataRepository dataRepository, @NonNull SellingContract.View sellingView) {
+        mUserId = userId;
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mSellingView = checkNotNull(sellingView, "sellingView cannot be null.");
         mSubscriptions = new CompositeSubscription();
@@ -39,47 +38,67 @@ public class SellingPresenter implements SellingContract.Presenter {
 
     }
 
-    @Override public void fetchAdvertsPerFilter(AdvertFilter filter) {
-        mSellingView.setProgressIndicator(true);
+    @Override public void refreshAdverts() {
+        mSellingView.setLoadingProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .getPaginatedAdvertListWithFilter(filter)
+                .getPaginatedAdvertListWithFilter(createFilter())
                 .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
-                .subscribe(getSubscriber());
+                .subscribe(new Subscriber<PaginatedList<Advert>>() {
+                    @Override public void onCompleted() {
+                        mSellingView.setRefreshingProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable throwable) {
+                        mSellingView.setRefreshingProgressIndicator(false);
+                        handleError(throwable);
+                    }
+
+                    @Override public void onNext(PaginatedList<Advert> paginatedList) {
+                        mAdvertPaginatedList = paginatedList;
+                        mSellingView.showRefreshedAdvertsInView(paginatedList.getResults());
+                    }
+                });
         mSubscriptions.add(subscription);
     }
 
-    @Override public void fetchAdverts() {
+    private AdvertFilter createFilter() {
+        return new AdvertFilter.Builder()
+                .setAuthorId(mUserId)
+                .create();
+    }
+
+    @Override public void loadAdverts() {
         if (mAdvertPaginatedList != null && mAdvertPaginatedList.hasNext()) {
-            mSellingView.setProgressIndicator(true);
+            mSellingView.setLoadingProgressIndicator(true);
             Subscription subscription = mDataRepository
-                    .getAdvertResultListPerPage(mAdvertPaginatedList.getNext())
+                    .getPaginatedAdvertListPerPage(mAdvertPaginatedList.getNext())
                     .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
-                    .subscribe(getSubscriber());
+                    .subscribe(new Subscriber<PaginatedList<Advert>>() {
+                        @Override public void onCompleted() {
+                            mSellingView.setLoadingProgressIndicator(false);
+                        }
+
+                        @Override public void onError(Throwable throwable) {
+                            mSellingView.setLoadingProgressIndicator(false);
+                            handleError(throwable);
+                        }
+
+                        @Override public void onNext(PaginatedList<Advert> paginatedList) {
+                            mAdvertPaginatedList = paginatedList;
+                            mSellingView.showLoadedAdvertsInView(paginatedList.getResults());
+                        }
+                    });
             mSubscriptions.add(subscription);
         }
     }
 
-    private Subscriber<PaginatedList<Advert>> getSubscriber() {
-        return new Subscriber<PaginatedList<Advert>>() {
-            @Override public void onCompleted() {
-                mSellingView.setProgressIndicator(false);
-            }
-
-            @Override public void onError(Throwable e) {
-                mSellingView.setProgressIndicator(false);
-                LOGE(TAG, "BOOM:", e);
-                if (e instanceof NetworkConnectionException) {
-                    mSellingView.showNetworkConnectionError();
-                } else {
-                    mSellingView.showUnknownError();
-                }
-            }
-
-            @Override public void onNext(PaginatedList<Advert> paginatedList) {
-                mAdvertPaginatedList = paginatedList;
-                mSellingView.showAdvertsInView(paginatedList.getResults());
-            }
-        };
+    private void handleError(Throwable throwable) {
+        e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mSellingView.showNetworkConnectionError();
+        } else {
+            mSellingView.showUnknownError();
+        }
     }
 
     @Override public void pause() {
