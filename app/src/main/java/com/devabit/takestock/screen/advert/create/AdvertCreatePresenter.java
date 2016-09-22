@@ -1,12 +1,10 @@
 package com.devabit.takestock.screen.advert.create;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataRepository;
+import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
-import com.devabit.takestock.utils.BitmapUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -15,29 +13,22 @@ import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
+import static timber.log.Timber.e;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
-
-    private static final String TAG = makeLogTag(AdvertCreatePresenter.class);
+class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
 
     private final DataRepository mDataRepository;
     private final AdvertCreateContract.View mCreateView;
 
     private CompositeSubscription mSubscriptions;
 
-    private boolean mIsAdvertRelatedDataShowed;
-
-    public AdvertCreatePresenter(@NonNull DataRepository dataRepository, @NonNull AdvertCreateContract.View createView) {
+    AdvertCreatePresenter(@NonNull DataRepository dataRepository, @NonNull AdvertCreateContract.View createView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mCreateView = checkNotNull(createView, "createView cannot be null.");
         mSubscriptions = new CompositeSubscription();
@@ -45,34 +36,30 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     }
 
     @Override public void resume() {
-        fetchAdvertRelatedData();
     }
 
-   private void fetchAdvertRelatedData() {
-        if (mIsAdvertRelatedDataShowed) return;
+    @Override public void fetchAdvertRelatedData() {
         mCreateView.setProgressIndicator(true);
         Subscription subscription = buildAdvertRelatedDataObservable()
-                .compose(RxTransformers.<List<Certification>>applyObservableSchedulers())
-                .subscribe(new Subscriber<List<Certification>>() {
+                .compose(RxTransformers.<Void>applyObservableSchedulers())
+                .subscribe(new Subscriber<Void>() {
                     @Override public void onCompleted() {
-                        mIsAdvertRelatedDataShowed = true;
                         mCreateView.setProgressIndicator(false);
+                        mCreateView.showAdvertRelatedDataFetched();
                     }
 
-                    @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
-                        mCreateView.setProgressIndicator(false);
-                        mCreateView.showUnknownError();
+                    @Override public void onError(Throwable throwable) {
+                        handleError(throwable);
                     }
 
-                    @Override public void onNext(List<Certification> certifications) {
+                    @Override public void onNext(Void v) {
 
                     }
                 });
         mSubscriptions.add(subscription);
     }
 
-    private Observable<List<Certification>> buildAdvertRelatedDataObservable() {
+    private Observable<Void> buildAdvertRelatedDataObservable() {
         return Observable.defer(
                 new Func0<Observable<List<Category>>>() {
                     @Override public Observable<List<Category>> call() {
@@ -140,60 +127,53 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
                                     }
                                 });
                     }
+                })
+                .map(new Func1<List<Certification>, Void>() {
+                    @Override public Void call(List<Certification> certifications) {
+                        return null;
+                    }
                 });
-
     }
 
-    @Override public void processPhotoUriToFile(Uri photoUri, final File photoFile) {
+    @Override public void saveAdvert(Advert advert) {
+        if (!isAdvertValid(advert)) return;
+        advert.setInDrafts(true);
         mCreateView.setProgressIndicator(true);
-        Subscription subscription = Observable.just(photoUri)
-                .map(new Func1<Uri, Bitmap>() {
-                    @Override
-                    public Bitmap call(Uri uri) {
-                        try {
-                            Bitmap bitmap = BitmapUtil.getBitmapFromUri(uri);
-                            return BitmapUtil.rotateBitmapPerOrientation(bitmap, uri);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }).map(new Func1<Bitmap, Photo>() {
-                    @Override public Photo call(Bitmap bitmap) {
-                        try {
-                            File file = BitmapUtil.saveBitmapToFile(bitmap, photoFile);
-                            Photo photo = new Photo();
-                            photo.setImagePath(file.getAbsolutePath());
-                            return photo;
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                })
-                .compose(RxTransformers.<Photo>applyObservableSchedulers())
-                .subscribe(new Subscriber<Photo>() {
+        Subscription subscription = mDataRepository
+                .saveAdvert(advert)
+                .compose(RxTransformers.<Advert>applyObservableSchedulers())
+                .subscribe(new Subscriber<Advert>() {
                     @Override public void onCompleted() {
                         mCreateView.setProgressIndicator(false);
                     }
 
-                    @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
+                    @Override public void onError(Throwable throwable) {
                         mCreateView.setProgressIndicator(false);
-                        mCreateView.showUnknownError();
+                        handleError(throwable);
                     }
 
-                    @Override public void onNext(Photo photo) {
-                        mCreateView.showPhotoInView(photo);
+                    @Override public void onNext(Advert advert) {
+                        mCreateView.showSavedAdvert(advert);
                     }
                 });
         mSubscriptions.add(subscription);
     }
 
-    @Override public void previewAdvert(Advert advert) {
-        if(!isAdvertDataValid(advert)) return;
-        mCreateView.showAdvertInPreview(advert);
+    private void handleError(Throwable throwable) {
+        e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mCreateView.showNetworkConnectionError();
+        } else {
+            mCreateView.showUnknownError();
+        }
     }
 
-    private boolean isAdvertDataValid(Advert advert) {
+    @Override public void previewAdvert(Advert advert) {
+        if (!isAdvertValid(advert)) return;
+        mCreateView.showPreviewedAdvert(advert);
+    }
+
+    private boolean isAdvertValid(Advert advert) {
         return validatePhotos(advert)
                 && validateName(advert)
                 && validateCategory(advert)
@@ -300,8 +280,8 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     }
 
     private boolean validateExpiryDate(Advert advert) {
-        String date = advert.getDateExpiresAt();
-        if(date.isEmpty()) {
+        String date = advert.getExpiresAt();
+        if (date.isEmpty()) {
             mCreateView.showEmptyExpiryDateError();
             return false;
         }
@@ -319,7 +299,7 @@ public class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
 
     private boolean validateCertification(Advert advert) {
         int certificationId = advert.getCertificationId();
-        if(certificationId <= 0) {
+        if (certificationId <= 0) {
             mCreateView.showEmptyCertificationError();
             return false;
         }

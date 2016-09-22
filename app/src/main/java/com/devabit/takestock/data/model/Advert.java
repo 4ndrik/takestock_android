@@ -2,7 +2,6 @@ package com.devabit.takestock.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.StringDef;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +54,7 @@ public class Advert implements Parcelable {
     private String mEscapedDescription;
     private String mCategoryName;
 
-    Advert(int id, String name, String createdAt, String expiresAt, String updatedAt, String guidePrice,
+    private Advert(int id, String name, String createdAt, String expiresAt, String updatedAt, String guidePrice,
            String description, String location, int shippingId, String shippingDisplay, boolean isVatExempt,
            List<Photo> photos, int authorId, int categoryId, int subcategoryId, int packagingId,
            int minOrderQuantity, String size, Certification certification, String certificationExtra,
@@ -340,6 +339,10 @@ public class Advert implements Parcelable {
 
     public int[] getSubscribers() {
         return mSubscribers;
+    }
+
+    public void setInDrafts(boolean inDrafts) {
+        mInDrafts = inDrafts;
     }
 
     public boolean isInDrafts() {
@@ -698,9 +701,6 @@ public class Advert implements Parcelable {
         private static final String SUBSCRIBED = "subscribed";
         private static final String UNSUBSCRIBED = "unsubscribed";
 
-        @StringDef({SUBSCRIBED, UNSUBSCRIBED})
-        public @interface Status {}
-
         private int mAdvertId;
         private String mStatus;
 
@@ -713,7 +713,7 @@ public class Advert implements Parcelable {
             return mAdvertId;
         }
 
-        public @Status String getStatus() {
+        public String getStatus() {
             return mStatus;
         }
 

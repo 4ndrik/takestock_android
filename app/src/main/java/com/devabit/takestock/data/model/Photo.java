@@ -16,7 +16,7 @@ public class Photo implements Parcelable {
 
     public Photo(){}
 
-    Photo(int id, String imagePath, boolean isMain, int width, int height) {
+    private Photo(int id, String imagePath, boolean isMain, int width, int height) {
         mId = id;
         mImagePath = imagePath;
         mIsMain = isMain;

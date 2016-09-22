@@ -1,17 +1,15 @@
 package com.devabit.takestock.screen.advert.create;
 
-import android.net.Uri;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-public interface AdvertCreateContract {
+interface AdvertCreateContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -27,7 +25,7 @@ public interface AdvertCreateContract {
 
         void showCertificationsInView(List<Certification> certifications);
 
-        void showPhotoInView(Photo photo);
+        void showAdvertRelatedDataFetched();
 
         void setProgressIndicator(boolean isActive);
 
@@ -65,13 +63,17 @@ public interface AdvertCreateContract {
 
         void showUnknownError();
 
-        void showAdvertInPreview(Advert advert);
+        void showSavedAdvert(Advert advert);
+
+        void showPreviewedAdvert(Advert advert);
 
     }
 
     interface Presenter extends BasePresenter {
 
-        void processPhotoUriToFile(Uri photoUri, File photoFile);
+        void fetchAdvertRelatedData();
+
+        void saveAdvert(Advert advert);
 
         void previewAdvert(Advert advert);
     }

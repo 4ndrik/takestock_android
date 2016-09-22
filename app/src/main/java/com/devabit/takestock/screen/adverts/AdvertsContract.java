@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 12/09/2016.
  */
-public interface AdvertsContract {
+interface AdvertsContract {
 
     interface View extends BaseView<Presenter> {
 

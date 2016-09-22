@@ -559,12 +559,14 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
-                    @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOSTCallable(WATCHLIST, json));
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(WATCHLIST, jsonString));
                     }
                 })
                 .map(new Func1<String, Advert.Subscriber>() {
                     @Override public Advert.Subscriber call(String jsonString) {
+                        d(jsonString);
                         AdvertSubscriberJson json = mGson.fromJson(jsonString, AdvertSubscriberJson.class);
                         return json.toSubscriber();
                     }

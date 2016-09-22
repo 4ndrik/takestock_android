@@ -3,10 +3,7 @@ package com.devabit.takestock.screen.advert.create;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -32,16 +29,18 @@ import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
 import com.devabit.takestock.screen.advert.dialog.KeywordDialog;
 import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.utils.FileUtil;
+import com.devabit.takestock.utils.ImagePickerUtil;
 import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
 import com.devabit.takestock.widget.FlexboxLayout;
 import com.devabit.takestock.widget.HintSpinnerAdapter;
+import timber.log.Timber;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.devabit.takestock.R.id.toolbar;
 import static com.devabit.takestock.utils.PermissionChecker.*;
 
 /**
@@ -49,16 +48,23 @@ import static com.devabit.takestock.utils.PermissionChecker.*;
  */
 public class AdvertCreateActivity extends AppCompatActivity implements AdvertCreateContract.View {
 
+    private static final String EXTRA_ADVERT = "ADVERT";
+
+    public static Intent getStartIntent(Context context, Advert advert) {
+        Intent starter = getStartIntent(context);
+        starter.putExtra(EXTRA_ADVERT, advert);
+        return starter;
+    }
+
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AdvertCreateActivity.class);
     }
 
-    private static final int REQUEST_CODE_PHOTO_STORAGE = 101;
-    private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
-    private static final int REQUEST_CODE_CAMERA_PERMISSION = 103;
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 104;
+    private static final int RC_CAMERA_PERMISSION = 103;
+    private static final int RC_GALLERY_PERMISSION = 104;
 
     @BindView(R.id.content) protected View mContent;
+    @BindView(toolbar) protected Toolbar mToolbar;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
     @BindView(R.id.content_input) protected ViewGroup mContentInput;
 
@@ -93,38 +99,30 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     private PhotoGalleryAdapter mPhotoGalleryAdapter;
 
     private AdvertCreateContract.Presenter mPresenter;
-
-    private Uri mPhotoUri;
+    private Advert mAdvert;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert_create);
         ButterKnife.bind(AdvertCreateActivity.this);
-        setUpPresenter();
+        mAdvert = getIntent().getParcelableExtra(EXTRA_ADVERT);
         setUpToolbar();
-        setUpPhotosRecyclerView();
-    }
-
-    private void setUpPresenter() {
-        new AdvertCreatePresenter(
-                Injection.provideDataRepository(AdvertCreateActivity.this), AdvertCreateActivity.this);
-    }
-
-    @Override public void setPresenter(@NonNull AdvertCreateContract.Presenter presenter) {
-        mPresenter = presenter;
+        setUpRecyclerView();
+        createPresenter();
     }
 
     private void setUpToolbar() {
-        Toolbar toolbar = ButterKnife.findById(AdvertCreateActivity.this, R.id.toolbar);
-        toolbar.setTitle(R.string.sell_something);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar.setTitle(mAdvert == null
+                ? R.string.advert_create_toolbar_title_create
+                : R.string.advert_create_toolbar_title_edit);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
         });
     }
 
-    private void setUpPhotosRecyclerView() {
+    private void setUpRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 AdvertCreateActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mPhotosRecyclerView.setLayoutManager(layoutManager);
@@ -135,6 +133,16 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
             }
         });
         mPhotosRecyclerView.setAdapter(mPhotoGalleryAdapter);
+    }
+
+    private void createPresenter() {
+        new AdvertCreatePresenter(
+                Injection.provideDataRepository(AdvertCreateActivity.this), AdvertCreateActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull AdvertCreateContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.fetchAdvertRelatedData();
     }
 
     private void displayPhotoPickerDialog() {
@@ -156,18 +164,18 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     private void pickPhotoFromCamera() {
         if (lacksPermissions(AdvertCreateActivity.this, CAMERA_PERMISSIONS)) {
             ActivityCompat.requestPermissions(AdvertCreateActivity.this,
-                    CAMERA_PERMISSIONS, REQUEST_CODE_CAMERA_PERMISSION);
+                    CAMERA_PERMISSIONS, RC_CAMERA_PERMISSION);
         } else {
-            startCameraActivity();
+            ImagePickerUtil.openCamera(AdvertCreateActivity.this);
         }
     }
 
     private void pickPhotoFromStorage() {
         if (lacksPermissions(AdvertCreateActivity.this, STORAGE_PERMISSIONS)) {
             ActivityCompat.requestPermissions(AdvertCreateActivity.this,
-                    STORAGE_PERMISSIONS, REQUEST_CODE_STORAGE_PERMISSION);
+                    STORAGE_PERMISSIONS, RC_GALLERY_PERMISSION);
         } else {
-            startPhotoStorageActivity();
+            ImagePickerUtil.openGallery(AdvertCreateActivity.this);
         }
     }
 
@@ -175,49 +183,40 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (!grantPermissions(grantResults)) return;
         switch (requestCode) {
-            case REQUEST_CODE_CAMERA_PERMISSION:
-                startCameraActivity();
+            case RC_CAMERA_PERMISSION:
+                ImagePickerUtil.openCamera(AdvertCreateActivity.this);
                 break;
-            case REQUEST_CODE_STORAGE_PERMISSION:
-                startPhotoStorageActivity();
+            case RC_GALLERY_PERMISSION:
+                ImagePickerUtil.openGallery(AdvertCreateActivity.this);
                 break;
         }
-    }
-
-    private void startCameraActivity() {
-        Intent starter = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        mPhotoUri = Uri.fromFile(FileUtil.getPhotoFile());
-        starter.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
-        startActivityForResult(starter, REQUEST_CODE_PHOTO_CAMERA);
-    }
-
-    private void startPhotoStorageActivity() {
-        Intent starter = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(starter, REQUEST_CODE_PHOTO_STORAGE);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PHOTO_STORAGE && resultCode == RESULT_OK) {
-            mPhotoUri = uriFromPhotoLibraryResult(data);
-            processPhotoUri(mPhotoUri);
-        } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA && resultCode == RESULT_OK) {
-            processPhotoUri(mPhotoUri);
-        }
+        ImagePickerUtil.handleActivityResult(requestCode, resultCode, data, AdvertCreateActivity.this,
+                new ImagePickerUtil.OnImagePickedListener() {
+                    @Override public void onImagePicked(File imageFile, String source) {
+                        Timber.d("onImagePicked: %s, %s", imageFile.toString(), source);
+                        setUpImage(imageFile);
+                    }
+
+                    @Override public void onCanceled(String source) {
+                        Timber.d("onCanceled: %s", source);
+                    }
+
+                    @Override public void onError(Throwable throwable, String source) {
+                        Timber.e(throwable, "onError");
+                    }
+                });
     }
 
-    private Uri uriFromPhotoLibraryResult(Intent data) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        try (Cursor cursor = getContentResolver().query(data.getData(), projection, null, null, null)) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return Uri.fromFile(new File(cursor.getString(column_index)));
-        }
-    }
-
-    private void processPhotoUri(Uri photoUri) {
-        mPresenter.processPhotoUriToFile(photoUri, FileUtil.getUniquePhotoFile(AdvertCreateActivity.this));
+    private void setUpImage(File imageFile) {
+        Photo photo = new Photo.Builder()
+                .setImage(imageFile.getAbsolutePath())
+                .build();
+        mPhotoGalleryAdapter.addPhoto(photo);
+        mPhotosRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
     }
 
     @OnClick(R.id.expiry_date_text_view)
@@ -235,21 +234,16 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
                 new DatePickerDialog.OnDateSetListener() {
                     @Override public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         mExpiryDateTextView.setError(null);
-                        mExpiryDateTextView.setText(getString(R.string.expiry_date, dayOfMonth, monthOfYear + 1, year));
+                        mExpiryDateTextView.setText(getString(R.string.advert_create_expiry_date, dayOfMonth, monthOfYear + 1, year));
                     }
                 }, year, month, day);
         dialog.show();
     }
 
-    @Override protected void onStart() {
-        super.onStart();
-        mPresenter.resume();
-    }
-
     @Override public void showCategoriesInView(final List<Category> categories) {
         CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
         final HintSpinnerAdapter<Category> hintAdapter = new HintSpinnerAdapter<>(
-                adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
         mCategorySpinner.setAdapter(hintAdapter);
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -271,7 +265,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
             SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(
                     AdvertCreateActivity.this, category.getSubcategories());
             HintSpinnerAdapter<Subcategory> nothingSelectedAdapter = new HintSpinnerAdapter<>(
-                    adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+                    adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
             mSubcategorySpinner.setAdapter(nothingSelectedAdapter);
             setSubcategoryContentVisibility(true);
         }
@@ -307,14 +301,14 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @Override public void showShippingsInView(List<Shipping> shippings) {
         ShippingSpinnerAdapter adapter = new ShippingSpinnerAdapter(AdvertCreateActivity.this, shippings);
         HintSpinnerAdapter<Shipping> hintAdapter = new HintSpinnerAdapter<>(
-                adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
         mShippingSpinner.setAdapter(hintAdapter);
     }
 
     @Override public void showConditionsInView(List<Condition> conditions) {
         ConditionSpinnerAdapter adapter = new ConditionSpinnerAdapter(AdvertCreateActivity.this, conditions);
         HintSpinnerAdapter<Condition> hintAdapter = new HintSpinnerAdapter<>(
-                adapter, R.layout.item_spinner, R.string.select_one, AdvertCreateActivity.this);
+                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
         mConditionSpinner.setAdapter(hintAdapter);
     }
 
@@ -327,18 +321,38 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         mCertificationGroupView.setUpCertifications(certifications);
     }
 
-    @Override public void showPhotoInView(Photo photo) {
-        mPhotoGalleryAdapter.addPhoto(photo);
-        mPhotosRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
+    @Override public void showAdvertRelatedDataFetched() {
+        setUpAdvert();
+    }
+
+    private void setUpAdvert() {
+        if (mAdvert == null) return;
+        mPhotoGalleryAdapter.setPhotos(mAdvert.getPhotos());
+        mTitleEditText.setText(mAdvert.getName());
+        mItemCountEditText.setText(String.valueOf(mAdvert.getItemsCount()));
+        mMinimumOrderEditText.setText(String.valueOf(mAdvert.getMinOrderQuantity()));
+        mGuidePriceEditText.setText(mAdvert.getGuidePrice());
+        mDescriptionEditText.setText(mAdvert.getDescription());
+        mLocationEditText.setText(mAdvert.getLocation());
+        mExpiryDateTextView.setText(DateUtil.formatToExpiryDate(mAdvert.getExpiresAt()));
+        mCertificationGroupView.selectCertification(mAdvert.getCertification());
+        mCertificationExtraEditText.setText(mAdvert.getCertificationExtra());
+        String value = mAdvert.getSize();
+        if (!value.isEmpty()) {
+            String[] xyz = value.split("x");
+            mSizeXEditText.setText(xyz[0]);
+            mSizeYEditText.setText(xyz[1]);
+            mSizeZEditText.setText(xyz[2]);
+        }
     }
 
     @Override public void showEmptyPhotosError() {
-        showSnack(R.string.error_empty_photos);
+        showSnack(R.string.advert_create_error_photo);
         requestFocusOnView(mPhotosRecyclerView);
     }
 
     @Override public void showEmptyTitleError() {
-        mTitleEditText.setError(getText(R.string.error_empty_title));
+        mTitleEditText.setError(getText(R.string.advert_create_error_title));
         requestFocusOnView(mTitleEditText);
     }
 
@@ -348,27 +362,27 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showEmptyItemCountError() {
-        mItemCountEditText.setError(getText(R.string.error_empty_item_count));
+        mItemCountEditText.setError(getText(R.string.advert_create_error_item_count));
         requestFocusOnView(mItemCountEditText);
     }
 
     @Override public void showEmptyMinimumOrderError() {
-        mMinimumOrderEditText.setError(getText(R.string.error_empty_minimum_order));
+        mMinimumOrderEditText.setError(getText(R.string.advert_create_error_minimum_order));
         requestFocusOnView(mMinimumOrderEditText);
     }
 
     @Override public void showEmptyGuidePriceError() {
-        mGuidePriceEditText.setError(getText(R.string.error_empty_guide_price));
+        mGuidePriceEditText.setError(getText(R.string.advert_create_error_guide_price));
         requestFocusOnView(mGuidePriceEditText);
     }
 
     @Override public void showEmptyDescriptionError() {
-        mDescriptionEditText.setError(getText(R.string.error_empty_description));
+        mDescriptionEditText.setError(getText(R.string.advert_create_error_description));
         requestFocusOnView(mDescriptionEditText);
     }
 
     @Override public void showEmptyLocationError() {
-        mLocationEditText.setError(getText(R.string.error_empty_location));
+        mLocationEditText.setError(getText(R.string.advert_create_error_location));
         requestFocusOnView(mLocationEditText);
     }
 
@@ -384,7 +398,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     @Override public void showEmptyExpiryDateError() {
         mExpiryDateTextView.setError("");
-        showSnack(R.string.error_empty_expiry_date);
+        showSnack(R.string.advert_create_error_expiry_date);
         requestFocusOnView(mExpiryDateTextView);
     }
 
@@ -394,12 +408,12 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showEmptyCertificationError() {
-        showSnack(R.string.error_empty_certification);
+        showSnack(R.string.advert_create_error_certification);
         requestFocusOnView(mCertificationGroupView);
     }
 
     @Override public void showEmptyCertificationExtraError() {
-        mCertificationExtraEditText.setError(getText(R.string.error_empty_certification_extra));
+        mCertificationExtraEditText.setError(getText(R.string.advert_create_error_certification_extra));
         requestFocusOnView(mCertificationExtraEditText);
     }
 
@@ -420,7 +434,13 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         showSnack(R.string.error_unknown);
     }
 
-    @Override public void showAdvertInPreview(Advert advert) {
+    @Override public void showSavedAdvert(Advert advert) {
+        showSnack(R.string.advert_create_advert_saved);
+        mAdvert = advert;
+        mToolbar.setTitle(R.string.advert_create_toolbar_title_edit);
+    }
+
+    @Override public void showPreviewedAdvert(Advert advert) {
         startActivity(AdvertPreviewActivity.getStartIntent(AdvertCreateActivity.this, advert));
     }
 
@@ -481,41 +501,44 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
             }
         });
         mKeywordsFlexboxLayout.addView(textView);
-
     }
 
     private TextView inflateKeywordTextView() {
         return (TextView) getLayoutInflater().inflate(R.layout.item_keyword, mKeywordsFlexboxLayout, false);
     }
 
-    @OnClick(R.id.preview_button)
-    protected void onPreviewButton() {
-        Advert advert = getAdvert();
-        mPresenter.previewAdvert(advert);
+    @OnClick(R.id.save_button)
+    protected void onSaveButtonClick() {
+        mPresenter.saveAdvert(createAdvert());
     }
 
-    private Advert getAdvert() {
-        Advert advert = new Advert();
-        advert.setPhotos(getPhotos());
-        advert.setName(getAdvertTitle());
-        advert.setCategoryId(getCategoryId());
-        advert.setSubCategoryId(getSubcategoryId());
-        advert.setPackagingId(getPackagingId());
-        advert.setPackagingName(getPackagingName());
-        advert.setItemsCount(getItemCount());
-        advert.setMinOrderQuantity(getMinimumOrder());
-        advert.setGuidePrice(getGuidePrice());
-        advert.setDescription(getDescription());
-        advert.setLocation(getLocation());
-        advert.setShippingId(getShippingId());
-        advert.setConditionId(getConditionId());
-        advert.setDateExpiresAt(getExpiryDate());
-        advert.setSize(getSize());
-        advert.setCertificationId(getCertificationId());
-        advert.setCertificationExtra(getCertificationExtra());
-        advert.setTags(getKeywords());
-        advert.setAuthorId(getUserId());
-        return advert;
+    @OnClick(R.id.preview_button)
+    protected void onPreviewButton() {
+        mPresenter.previewAdvert(createAdvert());
+    }
+
+    private Advert createAdvert() {
+        return new Advert.Builder()
+                .setPhotos(getPhotos())
+                .setName(getAdvertTitle())
+                .setCategoryId(getCategoryId())
+                .setSubcategoryId(getSubcategoryId())
+                .setPackagingId(getPackagingId())
+                .setPackagingName(getPackagingName())
+                .setItemsCount(getItemCount())
+                .setMinOrderQuantity(getMinimumOrder())
+                .setGuidePrice(getGuidePrice())
+                .setDescription(getDescription())
+                .setLocation(getLocation())
+                .setShippingId(getShippingId())
+                .setConditionId(getConditionId())
+                .setExpiresAt(getExpiryDate())
+                .setSize(getSize())
+                .setCertificationId(getCertificationId())
+                .setCertificationExtra(getCertificationExtra())
+                .setTags(getKeywords())
+                .setAuthorId(getUserId())
+                .create();
     }
 
     private List<Photo> getPhotos() {
@@ -620,10 +643,5 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @Override protected void onStop() {
         super.onStop();
         mPresenter.pause();
-    }
-
-    @Override protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.destroy();
     }
 }

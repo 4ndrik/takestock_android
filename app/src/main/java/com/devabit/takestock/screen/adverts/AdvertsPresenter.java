@@ -26,7 +26,7 @@ class AdvertsPresenter implements AdvertsContract.Presenter {
 
     private PaginatedList<Advert> mPaginatedList;
 
-    public AdvertsPresenter(@NonNull DataRepository dataRepository,
+    AdvertsPresenter(@NonNull DataRepository dataRepository,
                             @NonNull AdvertsContract.View view,
                             @NonNull AdvertFilter filter) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");

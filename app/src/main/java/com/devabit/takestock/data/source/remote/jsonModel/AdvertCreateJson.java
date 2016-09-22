@@ -30,6 +30,7 @@ public class AdvertCreateJson implements JsonModel {
     public final int items_count;
     public final String[] tags;
     public final String[] photos_list;
+    public final boolean in_drafts;
 
     public AdvertCreateJson(Advert advert) throws IOException {
         this.name = advert.getName();
@@ -50,6 +51,7 @@ public class AdvertCreateJson implements JsonModel {
         this.items_count = advert.getItemsCount();
         this.tags = advert.getTags().toArray(new String[advert.getTags().size()]);
         this.photos_list = toPhotoList(advert.getPhotos());
+        this.in_drafts = advert.isInDrafts();
     }
 
     private String[] toPhotoList(List<Photo> photos) throws IOException {
