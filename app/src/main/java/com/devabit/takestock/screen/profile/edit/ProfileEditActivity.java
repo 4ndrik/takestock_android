@@ -2,10 +2,7 @@ package com.devabit.takestock.screen.profile.edit;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -26,29 +23,23 @@ import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.profile.edit.adapter.BusinessSubtypeSpinnerAdapter;
 import com.devabit.takestock.screen.profile.edit.adapter.BusinessTypeSpinnerAdapter;
 import com.devabit.takestock.screen.profile.edit.dialog.ProfilePhotoPickerDialog;
-import com.devabit.takestock.utils.FileUtil;
+import com.devabit.takestock.utils.ImagePickerUtil;
 import com.devabit.takestock.widget.HintSpinnerAdapter;
+import timber.log.Timber;
 
 import java.io.File;
 import java.util.List;
-
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 08/06/2016.
  */
 public class ProfileEditActivity extends AppCompatActivity implements ProfileEditContract.View {
 
-    private static final String TAG = makeLogTag(ProfileEditActivity.class);
-
     public static Intent getStartIntent(Context context, User user) {
         Intent starter = new Intent(context, ProfileEditActivity.class);
         starter.putExtra(User.class.getName(), user);
         return starter;
     }
-
-    private static final int REQUEST_CODE_PHOTO_LIBRARY = 101;
-    private static final int REQUEST_CODE_PHOTO_CAMERA = 102;
 
     @BindView(R.id.content) protected View mContent;
     @BindView(R.id.content_input) protected ViewGroup mContentInput;
@@ -69,8 +60,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
 
     private User mUser;
     private Menu mMenu;
-    private Uri mPhotoUri;
-    private String mPhotoPath;
+    private String mImageFilePath;
 
     private ProfileEditContract.Presenter mPresenter;
 
@@ -79,15 +69,20 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         setContentView(R.layout.activity_profile_edit);
         ButterKnife.bind(ProfileEditActivity.this);
         setUpToolbar();
-        setUpPresenter();
         User user = getIntent().getParcelableExtra(User.class.getName());
         setUpUser(user);
         setUpVatRegisterCheckBox();
+        createPresenter();
     }
 
-    private void setUpPresenter() {
+    private void createPresenter() {
         new ProfileEditPresenter(
                 Injection.provideDataRepository(ProfileEditActivity.this), ProfileEditActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull ProfileEditContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.fetchUserProfileData();
     }
 
     private void setUpToolbar() {
@@ -118,11 +113,6 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         }
     };
 
-    @Override protected void onStart() {
-        super.onStart();
-        mPresenter.resume();
-    }
-
     @OnClick(R.id.profile_image_view)
     protected void onProfileImageViewClick() {
         displayPhotoPickerDialog();
@@ -138,12 +128,12 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
             = new ProfilePhotoPickerDialog.OnPickPhotoListener() {
         @Override public void pickFromCamera(ProfilePhotoPickerDialog dialog) {
             dialog.dismiss();
-            startCameraActivity();
+            ImagePickerUtil.openCamera(ProfileEditActivity.this);
         }
 
         @Override public void pickFromLibrary(ProfilePhotoPickerDialog dialog) {
             dialog.dismiss();
-            startPhotoLibraryActivity();
+            ImagePickerUtil.openGallery(ProfileEditActivity.this);
         }
 
         @Override public void delete(ProfilePhotoPickerDialog dialog) {
@@ -151,50 +141,34 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         }
     };
 
-    private void startCameraActivity() {
-        Intent starter = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        mPhotoUri = Uri.fromFile(FileUtil.getPhotoFile());
-        starter.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
-        startActivityForResult(starter, REQUEST_CODE_PHOTO_CAMERA);
-    }
-
-    private void startPhotoLibraryActivity() {
-        Intent starter = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(starter, REQUEST_CODE_PHOTO_LIBRARY);
-    }
-
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PHOTO_LIBRARY && resultCode == RESULT_OK) {
-            mPhotoUri = uriFromPhotoLibraryResult(data);
-            processPhotoUri(mPhotoUri);
-        } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA && resultCode == RESULT_OK) {
-            processPhotoUri(mPhotoUri);
-        }
-    }
+        ImagePickerUtil.handleActivityResult(requestCode, resultCode, data, ProfileEditActivity.this,
+                new ImagePickerUtil.OnImagePickedListener() {
+                    @Override public void onImagePicked(File imageFile, String source) {
+                        Timber.d("onImagePicked: %s, %s", imageFile.toString(), source);
+                        setUpProfilePhoto(imageFile.getAbsolutePath());
+                    }
 
-    private Uri uriFromPhotoLibraryResult(Intent data) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        try (Cursor cursor = getContentResolver().query(data.getData(), projection, null, null, null)) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return Uri.fromFile(new File(cursor.getString(column_index)));
-        }
-    }
+                    @Override public void onCanceled(String source) {
+                        Timber.d("onCanceled: %s", source);
+                    }
 
-    private void processPhotoUri(Uri photoUri) {
-        mPresenter.processPhotoUriToFile(photoUri, FileUtil.getUniquePhotoFile(ProfileEditActivity.this));
+                    @Override public void onError(Throwable throwable, String source) {
+                        Timber.e(throwable, "onError");
+                    }
+                });
     }
 
     @Override public void showBusinessTypesInView(List<BusinessType> businessTypes) {
         BusinessTypeSpinnerAdapter businessTypeAdapter = new BusinessTypeSpinnerAdapter(ProfileEditActivity.this, businessTypes);
         final HintSpinnerAdapter<BusinessType> nothingSelectedAdapter = new HintSpinnerAdapter<>(
-                businessTypeAdapter, R.layout.item_spinner, R.string.select_one, ProfileEditActivity.this);
+                businessTypeAdapter, R.layout.item_spinner, R.string.advert_create_select_one, ProfileEditActivity.this);
         mBusinessTypeSpinner.setAdapter(nothingSelectedAdapter);
         mBusinessTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 BusinessType type = nothingSelectedAdapter.getItem(position);
+                if (type == null) return;
                 showBusinessSubtypesInView(type.getSubtypes());
             }
 
@@ -228,7 +202,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
             BusinessSubtypeSpinnerAdapter adapter = new BusinessSubtypeSpinnerAdapter(ProfileEditActivity.this, subtypes);
             HintSpinnerAdapter<BusinessSubtype> nothingSelectedAdapter
                     = new HintSpinnerAdapter<>(
-                    adapter, R.layout.item_spinner, R.string.select_one, ProfileEditActivity.this);
+                    adapter, R.layout.item_spinner, R.string.advert_create_select_one, ProfileEditActivity.this);
             mBusinessSubtypeSpinner.setAdapter(nothingSelectedAdapter);
             setUserBusinessSubtypesTypeSelection(nothingSelectedAdapter, subtypes);
             setBusinessSubtypeContentVisibility(true);
@@ -256,15 +230,10 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         mBusinessSubtypeSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    @Override public void showPhotoInView(String path) {
-        setUpProfilePhoto(path);
-    }
-
-    private void setUpProfilePhoto(String photoPath) {
-        mPhotoPath = photoPath;
-        if (mPhotoPath.isEmpty()) return;
+    private void setUpProfilePhoto(String filePath) {
+        mImageFilePath = filePath;
         Glide.with(ProfileEditActivity.this)
-                .load(mPhotoPath)
+                .load(mImageFilePath)
                 .error(R.drawable.placeholder_user_96dp)
                 .crossFade()
                 .into(mProfileImageView);
@@ -279,7 +248,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         user.setId(mUser.getId());
         user.setUserName(getName());
         user.setEmail(getEmail());
-        user.setPhotoPath(getPhotoPath());
+        user.setPhotoPath(getImageFilePath());
         user.setBusinessName(getBusinessName());
         user.setBusinessTypeId(getBusinessTypeId());
         user.setBusinessSubtypeId(getBusinessSubtypeId());
@@ -300,8 +269,8 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         return mBusinessNameEditText.getText().toString().trim();
     }
 
-    private String getPhotoPath() {
-        return mPhotoPath.equals(mUser.getPhotoPath()) ? "" : mPhotoPath;
+    private String getImageFilePath() {
+        return mImageFilePath.equals(mUser.getPhotoPath()) ? "" : mImageFilePath;
     }
 
     private int getBusinessTypeId() {
@@ -359,10 +328,6 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         showSnack(R.string.error_no_network_connection);
     }
 
-    @Override public void showPhotoError() {
-        showSnack(R.string.error_photo);
-    }
-
     @Override public void showUnknownError() {
         showSnack(R.string.error_unknown);
     }
@@ -402,10 +367,6 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
             View view = mContentInput.getChildAt(i);
             view.setAlpha(isActive ? 0.5f : 1.0f);
         }
-    }
-
-    @Override public void setPresenter(@NonNull ProfileEditContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @Override protected void onStop() {

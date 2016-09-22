@@ -1,25 +1,17 @@
 package com.devabit.takestock.screen.profile.edit;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.BusinessType;
 import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
-import com.devabit.takestock.utils.BitmapUtil;
 import com.devabit.takestock.utils.Logger;
-import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import static com.devabit.takestock.utils.Logger.LOGD;
@@ -29,7 +21,7 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 07/06/2016.
  */
-public class ProfileEditPresenter implements ProfileEditContract.Presenter {
+class ProfileEditPresenter implements ProfileEditContract.Presenter {
 
     private static final String TAG = Logger.makeLogTag(ProfileEditPresenter.class);
 
@@ -40,7 +32,7 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
 
     private boolean mIsUserProfileRelatedDataShowed;
 
-    public ProfileEditPresenter(@NonNull DataRepository dataRepository, @NonNull ProfileEditContract.View profileView) {
+    ProfileEditPresenter(@NonNull DataRepository dataRepository, @NonNull ProfileEditContract.View profileView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mProfileView = checkNotNull(profileView, "profileView cannot be null.");
         mSubscriptions = new CompositeSubscription();
@@ -48,10 +40,9 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
     }
 
     @Override public void resume() {
-        fetchUserProfileData();
     }
 
-    private void fetchUserProfileData() {
+    @Override public void fetchUserProfileData() {
         if (mIsUserProfileRelatedDataShowed) return;
         mProfileView.setProgressIndicator(true);
         Subscription subscription = mDataRepository.getBusinessTypes()
@@ -62,48 +53,6 @@ public class ProfileEditPresenter implements ProfileEditContract.Presenter {
                         mIsUserProfileRelatedDataShowed = true;
                     }
                 }, getOnError(), getOnCompleted());
-        mSubscriptions.add(subscription);
-    }
-
-    @Override public void processPhotoUriToFile(Uri photoUri, final File uniqueFile) {
-        mProfileView.setProgressIndicator(true);
-        Subscription subscription = Observable.just(photoUri)
-                .map(new Func1<Uri, Bitmap>() {
-                    @Override
-                    public Bitmap call(Uri uri) {
-                        try {
-                            Bitmap bitmap = BitmapUtil.getBitmapFromUri(uri);
-                            return BitmapUtil.rotateBitmapPerOrientation(bitmap, uri);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }).map(new Func1<Bitmap, String>() {
-                    @Override public String call(Bitmap bitmap) {
-                        try {
-                            File file = BitmapUtil.saveBitmapToFile(bitmap, uniqueFile);
-                            return file.getAbsolutePath();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                })
-                .compose(RxTransformers.<String>applyObservableSchedulers())
-                .subscribe(new Subscriber<String>() {
-                    @Override public void onCompleted() {
-                        mProfileView.setProgressIndicator(false);
-                    }
-
-                    @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
-                        mProfileView.setProgressIndicator(false);
-                        mProfileView.showPhotoError();
-                    }
-
-                    @Override public void onNext(String path) {
-                        mProfileView.showPhotoInView(path);
-                    }
-                });
         mSubscriptions.add(subscription);
     }
 

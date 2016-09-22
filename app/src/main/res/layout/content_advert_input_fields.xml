@@ -35,11 +35,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:singleLine="true"
                 android:inputType="textCapSentences"
                 android:imeOptions="actionDone"
                 android:drawableEnd="@drawable/ic_edit_purple_dark_24dp"
-                android:hint="@string/advert_create_add_product_title"/>
+                android:hint="@string/advert_create_add_product_title"
+                android:maxLines="1"/>
 
         <TextView
                 android:layout_width="wrap_content"
@@ -399,10 +399,20 @@
                 android:textAppearance="@style/TextAppearance.Small.Black"/>
 
         <Button
-                android:id="@+id/preview_button"
+                android:id="@+id/save_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/advert_create_save"
+                android:theme="@style/Widget.TakeStock.Button.Grey"/>
+
+        <Button
+                android:id="@+id/preview_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="32dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
