@@ -240,14 +240,20 @@
     <string name="offer_dialog_error_quantity">Quantity not added</string>
     <!--offer dialog end-->
 
-    <!--questions activity start-->
-    <string name="questions_toolbar_title">Questions</string>
-    <string name="questions_write_question">Write a question…</string>
-    <!--questions activity end-->
+    <!--ask questions activity start-->
+    <string name="ask_question_toolbar_title">Ask Question</string>
+    <string name="ask_question_write_question">Write a question…</string>
+    <!--ask questions activity end-->
 
     <!--selling activity start-->
     <string name="selling_toolbar_title">Selling</string>
     <string name="advert_create_advert_saved">Advert saved in drafts</string>
     <!--selling activity end-->
+
+    <!--advert item menu start-->
+    <string name="advert_item_menu_view_questions">View questions</string>
+    <string name="advert_item_menu_view_offers">View offers</string>
+    <string name="advert_item_menu_edit_advert">Edit advert</string>
+    <!--advert item menu end-->
 
 </resources>

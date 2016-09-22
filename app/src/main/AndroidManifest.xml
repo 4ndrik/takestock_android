@@ -70,7 +70,7 @@
                 android:name=".screen.selling.SellingActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.questions.QuestionsActivity"
+                android:name=".screen.askQuestion.AskQuestionActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screen.buying.BuyingActivity"

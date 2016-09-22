@@ -24,8 +24,8 @@ import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
 import com.devabit.takestock.screen.advert.detail.dialogs.OfferDialog;
+import com.devabit.takestock.screen.askQuestion.AskQuestionActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
-import com.devabit.takestock.screen.questions.QuestionsActivity;
 import com.devabit.takestock.utils.DateUtil;
 import timber.log.Timber;
 
@@ -67,6 +67,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
         mAccount = TakeStockAccount.get(AdvertDetailActivity.this);
         mAdvert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
+        Timber.d(mAdvert.toString());
 
         setUpToolbar(mAdvert);
         setUpRecyclerView(mAdvert);
@@ -206,7 +207,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     private void startQuestionActivity() {
-        startActivity(QuestionsActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
+        startActivity(AskQuestionActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
     }
 
     @Override protected void onPause() {

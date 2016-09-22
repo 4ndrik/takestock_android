@@ -2,18 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:id="@+id/action_manage_offers"
-            android:title="Manage offers"/>
-
-    <item
             android:id="@+id/action_view_messages"
-            android:title="View messages"/>
+            android:title="@string/advert_item_menu_view_questions"/>
 
     <item
-            android:id="@+id/action_view_advert"
-            android:title="View advert"/>
+            android:id="@+id/action_manage_offers"
+            android:title="@string/advert_item_menu_view_offers"/>
 
     <item
             android:id="@+id/action_edit_advert"
-            android:title="Edit advert"/>
+            android:title="@string/advert_item_menu_edit_advert"/>
 </menu>

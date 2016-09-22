@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.questions.adapters;
+package com.devabit.takestock.screen.askQuestion.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

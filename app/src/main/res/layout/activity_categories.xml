@@ -15,7 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:title="Categories"
-                app:titleTextColor="@color/black"
+                app:titleTextColor="@color/white"
                 app:navigationIcon="@drawable/ic_clear_white_24dp"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
     </android.support.design.widget.AppBarLayout>

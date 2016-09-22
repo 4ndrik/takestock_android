@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.questions;
+package com.devabit.takestock.screen.askQuestion;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.QuestionFilter;
@@ -18,18 +18,18 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-class QuestionsPresenter implements QuestionsContract.Presenter {
+class AskQuestionPresenter implements AskQuestionContract.Presenter {
 
     private final DataRepository mDataRepository;
-    private final QuestionsContract.View mQuestionView;
+    private final AskQuestionContract.View mQuestionView;
 
     private CompositeSubscription mSubscriptions;
 
-    QuestionsPresenter(@NonNull DataRepository dataRepository, @NonNull QuestionsContract.View questionView) {
+    AskQuestionPresenter(@NonNull DataRepository dataRepository, @NonNull AskQuestionContract.View questionView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mQuestionView = checkNotNull(questionView, "questionView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mQuestionView.setPresenter(QuestionsPresenter.this);
+        mQuestionView.setPresenter(AskQuestionPresenter.this);
     }
 
     @Override public void resume() {
