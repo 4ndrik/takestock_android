@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.answers.dialog;
+package com.devabit.takestock.screen.questions.dialog;
 
 import android.app.Dialog;
 import android.app.DialogFragment;

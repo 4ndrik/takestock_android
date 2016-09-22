@@ -55,7 +55,7 @@ public class AskQuestionActivity extends AppCompatActivity implements AskQuestio
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_question);
+        setContentView(R.layout.activity_ask_question);
         ButterKnife.bind(AskQuestionActivity.this);
         mAdvertId = getIntent().getIntExtra(EXTRA_ADVERT_ID, 0);
         mAccount = TakeStockAccount.get(AskQuestionActivity.this);

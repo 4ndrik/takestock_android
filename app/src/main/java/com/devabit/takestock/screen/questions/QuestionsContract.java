@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.answers;
+package com.devabit.takestock.screen.questions;
 
 import com.devabit.takestock.data.model.Answer;
 import com.devabit.takestock.data.model.Question;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public interface AnswersContract {
+interface QuestionsContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -28,7 +28,7 @@ public interface AnswersContract {
 
     interface Presenter extends BasePresenter {
 
-        void fetchQuestionsByAdvertId(int advertId);
+        void loadQuestions();
 
         void makeAnswer(Answer answer);
     }

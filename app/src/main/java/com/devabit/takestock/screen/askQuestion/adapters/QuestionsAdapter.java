@@ -29,7 +29,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.item_question, parent, false);
+        View view = mLayoutInflater.inflate(R.layout.item_ask_question, parent, false);
         return new ViewHolder(view);
     }
 

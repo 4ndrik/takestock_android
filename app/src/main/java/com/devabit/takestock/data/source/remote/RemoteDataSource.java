@@ -751,9 +751,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Answer
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Answers Methods **********/
 
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         final AnswerJsonMapper jsonMapper = new AnswerJsonMapper();
@@ -768,14 +766,16 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
-                    @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPOSTCallable(ANSWERS, json));
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(ANSWERS, jsonString));
                     }
                 })
                 .map(new Func1<String, Answer>() {
-                    @Override public Answer call(String json) {
+                    @Override public Answer call(String jsonString) {
                         try {
-                            return jsonMapper.fromJsonString(json);
+                            d(jsonString);
+                            return jsonMapper.fromJsonString(jsonString);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

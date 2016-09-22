@@ -82,7 +82,7 @@
                 android:name=".screen.offers.OffersActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.answers.AnswersActivity"
+                android:name=".screen.questions.QuestionsActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screen.profile.account.ProfileAccountActivity"

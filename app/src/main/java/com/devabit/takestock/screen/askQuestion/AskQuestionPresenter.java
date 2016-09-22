@@ -38,9 +38,8 @@ class AskQuestionPresenter implements AskQuestionContract.Presenter {
 
     @Override public void fetchQuestionsWithAdvertId(int advertId) {
         mQuestionView.setProgressIndicator(true);
-        QuestionFilter filter = new QuestionFilter(advertId);
         Subscription subscription = mDataRepository
-                .getPaginatedQuestionListWithFilter(filter)
+                .getPaginatedQuestionListWithFilter(createFilter(advertId))
                 .compose(RxTransformers.<PaginatedList<Question>>applyObservableSchedulers())
                 .subscribe(new Action1<PaginatedList<Question>>() {
                     @Override public void call(PaginatedList<Question> resultList) {
@@ -48,6 +47,12 @@ class AskQuestionPresenter implements AskQuestionContract.Presenter {
                     }
                 }, getOnError(), getOnCompleted());
         mSubscriptions.add(subscription);
+    }
+
+    private QuestionFilter createFilter(int advertId) {
+        return new QuestionFilter.Builder()
+                .setAdvertId(advertId)
+                .create();
     }
 
     @Override public void makeQuestion(Question question) {
