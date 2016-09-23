@@ -250,7 +250,7 @@
 
     <!--advert item menu start-->
     <string name="advert_item_menu_view_questions">View questions</string>
-    <string name="advert_item_menu_view_offers">View offers</string>
+    <string name="advert_item_menu_manage_offers">Manage offers</string>
     <string name="advert_item_menu_edit_advert">Edit advert</string>
     <!--advert item menu end-->
 

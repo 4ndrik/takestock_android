@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
@@ -35,12 +36,16 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
     private final LayoutInflater mLayoutInflater;
     private final List<Advert> mAdverts;
 
+    public interface OnItemClickListener {
+        void onItemClicked(Advert advert);
+    }
+
+    private OnItemClickListener mItemClickListener;
+
     public interface OnMenuItemClickListener {
         void manageOffers(Advert advert);
 
-        void viewMessages(Advert advert);
-
-        void viewAdvert(Advert advert);
+        void viewQuestions(Advert advert);
 
         void editAdvert(Advert advert);
     }
@@ -103,7 +108,11 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
         }
     }
 
-    public void setOnItemClickListener(OnMenuItemClickListener itemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mItemClickListener = onItemClickListener;
+    }
+
+    public void setOnMenuItemClickListener(OnMenuItemClickListener itemClickListener) {
         mMenuItemClickListener = itemClickListener;
     }
 
@@ -163,10 +172,6 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
                         onViewMassageAction();
                         return true;
 
-                    case R.id.action_view_advert:
-                        onViewAdvertAction();
-                        return true;
-
                     case R.id.action_edit_advert:
                         onEditAdvertAction();
                         return true;
@@ -178,19 +183,18 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
         };
 
         private void onManageOffersAction() {
-            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null) SellingAdvertsAdapter.this.mMenuItemClickListener.manageOffers(advert);
+            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null)
+                SellingAdvertsAdapter.this.mMenuItemClickListener.manageOffers(advert);
         }
 
         private void onViewMassageAction() {
-            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null) SellingAdvertsAdapter.this.mMenuItemClickListener.viewMessages(advert);
-        }
-
-        private void onViewAdvertAction() {
-            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null) SellingAdvertsAdapter.this.mMenuItemClickListener.viewAdvert(advert);
+            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null)
+                SellingAdvertsAdapter.this.mMenuItemClickListener.viewQuestions(advert);
         }
 
         private void onEditAdvertAction() {
-            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null) SellingAdvertsAdapter.this.mMenuItemClickListener.editAdvert(advert);
+            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null)
+                SellingAdvertsAdapter.this.mMenuItemClickListener.editAdvert(advert);
         }
 
         void bindAdvert(Advert advert) {
@@ -210,10 +214,9 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
             setMenuItemVisibility(R.id.action_manage_offers, !offersCount.equals("0"));
             offersCountTextView.setText(offersCount);
 
-//            String questionsCount = advert.getQuestionsCount();
-//            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
-            setMenuItemVisibility(R.id.action_view_messages, false);
-//            questionsCountTextView.setText(questionsCount);
+            String questionsCount = advert.getQuestionsCount();
+            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
+            questionsCountTextView.setText(questionsCount);
 
             daysLeftCountTextView.setText(advert.getDaysLeft());
         }
@@ -232,6 +235,11 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
         void setMenuItemVisibility(@IdRes int itemId, boolean visible) {
             MenuItem item = popupMenu.getMenu().findItem(itemId);
             item.setVisible(visible);
+        }
+
+        @OnClick(R.id.content_item_advert_selling)
+        void onContentClick() {
+            if(mItemClickListener != null) mItemClickListener.onItemClicked(this.advert);
         }
     }
 

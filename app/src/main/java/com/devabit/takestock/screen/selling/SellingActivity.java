@@ -21,7 +21,7 @@ import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.advert.edit.AdvertEditActivity;
-import com.devabit.takestock.screen.answers.AnswersActivity;
+import com.devabit.takestock.screen.questions.QuestionsActivity;
 import com.devabit.takestock.screen.offers.OffersActivity;
 import com.devabit.takestock.screen.selling.adapters.SellingAdvertsAdapter;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
@@ -84,7 +84,12 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         mAdvertsAdapter = new SellingAdvertsAdapter(SellingActivity.this);
-        mAdvertsAdapter.setOnItemClickListener(mMenuItemClickListener);
+        mAdvertsAdapter.setOnItemClickListener(new SellingAdvertsAdapter.OnItemClickListener() {
+            @Override public void onItemClicked(Advert advert) {
+                startAdvertDetailActivity(advert);
+            }
+        });
+        mAdvertsAdapter.setOnMenuItemClickListener(mMenuItemClickListener);
         recyclerView.setAdapter(mAdvertsAdapter);
     }
 
@@ -112,12 +117,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
             startOffersActivity(advert);
         }
 
-        @Override public void viewMessages(Advert advert) {
-            startAnswersActivity(advert);
-        }
-
-        @Override public void viewAdvert(Advert advert) {
-            startAdvertDetailActivity(advert);
+        @Override public void viewQuestions(Advert advert) {
+            startQuestionsActivity(advert);
         }
 
         @Override public void editAdvert(Advert advert) {
@@ -129,8 +130,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         startActivity(OffersActivity.getStartIntent(SellingActivity.this, advert));
     }
 
-    private void startAnswersActivity(Advert advert) {
-        startActivity(AnswersActivity.getStartIntent(SellingActivity.this, advert.getId()));
+    private void startQuestionsActivity(Advert advert) {
+        startActivity(QuestionsActivity.getStartIntent(SellingActivity.this, advert.getId()));
     }
 
     private void startAdvertDetailActivity(Advert advert) {

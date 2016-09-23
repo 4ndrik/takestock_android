@@ -64,6 +64,7 @@ class SellingPresenter implements SellingContract.Presenter {
     private AdvertFilter createFilter() {
         return new AdvertFilter.Builder()
                 .setAuthorId(mUserId)
+                .setAdditions(AdvertFilter.Addition.POSTED, AdvertFilter.Addition.HOLD_ON)
                 .create();
     }
 
