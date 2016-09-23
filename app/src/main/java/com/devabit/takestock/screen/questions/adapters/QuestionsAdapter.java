@@ -81,6 +81,12 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
         notifyItemRangeInserted(positionStart, questions.size());
     }
 
+    public void refreshQuestion(Question question) {
+        int position = mQuestions.indexOf(question);
+        mQuestions.set(position, question);
+        notifyItemChanged(position);
+    }
+
     public void setOnQuestionRepliedListener(OnQuestionRepliedListener onQuestionRepliedListener) {
         mRepliedListener = onQuestionRepliedListener;
     }

@@ -4,6 +4,8 @@ import android.support.annotation.IntDef;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,11 +15,6 @@ import java.util.Set;
  */
 public class AdvertFilter extends Filter {
 
-    @IntDef({
-            ORDER_DEFAULT, ORDER_EXPIRES_AT, ORDER_EXPIRES_AT_DESCENDING, ORDER_CREATED_AT,
-            ORDER_CREATED_AT_DESCENDING, ORDER_GUIDE_PRICE, ORDER_GUIDE_PRICE_DESCENDING})
-    public @interface Order {}
-
     public static final int ORDER_DEFAULT = -1;
     public static final int ORDER_EXPIRES_AT = 1;
     public static final int ORDER_EXPIRES_AT_DESCENDING = 2;
@@ -25,6 +22,20 @@ public class AdvertFilter extends Filter {
     public static final int ORDER_CREATED_AT_DESCENDING = 4;
     public static final int ORDER_GUIDE_PRICE = 5;
     public static final int ORDER_GUIDE_PRICE_DESCENDING = 6;
+
+    @IntDef({
+            ORDER_DEFAULT, ORDER_EXPIRES_AT, ORDER_EXPIRES_AT_DESCENDING, ORDER_CREATED_AT,
+            ORDER_CREATED_AT_DESCENDING, ORDER_GUIDE_PRICE, ORDER_GUIDE_PRICE_DESCENDING})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Order {
+    }
+
+    public static final class Addition {
+        public static final String DRAFTS = "drafts";
+        public static final String POSTED = "posted";
+        public static final String ACTIVE = "active";
+        public static final String HOLD_ON = "hold_on";
+    }
 
     private Set<Integer> mAdvertIds = new HashSet<>(0);
     private int mItemCount;
@@ -34,12 +45,13 @@ public class AdvertFilter extends Filter {
     private boolean mIsWatchlist;
     private String mQuery;
     @Order private int mOrder;
+    private String[] mAdditions;
 
     public AdvertFilter() {
     }
 
-    AdvertFilter(int itemCount, Category category, Subcategory subcategory, int authorId,
-                 int order, int pageSize, boolean isWatchlist, String query) {
+    private AdvertFilter(int itemCount, Category category, Subcategory subcategory, int authorId,
+                         int order, int pageSize, boolean isWatchlist, String query, String[] additions) {
         mItemCount = itemCount;
         mCategory = category;
         mSubcategory = subcategory;
@@ -48,6 +60,7 @@ public class AdvertFilter extends Filter {
         mPageSize = pageSize;
         mIsWatchlist = isWatchlist;
         mQuery = query;
+        mAdditions = additions;
     }
 
     public Set<Integer> getAdvertIds() {
@@ -110,6 +123,10 @@ public class AdvertFilter extends Filter {
         return mQuery;
     }
 
+    public String[] getAdditions() {
+        return mAdditions;
+    }
+
     public static class Builder {
 
         private int mItemCount;
@@ -120,6 +137,7 @@ public class AdvertFilter extends Filter {
         private int mPageSize = DEFAULT_PAGE_SIZE;
         private boolean mIsWatchlist;
         private String mQuery = "";
+        private String[] mAdditions;
 
         public Builder setItemCount(int itemCount) {
             mItemCount = itemCount;
@@ -161,10 +179,15 @@ public class AdvertFilter extends Filter {
             return this;
         }
 
+        public Builder setAdditions(String... additions) {
+            mAdditions = additions;
+            return this;
+        }
+
         public AdvertFilter create() {
             return new AdvertFilter(
                     mItemCount, mCategory, mSubcategory,
-                    mAuthorId, mOrder, mPageSize, mIsWatchlist, mQuery);
+                    mAuthorId, mOrder, mPageSize, mIsWatchlist, mQuery, mAdditions);
         }
     }
 }

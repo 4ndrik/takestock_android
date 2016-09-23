@@ -45,7 +45,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_gravity="end"
-            android:text="@string/cancel"
+            android:text="@string/answer_dialog_cancel"
             android:theme="@style/FlatButtonPurple"
             android:textStyle="bold"
             android:textAppearance="@android:style/TextAppearance.Small"

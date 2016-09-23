@@ -754,15 +754,10 @@ public class RemoteDataSource implements ApiRest, DataSource {
     /********** Answers Methods **********/
 
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
-        final AnswerJsonMapper jsonMapper = new AnswerJsonMapper();
         return Observable.just(answer)
                 .map(new Func1<Answer, String>() {
                     @Override public String call(Answer answer) {
-                        try {
-                            return jsonMapper.toJsonString(answer);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        return mGson.toJson(new AnswerCreateJson(answer));
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
@@ -773,12 +768,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 })
                 .map(new Func1<String, Answer>() {
                     @Override public Answer call(String jsonString) {
-                        try {
-                            d(jsonString);
-                            return jsonMapper.fromJsonString(jsonString);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        d(jsonString);
+                        AnswerJson json = mGson.fromJson(jsonString, AnswerJson.class);
+                        return json.toAnswer();
                     }
                 });
     }

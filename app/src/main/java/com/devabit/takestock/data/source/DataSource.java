@@ -15,14 +15,14 @@ import java.util.List;
  */
 public interface DataSource {
 
-    /********* Entries Methods  ********/
+    /********* Entries Methods  *********/
 
     Observable<AuthToken> signUp(@NonNull UserCredentials credentials);
 
     Observable<AuthToken> signIn(@NonNull UserCredentials credentials);
 
 
-    /********* Categories Methods  ********/
+    /********* Categories Methods  *********/
 
     Observable<List<Category>> saveCategories(@NonNull List<Category> categories);
 
@@ -31,7 +31,7 @@ public interface DataSource {
     Observable<List<Category>> getCategories();
 
 
-    /********* Sizes Methods  ********/
+    /********* Sizes Methods  *********/
 
     Observable<List<Size>> saveSizes(@NonNull List<Size> sizes);
 
@@ -40,7 +40,7 @@ public interface DataSource {
     Observable<List<Size>> getSizes();
 
 
-    /********* Certifications Methods  ********/
+    /********* Certifications Methods  *********/
 
     Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications);
 
@@ -51,7 +51,7 @@ public interface DataSource {
     Certification getCertificationWithId(int id);
 
 
-    /********* Shippings Methods  ********/
+    /********* Shippings Methods  *********/
 
     Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings);
 
@@ -62,7 +62,7 @@ public interface DataSource {
     Shipping getShippingWithId(int id);
 
 
-    /********* Conditions Methods  ********/
+    /********* Conditions Methods  *********/
 
     Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditions);
 
@@ -73,7 +73,7 @@ public interface DataSource {
     Condition getConditionWithId(int id);
 
 
-    /********* Packagings Methods  ********/
+    /********* Packagings Methods  *********/
 
     Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings);
 
@@ -84,7 +84,7 @@ public interface DataSource {
     Packaging getPackagingWithId(int id);
 
 
-    /********* OfferStatuses Methods  ********/
+    /********* OfferStatuses Methods  *********/
 
     Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses);
 
@@ -108,7 +108,7 @@ public interface DataSource {
 
     BusinessSubtype getBusinessSubtypeById(int id);
 
-    /********* Advert Methods  ********/
+    /********* Advert Methods  *********/
 
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
@@ -120,7 +120,7 @@ public interface DataSource {
 
     Observable<Advert.Subscriber> addRemoveAdvertWatching(int advertId);
 
-    /********* Offers Methods  ********/
+    /********* Offers Methods  *********/
 
     Observable<Offer> makeOffer(@NonNull Offer offer);
 
@@ -132,7 +132,7 @@ public interface DataSource {
 
     Observable<PaginatedList<Offer>> getPaginatedOfferListPerPage(@NonNull String page);
 
-    /********* Questions Methods  ********/
+    /********* Questions Methods  *********/
 
     Observable<Question> saveQuestion(@NonNull Question question);
 
@@ -140,9 +140,7 @@ public interface DataSource {
 
     Observable<PaginatedList<Question>> getPaginatedQuestionListPerPage(@NonNull String page);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Answer
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Answers Methods **********/
 
     Observable<Answer> saveAnswer(@NonNull Answer answer);
 

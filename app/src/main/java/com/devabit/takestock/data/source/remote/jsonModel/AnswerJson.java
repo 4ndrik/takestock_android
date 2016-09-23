@@ -12,14 +12,17 @@ public class AnswerJson implements JsonModel {
     public int user;
     public String message;
     public String created_at;
+    public String user_username;
+    public int[] question;
 
     public Answer toAnswer() {
-        Answer answer = new Answer();
-        answer.setId(id);
-        answer.setUserId(user);
-        answer.setMessage(message);
-        answer.setDateCreated(created_at);
-        return answer;
+        return new Answer.Builder()
+                .setId(id)
+                .setUserId(user)
+                .setMessage(message)
+                .setCreatedAt(created_at)
+                .setUserName(user_username)
+                .setQuestion(question)
+                .create();
     }
-
 }

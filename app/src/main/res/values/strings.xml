@@ -6,7 +6,6 @@
     <string name="sell_something">Sell Something</string>
     <string name="home">home</string>
     <string name="add_photo">Add photo</string>
-    <string name="cancel">Cancel</string>
     <string name="choose_unit">Choose unit / type of packaging</string>
     <string name="how_many_unit">How many [unit] are for sale?</string>
     <string name="hint_add_product_title">Add product title</string>
@@ -97,7 +96,6 @@
     <string name="counter">Counter</string>
     <string name="reject">Reject</string>
     <string name="counter_offer">Counter offer</string>
-    <string name="reply">Reply</string>
     <string name="answer">Answer</string>
     <string name="reject_offer">Reject offer</string>
     <string name="log_out">Log Out</string>
@@ -259,5 +257,13 @@
     <!--questions activity start-->
     <string name="questions_toolbar_title">Questions</string>
     <!--questions activity end-->
+
+    <!--answer dialog start-->
+    <string name="answer_dialog_title">Answer</string>
+    <string name="answer_dialog_reply">Reply</string>
+    <string name="answer_dialog_cancel">Cancel</string>
+    <string name="answer_dialog_error_answer">Answer is empty</string>
+    <string name="answer_dialog_hint">Write an answer…</string>
+    <!--answer dialog end-->
 
 </resources>

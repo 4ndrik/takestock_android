@@ -431,9 +431,7 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Answer
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Answers Methods **********/
 
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         throw new UnsupportedOperationException("This operation not required.");

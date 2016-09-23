@@ -21,6 +21,7 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
     private static final String ORDER = "o";
     private static final String IDS = "ids";
     private static final String QUERY = "q";
+    private static final String IN = "in";
 
     private static final String EXPIRES_AT = "expires_at";
     private static final String EXPIRES_AT_DESCENDING = "-expires_at";
@@ -78,6 +79,11 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
 
         if (mFilter.isWatchlist()) {
             appendQueryParameter(FILTER, WATCHLIST);
+        }
+
+        String[] additions = mFilter.getAdditions();
+        if (additions != null && additions.length > 0) {
+            appendQueryParameter(IN, TextUtils.join(",", additions));
         }
 
         return mBuilder.toString();

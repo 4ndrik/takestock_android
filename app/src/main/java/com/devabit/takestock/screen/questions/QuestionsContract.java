@@ -16,7 +16,7 @@ interface QuestionsContract {
 
         void showQuestionsInView(List<Question> questions);
 
-        void showAnswerInView(Answer answer);
+        void showQuestionRepliedInView(Question question);
 
         void showNetworkConnectionError();
 
@@ -30,6 +30,6 @@ interface QuestionsContract {
 
         void loadQuestions();
 
-        void makeAnswer(Answer answer);
+        void makeAnswer(Question question, Answer answer);
     }
 }

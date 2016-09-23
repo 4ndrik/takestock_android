@@ -10,56 +10,43 @@ public class Answer {
     private int mId;
     private int mUserId;
     private String mMessage;
-    private String mDateCreated;
-    private int[] mQuestionSet;
+    private String mCreatedAt;
+    private int[] mQuestion;
     private String mUserName;
+
+    private Answer(){}
+
+    private Answer(int id, int userId, String message, String createdAt, int[] question, String userName) {
+        mId = id;
+        mUserId = userId;
+        mMessage = message;
+        mCreatedAt = createdAt;
+        mQuestion = question;
+        mUserName = userName;
+    }
 
     public int getId() {
         return mId;
-    }
-
-    public void setId(int id) {
-        mId = id;
     }
 
     public int getUserId() {
         return mUserId;
     }
 
-    public void setUserId(int userId) {
-        mUserId = userId;
-    }
-
     public String getMessage() {
         return mMessage;
     }
 
-    public void setMessage(String message) {
-        mMessage = message;
+    public String getCreatedAt() {
+        return mCreatedAt;
     }
 
-    public String getDateCreated() {
-        return mDateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        mDateCreated = dateCreated;
-    }
-
-    public int[] getQuestionSet() {
-        return mQuestionSet;
-    }
-
-    public void setQuestionSet(int[] questionSet) {
-        mQuestionSet = questionSet;
+    public int[] getQuestion() {
+        return mQuestion;
     }
 
     public String getUserName() {
         return mUserName;
-    }
-
-    public void setUserName(String userName) {
-        mUserName = userName;
     }
 
     @Override public String toString() {
@@ -67,9 +54,53 @@ public class Answer {
                 "mId=" + mId +
                 ", mUserId=" + mUserId +
                 ", mMessage='" + mMessage + '\'' +
-                ", mDateCreated='" + mDateCreated + '\'' +
-                ", mQuestionSet=" + Arrays.toString(mQuestionSet) +
+                ", mCreatedAt='" + mCreatedAt + '\'' +
+                ", mQuestion=" + Arrays.toString(mQuestion) +
                 ", mUserName='" + mUserName + '\'' +
                 '}';
+    }
+
+    public static class Builder {
+
+        private int mId;
+        private int mUserId;
+        private String mMessage;
+        private String mCreatedAt;
+        private int[] mQuestion;
+        private String mUserName;
+
+        public Builder setId(int id) {
+            mId = id;
+            return this;
+        }
+
+        public Builder setUserId(int userId) {
+            mUserId = userId;
+            return this;
+        }
+
+        public Builder setMessage(String message) {
+            mMessage = message;
+            return this;
+        }
+
+        public Builder setCreatedAt(String createdAt) {
+            mCreatedAt = createdAt;
+            return this;
+        }
+
+        public Builder setQuestion(int[] question) {
+            mQuestion = question;
+            return this;
+        }
+
+        public Builder setUserName(String userName) {
+            mUserName = userName;
+            return this;
+        }
+
+        public Answer create() {
+            return new Answer(mId, mUserId, mMessage, mCreatedAt, mQuestion, mUserName);
+        }
     }
 }

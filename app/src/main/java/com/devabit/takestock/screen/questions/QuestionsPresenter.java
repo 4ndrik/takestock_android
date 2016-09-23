@@ -77,7 +77,7 @@ class QuestionsPresenter implements QuestionsContract.Presenter {
                 .create();
     }
 
-    @Override public void makeAnswer(Answer answer) {
+    @Override public void makeAnswer(final Question question, Answer answer) {
         mView.setProgressIndicator(true);
         Subscription subscription = mDataRepository
                 .saveAnswer(answer)
@@ -93,7 +93,8 @@ class QuestionsPresenter implements QuestionsContract.Presenter {
                     }
 
                     @Override public void onNext(Answer answer) {
-                        mView.showAnswerInView(answer);
+                        question.setAnswer(answer);
+                        mView.showQuestionRepliedInView(question);
                     }
                 });
         mSubscriptions.add(subscription);

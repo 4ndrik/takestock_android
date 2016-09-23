@@ -18,7 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
-import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Answer;
 import com.devabit.takestock.data.model.Question;
 import com.devabit.takestock.screen.questions.adapters.QuestionsAdapter;
@@ -105,12 +104,12 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
     };
 
     private void displayAnswerMakerDialog(Question question) {
-        AnswerDialog dialog = AnswerDialog.newInstance(getUserId(), question);
+        AnswerDialog dialog = AnswerDialog.newInstance(question);
         dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
         dialog.setAnswerListener(new AnswerDialog.OnAnswerListener() {
-            @Override public void onAnswer(AnswerDialog dialog, Answer answer) {
+            @Override public void onAnswer(AnswerDialog dialog, Question question, Answer answer) {
                 dialog.dismiss();
-                mPresenter.makeAnswer(answer);
+                mPresenter.makeAnswer(question, answer);
             }
         });
     }
@@ -129,12 +128,8 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsCon
         mQuestionsAdapter.addQuestions(questions);
     }
 
-    @Override public void showAnswerInView(Answer answer) {
-
-    }
-
-    private int getUserId() {
-        return TakeStockAccount.get(QuestionsActivity.this).getUserId();
+    @Override public void showQuestionRepliedInView(Question question) {
+        mQuestionsAdapter.refreshQuestion(question);
     }
 
     @Override public void showNetworkConnectionError() {

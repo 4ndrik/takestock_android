@@ -17,7 +17,8 @@ public class Question implements Parcelable {
     private String mUserName;
     private Answer mAnswer;
 
-    protected Question(int id, int userId, int advertId, String message, boolean isNew, String createdAt, String userName, Answer answer) {
+    private Question(int id, int userId, int advertId, String message,
+                     boolean isNew, String createdAt, String userName, Answer answer) {
         mId = id;
         mUserId = userId;
         mAdvertId = advertId;
@@ -98,6 +99,14 @@ public class Question implements Parcelable {
         return mAnswer;
     }
 
+    public void setAnswer(Answer answer) {
+        mAnswer = answer;
+    }
+
+    public boolean hasAnswer() {
+        return mAnswer != null;
+    }
+
     @Override public String toString() {
         return "Question{" +
                 "mId=" + mId +
@@ -109,6 +118,33 @@ public class Question implements Parcelable {
                 ", mUserName='" + mUserName + '\'' +
                 ", mAnswer=" + mAnswer +
                 '}';
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Question question = (Question) o;
+
+        if (mId != question.mId) return false;
+        if (mUserId != question.mUserId) return false;
+        if (mAdvertId != question.mAdvertId) return false;
+        if (mIsNew != question.mIsNew) return false;
+        if (mMessage != null ? !mMessage.equals(question.mMessage) : question.mMessage != null) return false;
+        if (mCreatedAt != null ? !mCreatedAt.equals(question.mCreatedAt) : question.mCreatedAt != null) return false;
+        return mUserName != null ? mUserName.equals(question.mUserName) : question.mUserName == null;
+
+    }
+
+    @Override public int hashCode() {
+        int result = mId;
+        result = 31 * result + mUserId;
+        result = 31 * result + mAdvertId;
+        result = 31 * result + (mMessage != null ? mMessage.hashCode() : 0);
+        result = 31 * result + (mIsNew ? 1 : 0);
+        result = 31 * result + (mCreatedAt != null ? mCreatedAt.hashCode() : 0);
+        result = 31 * result + (mUserName != null ? mUserName.hashCode() : 0);
+        return result;
     }
 
     public static class Builder {
