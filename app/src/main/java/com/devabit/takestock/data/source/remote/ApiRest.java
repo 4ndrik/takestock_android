@@ -5,7 +5,7 @@ import com.devabit.takestock.BuildConfig;
 /**
  * Created by Victor Artemyev on 22/04/2016.
  */
-public interface ApiRest {
+interface ApiRest {
 
     String API_BASE_URL = BuildConfig.API_URL;
 
@@ -23,6 +23,7 @@ public interface ApiRest {
     String BUSINESS_TYPE = API_BASE_URL + "/a/businesstype/";
     String ADVERTS = API_BASE_URL + "/adverts/";
     String OFFERS = API_BASE_URL + "/offers/";
+    String ACCEPT_OFFER = API_BASE_URL + "/accept_offer/";
     String ANSWERS = API_BASE_URL + "/qa/answers/";
     String QUESTIONS = API_BASE_URL + "/qa/questions/";
     String USERS = API_BASE_URL + "/users/";

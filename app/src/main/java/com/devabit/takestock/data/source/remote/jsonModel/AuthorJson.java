@@ -1,11 +1,14 @@
 package com.devabit.takestock.data.source.remote.jsonModel;
 
+import com.devabit.takestock.BuildConfig;
 import com.devabit.takestock.data.model.Author;
 
 /**
  * Created by Victor Artemyev on 06/09/2016.
  */
 public class AuthorJson {
+
+    private static final String IMAGE_URL = BuildConfig.IMAGE_URL;
 
     public int id;
     public String business_sub_type_name;
@@ -75,10 +78,10 @@ public class AuthorJson {
                 .setIsVatExempt(is_vat_exempt)
                 .setAvgRating(avg_rating)
                 .setBusinessName(bussines_name)
+                .setPhoto(IMAGE_URL + photo)
                 .setPostcode(postcode)
                 .setVatNumber(vat_number)
                 .setHasNotifications(has_notifications)
                 .build();
     }
-
 }

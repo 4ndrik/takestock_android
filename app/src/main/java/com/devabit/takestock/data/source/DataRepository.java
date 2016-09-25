@@ -294,7 +294,7 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.addRemoveAdvertWatching(advertId);
     }
 
-    /********* Adverts Methods  ********/
+    /********* Offers Methods  ********/
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
         return mRemoteDataSource.makeOffer(offer);
@@ -302,6 +302,10 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<Offer> updateOffer(@NonNull Offer offer) {
         return mRemoteDataSource.updateOffer(offer);
+    }
+
+    @Override public Observable<Offer.Accept> acceptOffer(@NonNull Offer.Accept accept) {
+        return mRemoteDataSource.acceptOffer(accept);
     }
 
     @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {

@@ -34,9 +34,16 @@ public class OfferJson {
                 .setQuantity(quantity)
                 .setUserId(user)
                 .setStatus(status)
+                .setStatusForBuyer(status_for_buyer)
                 .setComment(comment)
                 .setCreatedAt(created_at)
                 .setUpdatedAt(updated_at)
+                .setAuthor(user_detailed.getAuthor())
+                .setPriceForStripe(price_for_stripe)
+                .setFromSeller(from_seller)
+                .setLastOfferId(last_offer)
+                .setNotifications(notifications)
+                .setShipping(shipping)
                 .create();
     }
 }

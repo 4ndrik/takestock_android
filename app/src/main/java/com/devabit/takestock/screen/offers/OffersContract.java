@@ -1,6 +1,5 @@
 package com.devabit.takestock.screen.offers;
 
-import android.util.Pair;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
@@ -10,31 +9,35 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 31/05/2016.
  */
-public interface OffersContract {
+interface OffersContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showOffersCounterOfferPairsInView(List<Pair<Offer, Offer>> pairs);
+        void showRefreshedOffersInView(List<Offer> offers);
+
+        void showLoadedOffersInView(List<Offer> offers);
+
+        void showOfferAcceptedInView(Offer offer);
 
         void showNetworkConnectionError();
 
         void showUnknownError();
 
-        void setProgressIndicator(boolean isActive);
+        void setRefreshingProgressIndicator(boolean isActive);
+
+        void setLoadingProgressIndicator(boolean isActive);
 
         void showUpdatedOfferInView(Offer offer);
 
-        void showSavedCounterOfferInView(Offer offer);
     }
 
     interface Presenter extends BasePresenter {
 
-        void fetchOffersByAdvertId(int advertId);
+        void refreshOffers();
 
-        void updateOffer(Offer offer);
+        void loadOffers();
 
-        void saveCounterOffer(Offer offer);
+        void acceptOffer(Offer offer, Offer.Accept accept);
 
-        void rejectOffer(Offer offer);
     }
 }

@@ -110,7 +110,17 @@
     <string name="website_url">http://www.takestock.com/</string>
     <string name="admin_email">admin@wetakestock.com</string>
     <string name="send_question">Send question…</string>
-    <string name="about_takestock">\tMany businesses in large distributed industries have a problem with stock being unwanted in one location and desired somewhere else. Takestock.com was created to be an online trading platform to make it easy for owners of stock to sell their unwanted items and to find a buyer efficiently rather than turning to scrap as an option. Takestock is initially focussing on the food manufacturing and agricultural sectors where 600,000 tonnes of food are wasted each year in the UK alone. \n\n\tWe are an eCommerce platform and believe the future solution to distributed unwanted stock is an e market place. That is why we do not advertise on behalf of brands, publish content or produce editorials for the trades we operate in. We focus on trading and helping you turn unwanted stock into cash. Takestock was set up by 4 founders who have a wide range of experience across multiple tech and food sectors. We think it is unacceptable that nearly £1Bn in food is wasted each year in the UK and we intend to make an impact on that at Takestock.</string>
+    <string name="about_takestock">\tMany businesses in large distributed industries have a problem with stock being
+        unwanted in one location and desired somewhere else. Takestock.com was created to be an online trading platform
+        to make it easy for owners of stock to sell their unwanted items and to find a buyer efficiently rather than
+        turning to scrap as an option. Takestock is initially focussing on the food manufacturing and agricultural
+        sectors where 600,000 tonnes of food are wasted each year in the UK alone. \n\n\tWe are an eCommerce platform
+        and believe the future solution to distributed unwanted stock is an e market place. That is why we do not
+        advertise on behalf of brands, publish content or produce editorials for the trades we operate in. We focus on
+        trading and helping you turn unwanted stock into cash. Takestock was set up by 4 founders who have a wide range
+        of experience across multiple tech and food sectors. We think it is unacceptable that nearly £1Bn in food is
+        wasted each year in the UK and we intend to make an impact on that at Takestock.
+    </string>
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="terms_of_services_url">http://takestock.shalakh.in/legal/</string>
     <string name="agreement">I agree to Takestock\'s</string>
@@ -147,7 +157,9 @@
     <string name="advert_create_minimum_order">Minimum order</string>
     <string name="advert_create_guide_price">Guide price</string>
     <string name="advert_create_product_description">Product description*</string>
-    <string name="advert_create_hint_product_description">Great tasting Chocolate Brownie Mix. Mix with Water and Butter for a luxury product. Recipe supplied with order…</string>
+    <string name="advert_create_hint_product_description">Great tasting Chocolate Brownie Mix. Mix with Water and Butter
+        for a luxury product. Recipe supplied with order…
+    </string>
     <string name="advert_create_location">Location*</string>
     <string name="advert_create_hint_location">Brighton</string>
     <string name="advert_create_shipping">Shipping*</string>
@@ -160,7 +172,8 @@
     <string name="advert_create_hint_other_certification_extra">List any other certifications</string>
     <string name="advert_create_keywords">Keywords</string>
     <string name="advert_create_add_keyword">Add keyword</string>
-    <string name="advert_create_hint_keywords">List as many as you like. Keywords help customers find your product</string>
+    <string name="advert_create_hint_keywords">List as many as you like. Keywords help customers find your product
+    </string>
     <string name="advert_create_preview_and_make_live"><![CDATA[Preview & make live]]></string>
     <string name="advert_create_save">Save in drafts</string>
     <string name="advert_create_error_photo">Photo not added</string>
@@ -225,7 +238,7 @@
     <string name="advert_detail_ask_away">Ask away</string>
     <string name="advert_detail_make_offer">Make offer</string>
     <string name="advert_detail_offer_made">Offer made</string>
-    <!--adverts detail activity start-->
+    <!--adverts detail activity end-->
 
     <!--offer dialog start-->
     <string name="offer_dialog_title">Offer</string>
@@ -266,4 +279,38 @@
     <string name="answer_dialog_hint">Write an answer…</string>
     <!--answer dialog end-->
 
+    <!--offers activity start-->
+    <string name="offers_toolbar_title">Offers</string>
+    <!--offers activity end-->
+
+    <!--offer item start-->
+    <string name="offer_item_accept">Accept</string>
+    <string name="offer_item_counter">Counter</string>
+    <string name="offer_item_reject">Reject</string>
+    <string name="offer_item_offer">%1$d %2$s - £ %3$s/%4$s</string>
+    <!--offer item end-->
+
+    <!--reject offer dialog start-->
+    <string name="reject_offer_dialog_title">Reject offer</string>
+    <string name="reject_offer_dialog_reject">Reject</string>
+    <string name="reject_offer_dialog_cancel">Cancel</string>
+    <string name="reject_offer_dialog_error_comment">Comment is empty</string>
+    <string name="reject_offer_dialog_hint">Write a comment…</string>
+    <!--reject offer dialog end-->
+    
+    <!--offer status start-->
+    <string-array name="offer_statuses">
+        <item>Accepted</item>
+        <item>Rejected</item>
+        <item>Pending</item>
+        <item>Countered</item>
+        <item>Payment made</item>
+        <item>Countered by buyer</item>
+        <item>Address received</item>
+        <item>Await confirm stock dispatched</item>
+        <item>Stock in transit</item>
+        <item>Goods received</item>
+        <item>In dispute</item>
+    </string-array>
+    <!--offer status end-->
 </resources>

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 16/09/2016.
  */
-public class AdvertCreateJson implements JsonModel {
+public class MakeAdvertJson implements JsonModel {
 
     public final String name;
     public final String guide_price;
@@ -32,7 +32,7 @@ public class AdvertCreateJson implements JsonModel {
     public final String[] photos_list;
     public final boolean in_drafts;
 
-    public AdvertCreateJson(Advert advert) throws IOException {
+    public MakeAdvertJson(Advert advert) throws IOException {
         this.name = advert.getName();
         this.guide_price = advert.getGuidePrice();
         this.description = advert.getDescription();

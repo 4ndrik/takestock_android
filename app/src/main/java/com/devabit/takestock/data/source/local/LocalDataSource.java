@@ -10,7 +10,6 @@ import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.dao.*;
 import com.devabit.takestock.data.source.local.entity.*;
-import com.devabit.takestock.data.source.local.filterBuilders.AdvertFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
 import com.devabit.takestock.data.source.local.mapper.*;
 import io.realm.*;
@@ -324,31 +323,10 @@ public class LocalDataSource implements DataSource {
         return new BusinessSubtypeDataMapper().transformFromEntity(entity);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Advert
-    ///////////////////////////////////////////////////////////////////////////
+    /********* Adverts Methods  ********/
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
-        return Observable.just(advert)
-                .doOnNext(new Action1<Advert>() {
-                    @Override public void call(Advert advert) {
-                        try (Realm realm = Realm.getDefaultInstance()) {
-                            realm.beginTransaction();
-                            AdvertEntityDataMapper advertMapper = new AdvertEntityDataMapper();
-                            AdvertEntity advertEntity = advertMapper.transformToEntity(advert);
-                            advertEntity = realm.copyToRealmOrUpdate(advertEntity);
-                            for (String tag : advert.getTags()) {
-                                StringEntity tagEntity = advertMapper.transformTagToEntity(tag);
-                                advertEntity.addTag(tagEntity);
-                            }
-                            for (Photo photo : advert.getPhotos()) {
-                                PhotoEntity photoEntity = advertMapper.transformPhotoToEntity(photo);
-                                advertEntity.addPhoto(photoEntity);
-                            }
-                            realm.commitTransaction();
-                        }
-                    }
-                });
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter) {
@@ -364,44 +342,20 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter) {
-        return Observable.just(filter)
-                .map(new Func1<AdvertFilter, RealmResults<AdvertEntity>>() {
-                    @Override public RealmResults<AdvertEntity> call(AdvertFilter advertFilter) {
-                        RealmQuery<AdvertEntity> query = new AdvertFilterQueryBuilder().buildQuery(advertFilter);
-                        return query.findAll();
-                    }
-                })
-                .map(new Func1<RealmResults<AdvertEntity>, List<Advert>>() {
-                    @Override public List<Advert> call(RealmResults<AdvertEntity> advertEntities) {
-                        return new AdvertEntityDataMapper().transformFromEntitiesToList(advertEntities);
-                    }
-                }).map(new Func1<List<Advert>, PaginatedList<Advert>>() {
-                    @Override public PaginatedList<Advert> call(List<Advert> adverts) {
-                        PaginatedList<Advert> paginatedList = new PaginatedList<>();
-                        paginatedList.setResults(adverts);
-                        return paginatedList;
-                    }
-                });
-
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     /********* Offers Methods  ********/
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
-        return Observable.just(offer)
-                .doOnNext(new Action1<Offer>() {
-                    @Override public void call(Offer offer) {
-                        try (Realm realm = Realm.getDefaultInstance()) {
-                            realm.beginTransaction();
-                            OfferEntity entity = new OfferEntityDataMapper().transformToEntity(offer);
-                            realm.copyToRealmOrUpdate(entity);
-                            realm.commitTransaction();
-                        }
-                    }
-                });
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<Offer> updateOffer(@NonNull Offer offer) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Offer.Accept> acceptOffer(@NonNull Offer.Accept accept) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
@@ -489,23 +443,5 @@ public class LocalDataSource implements DataSource {
 
     @Override public Observable<String> addPayment(@NonNull Payment payment) {
         throw new UnsupportedOperationException("This operation not required.");
-    }
-
-    private <E extends RealmModel> List<E> saveOrUpdateEntities(Iterable<E> objects) {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            realm.beginTransaction();
-            List<E> result = realm.copyToRealmOrUpdate(objects);
-            realm.commitTransaction();
-            return result;
-        }
-    }
-
-    private <E extends RealmModel> E saveOrUpdateEntity(E object) {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            realm.beginTransaction();
-            E result = realm.copyToRealmOrUpdate(object);
-            realm.commitTransaction();
-            return result;
-        }
     }
 }

@@ -2,22 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/content_activity_offers"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_base"/>
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/white"
+            app:title="@string/offers_toolbar_title"
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"/>
 
     <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/content_activity_search"
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/grey_50">
 
             <RelativeLayout
                     android:layout_width="match_parent"
@@ -27,8 +33,8 @@
 
                 <ImageView
                         android:id="@+id/advert_photo_image_view"
-                        android:layout_width="124dp"
-                        android:layout_height="124dp"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
                         android:src="@drawable/ic_image_48dp"
                         tools:scaleType="centerCrop"
                         tools:ignore="ContentDescription"/>
@@ -41,11 +47,9 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
                         android:paddingTop="4dp"
-                        android:singleLine="true"
-                        android:textAppearance="@android:style/TextAppearance.Large"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        tools:text="Chocolate "/>
+                        tools:text="Chocolate " android:maxLines="1"/>
 
                 <TextView
                         android:id="@+id/date_updated_text_view"
@@ -69,11 +73,11 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
                         android:paddingTop="4dp"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:textAppearance="@android:style/TextAppearance.Small"
                         android:textColor="@color/black"
-                        android:singleLine="true"
                         android:textStyle="normal"
-                        tools:text="45 per kg"/>
+                        tools:text="45 per kg"
+                        android:maxLines="1"/>
 
                 <TextView
                         android:id="@+id/qty_available_text_view"
@@ -81,10 +85,9 @@
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/advert_photo_image_view"
                         android:layout_below="@+id/guide_price_text_view"
-                        android:paddingTop="8dp"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:textAppearance="@android:style/TextAppearance.Small"
                         android:textColor="@color/black"
                         android:textStyle="normal"
                         tools:text="45 kg available"/>
@@ -96,17 +99,15 @@
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorAccent"
+                android:background="@color/white"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/grey_200"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    tools:listitem="@layout/item_offer"/>
+                    android:scrollbars="vertical"
+                    tools:listitem="@layout/item_offer_pending"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

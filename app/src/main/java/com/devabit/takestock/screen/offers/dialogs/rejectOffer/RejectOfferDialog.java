@@ -12,7 +12,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.OfferStatus;
 
 /**
  * Created by Victor Artemyev on 02/06/2016.
@@ -34,7 +33,7 @@ public class RejectOfferDialog extends DialogFragment {
     private Offer mOffer;
 
     public interface OnRejectOfferListener {
-        void onOfferRejected(RejectOfferDialog dialog, Offer offer);
+        void onOfferRejected(RejectOfferDialog dialog, Offer.Accept accept);
     }
 
     private OnRejectOfferListener mRejectOfferListener;
@@ -47,9 +46,9 @@ public class RejectOfferDialog extends DialogFragment {
     @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         Activity parentActivity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity, R.style.AppTheme_Dialog_Alert_Purple);
-        builder.setTitle(R.string.reject_offer);
-        builder.setPositiveButton(R.string.reject, null);
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setTitle(R.string.reject_offer_dialog_title);
+        builder.setPositiveButton(R.string.reject_offer_dialog_reject, null);
+        builder.setNegativeButton(R.string.reject_offer_dialog_cancel, null);
         builder.setView(R.layout.dialog_reject_offer);
         return builder.create();
     }
@@ -72,13 +71,25 @@ public class RejectOfferDialog extends DialogFragment {
     }
 
     private void onPositiveButtonClick() {
-        if (mRejectOfferListener != null) mRejectOfferListener.onOfferRejected(RejectOfferDialog.this, rejectOffer());
+        if (lacksComment()) return;
+        if (mRejectOfferListener != null) mRejectOfferListener.onOfferRejected(RejectOfferDialog.this, createOfferAccept());
     }
 
-    private Offer rejectOffer() {
-        mOffer.setComment(getComment());
-        mOffer.setOfferStatusId(OfferStatus.REJECTED);
-        return mOffer;
+    private boolean lacksComment() {
+        if (getComment().isEmpty()) {
+            mCommentEditText.setError(getString(R.string.reject_offer_dialog_error_comment));
+            return true;
+        }
+        return false;
+    }
+
+    private Offer.Accept createOfferAccept() {
+        return new Offer.Accept.Builder()
+                .setOfferId(mOffer.getId())
+                .setStatus(Offer.Status.REJECTED)
+                .setFromSeller(true)
+                .setComment(getComment())
+                .create();
     }
 
     private String getComment() {

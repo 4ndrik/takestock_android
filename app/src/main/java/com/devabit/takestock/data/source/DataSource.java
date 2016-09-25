@@ -126,6 +126,8 @@ public interface DataSource {
 
     Observable<Offer> updateOffer(@NonNull Offer offer);
 
+    Observable<Offer.Accept> acceptOffer(@NonNull Offer.Accept accept);
+
     Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter);
 
     Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter);

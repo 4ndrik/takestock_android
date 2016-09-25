@@ -117,7 +117,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         if (photoPath.isEmpty()) return;
         Glide.with(ProfileAccountActivity.this)
                 .load(photoPath)
-                .error(R.drawable.placeholder_user_96dp)
+                .error(R.drawable.ic_placeholder_user_96dp)
                 .crossFade()
                 .into(mProfileImageView);
     }
@@ -170,7 +170,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
                 logOut();
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.answer_dialog_cancel, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
 
             }

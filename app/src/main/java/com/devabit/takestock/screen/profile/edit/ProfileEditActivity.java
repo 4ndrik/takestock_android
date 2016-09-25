@@ -147,7 +147,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
                 new ImagePickerUtil.OnImagePickedListener() {
                     @Override public void onImagePicked(File imageFile, String source) {
                         Timber.d("onImagePicked: %s, %s", imageFile.toString(), source);
-                        setUpProfilePhoto(imageFile.getAbsolutePath());
+                        setUpProfileImage(imageFile.getAbsolutePath());
                     }
 
                     @Override public void onCanceled(String source) {
@@ -230,11 +230,11 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
         mBusinessSubtypeSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    private void setUpProfilePhoto(String filePath) {
+    private void setUpProfileImage(String filePath) {
         mImageFilePath = filePath;
         Glide.with(ProfileEditActivity.this)
                 .load(mImageFilePath)
-                .error(R.drawable.placeholder_user_96dp)
+                .error(R.drawable.ic_placeholder_user_96dp)
                 .crossFade()
                 .into(mProfileImageView);
     }
@@ -297,7 +297,7 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
 
     private void setUpUser(User user) {
         mUser = user;
-        setUpProfilePhoto(user.getPhotoPath());
+        setUpProfileImage(user.getPhotoPath());
         mUserNameEditText.setText(mUser.getUserName());
         mEmailEditText.setText(mUser.getEmail());
         mEmailSubscriptionCheckBox.setChecked(mUser.isSubscribed());

@@ -13,7 +13,6 @@ import butterknife.Unbinder;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.OfferStatus;
 
 /**
  * Created by Victor Artemyev on 02/06/2016.
@@ -55,7 +54,7 @@ public class CounterOfferDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity, R.style.AppTheme_Dialog_Alert_Purple);
         builder.setTitle(R.string.counter_offer);
         builder.setPositiveButton(R.string.make, null);
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setNegativeButton(R.string.answer_dialog_cancel, null);
         builder.setView(R.layout.dialog_counter_offer);
         return builder.create();
     }
@@ -98,7 +97,7 @@ public class CounterOfferDialog extends DialogFragment {
     }
 
     public void showEmptyPriceError() {
-        mPriceEditText.setError(getText(R.string.error_empty_price));
+        mPriceEditText.setError(getText(R.string.offer_dialog_error_price));
     }
 
     private boolean validateQuantity() {
@@ -110,7 +109,7 @@ public class CounterOfferDialog extends DialogFragment {
     }
 
     public void showEmptyQuantityError() {
-        mQuantityEditText.setError(getText(R.string.error_empty_quantity));
+        mQuantityEditText.setError(getText(R.string.offer_dialog_error_quantity));
     }
 
     private String getPrice() {
@@ -131,14 +130,14 @@ public class CounterOfferDialog extends DialogFragment {
     }
 
     private Offer createCounterOffer() {
-        Offer offer = new Offer();
-        offer.setAdvertId(mAdvert.getId());
-        offer.setCounterOfferId(mOffer.getId());
-        offer.setUserId(mAdvert.getAuthorId());
-        offer.setPrice(getPrice());
-        offer.setQuantity(getQuantityAsInt());
-        offer.setComment(getComment());
-        offer.setOfferStatusId(OfferStatus.COUNTERED);
+        Offer offer = new Offer.Builder().create();
+//        offer.setAdvertId(mAdvert.getId());
+//        offer.setCounterOfferId(mOffer.getId());
+//        offer.setUserId(mAdvert.getAuthorId());
+//        offer.setPrice(getPrice());
+//        offer.setQuantity(getQuantityAsInt());
+//        offer.setComment(getComment());
+//        offer.setStatus(OfferStatus.COUNTERED);
         return offer;
     }
 

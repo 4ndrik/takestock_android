@@ -17,7 +17,7 @@
             android:paddingEnd="8dp"
             android:maxLines="3"
             android:inputType="textCapSentences|textMultiLine"
-            android:hint="Write a comment..."
+            android:hint="@string/reject_offer_dialog_hint"
             tools:ignore="LabelFor"/>
 
 </LinearLayout>

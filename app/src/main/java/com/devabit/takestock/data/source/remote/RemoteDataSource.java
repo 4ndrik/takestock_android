@@ -465,17 +465,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         return Observable.just(advert)
-                .map(new Func1<Advert, AdvertCreateJson>() {
-                    @Override public AdvertCreateJson call(Advert advert) {
+                .map(new Func1<Advert, MakeAdvertJson>() {
+                    @Override public MakeAdvertJson call(Advert advert) {
                         try {
-                            return new AdvertCreateJson(advert);
+                            return new MakeAdvertJson(advert);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     }
                 })
-                .map(new Func1<AdvertCreateJson, String>() {
-                    @Override public String call(AdvertCreateJson json) {
+                .map(new Func1<MakeAdvertJson, String>() {
+                    @Override public String call(MakeAdvertJson json) {
                         return mGson.toJson(json);
                     }
                 })
@@ -636,6 +636,27 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public Observable<Offer.Accept> acceptOffer(@NonNull Offer.Accept accept) {
+        return Observable.just(accept)
+                .map(new Func1<Offer.Accept, String>() {
+                    @Override public String call(Offer.Accept accept) {
+                        return mGson.toJson(new MakeOfferAcceptJson(accept));
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String jsonString) {
+                        return Observable.fromCallable(createPOSTCallable(ACCEPT_OFFER, jsonString));
+                    }
+                })
+                .map(new Func1<String, Offer.Accept>() {
+                    @Override public Offer.Accept call(String jsonString) {
+                        d(jsonString);
+                        OfferAcceptJson json = mGson.fromJson(jsonString, OfferAcceptJson.class);
+                        return json.toOfferAccept();
+                    }
+                });
+    }
+
     @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<OfferFilter, String>() {
@@ -673,13 +694,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return new OfferFilterUrlBuilder(OFFERS, offerFilter).buildUrl();
                     }
                 })
-                .doOnNext(new Action1<String>() {
-                    @Override public void call(String url) {
-                        LOGD(TAG, url);
-                    }
-                })
                 .flatMap(new Func1<String, Observable<PaginatedList<Offer>>>() {
                     @Override public Observable<PaginatedList<Offer>> call(String url) {
+                        d(url);
                         return getPaginatedOfferListPerPage(url);
                     }
                 });
@@ -689,12 +706,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
         return Observable.fromCallable(createGETCallable(page))
                 .map(new Func1<String, PaginatedList<Offer>>() {
                     @Override public PaginatedList<Offer> call(String jsonString) {
-                        try {
-                            LOGD(TAG, jsonString);
-                            return new OfferPaginatedListJsonMapper().fromJsonString(jsonString);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                            d(jsonString);
+                            PaginatedOfferListJson json = mGson.fromJson(jsonString, PaginatedOfferListJson.class);
+                            return json.toPaginatedList();
                     }
                 });
     }
@@ -703,13 +717,13 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         return Observable.just(question)
-                .map(new Func1<Question, QuestionCreateJson>() {
-                    @Override public QuestionCreateJson call(Question question) {
-                        return new QuestionCreateJson(question);
+                .map(new Func1<Question, MakeQuestionJson>() {
+                    @Override public MakeQuestionJson call(Question question) {
+                        return new MakeQuestionJson(question);
                     }
                 })
-                .map(new Func1<QuestionCreateJson, String>() {
-                    @Override public String call(QuestionCreateJson json) {
+                .map(new Func1<MakeQuestionJson, String>() {
+                    @Override public String call(MakeQuestionJson json) {
                         return mGson.toJson(json);
                     }
                 })
@@ -757,7 +771,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         return Observable.just(answer)
                 .map(new Func1<Answer, String>() {
                     @Override public String call(Answer answer) {
-                        return mGson.toJson(new AnswerCreateJson(answer));
+                        return mGson.toJson(new MakeAnswerJson(answer));
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {

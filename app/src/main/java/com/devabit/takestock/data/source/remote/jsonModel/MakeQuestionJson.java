@@ -6,13 +6,13 @@ import com.devabit.takestock.data.model.Question;
  * Created by Victor Artemyev on 20/09/2016.
  */
 
-public class QuestionCreateJson implements JsonModel {
+public class MakeQuestionJson implements JsonModel {
 
     public int user;
     public String message;
     public int advert;
 
-    public QuestionCreateJson(Question question) {
+    public MakeQuestionJson(Question question) {
         this.user = question.getUserId();
         this.message = question.getMessage();
         this.advert = question.getAdvertId();
