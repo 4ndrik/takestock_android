@@ -83,7 +83,7 @@ public class AdvertJson implements JsonModel {
                 .setItemsCount(items_count)
                 .setItemsCountNow(items_count_now)
                 .setTags(Arrays.asList(tags))
-                .setAuthor(author_detailed.getAuthor())
+                .setAuthor(author_detailed.toAuthor())
                 .setPackagingName(packaging_name)
                 .setOffersCount(offers_count)
                 .setQuestionsCount(questions_count)

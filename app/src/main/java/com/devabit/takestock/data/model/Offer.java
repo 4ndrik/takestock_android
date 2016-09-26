@@ -38,10 +38,11 @@ public class Offer implements Parcelable {
     private String mUpdatedAt;
     private Author mAuthor;
     private int mPriceForStripe;
-    private int mLastOfferId;
     private int mNotifications;
     private boolean mFromSeller;
     private int[] mShipping;
+    private Offer[] mChildOffers;
+    private Offer mLastOffer;
 
     public Offer() {
     }
@@ -60,10 +61,11 @@ public class Offer implements Parcelable {
                   String updatedAt,
                   Author author,
                   int priceForStripe,
-                  int lastOfferId,
                   int notifications,
                   boolean fromSeller,
-                  int[] shipping) {
+                  int[] shipping,
+                  Offer[] childOffers,
+                  Offer lastOffer) {
         mId = id;
         mAdvertId = advertId;
         mCounterOfferId = counterOfferId;
@@ -78,10 +80,11 @@ public class Offer implements Parcelable {
         mUpdatedAt = updatedAt;
         mAuthor = author;
         mPriceForStripe = priceForStripe;
-        mLastOfferId = lastOfferId;
         mNotifications = notifications;
         mFromSeller = fromSeller;
         mShipping = shipping;
+        mChildOffers = childOffers;
+        mLastOffer = lastOffer;
     }
 
     protected Offer(Parcel in) {
@@ -92,11 +95,18 @@ public class Offer implements Parcelable {
         mQuantity = in.readInt();
         mUserId = in.readInt();
         mStatus = in.readInt();
+        mStatusForBuyer = in.readInt();
         mComment = in.readString();
         mStatusComment = in.readString();
         mCreatedAt = in.readString();
         mUpdatedAt = in.readString();
-        mAuthor = in.readParcelable(User.class.getClassLoader());
+        mAuthor = in.readParcelable(Author.class.getClassLoader());
+        mPriceForStripe = in.readInt();
+        mNotifications = in.readInt();
+        mFromSeller = in.readByte() != 0;
+        mShipping = in.createIntArray();
+        mChildOffers = in.createTypedArray(Offer.CREATOR);
+        mLastOffer = in.readParcelable(Offer.class.getClassLoader());
     }
 
     @Override
@@ -108,11 +118,18 @@ public class Offer implements Parcelable {
         dest.writeInt(mQuantity);
         dest.writeInt(mUserId);
         dest.writeInt(mStatus);
+        dest.writeInt(mStatusForBuyer);
         dest.writeString(mComment);
         dest.writeString(mStatusComment);
         dest.writeString(mCreatedAt);
         dest.writeString(mUpdatedAt);
         dest.writeParcelable(mAuthor, flags);
+        dest.writeInt(mPriceForStripe);
+        dest.writeInt(mNotifications);
+        dest.writeByte((byte) (mFromSeller ? 1 : 0));
+        dest.writeIntArray(mShipping);
+        dest.writeTypedArray(mChildOffers, flags);
+        dest.writeParcelable(mLastOffer, flags);
     }
 
     @Override
@@ -198,7 +215,6 @@ public class Offer implements Parcelable {
         if (mStatus != offer.mStatus) return false;
         if (mStatusForBuyer != offer.mStatusForBuyer) return false;
         if (mPriceForStripe != offer.mPriceForStripe) return false;
-        if (mLastOfferId != offer.mLastOfferId) return false;
         if (mNotifications != offer.mNotifications) return false;
         if (mFromSeller != offer.mFromSeller) return false;
         if (mPrice != null ? !mPrice.equals(offer.mPrice) : offer.mPrice != null) return false;
@@ -227,7 +243,6 @@ public class Offer implements Parcelable {
         result = 31 * result + (mUpdatedAt != null ? mUpdatedAt.hashCode() : 0);
         result = 31 * result + (mAuthor != null ? mAuthor.hashCode() : 0);
         result = 31 * result + mPriceForStripe;
-        result = 31 * result + mLastOfferId;
         result = 31 * result + mNotifications;
         result = 31 * result + (mFromSeller ? 1 : 0);
         result = 31 * result + Arrays.hashCode(mShipping);
@@ -250,10 +265,11 @@ public class Offer implements Parcelable {
                 ", mUpdatedAt='" + mUpdatedAt + '\'' +
                 ", mAuthor=" + mAuthor +
                 ", mPriceForStripe=" + mPriceForStripe +
-                ", mLastOfferId=" + mLastOfferId +
                 ", mNotifications=" + mNotifications +
                 ", mFromSeller=" + mFromSeller +
                 ", mShipping=" + Arrays.toString(mShipping) +
+                ", mChildOffers=" + Arrays.toString(mChildOffers) +
+                ", mLastOffer=" + mLastOffer +
                 '}';
     }
 
@@ -273,10 +289,11 @@ public class Offer implements Parcelable {
         private String mUpdatedAt;
         private Author mAuthor;
         private int mPriceForStripe;
-        private int mLastOfferId;
         private int mNotifications;
         private boolean mFromSeller;
         private int[] mShipping;
+        private Offer[] mChildOffers;
+        private Offer mLastOffer;
 
         public Builder setId(int id) {
             mId = id;
@@ -348,11 +365,6 @@ public class Offer implements Parcelable {
             return this;
         }
 
-        public Builder setLastOfferId(int lastOfferId) {
-            mLastOfferId = lastOfferId;
-            return this;
-        }
-
         public Builder setNotifications(int notifications) {
             mNotifications = notifications;
             return this;
@@ -368,10 +380,20 @@ public class Offer implements Parcelable {
             return this;
         }
 
+        public Builder setChildOffers(Offer[] childOffers) {
+            mChildOffers = childOffers;
+            return this;
+        }
+
+        public Builder setLastOffer(Offer lastOffer) {
+            mLastOffer = lastOffer;
+            return this;
+        }
+
         public Offer create() {
             return new Offer(mId, mAdvertId, mCounterOfferId, mPrice, mQuantity, mUserId,
-                    mStatus, mStatusForBuyer, mComment, mStatusComment, mCreatedAt, mUpdatedAt,
-                    mAuthor, mPriceForStripe, mLastOfferId, mNotifications, mFromSeller, mShipping);
+                    mStatus, mStatusForBuyer, mComment, mStatusComment, mCreatedAt, mUpdatedAt, mAuthor,
+                    mPriceForStripe, mNotifications, mFromSeller, mShipping, mChildOffers, mLastOffer);
         }
     }
 

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/content"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:padding="16dp"
-              android:focusableInTouchMode="true">
+              android:padding="16dp">
 
     <EditText
             android:id="@+id/comment_edit_text"
@@ -17,7 +15,6 @@
             android:paddingEnd="8dp"
             android:maxLines="3"
             android:inputType="textCapSentences|textMultiLine"
-            android:hint="@string/reject_offer_dialog_hint"
-            tools:ignore="LabelFor"/>
+            android:hint="@string/reject_offer_dialog_hint"/>
 
 </LinearLayout>

@@ -48,7 +48,7 @@ public class AuthorJson {
 //            "bussines_type": null
 //            "business_sub_type": null
 
-    public Author getAuthor() {
+    public Author toAuthor() {
         return new Author.Builder()
                 .setId(id)
                 .setBusinessName(business_type_name)

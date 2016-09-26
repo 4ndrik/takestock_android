@@ -1,164 +1,161 @@
 package com.devabit.takestock.screen.buying;
 
 import android.support.annotation.NonNull;
-import android.util.SparseArray;
+import android.util.Pair;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.filter.OfferFilter;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.OfferStatus;
 import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.Callable;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class BuyingPresenter implements BuyingContract.Presenter {
-
-    private static final String TAG = makeLogTag(BuyingPresenter.class);
+class BuyingPresenter implements BuyingContract.Presenter {
 
     private final DataRepository mDataRepository;
-    private final BuyingContract.View mOffersView;
+    private final BuyingContract.View mView;
 
     private CompositeSubscription mSubscriptions;
+    private PaginatedList<Offer> mOfferPaginatedList;
 
-    private boolean mIsOffersStatusesShowed;
-
-    public BuyingPresenter(@NonNull DataRepository dataRepository, @NonNull BuyingContract.View buyingView) {
+    BuyingPresenter(@NonNull DataRepository dataRepository, @NonNull BuyingContract.View buyingView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
-        mOffersView = checkNotNull(buyingView, "buyingView cannot be null.");
+        mView = checkNotNull(buyingView, "view cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mOffersView.setPresenter(BuyingPresenter.this);
+        mView.setPresenter(BuyingPresenter.this);
     }
 
     @Override public void resume() {
-        fetchOfferStatuses();
     }
 
-    private void fetchOfferStatuses() {
-        if (mIsOffersStatusesShowed) return;
+    @Override public void refreshOffers() {
+        mOfferPaginatedList = null;
         Subscription subscription = mDataRepository
-                .getOfferStatuses()
-                .map(new Func1<List<OfferStatus>, SparseArray<OfferStatus>>() {
-                    @Override public SparseArray<OfferStatus> call(List<OfferStatus> statuses) {
-                        SparseArray<OfferStatus> result = new SparseArray<>(statuses.size());
-                        for (OfferStatus status : statuses) {
-                            result.append(status.getId(), status);
-                        }
-                        return result;
+                .getPaginatedOfferListWithFilter(createFilter())
+                .flatMap(createOfferAdvertPairsFunc())
+                .compose(RxTransformers.<List<Pair<Offer, Advert>>>applyObservableSchedulers())
+                .subscribe(new Subscriber<List<Pair<Offer, Advert>>>() {
+                    @Override public void onCompleted() {
+                        mView.setRefreshingProgressIndicator(false);
                     }
-                })
-                .compose(RxTransformers.<SparseArray<OfferStatus>>applyObservableSchedulers())
-                .subscribe(new Action1<SparseArray<OfferStatus>>() {
-                    @Override public void call(SparseArray<OfferStatus> statuses) {
-                        mOffersView.showOfferStatusesInView(statuses);
-                        mIsOffersStatusesShowed = true;
-                    }
-                }, getOnError(), getOnCompleted());
-        mSubscriptions.add(subscription);
 
-    }
+                    @Override public void onError(Throwable throwable) {
+                        mView.setRefreshingProgressIndicator(false);
+                        handleError(throwable);
+                    }
 
-    @Override public void fetchOffersByUserId(int userId) {
-        mOffersView.setProgressIndicator(true);
-        OfferFilter filter = new OfferFilter();
-        filter.setUserId(userId);
-        filter.setPageSize(Integer.MAX_VALUE);
-        Subscription subscription = mDataRepository
-                .getOfferResultListPerFilter(filter)
-                .flatMap(new Func1<PaginatedList<Offer>, Observable<Map<Offer, Advert>>>() {
-                    @Override public Observable<Map<Offer, Advert>> call(PaginatedList<Offer> resultList) {
-                        List<Offer> offers = resultList.getResults();
-                        return Observable.zip(Observable.just(offers), buildAdvertsPerOffersObservable(offers),
-                                new Func2<List<Offer>, SparseArray<Advert>, Map<Offer, Advert>>() {
-                                    @Override public Map<Offer, Advert> call(List<Offer> offers, SparseArray<Advert> adverts) {
-                                        Map<Offer, Advert> offerAdvertMap = new HashMap<>(offers.size());
-                                        for (Offer offer : offers) {
-                                            offerAdvertMap.put(offer, adverts.get(offer.getAdvertId()));
-                                        }
-                                        return offerAdvertMap;
-                                    }
-                                });
-                    }
-                })
-                .compose(RxTransformers.<Map<Offer, Advert>>applyObservableSchedulers())
-                .subscribe(new Action1<Map<Offer, Advert>>() {
-                    @Override public void call(Map<Offer, Advert> offerAdvertMap) {
-                        mOffersView.showOfferAdvertPairsInView(offerAdvertMap);
-                    }
-                }, getOnError(), getOnCompleted());
-        mSubscriptions.add(subscription);
-    }
-
-    private Observable<SparseArray<Advert>> buildAdvertsPerOffersObservable(List<Offer> offers) {
-        return Observable.from(offers)
-                .map(new Func1<Offer, Integer>() {
-                    @Override public Integer call(Offer offer) {
-                        return offer.getAdvertId();
-                    }
-                })
-                .toList()
-                .map(new Func1<List<Integer>, AdvertFilter>() {
-                    @Override public AdvertFilter call(List<Integer> ids) {
-                        AdvertFilter filter = new AdvertFilter();
-                        filter.setAdvertIds(ids);
-                        return filter;
-                    }
-                })
-                .flatMap(new Func1<AdvertFilter, Observable<List<Advert>>>() {
-                    @Override public Observable<List<Advert>> call(AdvertFilter advertFilter) {
-                        return mDataRepository.getAdvertsWithFilter(advertFilter);
-                    }
-                })
-                .map(new Func1<List<Advert>, SparseArray<Advert>>() {
-                    @Override public SparseArray<Advert> call(List<Advert> adverts) {
-                        SparseArray<Advert> result = new SparseArray<>(adverts.size());
-                        for (Advert advert : adverts) {
-                            result.append(advert.getId(), advert);
-                        }
-                        return result;
+                    @Override public void onNext(List<Pair<Offer, Advert>> pairs) {
+                        mView.showRefreshedOfferAdvertPairsInView(pairs);
                     }
                 });
+        mSubscriptions.add(subscription);
 
     }
 
-    @NonNull private Action1<Throwable> getOnError() {
-        return new Action1<Throwable>() {
-            @Override public void call(Throwable throwable) {
-                mOffersView.setProgressIndicator(false);
-                LOGE(TAG, "BOOM:", throwable);
-                if (throwable instanceof NetworkConnectionException) {
-                    mOffersView.showNetworkConnectionError();
-                } else {
-                    mOffersView.showUnknownError();
-                }
+    private OfferFilter createFilter() {
+        return new OfferFilter.Builder()
+                .setForSelf(true)
+                .setOrder(OfferFilter.Order.UPDATED_AT_DESCENDING)
+                .setAdditions(OfferFilter.Addition.FROM_BUYER, OfferFilter.Addition.ORIGINAL)
+                .setViews(OfferFilter.View.CHILD_OFFERS, OfferFilter.View.LAST_OFFER)
+                .create();
+    }
+
+    @Override public void loadOffers() {
+        if (mOfferPaginatedList != null && mOfferPaginatedList.hasNext()) {
+            mView.setLoadingProgressIndicator(true);
+            Subscription subscription = mDataRepository
+                    .getPaginatedOfferListPerPage(mOfferPaginatedList.getNext())
+                    .flatMap(createOfferAdvertPairsFunc())
+                    .compose(RxTransformers.<List<Pair<Offer, Advert>>>applyObservableSchedulers())
+                    .subscribe(new Action1<List<Pair<Offer, Advert>>>() {
+                        @Override public void call(List<Pair<Offer, Advert>> pairs) {
+                            mView.setLoadingProgressIndicator(false);
+                            mView.showLoadedOfferAdvertPairsInView(pairs);
+                        }
+                    });
+            mSubscriptions.add(subscription);
+        }
+    }
+
+    @NonNull private Func1<PaginatedList<Offer>, Observable<List<Pair<Offer, Advert>>>> createOfferAdvertPairsFunc() {
+        return new Func1<PaginatedList<Offer>, Observable<List<Pair<Offer, Advert>>>>() {
+            @Override public Observable<List<Pair<Offer, Advert>>> call(PaginatedList<Offer> paginatedList) {
+                return Observable.zip(
+                        Observable.just(paginatedList),
+                        buildOfferAdvertListObservable(paginatedList.getResults()),
+                        new Func2<PaginatedList<Offer>, List<Pair<Offer, Advert>>, List<Pair<Offer, Advert>>>() {
+                            @Override public List<Pair<Offer, Advert>> call(PaginatedList<Offer> paginatedList,
+                                                                            List<Pair<Offer, Advert>> pairs) {
+                                mOfferPaginatedList = paginatedList;
+                                return pairs;
+                            }
+                        });
             }
         };
     }
 
-    @NonNull private Action0 getOnCompleted() {
-        return new Action0() {
-            @Override public void call() {
-                mOffersView.setProgressIndicator(false);
-            }
-        };
+    private Observable<List<Pair<Offer, Advert>>> buildOfferAdvertListObservable(final List<Offer> offers) {
+        return Observable.fromCallable(
+                new Callable<AdvertFilter>() {
+                    @Override public AdvertFilter call() throws Exception {
+                        int[] advertIds = new int[offers.size()];
+                        for (int i = 0; i < offers.size(); i++) {
+                            advertIds[i] = offers.get(i).getAdvertId();
+                        }
+                        return new AdvertFilter.Builder()
+                                .setAdvertIds(advertIds)
+                                .create();
+                    }
+                })
+                .flatMap(new Func1<AdvertFilter, Observable<PaginatedList<Advert>>>() {
+                    @Override public Observable<PaginatedList<Advert>> call(AdvertFilter advertFilter) {
+                        return mDataRepository.getPaginatedAdvertListWithFilter(advertFilter);
+                    }
+                })
+                .map(new Func1<PaginatedList<Advert>, List<Advert>>() {
+                    @Override public List<Advert> call(PaginatedList<Advert> paginatedList) {
+                        return paginatedList.getResults();
+                    }
+                })
+                .map(new Func1<List<Advert>, List<Pair<Offer, Advert>>>() {
+                    @Override public List<Pair<Offer, Advert>> call(List<Advert> adverts) {
+                        List<Pair<Offer, Advert>> pairs = new ArrayList<>(adverts.size());
+                        for (int i = 0; i < adverts.size(); i++) {
+                            Offer offer = offers.get(i);
+                            Advert advert = adverts.get(i);
+                            pairs.add(Pair.create(offer, advert));
+                        }
+                        return pairs;
+                    }
+                });
+    }
+
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mView.showNetworkConnectionError();
+        } else {
+            mView.showUnknownError();
+        }
     }
 
     @Override public void pause() {

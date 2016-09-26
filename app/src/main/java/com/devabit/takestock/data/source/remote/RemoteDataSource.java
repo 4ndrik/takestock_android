@@ -577,13 +577,13 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
         return Observable.just(offer)
-                .map(new Func1<Offer, OfferCreateJson>() {
-                    @Override public OfferCreateJson call(Offer offer) {
-                        return new OfferCreateJson(offer);
+                .map(new Func1<Offer, MakeOfferJson>() {
+                    @Override public MakeOfferJson call(Offer offer) {
+                        return new MakeOfferJson(offer);
                     }
                 })
-                .map(new Func1<OfferCreateJson, String>() {
-                    @Override public String call(OfferCreateJson json) {
+                .map(new Func1<MakeOfferJson, String>() {
+                    @Override public String call(MakeOfferJson json) {
                         return mGson.toJson(json);
                     }
                 })

@@ -5,23 +5,6 @@ package com.devabit.takestock.data.filter;
  */
 public class OfferFilter extends Filter {
 
-    private int mUserId;
-    private int mAdvertId;
-    private boolean mForSelf;
-    private String[] mAdditions;
-    private String[] mViews;
-
-    private OfferFilter(){}
-
-    private OfferFilter(int userId, int advertId, boolean forSelf, String[] additions, String[] views, int pageSize) {
-        mUserId = userId;
-        mAdvertId = advertId;
-        mForSelf = forSelf;
-        mAdditions = additions;
-        mViews = views;
-        mPageSize = pageSize;
-    }
-
     public static final class Addition {
         public static final String FROM_SELLER = "from_seller";
         public static final String FROM_BUYER = "from_buyer";
@@ -31,6 +14,32 @@ public class OfferFilter extends Filter {
     public static final class View {
         public static final String CHILD_OFFERS = "child_offers";
         public static final String LAST_OFFER = "last_offer";
+    }
+
+    public static final class Order {
+        public static final String CREATED_AT = "created_at";
+        public static final String CREATED_AT_DESCENDING = "-created_at";
+        public static final String UPDATED_AT = "updated_at";
+        public static final String UPDATED_AT_DESCENDING = "-updated_at";
+    }
+
+    private int mUserId;
+    private int mAdvertId;
+    private boolean mForSelf;
+    private String[] mAdditions;
+    private String[] mViews;
+    private String mOrder;
+
+    private OfferFilter(){}
+
+    private OfferFilter(int userId, int advertId, boolean forSelf, String[] additions, String[] views, int pageSize, String order) {
+        mUserId = userId;
+        mAdvertId = advertId;
+        mForSelf = forSelf;
+        mAdditions = additions;
+        mViews = views;
+        mPageSize = pageSize;
+        mOrder = order;
     }
 
     public int getAdvertId() {
@@ -53,6 +62,10 @@ public class OfferFilter extends Filter {
         return mViews;
     }
 
+    public String getOrder() {
+        return mOrder;
+    }
+
     public static class Builder {
 
         private int mUserId;
@@ -60,7 +73,8 @@ public class OfferFilter extends Filter {
         private boolean mForSelf;
         private String[] mAdditions;
         private String[] mViews;
-        private int mPageSize = 25;
+        private int mPageSize = DEFAULT_PAGE_SIZE;
+        private String mOrder;
 
         public Builder setUserId(int userId) {
             mUserId = userId;
@@ -92,8 +106,13 @@ public class OfferFilter extends Filter {
             return this;
         }
 
+        public Builder setOrder(String order) {
+            mOrder = order;
+            return this;
+        }
+
         public OfferFilter create() {
-            return new OfferFilter(mUserId, mAdvertId, mForSelf, mAdditions, mViews, mPageSize);
+            return new OfferFilter(mUserId, mAdvertId, mForSelf, mAdditions, mViews, mPageSize, mOrder);
         }
     }
 }

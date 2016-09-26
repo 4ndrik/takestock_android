@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--offer status start-->
+    <string-array name="offer_statuses">
+        <item>Accepted</item>
+        <item>Rejected</item>
+        <item>Pending</item>
+        <item>Countered</item>
+        <item>Payment made</item>
+        <item>Countered by buyer</item>
+        <item>Address received</item>
+        <item>Await confirm stock dispatched</item>
+        <item>Stock in transit</item>
+        <item>Goods received</item>
+        <item>In dispute</item>
+    </string-array>
+    <!--offer status end-->
+
+</resources>

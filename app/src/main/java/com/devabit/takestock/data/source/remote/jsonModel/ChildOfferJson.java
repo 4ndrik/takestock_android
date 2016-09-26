@@ -3,10 +3,10 @@ package com.devabit.takestock.data.source.remote.jsonModel;
 import com.devabit.takestock.data.model.Offer;
 
 /**
- * Created by Victor Artemyev on 20/09/2016.
+ * Created by Victor Artemyev on 26/09/2016.
  */
 
-public class OfferJson {
+public class ChildOfferJson implements JsonModel {
 
     public int id;
     public int advert;
@@ -22,7 +22,7 @@ public class OfferJson {
     public AuthorJson user_detailed;
     public int price_for_stripe;
     public boolean from_seller;
-    public ChildOfferJson last_offer;
+    public int last_offer;
     public int notifications;
     public int[] shipping;
 
@@ -43,7 +43,6 @@ public class OfferJson {
                 .setFromSeller(from_seller)
                 .setNotifications(notifications)
                 .setShipping(shipping)
-                .setLastOffer(last_offer == null ? null : last_offer.toOffer())
                 .setChildOffers(toChildOffers())
                 .create();
     }

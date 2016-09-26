@@ -45,6 +45,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     }
 
     public void setCategories(List<Category> categories) {
+        mCategories.clear();
         mCategories.add(Category.ALL);
         mCategories.addAll(categories);
         notifyDataSetChanged();

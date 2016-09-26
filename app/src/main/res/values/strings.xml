@@ -297,20 +297,13 @@
     <string name="reject_offer_dialog_error_comment">Comment is empty</string>
     <string name="reject_offer_dialog_hint">Write a comment…</string>
     <!--reject offer dialog end-->
-    
-    <!--offer status start-->
-    <string-array name="offer_statuses">
-        <item>Accepted</item>
-        <item>Rejected</item>
-        <item>Pending</item>
-        <item>Countered</item>
-        <item>Payment made</item>
-        <item>Countered by buyer</item>
-        <item>Address received</item>
-        <item>Await confirm stock dispatched</item>
-        <item>Stock in transit</item>
-        <item>Goods received</item>
-        <item>In dispute</item>
-    </string-array>
-    <!--offer status end-->
+
+    <!--buying activity start-->
+    <string name="buying_activity_toolbar_title">Buying</string>
+    <!--buying activity end-->
+
+    <!--offer buying item start-->
+    <string name="offer_buying_item_price">£%1$s/%2$d %3$s</string>
+    <!--offer buying item end-->
+
 </resources>

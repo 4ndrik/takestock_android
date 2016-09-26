@@ -13,6 +13,7 @@ public class OfferFilterUrlBuilder extends FilterUrlBuilder<OfferFilter> {
     private static final String IN = "in";
     private static final String FOR = "for";
     private static final String VIEW = "view";
+    private static final String ORDER = "o";
 
     public OfferFilterUrlBuilder(String baseUrl, OfferFilter filter) {
         super(baseUrl, filter);
@@ -40,6 +41,11 @@ public class OfferFilterUrlBuilder extends FilterUrlBuilder<OfferFilter> {
 
         if (mFilter.isForSelf()) {
             appendQueryParameter(FOR, "self");
+        }
+
+        String order = mFilter.getOrder();
+        if (order != null) {
+            appendQueryParameter(ORDER, order);
         }
 
         return mBuilder.toString();

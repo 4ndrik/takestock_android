@@ -10,18 +10,16 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Func8;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import java.util.List;
 
-import static com.devabit.takestock.utils.Logger.*;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
 public class MainPresenter implements MainContract.Presenter {
-
-    private static final String TAG = makeLogTag(MainPresenter.class);
 
     private final DataRepository mDataRepository;
     private final MainContract.View mMainView;
@@ -42,6 +40,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override public void updateData() {
+//        mMainView.showDataUpdated();
         if (mIsDataLoaded) return;
         mMainView.setProgressIndicator(true);
         Subscription subscription = Observable
@@ -68,10 +67,10 @@ public class MainPresenter implements MainContract.Presenter {
                         mMainView.showDataUpdated();
                     }
 
-                    @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
+                    @Override public void onError(Throwable throwable) {
+                        Timber.e(throwable);
                         mMainView.setProgressIndicator(false);
-                        if (e instanceof NetworkConnectionException) {
+                        if (throwable instanceof NetworkConnectionException) {
                             mMainView.showNetworkConnectionError();
                         } else {
                             mMainView.showLoadingDataError();
@@ -79,7 +78,7 @@ public class MainPresenter implements MainContract.Presenter {
                     }
 
                     @Override public void onNext(Void v) {
-                        LOGD(TAG, "BusinessTypes updated: ");
+
                     }
                 });
         mSubscriptions.add(subscription);

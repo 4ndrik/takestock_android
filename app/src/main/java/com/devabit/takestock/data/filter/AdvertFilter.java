@@ -6,9 +6,6 @@ import com.devabit.takestock.data.model.Subcategory;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Victor Artemyev on 20/05/2016.
@@ -37,7 +34,6 @@ public class AdvertFilter extends Filter {
         public static final String HOLD_ON = "hold_on";
     }
 
-    private Set<Integer> mAdvertIds = new HashSet<>(0);
     private int mItemCount;
     private Category mCategory;
     private Subcategory mSubcategory;
@@ -46,12 +42,13 @@ public class AdvertFilter extends Filter {
     private String mQuery;
     @Order private int mOrder;
     private String[] mAdditions;
+    private int[] mAdvertIds;
 
     public AdvertFilter() {
     }
 
-    private AdvertFilter(int itemCount, Category category, Subcategory subcategory, int authorId,
-                         int order, int pageSize, boolean isWatchlist, String query, String[] additions) {
+    private AdvertFilter(int itemCount, Category category, Subcategory subcategory, int authorId, int order,
+                         int pageSize, boolean isWatchlist, String query, String[] additions, int[] advertIds) {
         mItemCount = itemCount;
         mCategory = category;
         mSubcategory = subcategory;
@@ -61,46 +58,27 @@ public class AdvertFilter extends Filter {
         mIsWatchlist = isWatchlist;
         mQuery = query;
         mAdditions = additions;
+        mAdvertIds = advertIds;
     }
 
-    public Set<Integer> getAdvertIds() {
+    public int[] getAdvertIds() {
         return mAdvertIds;
-    }
-
-    public void setAdvertIds(List<Integer> advertIds) {
-        mAdvertIds.addAll(advertIds);
     }
 
     public int getItemCount() {
         return mItemCount;
     }
 
-    public void setItemCount(int itemCount) {
-        mItemCount = itemCount;
-    }
-
     public Category getCategory() {
         return mCategory;
-    }
-
-    public void setCategory(Category category) {
-        mCategory = category;
     }
 
     public Subcategory getSubcategory() {
         return mSubcategory;
     }
 
-    public void setSubcategory(Subcategory subcategory) {
-        mSubcategory = subcategory;
-    }
-
     public int getAuthorId() {
         return mAuthorId;
-    }
-
-    public void setAuthorId(int authorId) {
-        mAuthorId = authorId;
     }
 
     @Order public int getOrder() {
@@ -138,6 +116,7 @@ public class AdvertFilter extends Filter {
         private boolean mIsWatchlist;
         private String mQuery = "";
         private String[] mAdditions;
+        private int[] mAdvertIds;
 
         public Builder setItemCount(int itemCount) {
             mItemCount = itemCount;
@@ -184,10 +163,14 @@ public class AdvertFilter extends Filter {
             return this;
         }
 
+        public Builder setAdvertIds(int[] advertIds) {
+            mAdvertIds = advertIds;
+            return this;
+        }
+
         public AdvertFilter create() {
-            return new AdvertFilter(
-                    mItemCount, mCategory, mSubcategory,
-                    mAuthorId, mOrder, mPageSize, mIsWatchlist, mQuery, mAdditions);
+            return new AdvertFilter(mItemCount, mCategory, mSubcategory, mAuthorId,
+                    mOrder, mPageSize, mIsWatchlist, mQuery, mAdditions, mAdvertIds);
         }
     }
 }

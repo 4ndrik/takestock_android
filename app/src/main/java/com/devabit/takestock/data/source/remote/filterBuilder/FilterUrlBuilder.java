@@ -25,6 +25,16 @@ public abstract class FilterUrlBuilder<T extends Filter> {
         mBuilder.append(value);
     }
 
+    protected void appendQueryParameter(String key, int[] values) {
+        appendKey(key);
+        join(values);
+    }
+
+    protected void appendQueryParameter(String key, String[] values) {
+        appendKey(key);
+        join(values);
+    }
+
     protected void appendQueryParameter(String key, String value) {
         appendKey(key);
         mBuilder.append(value);
@@ -34,5 +44,29 @@ public abstract class FilterUrlBuilder<T extends Filter> {
         mBuilder.append(mBuilder.charAt(mBuilder.length() - 1) == '/' ? '?' : '&');
         mBuilder.append(key);
         mBuilder.append('=');
+    }
+
+    private void join(int[] values) {
+        boolean firstTime = true;
+        for (int value: values) {
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                mBuilder.append(',');
+            }
+            mBuilder.append(value);
+        }
+    }
+
+    private void join(String[] values) {
+        boolean firstTime = true;
+        for (String value: values) {
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                mBuilder.append(',');
+            }
+            mBuilder.append(value);
+        }
     }
 }

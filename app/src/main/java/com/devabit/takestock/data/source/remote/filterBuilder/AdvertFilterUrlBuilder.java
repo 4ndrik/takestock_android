@@ -5,8 +5,6 @@ import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
 
-import java.util.Set;
-
 import static com.devabit.takestock.data.filter.AdvertFilter.*;
 
 /**
@@ -72,9 +70,9 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
             appendQueryParameter(AUTHOR_ID, userId);
         }
 
-        Set<Integer> ids = mFilter.getAdvertIds();
-        if (!ids.isEmpty()) {
-            appendQueryParameter(IDS, TextUtils.join(",", ids));
+        int[] ids = mFilter.getAdvertIds();
+        if (ids != null && ids.length > 0) {
+            appendQueryParameter(IDS, ids);
         }
 
         if (mFilter.isWatchlist()) {
@@ -83,7 +81,7 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
 
         String[] additions = mFilter.getAdditions();
         if (additions != null && additions.length > 0) {
-            appendQueryParameter(IN, TextUtils.join(",", additions));
+            appendQueryParameter(IN, additions);
         }
 
         return mBuilder.toString();

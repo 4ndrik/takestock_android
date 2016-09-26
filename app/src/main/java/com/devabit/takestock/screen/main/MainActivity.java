@@ -71,13 +71,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         ButterKnife.bind(MainActivity.this);
         mAccount = TakeStockAccount.get(MainActivity.this);
         createPresenter();
-//        Typeface mediumTypeface = FontCache.getTypeface(MainActivity.this, R.string.font_brandon_medium);
-//        mSearchEditText.setTypeface(mediumTypeface);
-//
-//        Typeface boldTypeface = FontCache.getTypeface(MainActivity.this, R.string.font_brandon_bold);
-//        mBrowseProductsButton.setTypeface(boldTypeface);
-//        mSellSomethingButton.setTypeface(boldTypeface);
-
         setUpNavigationView();
         setUpSearchEditText();
         setUpTitleNavigationView();
@@ -156,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onProfileMenuItemClick() {
-        closeDrawer();
         if (lacksAccount()) startEntryActivity();
         else startProfileAccountActivity();
     }
@@ -181,13 +173,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onBuyingMenuItemClick() {
-        closeDrawer();
         if (lacksAccount()) startEntryActivity();
         else startBuyingActivity();
     }
 
     private void onSellingMenuItemClick() {
-        closeDrawer();
         if (lacksAccount()) startEntryActivity();
         else startSellingActivity();
     }
@@ -204,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void startEntryActivity() {
-//        startActivity(EntryActivity.getStartIntent(MainActivity.this));
         startActivityForResult(EntryActivity.getStartIntent(MainActivity.this), RC_ENTRY);
     }
 
@@ -254,8 +243,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         return mAccount.lacksAccount();
     }
 
-    private void startAdvertsActivity(String qyery) {
-        startActivity(AdvertsActivity.getSearchingStartIntent(MainActivity.this, qyery));
+    private void startAdvertsActivity(String query) {
+        startActivity(AdvertsActivity.getSearchingStartIntent(MainActivity.this, query));
     }
 
     @Override protected void onStart() {

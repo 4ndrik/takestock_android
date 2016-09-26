@@ -1,16 +1,18 @@
 package com.devabit.takestock.screen.category.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Category;
@@ -31,6 +33,9 @@ public class CategoriesFragment extends Fragment implements CategoriesContract.V
         return new CategoriesFragment();
     }
 
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+
     private CategoriesContract.Presenter mPresenter;
     private CategoriesAdapter mCategoriesAdapter;
 
@@ -39,21 +44,34 @@ public class CategoriesFragment extends Fragment implements CategoriesContract.V
     }
 
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
-        Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view;
-        LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(context, R.drawable.divider_grey300));
-        recyclerView.addItemDecoration(itemDecoration);
-        mCategoriesAdapter = new CategoriesAdapter(recyclerView.getContext());
-        recyclerView.setAdapter(mCategoriesAdapter);
-        mCategoriesAdapter.setOnCategorySelectedListener(new CategoriesAdapter.OnCategorySelectedListener() {
-            @Override public void onCategorySelected(Category category) {
-                ((CategoriesActivity)getActivity()).setSelectedCategory(category);
+        ButterKnife.bind(CategoriesFragment.this, view);
+        setUpRefreshLayout();
+        setUpRecyclerView();
+        createPresenter();
+    }
+
+    private void setUpRefreshLayout() {
+        mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
+                mPresenter.fetchCategories();
             }
         });
-        createPresenter();
+    }
+
+    private void setUpRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mRecyclerView.getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(mRecyclerView.getContext(), R.drawable.divider_grey300));
+        mRecyclerView.addItemDecoration(itemDecoration);
+        mCategoriesAdapter = new CategoriesAdapter(mRecyclerView.getContext());
+        mRecyclerView.setAdapter(mCategoriesAdapter);
+        mCategoriesAdapter.setOnCategorySelectedListener(new CategoriesAdapter.OnCategorySelectedListener() {
+            @Override public void onCategorySelected(Category category) {
+                ((CategoriesActivity) getActivity()).setSelectedCategory(category);
+            }
+        });
     }
 
     private void createPresenter() {
@@ -78,7 +96,7 @@ public class CategoriesFragment extends Fragment implements CategoriesContract.V
     }
 
     @Override public void setProgressIndicator(boolean isActive) {
-
+        mRefreshLayout.setRefreshing(isActive);
     }
 
     @Override public void onPause() {

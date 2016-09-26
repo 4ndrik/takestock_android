@@ -6,7 +6,7 @@ import com.devabit.takestock.data.model.Offer;
  * Created by Victor Artemyev on 20/09/2016.
  */
 
-public class OfferCreateJson implements JsonModel {
+public class MakeOfferJson implements JsonModel {
 
     public final int advert;
     public final int user;
@@ -14,7 +14,7 @@ public class OfferCreateJson implements JsonModel {
     public final String price;
     public final int quantity;
 
-    public OfferCreateJson(Offer offer) {
+    public MakeOfferJson(Offer offer) {
         this.advert = offer.getAdvertId();
         this.user = offer.getUserId();
         this.status = offer.getStatus();
