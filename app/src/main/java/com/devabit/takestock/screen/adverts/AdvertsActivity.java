@@ -69,6 +69,8 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         return starter;
     }
 
+    private static final int RC_ADVERT_DETAIL = 101;
+
     @BindView(R.id.content) protected ViewGroup mContent;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
     @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
@@ -153,7 +155,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void setUpAdvertAdapter(RecyclerView recyclerView) {
-        mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext());
+        mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext(), mAccount.getUserId());
         mAdvertsAdapter.setOnItemClickListener(new AdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Advert advert) {
                 startAdvertDetailActivity(advert);
@@ -174,7 +176,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void startAdvertDetailActivity(Advert advert) {
-        startActivity(AdvertDetailActivity.getStartIntent(AdvertsActivity.this, advert));
+        startActivityForResult(AdvertDetailActivity.getStartIntent(AdvertsActivity.this, advert), RC_ADVERT_DETAIL);
     }
 
     private void startEntryActivity() {
@@ -188,6 +190,14 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     @Override public void setPresenter(@NonNull AdvertsContract.Presenter presenter) {
         mPresenter = presenter;
         mPresenter.refreshAdverts();
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_ADVERT_DETAIL && resultCode == RESULT_OK) {
+            Advert advert = data.getParcelableExtra(getString(R.string.extra_advert));
+            mAdvertsAdapter.refreshAdvert(advert);
+        }
     }
 
     @Override protected void onNewIntent(Intent intent) {

@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"
-                tools:listitem="@layout/item_vertical_advert"/>
+                tools:listitem="@layout/item_advert_vertical"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

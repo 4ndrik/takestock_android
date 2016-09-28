@@ -30,10 +30,7 @@ import java.util.List;
  */
 public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHolder> {
 
-    private static final int TYPE_PROGRESS = 0;
-    private static final int TYPE_HORIZONTAL = 1;
-    private static final int TYPE_VERTICAL = 2;
-
+    private final int mUserId;
     private final LayoutInflater mLayoutInflater;
     private final List<Advert> mAdverts;
     private final SparseArray<Advert> mAdvertsInProcessing;
@@ -50,22 +47,28 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
     private OnWatchingChangedListener mWatchingChangedListener;
 
-    public AdvertsAdapter(Context context) {
+    public AdvertsAdapter(Context context, int userId) {
         mLayoutInflater = LayoutInflater.from(context);
         mAdverts = new ArrayList<>();
         mAdvertsInProcessing = new SparseArray<>();
+        mUserId = userId;
     }
 
-    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, @LayoutRes int viewType) {
         switch (viewType) {
-            case TYPE_PROGRESS:
-                return new ProgressViewHolder(inflateItemView(R.layout.item_progress, parent));
+            case R.layout.item_progress:
+                return new ProgressViewHolder(inflateItemView(viewType, parent));
 
-            case TYPE_VERTICAL:
-                return new AdvertViewHolder(inflateItemView(R.layout.item_vertical_advert, parent));
+            case R.layout.item_advert_account_vertical:
+            case R.layout.item_advert_account_horizontal:
+            case R.layout.item_advert_offered_vertical:
+            case R.layout.item_advert_offered_horizontal:
+                return new AdvertViewHolder(inflateItemView(viewType, parent));
 
+            case R.layout.item_advert_vertical:
+            case R.layout.item_advert_horizontal:
             default:
-                return new AdvertViewHolder(inflateItemView(R.layout.item_horizontal_advert, parent));
+                return new AdvertWatchingViewHolder(inflateItemView(viewType, parent));
         }
     }
 
@@ -74,30 +77,32 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
-        int viewType = holder.getItemViewType();
-        if (viewType == TYPE_HORIZONTAL || viewType == TYPE_VERTICAL) {
-            ((AdvertViewHolder)holder).bindAdvert(mAdverts.get(position));
+        if (holder.getItemViewType() == R.layout.item_progress) return;
+        ((AdvertViewHolder) holder).bindAdvert(mAdverts.get(position));
+    }
+
+    @Override public @LayoutRes int getItemViewType(int position) {
+        Advert advert = mAdverts.get(position);
+        if (advert == null) return R.layout.item_progress;
+
+        List<Photo> photos = advert.getPhotos();
+        if (photos.isEmpty()) return R.layout.item_advert_horizontal;
+
+        Photo photo = photos.get(0);
+        boolean isVertical = photo.getHeight() > photo.getWidth();
+        if (advert.getAuthorId() == mUserId) {
+            return isVertical ? R.layout.item_advert_account_vertical : R.layout.item_advert_account_horizontal;
         }
+
+        if (advert.canOffer()) {
+            return isVertical ? R.layout.item_advert_vertical : R.layout.item_advert_horizontal;
+        }
+
+        return isVertical ? R.layout.item_advert_offered_vertical : R.layout.item_advert_offered_horizontal;
     }
 
     @Override public int getItemCount() {
         return mAdverts.size();
-    }
-
-    @Override public int getItemViewType(int position) {
-        Advert advert = mAdverts.get(position);
-        if (advert == null) return TYPE_PROGRESS;
-        List<Photo> photos = advert.getPhotos();
-        if (photos.isEmpty()) {
-            return TYPE_HORIZONTAL;
-        } else {
-            return getItemViewTypePerPhoto(photos.get(0));
-        }
-    }
-
-    private int getItemViewTypePerPhoto(Photo photo) {
-        if (photo.getHeight() > photo.getWidth()) return TYPE_VERTICAL;
-        else return TYPE_HORIZONTAL;
     }
 
     public void addAdverts(List<Advert> adverts) {
@@ -109,6 +114,12 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         mAdverts.clear();
         mAdverts.addAll(adverts);
         notifyDataSetChanged();
+    }
+
+    public void refreshAdvert(Advert advert) {
+        int position = mAdverts.indexOf(advert);
+        mAdverts.set(position, advert);
+        notifyItemChanged(position);
     }
 
     public void startAdvertProcessing(Advert advert) {
@@ -159,6 +170,37 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         }
     }
 
+    class AdvertWatchingViewHolder extends AdvertViewHolder {
+
+        @BindView(R.id.watching_check_box) CheckBox watchingCheckBox;
+
+        AdvertWatchingViewHolder(View itemView) {
+            super(itemView);
+            watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
+        }
+
+        final CheckBox.OnCheckedChangeListener mCheckedChangeListener
+                = new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mWatchingChangedListener != null) mWatchingChangedListener.onWatchingChanged(mAdvert, isChecked);
+            }
+        };
+
+        @Override void bindAdvert(Advert advert) {
+            super.bindAdvert(advert);
+            watchingCheckBox.setOnCheckedChangeListener(null);
+//            watchingCheckBox.setChecked(mAdvert.hasSubscriber(sUserId));
+            watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
+            setItemViewActive(!isAdvertProcessing(mAdvert));
+        }
+
+        void setItemViewActive(boolean isActive) {
+            itemView.setAlpha(isActive ? 1.0f : 0.5f);
+            itemView.setEnabled(isActive);
+            watchingCheckBox.setEnabled(isActive);
+        }
+    }
+
     class AdvertViewHolder extends ViewHolder {
 
         private final Resources mResources;
@@ -168,16 +210,14 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         @BindView(R.id.location_text_view) TextView locationTextView;
         @BindView(R.id.date_text_view) TextView dateTextView;
         @BindView(R.id.price_text_view) TextView priceTextView;
-        @BindView(R.id.watching_check_box) CheckBox watchingCheckBox;
 
-        private Advert mAdvert;
+        Advert mAdvert;
 
         AdvertViewHolder(View itemView) {
             super(itemView);
             mResources = itemView.getResources();
             ButterKnife.bind(AdvertViewHolder.this, itemView);
             itemView.setOnClickListener(mClickListener);
-            watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
         }
 
         final View.OnClickListener mClickListener
@@ -193,25 +233,8 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             locationTextView.setText(mAdvert.getLocation());
             String priceString = mResources.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice());
             priceTextView.setText(priceString);
-            watchingCheckBox.setOnCheckedChangeListener(null);
-//            watchingCheckBox.setChecked(mAdvert.hasSubscriber(sUserId));
-            watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
             dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getExpiresAt()));
             bindPhoto(mAdvert.getPhotos());
-            setItemViewActive(!isAdvertProcessing(mAdvert));
-        }
-
-        final CheckBox.OnCheckedChangeListener mCheckedChangeListener
-                = new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mWatchingChangedListener != null) mWatchingChangedListener.onWatchingChanged(mAdvert, isChecked);
-            }
-        };
-
-        void setItemViewActive(boolean isActive) {
-            itemView.setAlpha(isActive ? 1.0f : 0.5f);
-            itemView.setEnabled(isActive);
-            watchingCheckBox.setEnabled(isActive);
         }
 
         boolean isAdvertProcessing(Advert advert) {
