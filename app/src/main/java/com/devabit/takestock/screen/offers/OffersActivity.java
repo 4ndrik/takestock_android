@@ -25,7 +25,6 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Photo;
-import com.devabit.takestock.screen.offers.adapters.OffersAdapter;
 import com.devabit.takestock.screen.offers.dialogs.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.offers.dialogs.rejectOffer.RejectOfferDialog;
 import com.devabit.takestock.utils.DateUtil;

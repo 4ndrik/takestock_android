@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.buying.adapter;
+package com.devabit.takestock.screen.buying;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -136,7 +136,7 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
             mPair = pair;
             Offer offer = mPair.first;
             offerDateTextView.setText(DateUtil.formatToDefaultDate(offer.getUpdatedAt()));
-            statusTextView.setText(offerStatuses[offer.getStatus() - 1]);
+            statusTextView.setText(offerStatuses[offer.getStatusForBuyer() - 1]);
             Advert advert = mPair.second;
             offerPriceTextView.setText(resources.getString(
                     R.string.offer_buying_item_price, offer.getPrice(), offer.getQuantity(), advert.getPackagingName()));

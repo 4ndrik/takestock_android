@@ -42,7 +42,7 @@ public class Offer implements Parcelable {
     private boolean mFromSeller;
     private int[] mShipping;
     private Offer[] mChildOffers;
-    private Offer mLastOffer;
+    private int mLastOffer;
 
     public Offer() {
     }
@@ -65,7 +65,7 @@ public class Offer implements Parcelable {
                   boolean fromSeller,
                   int[] shipping,
                   Offer[] childOffers,
-                  Offer lastOffer) {
+                  int lastOffer) {
         mId = id;
         mAdvertId = advertId;
         mCounterOfferId = counterOfferId;
@@ -106,7 +106,7 @@ public class Offer implements Parcelable {
         mFromSeller = in.readByte() != 0;
         mShipping = in.createIntArray();
         mChildOffers = in.createTypedArray(Offer.CREATOR);
-        mLastOffer = in.readParcelable(Offer.class.getClassLoader());
+        mLastOffer = in.readInt();
     }
 
     @Override
@@ -129,7 +129,7 @@ public class Offer implements Parcelable {
         dest.writeByte((byte) (mFromSeller ? 1 : 0));
         dest.writeIntArray(mShipping);
         dest.writeTypedArray(mChildOffers, flags);
-        dest.writeParcelable(mLastOffer, flags);
+        dest.writeInt(mLastOffer);
     }
 
     @Override
@@ -199,6 +199,34 @@ public class Offer implements Parcelable {
 
     public Author getAuthor() {
         return mAuthor;
+    }
+
+    public int getStatusForBuyer() {
+        return mStatusForBuyer;
+    }
+
+    public int getPriceForStripe() {
+        return mPriceForStripe;
+    }
+
+    public int getNotifications() {
+        return mNotifications;
+    }
+
+    public boolean isFromSeller() {
+        return mFromSeller;
+    }
+
+    public int[] getShipping() {
+        return mShipping;
+    }
+
+    public Offer[] getChildOffers() {
+        return mChildOffers;
+    }
+
+    public int getLastOffer() {
+        return mLastOffer;
     }
 
     @Override public boolean equals(Object o) {
@@ -293,7 +321,7 @@ public class Offer implements Parcelable {
         private boolean mFromSeller;
         private int[] mShipping;
         private Offer[] mChildOffers;
-        private Offer mLastOffer;
+        private int mLastOffer;
 
         public Builder setId(int id) {
             mId = id;
@@ -385,7 +413,7 @@ public class Offer implements Parcelable {
             return this;
         }
 
-        public Builder setLastOffer(Offer lastOffer) {
+        public Builder setLastOffer(int lastOffer) {
             mLastOffer = lastOffer;
             return this;
         }

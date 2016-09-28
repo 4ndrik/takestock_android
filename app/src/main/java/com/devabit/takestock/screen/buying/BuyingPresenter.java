@@ -75,7 +75,7 @@ class BuyingPresenter implements BuyingContract.Presenter {
                 .setForSelf(true)
                 .setOrder(OfferFilter.Order.UPDATED_AT_DESCENDING)
                 .setAdditions(OfferFilter.Addition.FROM_BUYER, OfferFilter.Addition.ORIGINAL)
-                .setViews(OfferFilter.View.CHILD_OFFERS, OfferFilter.View.LAST_OFFER)
+                .setViews(OfferFilter.View.CHILD_OFFERS)
                 .create();
     }
 
@@ -139,10 +139,15 @@ class BuyingPresenter implements BuyingContract.Presenter {
                 .map(new Func1<List<Advert>, List<Pair<Offer, Advert>>>() {
                     @Override public List<Pair<Offer, Advert>> call(List<Advert> adverts) {
                         List<Pair<Offer, Advert>> pairs = new ArrayList<>(adverts.size());
-                        for (int i = 0; i < adverts.size(); i++) {
+
+                        for (int i = 0; i < offers.size(); i++) {
                             Offer offer = offers.get(i);
-                            Advert advert = adverts.get(i);
-                            pairs.add(Pair.create(offer, advert));
+                            for (Advert advert : adverts) {
+                                if (offer.getAdvertId() == advert.getId()) {
+                                    pairs.add(Pair.create(offer, advert));
+                                    break;
+                                }
+                            }
                         }
                         return pairs;
                     }

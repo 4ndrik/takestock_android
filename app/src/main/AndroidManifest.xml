@@ -82,6 +82,9 @@
                 android:name=".screen.offers.OffersActivity"
                 android:screenOrientation="portrait"/>
         <activity
+                android:name=".screen.offer.OfferActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".screen.questions.QuestionsActivity"
                 android:screenOrientation="portrait"/>
         <activity

@@ -306,4 +306,8 @@
     <string name="offer_buying_item_price">£%1$s/%2$d %3$s</string>
     <!--offer buying item end-->
 
+    <!--offer buying item start-->
+    <string name="offer_activity_advert_price">£ %1$s/%2$s</string>
+    <!--offer buying item end-->
+
 </resources>

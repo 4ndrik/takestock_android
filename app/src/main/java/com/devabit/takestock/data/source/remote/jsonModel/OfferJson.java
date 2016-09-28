@@ -10,7 +10,7 @@ public class OfferJson {
 
     public int id;
     public int advert;
-    public ChildOfferJson[] child_offers;
+    public OfferJson[] child_offers;
     public String price;
     public int quantity;
     public int user;
@@ -22,7 +22,7 @@ public class OfferJson {
     public AuthorJson user_detailed;
     public int price_for_stripe;
     public boolean from_seller;
-    public ChildOfferJson last_offer;
+    public int last_offer;
     public int notifications;
     public int[] shipping;
 
@@ -43,7 +43,7 @@ public class OfferJson {
                 .setFromSeller(from_seller)
                 .setNotifications(notifications)
                 .setShipping(shipping)
-                .setLastOffer(last_offer == null ? null : last_offer.toOffer())
+                .setLastOffer(last_offer)
                 .setChildOffers(toChildOffers())
                 .create();
     }

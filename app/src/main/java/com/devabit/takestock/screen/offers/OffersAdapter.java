@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offers.adapters;
+package com.devabit.takestock.screen.offers;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 02/06/2016.
  */
-public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
+class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
     private static final int TYPE_PENDING = 1;
     private static final int TYPE_ACCEPTED = 2;
@@ -34,7 +34,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
     private final LayoutInflater mLayoutInflater;
     private final List<Offer> mOffers;
 
-    public interface OnStatusChangedListener {
+    interface OnStatusChangedListener {
         void onAccepted(Offer offer);
 
         void onCountered(Offer offer);
@@ -44,7 +44,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
 
     private OnStatusChangedListener mStatusChangedListener;
 
-    public OffersAdapter(Context context, String packaging) {
+    OffersAdapter(Context context, String packaging) {
         mPackaging = packaging;
         mLayoutInflater = LayoutInflater.from(context);
         mOffers = new ArrayList<>();

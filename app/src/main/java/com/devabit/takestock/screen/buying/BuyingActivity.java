@@ -21,7 +21,7 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.screen.buying.adapter.OfferAdvertPairsAdapter;
+import com.devabit.takestock.screen.offer.OfferActivity;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
 
 import java.util.List;
@@ -96,7 +96,7 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
         recyclerView.setAdapter(mOffersAdvertAdapter);
         mOffersAdvertAdapter.setOnItemClickListener(new OfferAdvertPairsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Pair<Offer, Advert> offerAdvertPair) {
-
+                startActivity(OfferActivity.getStartIntent(BuyingActivity.this, offerAdvertPair));
             }
         });
     }
