@@ -64,9 +64,6 @@
                 android:name=".screen.advert.preview.AdvertPreviewActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.search.SearchActivity"
-                android:screenOrientation="portrait"/>
-        <activity
                 android:name=".screen.selling.SellingActivity"
                 android:screenOrientation="portrait"/>
         <activity
