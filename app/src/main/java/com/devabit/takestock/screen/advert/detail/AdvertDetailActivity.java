@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -41,6 +43,9 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     private static final int RC_ENTRY = 100;
 
+    private static final int CHILD_MAKE_OFFER_BUTTON = 0;
+    private static final int CHILD_THANK_FOR_OFFER_TEXT = 1;
+
     @BindView(R.id.content_product_detail) protected View mContent;
     @BindView(R.id.guide_price_text_view) protected TextView mGuidePriceTextView;
     @BindView(R.id.minimum_order_text_view) protected TextView mMinimumOrderTextView;
@@ -51,13 +56,16 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @BindView(R.id.expiry_date_text_view) protected TextView mExpiryTextView;
     @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
     @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
+    @BindView(R.id.view_switcher) protected ViewSwitcher mViewSwitcher;
+    @BindView(R.id.make_offer_fab) protected FloatingActionButton mMakeOfferFAB;
 
     @BindViews({R.id.recycler_view, R.id.make_offer_fab, R.id.ask_button, R.id.make_button})
     protected List<View> mViews;
 
-    private TakeStockAccount mAccount;
-    private Advert mAdvert;
-    private AdvertDetailContract.Presenter mPresenter;
+    TakeStockAccount mAccount;
+    Advert mAdvert;
+    Offer mOffer;
+    AdvertDetailContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +103,8 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         Certification certification = advert.getCertification();
         mCertificationTextView.setText(certification == null ? "" : certification.getName());
         mLocationTextView.setText(advert.getLocation());
+        mViewSwitcher.setDisplayedChild(advert.canOffer() ? CHILD_MAKE_OFFER_BUTTON : CHILD_THANK_FOR_OFFER_TEXT);
+        mMakeOfferFAB.setVisibility(advert.canOffer() ? View.VISIBLE : View.GONE);
     }
 
     private void setUpRecyclerView(Advert advert) {
@@ -161,8 +171,12 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mConditionTextView.setText(condition.getState());
     }
 
-    @Override public void showOfferMade(Offer offer) {
+    @Override public void showOfferMadeInView(Offer offer) {
+        mOffer = offer;
         showSnack(R.string.advert_detail_offer_made);
+        mMakeOfferFAB.setVisibility(View.GONE);
+        mViewSwitcher.setDisplayedChild(CHILD_THANK_FOR_OFFER_TEXT);
+        mAdvert.setCanOffer(false);
     }
 
     @Override public void showNetworkConnectionError() {
@@ -208,6 +222,17 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     private void startQuestionActivity() {
         startActivity(AskQuestionActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
+    }
+
+    @Override public void onBackPressed() {
+        if (mOffer == null) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra(getString(R.string.extra_advert), mAdvert);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override protected void onPause() {

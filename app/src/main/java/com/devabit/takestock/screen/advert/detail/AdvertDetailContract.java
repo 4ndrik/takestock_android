@@ -17,7 +17,7 @@ interface AdvertDetailContract {
 
         void showConditionInView(Condition condition);
 
-        void showOfferMade(Offer offer);
+        void showOfferMadeInView(Offer offer);
 
         void showNetworkConnectionError();
 

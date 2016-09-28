@@ -238,6 +238,7 @@
     <string name="advert_detail_ask_away">Ask away</string>
     <string name="advert_detail_make_offer">Make offer</string>
     <string name="advert_detail_offer_made">Offer made</string>
+    <string name="advert_detail_thank_for_offer">Thank you for offer!\nWaiting for response!</string>
     <!--adverts detail activity end-->
 
     <!--offer dialog start-->
@@ -245,9 +246,10 @@
     <string name="offer_dialog_make">Make</string>
     <string name="offer_dialog_cancel">Cancel</string>
     <string name="offer_dialog_per_packaging">/%1$s</string>
-    <string name="offer_dialog_total_price">Your total price for %1$s kg is: \n£ %2$.2f</string>
+    <string name="offer_dialog_total_price">Your total price for %1$s %2$s is: \n£ %3$.2f</string>
     <string name="offer_dialog_hint_qty_you_want">Qty you want</string>
     <string name="offer_dialog_hint_offer_price">Offer price</string>
+    <string name="offer_dialog_quantity_available">Quantity available: %1$d</string>
     <string name="offer_dialog_error_price">Price not added</string>
     <string name="offer_dialog_error_quantity">Quantity not added</string>
     <!--offer dialog end-->

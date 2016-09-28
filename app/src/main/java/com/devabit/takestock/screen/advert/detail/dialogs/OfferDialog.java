@@ -49,6 +49,7 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
     private OfferContract.Presenter mPresenter;
 
     @BindView(R.id.quantity_edit_text) protected EditText mQuantityEditText;
+    @BindView(R.id.quantity_text_view) protected TextView mQuantityTextView;
     @BindView(R.id.price_edit_text) protected EditText mPriceEditText;
     @BindView(R.id.packaging_text_view) protected TextView mPackagingTextView;
     @BindView(R.id.per_packaging_text_view) protected TextView mPerPackagingTextView;
@@ -99,6 +100,7 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
         });
         View content = ButterKnife.findById(dialog, R.id.content);
         mUnbinder = ButterKnife.bind(OfferDialog.this, content);
+        mQuantityTextView.setText(getString(R.string.offer_dialog_quantity_available, mAdvert.getItemsCountNow()));
         mPackagingTextView.setText(mAdvert.getPackagingName());
         mPerPackagingTextView.setText(getString(R.string.offer_dialog_per_packaging, mAdvert.getPackagingName()));
         calculateTotalPrice();
@@ -135,7 +137,14 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
     @OnTextChanged(R.id.quantity_edit_text)
     protected void onQuantityTextChanged(CharSequence text) {
         d("onQuantityTextChanged: %s", text);
-        calculateTotalPrice();
+        if (text.length() > 0) {
+            int quantity = Integer.parseInt(text.toString());
+            if (quantity > mAdvert.getItemsCountNow()) {
+                mQuantityEditText.getText().clear();
+                mQuantityEditText.setError("Quantity greater than " + mAdvert.getItemsCount());
+            }
+            calculateTotalPrice();
+        }
     }
 
     @OnTextChanged(R.id.price_edit_text)
@@ -161,7 +170,8 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
     }
 
     @Override public void showTotalPriceInView(String quantity, double totalPrice) {
-        mTotalPriceTextView.setText(getString(R.string.offer_dialog_total_price, quantity, totalPrice));
+        mTotalPriceTextView.setText(
+                getString(R.string.offer_dialog_total_price, quantity, mAdvert.getPackagingName(), totalPrice));
     }
 
     @Override public void showEmptyQuantityError() {

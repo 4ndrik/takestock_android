@@ -353,7 +353,11 @@ public class Advert implements Parcelable {
         return mAdvertsViews;
     }
 
-    public boolean isCanOffer() {
+    public void setCanOffer(boolean canOffer) {
+        mCanOffer = canOffer;
+    }
+
+    public boolean canOffer() {
         return mCanOffer;
     }
 
@@ -383,6 +387,20 @@ public class Advert implements Parcelable {
 
     public String getCategoryName() {
         return mCategoryName;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Advert advert = (Advert) o;
+
+        return mId == advert.mId;
+
+    }
+
+    @Override public int hashCode() {
+        return mId;
     }
 
     @Override public String toString() {

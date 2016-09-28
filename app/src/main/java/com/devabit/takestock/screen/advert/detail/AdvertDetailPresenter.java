@@ -68,7 +68,7 @@ class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
                     }
 
                     @Override public void onNext(Offer offer) {
-                        mAdvertView.showOfferMade(offer);
+                        mAdvertView.showOfferMadeInView(offer);
                     }
                 });
         mSubscriptions.add(subscription);

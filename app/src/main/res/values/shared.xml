@@ -17,4 +17,6 @@
     <string name="action_log_out">com.devabit.takestock.action.LOG_OUT</string>
     <string name="action_advert_saved">com.devabit.takestock.action.ADVERT_SAVED</string>
 
+    <string name="extra_advert">com.devabit.takestock.extra.ADVERT</string>
+
 </resources>
