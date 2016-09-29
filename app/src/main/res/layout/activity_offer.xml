@@ -115,6 +115,6 @@
             android:scrollbars="vertical"
             android:background="@color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_offer_pending"/>
+            tools:listitem="@layout/item_offer_selling_pending"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -75,7 +75,8 @@ class OffersPresenter implements OffersContract.Presenter {
         return new OfferFilter.Builder()
                 .setAdvertId(mAdvertId)
                 .setOrder(OfferFilter.Order.UPDATED_AT_DESCENDING)
-                .setViews(OfferFilter.View.CHILD_OFFERS)
+                .setAdditions(OfferFilter.Addition.ORIGINAL, OfferFilter.Addition.FROM_BUYER)
+                .setForSelf(true)
                 .create();
     }
 

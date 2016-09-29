@@ -53,9 +53,9 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_PENDING:
-                return new OfferPendingViewHolder(inflateViewType(R.layout.item_offer_pending, parent));
+                return new OfferPendingViewHolder(inflateViewType(R.layout.item_offer_selling_pending, parent));
             default:
-                return new OfferAcceptedViewHolder(inflateViewType(R.layout.item_offer_accepted, parent));
+                return new OfferAcceptedViewHolder(inflateViewType(R.layout.item_offer_selling_accepted, parent));
         }
     }
 

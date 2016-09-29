@@ -10,57 +10,64 @@
               android:focusableInTouchMode="true">
 
     <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
         <EditText
                 android:id="@+id/price_edit_text"
-                android:layout_width="156dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_weight="1"
                 android:inputType="numberDecimal"
-                android:hint="Price"
+                android:hint="@string/counter_offer_dialog_hint_price"
                 style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView
-                android:layout_width="36dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
+                android:layout_weight="2"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/currency"
+                android:text="@string/counter_offer_dialog_currency"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 style="@style/TextViewGrey"/>
 
     </LinearLayout>
 
     <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
         <EditText
                 android:id="@+id/quantity_edit_text"
-                android:layout_width="156dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_weight="1"
                 android:inputType="number"
-                android:hint="Quantity"
+                android:hint="@string/counter_offer_dialog_hint_quantity"
                 style="@style/EditTextRoundedCornersGrey"
                 tools:ignore="LabelFor"/>
 
         <TextView
-                android:layout_width="36dp"
+                android:id="@+id/quantity_unit_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
+                android:layout_weight="2"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif-light"
                 android:layout_gravity="center"
-                android:text="@string/kg"
+                tools:text="kg"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 style="@style/TextViewGrey"/>
 
@@ -75,7 +82,7 @@
             android:paddingEnd="8dp"
             android:maxLines="3"
             android:inputType="textCapSentences|textMultiLine"
-            android:hint="Write a comment..."
+            android:hint="@string/counter_offer_dialog_hint_write_comment"
             tools:ignore="LabelFor"/>
 
 </LinearLayout>

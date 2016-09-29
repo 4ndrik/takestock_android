@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offers.dialogs.counterOffer;
+package com.devabit.takestock.screen.dialog.rejectOffer;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.Offer;
@@ -10,15 +10,15 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
-public class CounterOfferMakerPresenter implements CounterOfferMakerContract.Presenter {
+public class RejectOfferMakerPresenter implements RejectOfferMakerContract.Presenter {
 
-    private static final String TAG = makeLogTag(CounterOfferMakerPresenter.class);
+    private static final String TAG = makeLogTag(RejectOfferMakerPresenter.class);
 
-    private final CounterOfferMakerContract.View mOfferMakerView;
+    private final RejectOfferMakerContract.View mOfferMakerView;
 
-    public CounterOfferMakerPresenter(@NonNull CounterOfferMakerContract.View offerMakerView) {
+    public RejectOfferMakerPresenter(@NonNull RejectOfferMakerContract.View offerMakerView) {
         mOfferMakerView = checkNotNull(offerMakerView, "offerMakerView cannot be null.");
-        mOfferMakerView.setPresenter(CounterOfferMakerPresenter.this);
+        mOfferMakerView.setPresenter(RejectOfferMakerPresenter.this);
     }
 
     @Override public void resume() {

@@ -25,8 +25,8 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Photo;
-import com.devabit.takestock.screen.offers.dialogs.counterOffer.CounterOfferDialog;
-import com.devabit.takestock.screen.offers.dialogs.rejectOffer.RejectOfferDialog;
+import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
+import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
 
@@ -138,18 +138,19 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
         }
     };
 
-    private void displayCounterOfferMakerDialog(Offer offer) {
-        CounterOfferDialog dialog = CounterOfferDialog.newInstance(mAdvert, offer);
+    private void displayCounterOfferMakerDialog(final Offer offer) {
+        CounterOfferDialog dialog = CounterOfferDialog.newInstance(mAdvert, offer, true);
         dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
-        dialog.setOnCounterOfferListener(new CounterOfferDialog.OnCounterOfferListener() {
-            @Override public void onOfferCountered(CounterOfferDialog dialog, Offer offer) {
+        dialog.setOnOfferCounteredListener(new CounterOfferDialog.OnOfferCounteredListener() {
+            @Override public void onCountered(CounterOfferDialog dialog, Offer.Accept accept) {
                 dialog.dismiss();
+                mPresenter.acceptOffer(offer, accept);
             }
         });
     }
 
     private void displayRejectOfferMakerDialog(final Offer offer) {
-        RejectOfferDialog dialog = RejectOfferDialog.newInstance(offer);
+        RejectOfferDialog dialog = RejectOfferDialog.newInstance(offer, true);
         dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
         dialog.setOnRejectOfferListener(new RejectOfferDialog.OnRejectOfferListener() {
             @Override public void onOfferRejected(RejectOfferDialog dialog, Offer.Accept accept) {

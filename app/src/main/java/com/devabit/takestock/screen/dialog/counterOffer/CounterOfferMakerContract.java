@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offers.dialogs.counterOffer;
+package com.devabit.takestock.screen.dialog.counterOffer;
 
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.BasePresenter;

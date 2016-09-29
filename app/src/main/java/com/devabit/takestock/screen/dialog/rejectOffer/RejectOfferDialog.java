@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offers.dialogs.rejectOffer;
+package com.devabit.takestock.screen.dialog.rejectOffer;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -18,9 +18,13 @@ import com.devabit.takestock.data.model.Offer;
  */
 public class RejectOfferDialog extends DialogFragment {
 
-    public static RejectOfferDialog newInstance(Offer offer) {
+    private static final String ARG_OFFER = "ARG_OFFER";
+    private static final String ARG_FROM_SELLER = "ARG_FROM_SELLER";
+
+    public static RejectOfferDialog newInstance(Offer offer, boolean fromSeller) {
         Bundle args = new Bundle();
-        args.putParcelable(Offer.class.getSimpleName(), offer);
+        args.putParcelable(ARG_OFFER, offer);
+        args.putBoolean(ARG_FROM_SELLER, fromSeller);
         RejectOfferDialog fragment = new RejectOfferDialog();
         fragment.setArguments(args);
         return fragment;
@@ -28,9 +32,10 @@ public class RejectOfferDialog extends DialogFragment {
 
     @BindView(R.id.comment_edit_text) protected EditText mCommentEditText;
 
-    private Unbinder mUnbinder;
+    Unbinder mUnbinder;
 
-    private Offer mOffer;
+    Offer mOffer;
+    boolean mFromSeller;
 
     public interface OnRejectOfferListener {
         void onOfferRejected(RejectOfferDialog dialog, Offer.Accept accept);
@@ -40,7 +45,8 @@ public class RejectOfferDialog extends DialogFragment {
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mOffer = getArguments().getParcelable(Offer.class.getSimpleName());
+        mOffer = getArguments().getParcelable(ARG_OFFER);
+        mFromSeller = getArguments().getBoolean(ARG_FROM_SELLER);
     }
 
     @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -87,7 +93,7 @@ public class RejectOfferDialog extends DialogFragment {
         return new Offer.Accept.Builder()
                 .setOfferId(mOffer.getId())
                 .setStatus(Offer.Status.REJECTED)
-                .setFromSeller(true)
+                .setFromSeller(mFromSeller)
                 .setComment(getComment())
                 .create();
     }

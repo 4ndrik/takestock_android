@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offers.dialogs.counterOffer;
+package com.devabit.takestock.screen.dialog.counterOffer;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -19,10 +20,15 @@ import com.devabit.takestock.data.model.Offer;
  */
 public class CounterOfferDialog extends DialogFragment {
 
-    public static CounterOfferDialog newInstance(Advert advert, Offer offer) {
+    private static final String ARG_ADVERT = "ARG_ADVERT";
+    private static final String ARG_OFFER = "ARG_OFFER";
+    private static final String ARG_FROM_SELLER = "ARG_FROM_SELLER";
+
+    public static CounterOfferDialog newInstance(Advert advert, Offer offer, boolean fromSeller) {
         Bundle args = new Bundle();
-        args.putParcelable(Advert.class.getSimpleName(), advert);
-        args.putParcelable(Offer.class.getSimpleName(), offer);
+        args.putParcelable(ARG_ADVERT, advert);
+        args.putParcelable(ARG_OFFER, offer);
+        args.putBoolean(ARG_FROM_SELLER, fromSeller);
         CounterOfferDialog fragment = new CounterOfferDialog();
         fragment.setArguments(args);
         return fragment;
@@ -31,30 +37,33 @@ public class CounterOfferDialog extends DialogFragment {
     @BindView(R.id.price_edit_text) protected EditText mPriceEditText;
     @BindView(R.id.quantity_edit_text) protected EditText mQuantityEditText;
     @BindView(R.id.comment_edit_text) protected EditText mCommentEditText;
+    @BindView(R.id.quantity_unit_text_view) protected TextView mQuantityUnitTextView;
 
-    private Unbinder mUnbinder;
+    Unbinder mUnbinder;
 
-    private Advert mAdvert;
-    private Offer mOffer;
+    Advert mAdvert;
+    Offer mOffer;
+    boolean mFromSeller;
 
-    public interface OnCounterOfferListener {
-        void onOfferCountered(CounterOfferDialog dialog, Offer offer);
+    public interface OnOfferCounteredListener {
+        void onCountered(CounterOfferDialog dialog, Offer.Accept accept);
     }
 
-    private OnCounterOfferListener mCounterOfferListener;
+    OnOfferCounteredListener mOfferCounteredListener;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdvert = getArguments().getParcelable(Advert.class.getSimpleName());
-        mOffer = getArguments().getParcelable(Offer.class.getSimpleName());
+        mAdvert = getArguments().getParcelable(ARG_ADVERT);
+        mOffer = getArguments().getParcelable(ARG_OFFER);
+        mFromSeller = getArguments().getBoolean(ARG_FROM_SELLER, false);
     }
 
     @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         Activity parentActivity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity, R.style.AppTheme_Dialog_Alert_Purple);
-        builder.setTitle(R.string.counter_offer);
-        builder.setPositiveButton(R.string.make, null);
-        builder.setNegativeButton(R.string.answer_dialog_cancel, null);
+        builder.setTitle(R.string.counter_offer_dialog_title);
+        builder.setPositiveButton(R.string.counter_offer_dialog_make, null);
+        builder.setNegativeButton(R.string.counter_offer_dialog_cancel, null);
         builder.setView(R.layout.dialog_counter_offer);
         return builder.create();
     }
@@ -74,12 +83,13 @@ public class CounterOfferDialog extends DialogFragment {
         });
         View content = ButterKnife.findById(dialog, R.id.content);
         mUnbinder = ButterKnife.bind(CounterOfferDialog.this, content);
+        mQuantityUnitTextView.setText(mAdvert.getPackagingName());
     }
 
     private void onPositiveButtonClick() {
         if (isAllValid()) {
-            Offer offer = createCounterOffer();
-            if (mCounterOfferListener != null) mCounterOfferListener.onOfferCountered(CounterOfferDialog.this, offer);
+            if (mOfferCounteredListener != null)
+                mOfferCounteredListener.onCountered(CounterOfferDialog.this, createOfferAccept());
         }
     }
 
@@ -97,7 +107,7 @@ public class CounterOfferDialog extends DialogFragment {
     }
 
     public void showEmptyPriceError() {
-        mPriceEditText.setError(getText(R.string.offer_dialog_error_price));
+        mPriceEditText.setError(getText(R.string.counter_offer_dialog_error_price));
     }
 
     private boolean validateQuantity() {
@@ -109,7 +119,18 @@ public class CounterOfferDialog extends DialogFragment {
     }
 
     public void showEmptyQuantityError() {
-        mQuantityEditText.setError(getText(R.string.offer_dialog_error_quantity));
+        mQuantityEditText.setError(getText(R.string.counter_offer_dialog_error_quantity));
+    }
+
+    private Offer.Accept createOfferAccept() {
+        return new Offer.Accept.Builder()
+                .setOfferId(mOffer.getId())
+                .setStatus(mFromSeller ? Offer.Status.COUNTERED : Offer.Status.COUNTERED_BY_BUYER)
+                .setFromSeller(mFromSeller)
+                .setQuantity(getQuantityAsInt())
+                .setPrice(getPrice())
+                .setComment(getComment())
+                .create();
     }
 
     private String getPrice() {
@@ -129,28 +150,16 @@ public class CounterOfferDialog extends DialogFragment {
         return mCommentEditText.getText().toString().trim();
     }
 
-    private Offer createCounterOffer() {
-        Offer offer = new Offer.Builder().create();
-//        offer.setAdvertId(mAdvert.getId());
-//        offer.setCounterOfferId(mOffer.getId());
-//        offer.setUserId(mAdvert.getAuthorId());
-//        offer.setPrice(getPrice());
-//        offer.setQuantity(getQuantityAsInt());
-//        offer.setComment(getComment());
-//        offer.setStatus(OfferStatus.COUNTERED);
-        return offer;
-    }
-
     private void onNegativeButtonClick() {
         dismiss();
     }
 
-    public void setOnCounterOfferListener(OnCounterOfferListener counterOfferListener) {
-        mCounterOfferListener = counterOfferListener;
+    public void setOnOfferCounteredListener(OnOfferCounteredListener offerCounteredListener) {
+        mOfferCounteredListener = offerCounteredListener;
     }
 
     @Override public void onStop() {
-        super.onStop();
         mUnbinder.unbind();
+        super.onStop();
     }
 }

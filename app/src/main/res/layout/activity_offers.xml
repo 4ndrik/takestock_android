@@ -107,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="vertical"
-                    tools:listitem="@layout/item_offer_pending"/>
+                    tools:listitem="@layout/item_offer_selling_pending"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
