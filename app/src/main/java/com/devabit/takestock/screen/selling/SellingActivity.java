@@ -122,7 +122,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         }
 
         @Override public void editAdvert(Advert advert) {
-            startAdvertEditActivity(advert);
+//            startAdvertEditActivity(advert);
         }
     };
 

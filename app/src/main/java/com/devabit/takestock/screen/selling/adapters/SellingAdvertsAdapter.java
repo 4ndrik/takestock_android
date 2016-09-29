@@ -128,10 +128,11 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
         @BindView(R.id.title_text_view) TextView titleTextView;
         @BindView(R.id.guide_price_text_view) TextView guidePriceTextView;
         @BindView(R.id.qty_available_text_view) TextView qtyAvailableTextView;
+        @BindView(R.id.days_left_text_view) TextView daysLeftTextView;
         @BindView(R.id.date_updated_text_view) TextView dateUpdatedTextView;
         @BindView(R.id.offers_count_text_view) TextView offersCountTextView;
         @BindView(R.id.questions_count_text_view) TextView questionsCountTextView;
-        @BindView(R.id.days_left_count_text_view) TextView daysLeftCountTextView;
+        @BindView(R.id.views_text_view) TextView viewsTextView;
 
         Resources resources;
         PopupMenu popupMenu;
@@ -204,11 +205,15 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
                 Photo photo = advert.getPhotos().get(0);
                 bindPhoto(photo);
             }
-            titleTextView.setText(advert.getName());
-            guidePriceTextView.setText(resources.getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
-            qtyAvailableTextView.setText(resources.getString(R.string.available_kg, advert.getItemsCount()));
             String date = DateUtil.formatToDefaultDate(advert.getUpdatedAt());
             dateUpdatedTextView.setText(date);
+            titleTextView.setText(advert.getName());
+            guidePriceTextView.setText(
+                    resources.getString(R.string.advert_selling_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
+            qtyAvailableTextView.setText(
+                    resources.getString(R.string.advert_selling_available, advert.getItemsCountNow(), advert.getPackagingName()));
+            daysLeftTextView.setText(
+                    resources.getString(R.string.advert_selling_days_left, advert.getDaysLeft()));
 
             String offersCount = advert.getOffersCount();
             setMenuItemVisibility(R.id.action_manage_offers, !offersCount.equals("0"));
@@ -218,8 +223,12 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
             setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
             questionsCountTextView.setText(questionsCount);
 
-            daysLeftCountTextView.setText(advert.getDaysLeft());
+            viewsTextView.setText(String.valueOf(advert.getAdvertsViews()));
         }
+
+//        String buildCountString(String title, int count) {
+//
+//        }
 
         void bindPhoto(Photo photo) {
             Glide.with(imageView.getContext())

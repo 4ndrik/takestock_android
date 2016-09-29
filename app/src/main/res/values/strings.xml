@@ -312,4 +312,13 @@
     <string name="offer_activity_advert_price">£ %1$s/%2$s</string>
     <!--offer buying item end-->
 
+    <!--advert selling item start-->
+    <string name="advert_selling_guide_price">£ %1$s/%2$s</string>
+    <string name="advert_selling_available">Available: £ %1$d %2$s</string>
+    <string name="advert_selling_days_left">Days left: %1$s</string>
+    <string name="advert_selling_offers">offers</string>
+    <string name="advert_selling_questions">questions</string>
+    <string name="advert_selling_views">views</string>
+    <!--advert selling item end-->
+
 </resources>
