@@ -34,6 +34,7 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
+import com.devabit.takestock.screen.advert.selling.AdvertSellingActivity;
 import com.devabit.takestock.screen.adverts.adapter.AdvertsAdapter;
 import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
@@ -157,8 +158,9 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     private void setUpAdvertAdapter(RecyclerView recyclerView) {
         mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext(), mAccount.getUserId());
         mAdvertsAdapter.setOnItemClickListener(new AdvertsAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Advert advert) {
-                startAdvertDetailActivity(advert);
+            @Override public void onItemClick(Advert advert, boolean isAccount) {
+                if (isAccount) startAdvertSellingActivity(advert);
+                else startAdvertDetailActivity(advert);
             }
         });
         mAdvertsAdapter.setOnWatchingChangedListener(new AdvertsAdapter.OnWatchingChangedListener() {
@@ -173,6 +175,10 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
             }
         });
         recyclerView.setAdapter(mAdvertsAdapter);
+    }
+
+    private void startAdvertSellingActivity(Advert advert) {
+        startActivity(AdvertSellingActivity.getStartIntent(AdvertsActivity.this, advert));
     }
 
     private void startAdvertDetailActivity(Advert advert) {

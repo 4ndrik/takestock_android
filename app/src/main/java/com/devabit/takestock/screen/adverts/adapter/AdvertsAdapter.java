@@ -36,7 +36,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     private final SparseArray<Advert> mAdvertsInProcessing;
 
     public interface OnItemClickListener {
-        void onItemClick(Advert advert);
+        void onItemClick(Advert advert, boolean isAccount);
     }
 
     private OnItemClickListener mItemClickListener;
@@ -223,7 +223,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         final View.OnClickListener mClickListener
                 = new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (mItemClickListener != null) mItemClickListener.onItemClick(mAdvert);
+                if (mItemClickListener != null) mItemClickListener.onItemClick(mAdvert, mAdvert.getAuthorId() == mUserId);
             }
         };
 
