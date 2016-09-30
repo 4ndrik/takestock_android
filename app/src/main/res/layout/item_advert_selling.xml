@@ -99,15 +99,15 @@
                 tools:text="£25/3 kg"
                 tools:ignore="RelativeOverlap"/>
 
-        <ImageButton
-                android:id="@+id/menu_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:padding="8dp"
-                android:background="@null"
-                android:src="@drawable/ic_menu_more_white_24dp"
-                tools:ignore="ContentDescription"/>
+        <!--<ImageButton-->
+                <!--android:id="@+id/menu_button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:padding="8dp"-->
+                <!--android:background="@null"-->
+                <!--android:src="@drawable/ic_menu_more_white_24dp"-->
+                <!--tools:ignore="ContentDescription"/>-->
 
         <TableLayout
                 android:id="@+id/table_layout"

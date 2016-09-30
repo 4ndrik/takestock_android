@@ -19,10 +19,10 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.advert.edit.AdvertEditActivity;
-import com.devabit.takestock.screen.questions.QuestionsActivity;
+import com.devabit.takestock.screen.advert.selling.AdvertSellingActivity;
 import com.devabit.takestock.screen.offers.OffersActivity;
+import com.devabit.takestock.screen.questions.QuestionsActivity;
 import com.devabit.takestock.screen.selling.adapters.SellingAdvertsAdapter;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
 
@@ -86,7 +86,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         mAdvertsAdapter = new SellingAdvertsAdapter(SellingActivity.this);
         mAdvertsAdapter.setOnItemClickListener(new SellingAdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClicked(Advert advert) {
-                startAdvertDetailActivity(advert);
+                startAdvertSellingActivity(advert);
             }
         });
         mAdvertsAdapter.setOnMenuItemClickListener(mMenuItemClickListener);
@@ -134,8 +134,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         startActivity(QuestionsActivity.getStartIntent(SellingActivity.this, advert.getId()));
     }
 
-    private void startAdvertDetailActivity(Advert advert) {
-        startActivity(AdvertDetailActivity.getStartIntent(SellingActivity.this, advert));
+    private void startAdvertSellingActivity(Advert advert) {
+        startActivity(AdvertSellingActivity.getStartIntent(SellingActivity.this, advert));
     }
 
     private void startAdvertEditActivity(Advert advert) {

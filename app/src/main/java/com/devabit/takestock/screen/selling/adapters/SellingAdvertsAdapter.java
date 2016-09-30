@@ -2,7 +2,6 @@ package com.devabit.takestock.screen.selling.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -144,7 +143,7 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
             ButterKnife.bind(ItemViewHolder.this, itemView);
             Context context = itemView.getContext();
             resources = context.getResources();
-            setUpMenu();
+//            setUpMenu();
         }
 
         private void setUpMenu() {
@@ -216,11 +215,11 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
                     resources.getString(R.string.advert_selling_days_left, advert.getDaysLeft()));
 
             String offersCount = advert.getOffersCount();
-            setMenuItemVisibility(R.id.action_manage_offers, !offersCount.equals("0"));
+//            setMenuItemVisibility(R.id.action_manage_offers, !offersCount.equals("0"));
             offersCountTextView.setText(offersCount);
 
             String questionsCount = advert.getQuestionsCount();
-            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
+//            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
             questionsCountTextView.setText(questionsCount);
 
             viewsTextView.setText(String.valueOf(advert.getAdvertsViews()));
@@ -241,10 +240,10 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
                     .into(imageView);
         }
 
-        void setMenuItemVisibility(@IdRes int itemId, boolean visible) {
-            MenuItem item = popupMenu.getMenu().findItem(itemId);
-            item.setVisible(visible);
-        }
+//        void setMenuItemVisibility(@IdRes int itemId, boolean visible) {
+//            MenuItem item = popupMenu.getMenu().findItem(itemId);
+//            item.setVisible(visible);
+//        }
 
         @OnClick(R.id.content_item_advert_selling)
         void onContentClick() {

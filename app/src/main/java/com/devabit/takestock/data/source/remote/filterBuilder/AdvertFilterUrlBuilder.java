@@ -25,6 +25,8 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
     private static final String EXPIRES_AT_DESCENDING = "-expires_at";
     private static final String CREATED_AT = "created_at";
     private static final String CREATED_AT_DESCENDING = "-created_at";
+    private static final String UPDATED_AT = "updated_at";
+    private static final String UPDATED_AT_DESCENDING = "-updated_at";
     private static final String GUIDE_PRICE = "guide_price";
     private static final String GUIDE_PRICE_DESCENDING = "-guide_price";
     private static final String FILTER = "filter";
@@ -106,6 +108,12 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
 
             case ORDER_GUIDE_PRICE_DESCENDING:
                 return GUIDE_PRICE_DESCENDING;
+
+            case ORDER_UPDATED_AT:
+                return UPDATED_AT;
+
+            case ORDER_UPDATED_AT_DESCENDING:
+                return UPDATED_AT_DESCENDING;
 
             default:
                 return "";

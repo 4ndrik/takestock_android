@@ -19,10 +19,13 @@ public class AdvertFilter extends Filter {
     public static final int ORDER_CREATED_AT_DESCENDING = 4;
     public static final int ORDER_GUIDE_PRICE = 5;
     public static final int ORDER_GUIDE_PRICE_DESCENDING = 6;
+    public static final int ORDER_UPDATED_AT = 7;
+    public static final int ORDER_UPDATED_AT_DESCENDING = 8;
 
     @IntDef({
             ORDER_DEFAULT, ORDER_EXPIRES_AT, ORDER_EXPIRES_AT_DESCENDING, ORDER_CREATED_AT,
-            ORDER_CREATED_AT_DESCENDING, ORDER_GUIDE_PRICE, ORDER_GUIDE_PRICE_DESCENDING})
+            ORDER_CREATED_AT_DESCENDING, ORDER_GUIDE_PRICE, ORDER_GUIDE_PRICE_DESCENDING,
+            ORDER_UPDATED_AT, ORDER_UPDATED_AT_DESCENDING})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Order {
     }

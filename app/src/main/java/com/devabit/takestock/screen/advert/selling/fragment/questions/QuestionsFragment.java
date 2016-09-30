@@ -64,7 +64,7 @@ public class QuestionsFragment extends Fragment implements QuestionsContract.Vie
     private void setUpRecyclerView(View view) {
         RecyclerView recyclerView = ButterKnife.findById(view, R.id.recycler_view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-        layoutManager.setReverseLayout(true);
+        layoutManager.setReverseLayout(false);
         recyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(
                 ContextCompat.getDrawable(view.getContext(), R.drawable.divider_grey300));

@@ -1,5 +1,6 @@
 package com.devabit.takestock.screen.advert.selling.fragment.offers;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -84,24 +86,40 @@ public class OffersFragment extends Fragment implements OffersContract.View {
     private final OffersAdapter.OnStatusChangedListener mStatusChangedListener
             = new OffersAdapter.OnStatusChangedListener() {
         @Override public void onAccepted(Offer offer) {
-            Offer.Accept accept = new Offer.Accept.Builder()
-                    .setOfferId(offer.getId())
-                    .setStatus(Offer.Status.ACCEPTED)
-                    .setFromSeller(true)
-                    .create();
-            mPresenter.acceptOffer(offer, accept);
+         displayAcceptOfferDialog(offer);
         }
 
         @Override public void onCountered(Offer offer) {
-            displayCounterOfferMakerDialog(offer);
+            displayCounterOfferDialog(offer);
         }
 
         @Override public void onRejected(Offer offer) {
-            displayRejectOfferMakerDialog(offer);
+            displayRejectOfferDialog(offer);
         }
     };
 
-    private void displayCounterOfferMakerDialog(final Offer offer) {
+    private void displayAcceptOfferDialog(final Offer offer) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Accept offer")
+                .setMessage(
+                        getString(R.string.offer_item_offer,
+                                offer.getQuantity(), mAdvert.getPackagingName(),
+                                offer.getPrice(), mAdvert.getPackagingName()))
+                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        Offer.Accept accept = new Offer.Accept.Builder()
+                                .setOfferId(offer.getId())
+                                .setStatus(Offer.Status.ACCEPTED)
+                                .setFromSeller(true)
+                                .create();
+                        mPresenter.acceptOffer(offer, accept);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void displayCounterOfferDialog(final Offer offer) {
         CounterOfferDialog dialog = CounterOfferDialog.newInstance(mAdvert, offer, true);
         dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
         dialog.setOnOfferCounteredListener(new CounterOfferDialog.OnOfferCounteredListener() {
@@ -112,7 +130,7 @@ public class OffersFragment extends Fragment implements OffersContract.View {
         });
     }
 
-    private void displayRejectOfferMakerDialog(final Offer offer) {
+    private void displayRejectOfferDialog(final Offer offer) {
         RejectOfferDialog dialog = RejectOfferDialog.newInstance(offer, true);
         dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
         dialog.setOnRejectOfferListener(new RejectOfferDialog.OnRejectOfferListener() {
