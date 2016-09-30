@@ -100,6 +100,9 @@
         <activity
                 android:name=".screen.watching.WatchingActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screen.advert.selling.AdvertSellingActivity"
+                android:screenOrientation="portrait"/>
 
         <service android:name=".authenticator.TakeStockAuthenticatorService"
                  android:exported="false">

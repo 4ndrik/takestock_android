@@ -331,4 +331,10 @@
     <string name="counter_offer_dialog_currency">£</string>
     <!--counter offer dialog end-->
 
+    <!--advert selling activity start-->
+    <string name="advert_selling_activity_guide_price">£ %1$s/%2$s</string>
+    <string name="advert_selling_activity_available">Available: £ %1$d %2$s</string>
+    <string name="advert_selling_activity_days_left">Days left: %1$s</string>
+    <!--advert selling activity end-->
+
 </resources>

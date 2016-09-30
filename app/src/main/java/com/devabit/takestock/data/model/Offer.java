@@ -225,6 +225,10 @@ public class Offer implements Parcelable {
         return mChildOffers;
     }
 
+    public boolean hasChildOffers() {
+        return mChildOffers != null && mChildOffers.length > 0;
+    }
+
     public int getLastOffer() {
         return mLastOffer;
     }
