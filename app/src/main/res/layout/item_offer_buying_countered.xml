@@ -22,9 +22,9 @@
                 android:paddingBottom="8dp"
                 android:layout_alignParentStart="true"
                 android:textAllCaps="true"
-                android:textColor="@color/red_500"
+                android:textColor="@color/gold"
                 android:textAppearance="?android:textAppearanceSmall"
-                tools:text="Accepted"/>
+                tools:text="Countered"/>
 
         <com.devabit.takestock.widget.CircleImageView
                 android:id="@+id/user_image_view"
@@ -33,7 +33,7 @@
                 android:layout_below="@+id/status_text_view"
                 android:src="@drawable/ic_placeholder_user_96dp"
                 app:civ_border_width="2dp"
-                app:civ_border_color="@color/gold"
+                app:civ_border_color="@color/colorPrimary"
                 tools:ignore="ContentDescription"/>
 
         <TextView
@@ -68,20 +68,25 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/date_text_view"
                 android:layout_toEndOf="@id/user_image_view"
-                android:padding="8dp"
+                android:paddingTop="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:textColor="@color/black"
                 android:textAppearance="?android:textAppearanceMedium"
                 tools:text="100 kg - £ 1000.00/kg"/>
 
-        <Button
-                android:id="@+id/payment_button"
-                android:layout_width="match_parent"
+        <TextView
+                android:id="@+id/comment_text_view"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/offer_text_view"
-                android:text="Make payment"
-                android:textStyle="bold"
+                android:layout_below="@+id/offer_text_view"
+                android:layout_toEndOf="@id/user_image_view"
+                android:paddingTop="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="@color/black"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:theme="@style/Widget.TakeStock.Button.Gold"/>
+                tools:text="Many businesses in large distributed industries have a problem with stock being"/>
 
     </RelativeLayout>
 

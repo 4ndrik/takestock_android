@@ -100,12 +100,11 @@ public class OffersFragment extends Fragment implements OffersContract.View {
 
     private void displayAcceptOfferDialog(final Offer offer) {
         new AlertDialog.Builder(getActivity())
-                .setTitle("Accept offer")
-                .setMessage(
-                        getString(R.string.offer_item_offer,
+                .setTitle(R.string.accept_offer_dialog_title)
+                .setMessage(getString(R.string.accept_offer_dialog_message,
                                 offer.getQuantity(), mAdvert.getPackagingName(),
                                 offer.getPrice(), mAdvert.getPackagingName()))
-                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.accept_offer_dialog_accept, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         Offer.Accept accept = new Offer.Accept.Builder()
                                 .setOfferId(offer.getId())
@@ -115,7 +114,7 @@ public class OffersFragment extends Fragment implements OffersContract.View {
                         mPresenter.acceptOffer(offer, accept);
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.accept_offer_dialog_cancel, null)
                 .show();
     }
 

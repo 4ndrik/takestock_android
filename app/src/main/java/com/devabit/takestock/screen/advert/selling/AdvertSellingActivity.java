@@ -25,6 +25,7 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.screen.advert.selling.fragment.offers.OffersFragment;
 import com.devabit.takestock.screen.advert.selling.fragment.questions.QuestionsFragment;
+import com.devabit.takestock.widget.ControllableAppBarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class AdvertSellingActivity extends AppCompatActivity {
         return starter;
     }
 
+    @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.advert_image_view) ImageView mImageView;
     @BindView(R.id.advert_name_text_view) TextView mNameTextView;
     @BindView(R.id.qty_available_text_view) TextView mQtyAvailableTextView;
@@ -57,6 +59,7 @@ public class AdvertSellingActivity extends AppCompatActivity {
         ButterKnife.bind(AdvertSellingActivity.this);
         setUpToolbar();
         Advert advert = getIntent().getParcelableExtra(EXTRA_ADVERT);
+        setUpAppBarLayout(advert);
         setUpAdvert(advert);
         setUpTabLayout(advert);
     }
@@ -77,6 +80,25 @@ public class AdvertSellingActivity extends AppCompatActivity {
                         return true;
                     default:
                         return false;
+                }
+            }
+        });
+    }
+
+    private void setUpAppBarLayout(final Advert advert) {
+        ControllableAppBarLayout appBarLayout = ButterKnife.findById(AdvertSellingActivity.this, R.id.appbar_layout);
+        appBarLayout.setOnStateChangeListener(new ControllableAppBarLayout.OnStateChangeListener() {
+            @Override public void onStateChange(int toolbarChange) {
+                switch (toolbarChange) {
+                    case ControllableAppBarLayout.State.COLLAPSED:
+                        mToolbar.setTitle(advert.getName());
+                        mToolbar.setSubtitle(getString(R.string.advert_selling_activity_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
+                        break;
+                    case ControllableAppBarLayout.State.EXPANDED:
+                    case ControllableAppBarLayout.State.IDLE: // Just fired once between switching states
+                        mToolbar.setTitle("");
+                        mToolbar.setSubtitle("");
+                        break;
                 }
             }
         });
