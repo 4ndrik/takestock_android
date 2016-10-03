@@ -23,7 +23,7 @@ public class User implements Parcelable {
     private boolean mIsVatExempt;
     private double mAvgRating;
     private String mPhotoPath;
-    private int mPostcode;
+    private String mPostcode;
     private int mVatNumber;
     private String mBusinessName;
     private int mBusinessTypeId;
@@ -47,7 +47,7 @@ public class User implements Parcelable {
         mIsVatExempt = in.readByte() != 0;
         mAvgRating = in.readDouble();
         mPhotoPath = in.readString();
-        mPostcode = in.readInt();
+        mPostcode = in.readString();
         mVatNumber = in.readInt();
         mBusinessName = in.readString();
         mBusinessTypeId = in.readInt();
@@ -71,7 +71,7 @@ public class User implements Parcelable {
         dest.writeByte((byte) (mIsVatExempt ? 1 : 0));
         dest.writeDouble(mAvgRating);
         dest.writeString(mPhotoPath);
-        dest.writeInt(mPostcode);
+        dest.writeString(mPostcode);
         dest.writeInt(mVatNumber);
         dest.writeString(mBusinessName);
         dest.writeInt(mBusinessTypeId);
@@ -215,11 +215,11 @@ public class User implements Parcelable {
         mPhotoPath = photoPath;
     }
 
-    public int getPostcode() {
+    public String getPostcode() {
         return mPostcode;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(String postcode) {
         mPostcode = postcode;
     }
 

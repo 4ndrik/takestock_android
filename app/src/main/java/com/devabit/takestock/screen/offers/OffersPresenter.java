@@ -9,7 +9,12 @@ import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 import static timber.log.Timber.d;
@@ -43,8 +48,27 @@ class OffersPresenter implements OffersContract.Presenter {
         mView.setRefreshingProgressIndicator(true);
         Subscription subscription = mDataRepository
                 .getPaginatedOfferListWithFilter(createFilter())
-                .compose(RxTransformers.<PaginatedList<Offer>>applyObservableSchedulers())
-                .subscribe(new Subscriber<PaginatedList<Offer>>() {
+                .doOnNext(new Action1<PaginatedList<Offer>>() {
+                    @Override public void call(PaginatedList<Offer> offerPaginatedList) {
+                        mPaginatedList = offerPaginatedList;
+                    }
+                })
+                .map(new Func1<PaginatedList<Offer>, List<Offer>>() {
+                    @Override public List<Offer> call(PaginatedList<Offer> paginatedList) {
+                        List<Offer> offers = paginatedList.getResults();
+                        List<Offer> result = new ArrayList<>(offers.size());
+                        for (Offer offer : offers) {
+                            Offer currentOffer = offer;
+                            while (currentOffer.hasChildOffers()) {
+                                currentOffer = currentOffer.getChildOffers()[0];
+                            }
+                            result.add(currentOffer);
+                        }
+                        return result;
+                    }
+                })
+                .compose(RxTransformers.<List<Offer>>applyObservableSchedulers())
+                .subscribe(new Subscriber<List<Offer>>() {
                     @Override public void onCompleted() {
                         mView.setRefreshingProgressIndicator(false);
                     }
@@ -54,9 +78,8 @@ class OffersPresenter implements OffersContract.Presenter {
                         handleError(throwable);
                     }
 
-                    @Override public void onNext(PaginatedList<Offer> paginatedList) {
-                        mPaginatedList = paginatedList;
-                        mView.showRefreshedOffersInView(mPaginatedList.getResults());
+                    @Override public void onNext(List<Offer> offers) {
+                        mView.showRefreshedOffersInView(offers);
                     }
                 });
         mSubscriptions.add(subscription);
@@ -75,8 +98,8 @@ class OffersPresenter implements OffersContract.Presenter {
         return new OfferFilter.Builder()
                 .setAdvertId(mAdvertId)
                 .setOrder(OfferFilter.Order.UPDATED_AT_DESCENDING)
-                .setAdditions(OfferFilter.Addition.ORIGINAL, OfferFilter.Addition.FROM_BUYER)
-                .setForSelf(true)
+                .setViews(OfferFilter.View.CHILD_OFFERS)
+                .setAdditions(OfferFilter.Addition.FROM_BUYER, OfferFilter.Addition.ORIGINAL)
                 .create();
     }
 

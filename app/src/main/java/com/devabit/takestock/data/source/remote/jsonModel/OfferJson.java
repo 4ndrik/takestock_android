@@ -49,6 +49,7 @@ public class OfferJson {
     }
 
     protected Offer[] toChildOffers() {
+        if (child_offers == null) return new Offer[0];
         Offer[] offers = new Offer[child_offers.length];
         for (int i = 0; i < child_offers.length; i++) {
             offers[i] = child_offers[i].toOffer();

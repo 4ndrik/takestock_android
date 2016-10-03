@@ -268,7 +268,8 @@ public class LocalDataSource implements DataSource {
 
     @Override public void saveBusinessTypes(@NonNull List<BusinessType> businessTypes) {
         BusinessTypeDataMapper dataMapper = new BusinessTypeDataMapper();
-        try (Realm realm = Realm.getDefaultInstance()) {
+        Realm realm = Realm.getDefaultInstance();
+        try {
             realm.beginTransaction();
             for (BusinessType type : businessTypes) {
                 BusinessTypeEntity typeEntity = dataMapper.transformToEntity(type);
@@ -280,6 +281,8 @@ public class LocalDataSource implements DataSource {
                 }
             }
             realm.commitTransaction();
+        } finally {
+            realm.close();
         }
     }
 
@@ -359,6 +362,10 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<Offer> getOfferWithId(int offerId) {
+        return null;
+    }
+
     @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -399,11 +406,14 @@ public class LocalDataSource implements DataSource {
         return Observable.just(user)
                 .doOnNext(new Action1<User>() {
                     @Override public void call(User user) {
-                        try (Realm realm = Realm.getDefaultInstance()) {
+                        Realm realm = Realm.getDefaultInstance();
+                        try {
                             realm.beginTransaction();
                             UserEntity entity = new UserEntityDataMapper().transformToEntity(user);
                             realm.copyToRealmOrUpdate(entity);
                             realm.commitTransaction();
+                        } finally {
+                            realm.close();
                         }
                     }
                 });

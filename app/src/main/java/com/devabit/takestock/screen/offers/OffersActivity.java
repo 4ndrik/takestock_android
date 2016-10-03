@@ -100,11 +100,11 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
     private void setUpRefreshLayout() {
         mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override public void onRefresh() {
-                mPresenter.refreshOffers();
-            }
-        });
-    }
+        @Override public void onRefresh() {
+            mPresenter.refreshOffers();
+        }
+    });
+}
 
     private void setUpRecyclerView() {
         RecyclerView recyclerView = ButterKnife.findById(OffersActivity.this, R.id.recycler_view);
@@ -140,7 +140,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
 
     private void displayCounterOfferMakerDialog(final Offer offer) {
         CounterOfferDialog dialog = CounterOfferDialog.newInstance(mAdvert, offer, true);
-        dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
+        dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
         dialog.setOnOfferCounteredListener(new CounterOfferDialog.OnOfferCounteredListener() {
             @Override public void onCountered(CounterOfferDialog dialog, Offer.Accept accept) {
                 dialog.dismiss();
@@ -151,7 +151,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
 
     private void displayRejectOfferMakerDialog(final Offer offer) {
         RejectOfferDialog dialog = RejectOfferDialog.newInstance(offer, true);
-        dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
+        dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
         dialog.setOnRejectOfferListener(new RejectOfferDialog.OnRejectOfferListener() {
             @Override public void onOfferRejected(RejectOfferDialog dialog, Offer.Accept accept) {
                 dialog.dismiss();

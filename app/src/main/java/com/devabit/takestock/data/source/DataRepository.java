@@ -308,6 +308,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.acceptOffer(accept);
     }
 
+    @Override public Observable<Offer> getOfferWithId(int offerId) {
+        return mRemoteDataSource.getOfferWithId(offerId);
+    }
+
     @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
         return mRemoteDataSource.getOffersPerFilter(filter);
     }

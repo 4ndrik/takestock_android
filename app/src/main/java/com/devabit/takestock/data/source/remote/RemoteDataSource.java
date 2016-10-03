@@ -135,9 +135,8 @@ public class RemoteDataSource implements ApiRest, DataSource {
             try {
                 String tokeJson = new AuthTokenJsonMapper().toJsonString(authToken);
                 Request request = buildPOSTRequest(TOKEN_VERIFY, tokeJson);
-                try (ResponseBody body = mOkHttpClient.newCall(request).execute().body()) {
-                    return body.string();
-                }
+                ResponseBody body = mOkHttpClient.newCall(request).execute().body();
+                return body.string();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -159,7 +158,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
         }
     }
 
-    /********** Entries Methods **********/
+    /**********
+     * Entries Methods
+     **********/
 
     @Override public Observable<AuthToken> signUp(@NonNull final UserCredentials credentials) {
         return buildUserCredentialsAsJsonStringObservable(credentials)
@@ -224,7 +225,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    /********** Categories Methods **********/
+    /**********
+     * Categories Methods
+     **********/
 
     @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -250,7 +253,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    /********** Sizes Methods **********/
+    /**********
+     * Sizes Methods
+     **********/
 
     @Override public Observable<List<Size>> saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -276,7 +281,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    /********** Certifications Methods **********/
+    /**********
+     * Certifications Methods
+     **********/
 
     @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -306,7 +313,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********** Shippings Methods **********/
+    /**********
+     * Shippings Methods
+     **********/
 
     @Override public Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -336,7 +345,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********** Conditions Methods **********/
+    /**********
+     * Conditions Methods
+     **********/
 
     @Override public Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -365,7 +376,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********** Packagings Methods **********/
+    /**********
+     * Packagings Methods
+     **********/
 
     @Override public Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -394,7 +407,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********** OfferStatuses Methods **********/
+    /**********
+     * OfferStatuses Methods
+     **********/
 
     @Override public Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -461,7 +476,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********** Adverts Methods **********/
+    /**********
+     * Adverts Methods
+     **********/
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         return Observable.just(advert)
@@ -573,7 +590,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    /********* Offers Methods  ********/
+    /*********
+     * Offers Methods
+     ********/
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
         return Observable.just(offer)
@@ -657,6 +676,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public Observable<Offer> getOfferWithId(int offerId) {
+        String url = OFFERS + offerId + "/?view=child_offers";
+        return Observable.fromCallable(createGETCallable(url))
+                .map(new Func1<String, Offer>() {
+                    @Override public Offer call(String jsonString) {
+                        OfferJson json = mGson.fromJson(jsonString, OfferJson.class);
+                        return json.toOffer();
+                    }
+                });
+    }
+
     @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<OfferFilter, String>() {
@@ -706,14 +736,16 @@ public class RemoteDataSource implements ApiRest, DataSource {
         return Observable.fromCallable(createGETCallable(page))
                 .map(new Func1<String, PaginatedList<Offer>>() {
                     @Override public PaginatedList<Offer> call(String jsonString) {
-                            d(jsonString);
-                            PaginatedOfferListJson json = mGson.fromJson(jsonString, PaginatedOfferListJson.class);
-                            return json.toPaginatedList();
+                        d(jsonString);
+                        PaginatedOfferListJson json = mGson.fromJson(jsonString, PaginatedOfferListJson.class);
+                        return json.toPaginatedList();
                     }
                 });
     }
 
-    /********** Questions Methods **********/
+    /**********
+     * Questions Methods
+     **********/
 
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         return Observable.just(question)
@@ -765,7 +797,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    /********** Answers Methods **********/
+    /**********
+     * Answers Methods
+     **********/
 
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         return Observable.just(answer)
@@ -903,9 +937,8 @@ public class RemoteDataSource implements ApiRest, DataSource {
             Request request = buildPOSTRequest(url, json);
             d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
-            try (ResponseBody body = response.body()) {
-                return body.string();
-            }
+            ResponseBody body = response.body();
+            return body.string();
         } else {
             throw new NetworkConnectionException("There is no internet connection.");
         }
@@ -935,9 +968,8 @@ public class RemoteDataSource implements ApiRest, DataSource {
             Request request = buildGETRequest(url);
             d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
-            try (ResponseBody body = response.body()) {
-                return body.string();
-            }
+            ResponseBody body = response.body();
+            return body.string();
         } else {
             throw new NetworkConnectionException("There is no internet connection.");
         }
@@ -966,9 +998,8 @@ public class RemoteDataSource implements ApiRest, DataSource {
             Request request = buildPUTRequest(url, json);
             d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
-            try (ResponseBody body = response.body()) {
-                return body.string();
-            }
+            ResponseBody body = response.body();
+            return body.string();
         } else {
             throw new NetworkConnectionException("There is no internet connection.");
         }
@@ -998,9 +1029,8 @@ public class RemoteDataSource implements ApiRest, DataSource {
             Request request = buildPATCHRequest(url, json);
             d(request.toString());
             Response response = mOkHttpClient.newCall(request).execute();
-            try (ResponseBody body = response.body()) {
-                return body.string();
-            }
+            ResponseBody body = response.body();
+            return body.string();
         } else {
             throw new NetworkConnectionException("There is no internet connection.");
         }
