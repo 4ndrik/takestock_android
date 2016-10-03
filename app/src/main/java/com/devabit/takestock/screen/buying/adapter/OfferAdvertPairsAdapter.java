@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.buying;
+package com.devabit.takestock.screen.buying.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;

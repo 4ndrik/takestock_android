@@ -47,6 +47,7 @@ class BuyingPresenter implements BuyingContract.Presenter {
     }
 
     @Override public void refreshOffers() {
+        mView.setRefreshingProgressIndicator(true);
         mOfferPaginatedList = null;
         Subscription subscription = mDataRepository
                 .getPaginatedOfferListWithFilter(createFilter())
@@ -90,6 +91,11 @@ class BuyingPresenter implements BuyingContract.Presenter {
                         @Override public void call(List<Pair<Offer, Advert>> pairs) {
                             mView.setLoadingProgressIndicator(false);
                             mView.showLoadedOfferAdvertPairsInView(pairs);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override public void call(Throwable throwable) {
+                            mView.setLoadingProgressIndicator(false);
+                            handleError(throwable);
                         }
                     });
             mSubscriptions.add(subscription);

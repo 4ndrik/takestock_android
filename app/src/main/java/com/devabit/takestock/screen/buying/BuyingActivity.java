@@ -21,6 +21,7 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.screen.buying.adapter.OfferAdvertPairsAdapter;
 import com.devabit.takestock.screen.offer.OfferActivity;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
 
@@ -74,8 +75,7 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
 
     private void setUpRecyclerView() {
         RecyclerView recyclerView = ButterKnife.findById(BuyingActivity.this, R.id.recycler_view);
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(
-                getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(BuyingActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -136,7 +136,7 @@ public class BuyingActivity extends AppCompatActivity implements BuyingContract.
         mOffersAdvertAdapter.setLoadingProgressEnable(isActive);
     }
 
-    @Override public void setRefreshingProgressIndicator(boolean isActive) {
+    @Override public void setRefreshingProgressIndicator(final boolean isActive) {
         mRefreshLayout.setRefreshing(isActive);
     }
 
