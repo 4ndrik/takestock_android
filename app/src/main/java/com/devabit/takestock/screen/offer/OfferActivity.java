@@ -1,10 +1,14 @@
 package com.devabit.takestock.screen.offer;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +22,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
+import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
 import com.devabit.takestock.utils.DateUtil;
+import com.devabit.takestock.widget.ControllableAppBarLayout;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
 
 import java.util.ArrayList;
@@ -37,6 +45,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     private static final String EXTRA_OFFER = "com.devabit.takestock.screen.offer.EXTRA_OFFER";
     private static final String EXTRA_ADVERT = "com.devabit.takestock.screen.offer.EXTRA_ADVERT";
+    private RecyclerView recyclerView;
 
     public static Intent getStartIntent(Context context, Pair<Offer, Advert> offerAdvertPair) {
         Intent starter = new Intent(context, OfferActivity.class);
@@ -46,6 +55,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     }
 
     @BindView(R.id.content_activity_offer) protected ViewGroup mContent;
+    @BindView(R.id.appbar_layout) protected ControllableAppBarLayout mAppBarLayout;
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
     @BindView(R.id.advert_image_view) protected ImageView mAdvertImageView;
     @BindView(R.id.advert_name_text_view) protected TextView mAdvertNameTextView;
@@ -53,6 +63,8 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     @BindView(R.id.advert_date_text_view) protected TextView mAdvertDateTextView;
     @BindView(R.id.advert_price_text_view) protected TextView mAdvertPriceTextView;
 
+    private Advert mAdvert;
+    private OfferContract.Presenter mPresenter;
     private OffersAdapter mOffersAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,12 +72,14 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         setContentView(R.layout.activity_offer);
         ButterKnife.bind(OfferActivity.this);
         setUpToolbar();
-        Advert advert = getIntent().getParcelableExtra(EXTRA_ADVERT);
-        setUpAdvert(advert);
-        setUpRecyclerView(advert);
+        setUpAppBarLayout();
+        mAdvert = getIntent().getParcelableExtra(EXTRA_ADVERT);
+        setUpAdvert(mAdvert);
+        setUpRecyclerView(mAdvert);
         Offer offer = getIntent().getParcelableExtra(EXTRA_OFFER);
         List<Offer> offers = fetchOffers(offer);
         mOffersAdapter.addOffers(offers);
+        createPresenter();
     }
 
     private void setUpToolbar() {
@@ -76,13 +90,33 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         });
     }
 
+
+    private void setUpAppBarLayout() {
+        mAppBarLayout.setOnStateChangeListener(new ControllableAppBarLayout.OnStateChangeListener() {
+            @Override public void onStateChange(int toolbarChange) {
+                switch (toolbarChange) {
+                    case ControllableAppBarLayout.State.COLLAPSED:
+                        mToolbar.setTitle(mAdvert.getName());
+                        mToolbar.setSubtitle(getString(R.string.offer_activity_advert_price, mAdvert.getGuidePrice(), mAdvert.getPackagingName()));
+                        break;
+                    case ControllableAppBarLayout.State.EXPANDED:
+
+//                        break;
+                    case ControllableAppBarLayout.State.IDLE: // Just fired once between switching states
+                        mToolbar.setTitle("");
+                        mToolbar.setSubtitle("");
+                        break;
+                }
+            }
+        });
+    }
+
     private void setUpAdvert(Advert advert) {
         loadAdvertImage(advert);
         mAdvertNameTextView.setText(advert.getName());
         mAdvertLocationTextView.setText(advert.getLocation());
         mAdvertDateTextView.setText(DateUtil.formatToDefaultDate(advert.getUpdatedAt()));
-        mAdvertPriceTextView.setText(
-                getString(R.string.offer_activity_advert_price, advert.getGuidePrice(), advert.getPackagingName()));
+        mAdvertPriceTextView.setText(getString(R.string.offer_activity_advert_price, advert.getGuidePrice(), advert.getPackagingName()));
     }
 
     private void loadAdvertImage(Advert advert) {
@@ -102,12 +136,11 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     }
 
     private void setUpRecyclerView(Advert advert) {
-        RecyclerView recyclerView = ButterKnife.findById(OfferActivity.this, R.id.recycler_view);
+        recyclerView = ButterKnife.findById(OfferActivity.this, R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(OfferActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(
-                getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         mOffersAdapter = new OffersAdapter(OfferActivity.this, advert.getPackagingName());
         mOffersAdapter.setOnStatusChangedListener(mOnStatusChangedListener);
@@ -117,17 +150,60 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     final OffersAdapter.OnStatusChangedListener mOnStatusChangedListener
             = new OffersAdapter.OnStatusChangedListener() {
         @Override public void onAccepted(Offer offer) {
-
+            displayAcceptOfferDialog(offer);
         }
 
         @Override public void onCountered(Offer offer) {
-
+            displayCounterOfferDialog(offer);
         }
 
         @Override public void onRejected(Offer offer) {
-
+            displayRejectOfferDialog(offer);
         }
     };
+
+    private void displayAcceptOfferDialog(final Offer offer) {
+        new AlertDialog.Builder(OfferActivity.this)
+                .setTitle(R.string.accept_offer_dialog_title)
+                .setMessage(getString(R.string.accept_offer_dialog_message,
+                        offer.getQuantity(), mAdvert.getPackagingName(),
+                        offer.getPrice(), mAdvert.getPackagingName()))
+                .setPositiveButton(R.string.accept_offer_dialog_accept,
+                        new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                Offer.Accept accept = new Offer.Accept.Builder()
+                                        .setOfferId(offer.getId())
+                                        .setStatus(Offer.Status.ACCEPTED)
+                                        .setFromSeller(false)
+                                        .create();
+                                mPresenter.acceptOffer(offer, accept);
+                            }
+                        })
+                .setNegativeButton(R.string.accept_offer_dialog_cancel, null)
+                .show();
+    }
+
+    private void displayCounterOfferDialog(final Offer offer) {
+        CounterOfferDialog dialog = CounterOfferDialog.newInstance(mAdvert, offer, false);
+        dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
+        dialog.setOnOfferCounteredListener(new CounterOfferDialog.OnOfferCounteredListener() {
+            @Override public void onCountered(CounterOfferDialog dialog, Offer.Accept accept) {
+                dialog.dismiss();
+                mPresenter.acceptOffer(offer, accept);
+            }
+        });
+    }
+
+    private void displayRejectOfferDialog(final Offer offer) {
+        RejectOfferDialog dialog = RejectOfferDialog.newInstance(offer, false);
+        dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
+        dialog.setOnRejectOfferListener(new RejectOfferDialog.OnRejectOfferListener() {
+            @Override public void onOfferRejected(RejectOfferDialog dialog, Offer.Accept accept) {
+                dialog.dismiss();
+                mPresenter.acceptOffer(offer, accept);
+            }
+        });
+    }
 
     private List<Offer> fetchOffers(Offer offer) {
         List<Offer> offers = new ArrayList<>();
@@ -148,15 +224,38 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         return offers;
     }
 
-    @Override public void setPresenter(@NonNull OfferContract.Presenter presenter) {
+    private void createPresenter() {
+        new OfferPresenter(Injection.provideDataRepository(OfferActivity.this), OfferActivity.this);
+    }
 
+    @Override public void setPresenter(@NonNull OfferContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override public void showOfferAcceptedInView(Offer offer) {
+        mOffersAdapter.addOffer(offer);
+        recyclerView.scrollToPosition(0);
     }
 
     @Override public void showNetworkConnectionError() {
-
+        showSnack(R.string.error_no_network_connection);
     }
 
     @Override public void showUnknownError() {
+        showSnack(R.string.error_unknown);
+    }
 
+    private void showSnack(@StringRes int resId) {
+        Snackbar.make(mContent, resId, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override public void setProgressIndicator(boolean isActive) {
+        recyclerView.setEnabled(!isActive);
+        recyclerView.setAlpha(isActive ? 0.5f : 1f);
+    }
+
+    @Override protected void onPause() {
+        mPresenter.pause();
+        super.onPause();
     }
 }

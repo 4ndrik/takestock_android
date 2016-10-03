@@ -15,7 +15,8 @@
             android:elevation="4dp"
             app:titleTextColor="@color/white"
             app:title="@string/buying_activity_toolbar_title"
-            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"/>
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+            tools:targetApi="lollipop"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"

@@ -2,11 +2,11 @@ package com.devabit.takestock.screen.offer;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +18,7 @@ import com.devabit.takestock.data.model.Author;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.payment.PaymentActivity;
 import com.devabit.takestock.utils.DateUtil;
+import com.devabit.takestock.widget.CircleImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +28,6 @@ import java.util.List;
  */
 
 class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
-
-    private static final int TYPE_PENDING = 1;
-    private static final int TYPE_ACCEPTED = 2;
-    private static final int TYPE_REJECTED = 3;
 
     private final String mPackaging;
     private final LayoutInflater mLayoutInflater;
@@ -54,12 +51,23 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case TYPE_PENDING:
-                return new OfferPendingViewHolder(inflateViewType(R.layout.item_offer_selling_pending, parent));
-            case TYPE_REJECTED:
-                return new OfferRejectedViewHolder(inflateViewType(R.layout.item_offer_selling_accepted, parent));
+            case R.layout.item_offer_buying_accepted:
+                return new OfferAcceptedViewHolder(inflateViewType(viewType, parent));
+
+            case R.layout.item_offer_buying_countered:
+                return new OfferCounteredViewHolder(inflateViewType(viewType, parent));
+
+            case R.layout.item_offer_buying_rejected:
+                return new OfferRejectedViewHolder(inflateViewType(viewType, parent));
+
+            case R.layout.item_offer_buying_pending:
+                return new OfferPendingViewHolder(inflateViewType(viewType, parent));
+
+            case R.layout.item_offer_buying_pending_seller:
+                return new OfferPendingSellerViewHolder(inflateViewType(viewType, parent));
+
             default:
-                return new OfferPaymentAcceptedViewHolder(inflateViewType(R.layout.item_offer_payment_accepted, parent));
+                return new OfferHistoryViewHolder(inflateViewType(viewType, parent));
         }
     }
 
@@ -76,16 +84,24 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
     }
 
     @Override public int getItemViewType(int position) {
-        int status = mOffers.get(position).getStatus();
-        switch (status) {
-            case Offer.Status.ACCEPTED:
-                return TYPE_ACCEPTED;
+        if (position == 0) {
+            Offer offer = mOffers.get(position);
+            int status = offer.getStatus();
+            switch (status) {
+                case Offer.Status.ACCEPTED:
+                    return R.layout.item_offer_buying_accepted;
 
-            case Offer.Status.PENDING:
-                return TYPE_PENDING;
+                case Offer.Status.PENDING:
+                    return offer.isFromSeller() ? R.layout.item_offer_buying_pending : R.layout.item_offer_buying_pending_seller;
 
-            default:
-                return TYPE_REJECTED;
+                case Offer.Status.REJECTED:
+                    return R.layout.item_offer_buying_rejected;
+
+                default:
+                    return R.layout.item_offer_buying_countered;
+            }
+        } else {
+            return R.layout.item_offer_buying_history;
         }
     }
 
@@ -100,14 +116,26 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
         notifyItemChanged(position);
     }
 
-    public void addOffers(List<Offer> offers) {
+    void addOffers(List<Offer> offers) {
         int positionStart = mOffers.size();
         mOffers.addAll(offers);
         notifyItemRangeInserted(positionStart, offers.size());
     }
 
+    void addOffer(Offer offer) {
+        mOffers.add(0, offer);
+        notifyItemInserted(0);
+    }
+
     void setOnStatusChangedListener(OnStatusChangedListener statusChangedListener) {
         mStatusChangedListener = statusChangedListener;
+    }
+
+    class OfferPendingSellerViewHolder extends ViewHolder {
+
+        OfferPendingSellerViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 
     class OfferPendingViewHolder extends ViewHolder {
@@ -132,9 +160,9 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
         }
     }
 
-    class OfferPaymentAcceptedViewHolder extends ViewHolder {
+    class OfferAcceptedViewHolder extends ViewHolder {
 
-        OfferPaymentAcceptedViewHolder(View itemView) {
+        OfferAcceptedViewHolder(View itemView) {
             super(itemView);
         }
 
@@ -151,15 +179,39 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
         }
     }
 
+    class OfferCounteredViewHolder extends ViewHolder {
+
+        OfferCounteredViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    class OfferHistoryViewHolder extends ViewHolder {
+
+        OfferHistoryViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override void setStatus() {
+            statusTextView.setTextColor(mOffer.isFromSeller()
+                    ? ContextCompat.getColor(statusTextView.getContext(), R.color.jam)
+                    : ContextCompat.getColor(statusTextView.getContext(), R.color.gold));
+            statusTextView.setText(mOffer.isFromSeller()
+                    ? itemView.getResources().getString(R.string.offer_buying_seller_offer)
+                    : itemView.getResources().getString(R.string.offer_buying_buyer_offer));
+        }
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         final String[] offerStatuses;
 
-        @BindView(R.id.user_image_view) ImageView userImageView;
+        @BindView(R.id.user_image_view) CircleImageView userImageView;
         @BindView(R.id.name_text_view) TextView nameTextView;
         @BindView(R.id.date_text_view) TextView dateTextView;
         @BindView(R.id.offer_text_view) TextView offerTextView;
         @BindView(R.id.status_text_view) TextView statusTextView;
+        @BindView(R.id.comment_text_view) TextView commentTextView;
 
         Offer mOffer;
 
@@ -178,11 +230,16 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
             String offerString = offerTextView.getResources()
                     .getString(R.string.offer_item_offer, mOffer.getQuantity(), mPackaging, mOffer.getPrice(), mPackaging);
             offerTextView.setText(offerString);
-            statusTextView.setText(offerStatuses[mOffer.getStatus() - 1]);
-            this.itemView.setAlpha(getAdapterPosition() > 0 ? 0.5f : 1f);
+            commentTextView.setText(offer.getComment());
+            setStatus();
+        }
+
+        void setStatus() {
+            statusTextView.setText(offerStatuses[mOffer.getStatusForBuyer() - 1]);
         }
 
         void bindUserImage(String image) {
+            userImageView.setBorderColorResource(mOffer.isFromSeller() ? R.color.jam : R.color.gold);
             Glide.with(userImageView.getContext())
                     .load(image)
                     .error(R.drawable.ic_placeholder_user_96dp)
