@@ -9,28 +9,34 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 24/06/2016.
  */
-public interface WatchingContract {
+interface WatchingContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showAdvertsInView(List<Advert> adverts);
+        void showRefreshedAdvertsInView(List<Advert> adverts);
 
-        void showAdvertRemovedFromWatchingInView(int advertId);
+        void showLoadedAdvertsInView(List<Advert> adverts);
 
-        void showAdvertRemovedFromWatchingError(int advertId);
+        void showAdvertRemovedFromWatchingInView(Advert advert);
+
+        void showAdvertRemovedFromWatchingError(Advert advert);
 
         void showNetworkConnectionError();
 
         void showUnknownError();
 
-        void setProgressIndicator(boolean isActive);
+        void setRefreshingProgressIndicator(boolean isActive);
+
+        void setLoadingProgressIndicator(boolean isActive);
     }
 
     interface Presenter extends BasePresenter {
 
-        void fetchAdverts();
+        void refreshAdverts();
 
-        void removeWatchingAdvert(int advertId);
+        void loadAdverts();
+
+        void removeWatchingAdvert(Advert advert);
 
     }
 }

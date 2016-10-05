@@ -3,7 +3,6 @@ package com.devabit.takestock.screen.watching;
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.AdvertSubscriber;
 import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
@@ -12,12 +11,8 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-import java.util.List;
-
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
@@ -25,13 +20,11 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
  */
 final class WatchingPresenter implements WatchingContract.Presenter {
 
-    private static final String TAG = makeLogTag(WatchingPresenter.class);
-
     private final DataRepository mDataRepository;
-
     private final WatchingContract.View mWatchingView;
 
     private CompositeSubscription mSubscriptions;
+    private PaginatedList<Advert> mPaginatedList;
 
     WatchingPresenter(@NonNull DataRepository dataRepository, @NonNull WatchingContract.View watchingView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
@@ -41,61 +34,86 @@ final class WatchingPresenter implements WatchingContract.Presenter {
     }
 
     @Override public void resume() {
-        fetchAdverts();
     }
 
-    @Override public void fetchAdverts() {
-        mWatchingView.setProgressIndicator(true);
-        AdvertFilter filter = new AdvertFilter();
-        filter.setPageSize(Integer.MAX_VALUE);
-        filter.setWatchlist(true);
+    @Override public void refreshAdverts() {
+        mWatchingView.setRefreshingProgressIndicator(true);
         Subscription subscription = mDataRepository
-                .getPaginatedAdvertListWithFilter(filter)
+                .getPaginatedAdvertListWithFilter(createFilter())
                 .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
                 .subscribe(new Subscriber<PaginatedList<Advert>>() {
                     @Override public void onCompleted() {
-                        mWatchingView.setProgressIndicator(false);
+                        mWatchingView.setRefreshingProgressIndicator(false);
                     }
 
                     @Override public void onError(Throwable e) {
-                        mWatchingView.setProgressIndicator(false);
-                        LOGE(TAG, "BOOM:", e);
-                        if (e instanceof NetworkConnectionException) {
-                            mWatchingView.showNetworkConnectionError();
-                        } else {
-                            mWatchingView.showUnknownError();
-                        }
+                        mWatchingView.setRefreshingProgressIndicator(false);
+                        handleError(e);
                     }
 
                     @Override public void onNext(PaginatedList<Advert> advertResultList) {
-                        List<Advert> adverts = advertResultList.getResults();
-                        mWatchingView.showAdvertsInView(adverts);
+                        mPaginatedList = advertResultList;
+                        mWatchingView.showRefreshedAdvertsInView(mPaginatedList.getResults());
                     }
                 });
         mSubscriptions.add(subscription);
     }
 
-    @Override public void removeWatchingAdvert(final int advertId) {
-        AdvertSubscriber subscriber = new AdvertSubscriber();
-        subscriber.setAdvertId(advertId);
-        Subscription subscription = mDataRepository.addRemoveAdvertWatching(subscriber)
-                .compose(RxTransformers.<AdvertSubscriber>applyObservableSchedulers())
-                .subscribe(new Action1<AdvertSubscriber>() {
-                    @Override public void call(AdvertSubscriber subscriber) {
-                        LOGD(TAG, subscriber);
+    private AdvertFilter createFilter() {
+        return new AdvertFilter.Builder()
+                .setIsWatchlist(true)
+                .setOrder(AdvertFilter.ORDER_UPDATED_AT_DESCENDING)
+                .create();
+    }
+
+    @Override public void loadAdverts() {
+        if (mPaginatedList != null && mPaginatedList.hasNext()) {
+            mWatchingView.setLoadingProgressIndicator(true);
+            Subscription subscription = mDataRepository.getPaginatedAdvertListPerPage(mPaginatedList.getNext())
+                    .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
+                    .subscribe(new Action1<PaginatedList<Advert>>() {
+                        @Override public void call(PaginatedList<Advert> paginatedList) {
+                            mPaginatedList = paginatedList;
+                            mWatchingView.setLoadingProgressIndicator(false);
+                            mWatchingView.showLoadedAdvertsInView(mPaginatedList.getResults());
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override public void call(Throwable throwable) {
+                            mWatchingView.setLoadingProgressIndicator(false);
+                            handleError(throwable);
+                        }
+                    });
+            mSubscriptions.add(subscription);
+        }
+    }
+
+    @Override public void removeWatchingAdvert(final Advert advert) {
+        Subscription subscription = mDataRepository.addRemoveAdvertWatching(advert.getId())
+                .compose(RxTransformers.<Advert.Subscriber>applyObservableSchedulers())
+                .subscribe(new Action1<Advert.Subscriber>() {
+                    @Override public void call(Advert.Subscriber subscriber) {
                         if (!subscriber.isSubscribed()) {
-                            mWatchingView.showAdvertRemovedFromWatchingInView(subscriber.getAdvertId());
+                            mWatchingView.showAdvertRemovedFromWatchingInView(advert);
                         } else {
-                            mWatchingView.showAdvertRemovedFromWatchingError(subscriber.getAdvertId());
+                            mWatchingView.showAdvertRemovedFromWatchingError(advert);
                         }
                     }
                 }, new Action1<Throwable>() {
                     @Override public void call(Throwable throwable) {
-                        LOGE(TAG, "BOOM:", throwable);
-                        mWatchingView.showAdvertRemovedFromWatchingError(advertId);
+                        handleError(throwable);
+                        mWatchingView.showAdvertRemovedFromWatchingError(advert);
                     }
                 });
         mSubscriptions.add(subscription);
+    }
+
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mWatchingView.showNetworkConnectionError();
+        } else {
+            mWatchingView.showUnknownError();
+        }
     }
 
     @Override public void pause() {
@@ -105,5 +123,4 @@ final class WatchingPresenter implements WatchingContract.Presenter {
     @Override public void destroy() {
 
     }
-
 }

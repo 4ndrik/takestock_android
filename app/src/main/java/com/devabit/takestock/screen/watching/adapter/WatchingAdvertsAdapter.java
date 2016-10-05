@@ -2,11 +2,9 @@ package com.devabit.takestock.screen.watching.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Typeface;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,13 +38,13 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
         void onItemClick(Advert advert);
     }
 
-    private static OnItemClickListener sItemClickListener;
+    private OnItemClickListener mItemClickListener;
 
     public interface OnWatchedChangeListener {
         void onRemoved(Advert advert);
     }
 
-    private static OnWatchedChangeListener sWatchedChangeListener;
+    private OnWatchedChangeListener mWatchedChangeListener;
 
     public WatchingAdvertsAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -54,33 +52,50 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
         mAdverts = new ArrayList<>();
     }
 
-    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mLayoutInflater.inflate(R.layout.item_watching_advert, parent, false);
-        return new ViewHolder(itemView, mAdvertsInProcessing);
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, @LayoutRes int viewType) {
+        switch (viewType) {
+            case R.layout.item_progress:
+                return new LoadingViewHolder(inflateItemView(viewType, parent));
+            default:
+                return new AdvertViewHolder(inflateItemView(viewType, parent));
+        }
+    }
+
+    private View inflateItemView(@LayoutRes int resId, ViewGroup parent) {
+        return mLayoutInflater.inflate(resId, parent, false);
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
+        if(holder.getItemViewType() == R.layout.item_progress) return;
         Advert advert = mAdverts.get(position);
-        holder.bindAdvert(advert);
+        ((AdvertViewHolder) holder).bindAdvert(advert);
     }
 
     @Override public int getItemCount() {
         return mAdverts.size();
     }
 
-    public void addAdverts(List<Advert> adverts) {
+    @Override public @LayoutRes int getItemViewType(int position) {
+        if (mAdverts.get(position) == null) return R.layout.item_progress;
+        return R.layout.item_advert_watching;
+    }
+
+    public void refreshAdverts(List<Advert> adverts) {
+        mAdverts.clear();
         mAdverts.addAll(adverts);
         notifyDataSetChanged();
     }
 
-    public void clearAdverts() {
-        mAdverts.clear();
-        notifyDataSetChanged();
+    public void addAdverts(List<Advert> adverts) {
+        int positionStart = mAdverts.size();
+        mAdverts.addAll(adverts);
+        notifyItemRangeInserted(positionStart, adverts.size());
     }
 
     public void removeAdvert(Advert advert) {
+        int position = mAdverts.indexOf(advert);
         mAdverts.remove(advert);
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
     }
 
     public void startAdvertProcessing(Advert advert) {
@@ -93,27 +108,37 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
         notifyDataSetChanged();
     }
 
+    public void setLoadingProgressEnable(boolean enable) {
+        if (enable) {
+            mAdverts.add(null);
+            notifyItemInserted(mAdverts.size());
+        } else {
+            mAdverts.remove(mAdverts.size() - 1);
+            notifyItemRemoved(mAdverts.size());
+        }
+    }
+
     @Nullable public Advert getAdvertInProcessing(int advertId) {
         return mAdvertsInProcessing.get(advertId, null);
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
-        sItemClickListener = itemClickListener;
+        mItemClickListener = itemClickListener;
     }
 
     public void setOnWatchedChangeListener(OnWatchedChangeListener watchedChangeListener) {
-        sWatchedChangeListener = watchedChangeListener;
+        mWatchedChangeListener = watchedChangeListener;
     }
 
-    public void destroy() {
-        sItemClickListener = null;
-        sWatchedChangeListener = null;
+    class LoadingViewHolder extends ViewHolder {
+        LoadingViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class AdvertViewHolder extends ViewHolder {
 
         final Resources resources;
-        final SparseArray<Advert> advertInProcessing;
 
         @BindView(R.id.photo_image_view) ImageView photoImageView;
         @BindView(R.id.watching_button) ImageButton watchingButton;
@@ -126,23 +151,21 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
 
         private Advert mAdvert;
 
-        public ViewHolder(View itemView, SparseArray<Advert> advertInProcessing) {
+        AdvertViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(ViewHolder.this, itemView);
+            ButterKnife.bind(AdvertViewHolder.this, itemView);
             this.resources = itemView.getResources();
-            this.advertInProcessing = advertInProcessing;
         }
 
         void bindAdvert(Advert advert) {
             mAdvert = advert;
             bindPhoto(getAdvertPhoto(mAdvert));
-            String date = DateUtil.formatToDefaultDate(advert.getDateUpdatedAt());
-            dateTextView.setText(date);
+            dateTextView.setText(DateUtil.formatToDefaultDate(advert.getUpdatedAt()));
             locationTextView.setText(mAdvert.getLocation());
             nameTextView.setText(mAdvert.getName());
-            guidePriceTextView.setText(resources.getString(R.string.guide_price_per_kg, advert.getGuidePrice()));
-            qtyAvailableTextView.setText(resources.getString(R.string.available_kg, advert.getItemsCount()));
-            additionalTextView.setText(buildAdditionalInfoString(mAdvert));
+            guidePriceTextView.setText(resources.getString(R.string.advert_watching_item_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
+            qtyAvailableTextView.setText(resources.getString(R.string.advert_watching_item_available_unit, advert.getItemsCountNow(), advert.getPackagingName()));
+            additionalTextView.setText(resources.getString(R.string.advert_watching_item_additional, advert.getOffersCount(), advert.getQuestionsCount(), advert.getDaysLeft()));
             setItemViewActive(!isAdvertProcessing(mAdvert));
         }
 
@@ -154,7 +177,7 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
 
         void bindPhoto(Photo photo) {
             if (photo == null) {
-                photoImageView.setImageResource(R.color.grey_400);
+                photoImageView.setImageResource(R.drawable.ic_image_48dp);
                 return;
             }
             Glide.with(photoImageView.getContext())
@@ -167,27 +190,6 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
                     .into(photoImageView);
         }
 
-        SpannableStringBuilder buildAdditionalInfoString(Advert advert) {
-            SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
-            String offersCount = advert.getOffersCount();
-            stringBuilder.append(offersCount);
-            stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, stringBuilder.length(), 0);
-            String offers = resources.getString(R.string.offers).toLowerCase();
-            stringBuilder.append(" ").append(offers);
-            stringBuilder.append("  •  ");
-            String questionsCount = "0";
-            stringBuilder.append(questionsCount);
-            stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), stringBuilder.length() - questionsCount.length(), stringBuilder.length(), 0);
-            String questions = resources.getString(R.string.questions).toLowerCase();
-            stringBuilder.append(" ").append(questions);
-            stringBuilder.append("  •  ");
-            String daysLeftCount = advert.getDaysLeft();
-            stringBuilder.append(daysLeftCount);
-            stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), stringBuilder.length() - daysLeftCount.length(), stringBuilder.length(), 0);
-            stringBuilder.append(" ").append("days left");
-            return stringBuilder;
-        }
-
         void setItemViewActive(boolean isActive) {
             itemView.setAlpha(isActive ? 1.0f : 0.5f);
             itemView.setEnabled(isActive);
@@ -195,15 +197,22 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
         }
 
         boolean isAdvertProcessing(Advert advert) {
-            return advertInProcessing.get(advert.getId(), null) != null;
+            return mAdvertsInProcessing.get(advert.getId(), null) != null;
         }
 
         @OnClick(R.id.content) void onContentClick() {
-            if (sItemClickListener != null) sItemClickListener.onItemClick(mAdvert);
+            if (mItemClickListener != null) mItemClickListener.onItemClick(mAdvert);
         }
 
         @OnClick(R.id.watching_button) void onWatchingButtonClick() {
-            if (sWatchedChangeListener != null) sWatchedChangeListener.onRemoved(mAdvert);
+            if (mWatchedChangeListener != null) mWatchedChangeListener.onRemoved(mAdvert);
+        }
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }
