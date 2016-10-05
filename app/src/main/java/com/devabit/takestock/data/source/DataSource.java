@@ -130,8 +130,6 @@ public interface DataSource {
 
     Observable<Offer> getOfferWithId(int offerId);
 
-    Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter);
-
     Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter);
 
     Observable<PaginatedList<Offer>> getPaginatedOfferListPerPage(@NonNull String page);
@@ -160,10 +158,8 @@ public interface DataSource {
 
     Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Payment
-    ///////////////////////////////////////////////////////////////////////////
+    /********** Payment Methods **********/
 
-    Observable<String> addPayment(@NonNull Payment payment);
+    Observable<Payment> makePayment(@NonNull Payment payment);
 
 }

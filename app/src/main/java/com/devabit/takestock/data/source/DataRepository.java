@@ -312,10 +312,6 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getOfferWithId(offerId);
     }
 
-    @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
-        return mRemoteDataSource.getOffersPerFilter(filter);
-    }
-
     @Override public Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter) {
         return mRemoteDataSource.getPaginatedOfferListWithFilter(filter);
     }
@@ -377,7 +373,7 @@ public class DataRepository implements DataSource {
     // Methods for Payment
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public Observable<String> addPayment(@NonNull Payment payment) {
-        return mRemoteDataSource.addPayment(payment);
+    @Override public Observable<Payment> makePayment(@NonNull Payment payment) {
+        return mRemoteDataSource.makePayment(payment);
     }
 }

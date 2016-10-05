@@ -687,36 +687,6 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
-        return Observable.just(filter)
-                .map(new Func1<OfferFilter, String>() {
-                    @Override public String call(OfferFilter advertFilter) {
-                        return new OfferFilterUrlBuilder(OFFERS, advertFilter).buildUrl();
-                    }
-                })
-                .flatMap(new Func1<String, Observable<List<Offer>>>() {
-                    @Override public Observable<List<Offer>> call(final String page) {
-                        return Observable.create(new Observable.OnSubscribe<List<Offer>>() {
-                            @Override public void call(Subscriber<? super List<Offer>> subscriber) {
-                                try {
-                                    OfferPaginatedListJsonMapper jsonMapper = new OfferPaginatedListJsonMapper();
-                                    PaginatedList<Offer> paginatedList = jsonMapper.fromJsonString(createGET(page));
-                                    List<Offer> result = new ArrayList<>(paginatedList.getResults());
-                                    while (paginatedList.hasNext()) {
-                                        String nextPage = paginatedList.getNext();
-                                        paginatedList = jsonMapper.fromJsonString(createGET(nextPage));
-                                        result.addAll(paginatedList.getResults());
-                                    }
-                                    subscriber.onNext(result);
-                                } catch (Exception e) {
-                                    subscriber.onError(e);
-                                }
-                            }
-                        });
-                    }
-                });
-    }
-
     @Override public Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<OfferFilter, String>() {
@@ -894,25 +864,28 @@ public class RemoteDataSource implements ApiRest, DataSource {
         return null;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Payment
-    ///////////////////////////////////////////////////////////////////////////
+    /**********
+     * Payment Methods
+     **********/
 
-    @Override public Observable<String> addPayment(@NonNull Payment payment) {
+    @Override public Observable<Payment> makePayment(@NonNull final Payment payment) {
         return Observable.just(payment)
                 .map(new Func1<Payment, String>() {
                     @Override public String call(Payment payment) {
-                        try {
-                            return new PaymentJsonMapper().toJsonString(payment);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
+                        return mGson.toJson(new PaymentJson(payment));
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
-                    @Override public Observable<String> call(String json) {
-                        LOGD(TAG, "Payment json: " + json);
-                        return Observable.fromCallable(createPOSTCallable(PAY, json));
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(PAY, jsonString));
+                    }
+                })
+                .map(new Func1<String, Payment>() {
+                    @Override public Payment call(String jsonString) {
+                        PaymentStatusJson json = mGson.fromJson(jsonString, PaymentStatusJson.class);
+                        payment.setStatus(json.status);
+                        return payment;
                     }
                 });
     }

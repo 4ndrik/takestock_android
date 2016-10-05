@@ -2,6 +2,7 @@ package com.devabit.takestock.screen.payment;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.BuildConfig;
+import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Payment;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
@@ -13,7 +14,6 @@ import com.stripe.net.RequestOptions;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
@@ -21,17 +21,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static com.devabit.takestock.utils.Logger.*;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 import static com.stripe.android.model.Card.*;
 import static com.stripe.android.util.TextUtils.hasAnyPrefix;
+import static timber.log.Timber.d;
+import static timber.log.Timber.e;
 
 /**
  * Created by Victor Artemyev on 04/07/2016.
  */
 final class PaymentPresenter implements PaymentContract.Presenter {
-
-    private static final String TAG = makeLogTag(PaymentPresenter.class);
 
     private final DataRepository mDataRepository;
 
@@ -103,37 +102,40 @@ final class PaymentPresenter implements PaymentContract.Presenter {
         return false;
     }
 
-    @Override public void makePayment(int offerId, Card card) {
-        LOGD(TAG, card);
+    @Override public void makePayment(Offer offer, Card card) {
+        d(card.toString());
         if (!validateCard(card)) return;
         mPaymentView.setProgressIndicator(true);
-        Subscription subscription = buildPaymentObservable(offerId, card)
-                .compose(RxTransformers.<String>applyObservableSchedulers())
-                .subscribe(new Subscriber<String>() {
+        Subscription subscription = buildPaymentObservable(offer.getId(), card)
+                .compose(RxTransformers.<Payment>applyObservableSchedulers())
+                .subscribe(new Subscriber<Payment>() {
                     @Override public void onCompleted() {
                         mPaymentView.setProgressIndicator(false);
-                        mPaymentView.showUnknownError();
                     }
 
                     @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
                         mPaymentView.setProgressIndicator(false);
-                        if (e instanceof NetworkConnectionException) {
-                            mPaymentView.showNetworkConnectionError();
-                        } else {
-                            mPaymentView.showUnknownError();
-                        }
+                        handleError(e);
                     }
 
-                    @Override public void onNext(String s) {
-                        LOGD(TAG, s);
+                    @Override public void onNext(Payment payment) {
+                        d(payment.toString());
+                        mPaymentView.showPaymentMadeInView(payment);
                     }
                 });
         mSubscriptions.add(subscription);
-
     }
 
-    private Observable<String> buildPaymentObservable(final int offerId, final Card card) {
+    private void handleError(Throwable throwable) {
+        e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mPaymentView.showNetworkConnectionError();
+        } else {
+            mPaymentView.showUnknownError();
+        }
+    }
+
+    private Observable<Payment> buildPaymentObservable(final int offerId, final Card card) {
         return Observable.just(card)
                 .map(new Func1<Card, Token>() {
                     @Override public Token call(Card card) {
@@ -146,22 +148,15 @@ final class PaymentPresenter implements PaymentContract.Presenter {
                         }
                     }
                 })
-                .doOnNext(new Action1<Token>() {
-                    @Override public void call(Token token) {
-                        LOGD(TAG, token);
-                    }
-                })
                 .map(new Func1<Token, Payment>() {
                     @Override public Payment call(Token token) {
-                        Payment payment = new Payment();
-                        payment.setOfferId(offerId);
-                        payment.setTokenId(token.getId());
-                        return payment;
+                        d(token.toString());
+                        return new Payment(offerId, token.getId());
                     }
                 })
-                .flatMap(new Func1<Payment, Observable<String>>() {
-                    @Override public Observable<String> call(Payment payment) {
-                        return mDataRepository.addPayment(payment);
+                .flatMap(new Func1<Payment, Observable<Payment>>() {
+                    @Override public Observable<Payment> call(Payment payment) {
+                        return mDataRepository.makePayment(payment);
                     }
                 });
     }

@@ -2,7 +2,6 @@ package com.devabit.takestock.screen.payment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -23,7 +22,7 @@ import butterknife.*;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.utils.FontCache;
+import com.devabit.takestock.data.model.Payment;
 import com.stripe.android.model.Card;
 
 import static com.devabit.takestock.utils.Logger.LOGD;
@@ -54,7 +53,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @BindView(R.id.card_number_edit_text) protected EditText mCardNumberEditText;
     @BindView(R.id.expiry_date_edit_text) protected EditText mExpiryDateEditText;
     @BindView(R.id.cvv_code_edit_text) protected EditText mCVVCodeEditText;
-    @BindView(R.id.destination_address_edit_text) protected EditText mDestinationAddressEditText;
+//    @BindView(R.id.destination_address_edit_text) protected EditText mDestinationAddressEditText;
 
     private Offer mOffer;
 
@@ -81,7 +80,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     private void setUpToolbar() {
         Toolbar toolbar = ButterKnife.findById(PaymentActivity.this, R.id.toolbar);
-        toolbar.setTitle(R.string.payment);
+        toolbar.setTitle(R.string.payment_activity_toolbar_title);
         toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -100,11 +99,9 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     private void setUpPayButton(Offer offer) {
         Button button = ButterKnife.findById(PaymentActivity.this, R.id.pay_button);
-        Typeface boldTypeface = FontCache.getTypeface(PaymentActivity.this, R.string.font_brandon_bold);
-        button.setTypeface(boldTypeface);
         double price = Double.parseDouble(offer.getPrice());
         double finalPrice = price * offer.getQuantity();
-        button.setText(getString(R.string.pay, finalPrice));
+        button.setText(getString(R.string.payment_activity_make_payment, finalPrice));
     }
 
     @OnTextChanged(R.id.card_number_edit_text)
@@ -140,9 +137,9 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     protected void onExpiryDateEditTextFocusChanged(EditText editText, boolean focusable) {
         boolean isEmpty = editText.getText().toString().isEmpty();
         if (!focusable && isEmpty) {
-            mExpiryDateInputLayout.setHint("MM/YY");
+            mExpiryDateInputLayout.setHint(getString(R.string.payment_activity_hint_mm_yy));
         } else {
-            mExpiryDateInputLayout.setHint("Expiry date");
+            mExpiryDateInputLayout.setHint(getString(R.string.payment_activity_expiry_date));
         }
     }
 
@@ -174,6 +171,18 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     protected void onCVVCodeTextChanged() {
         mCVVCodeInputLayout.setError(null);
         mCVVCodeInputLayout.setErrorEnabled(false);
+    }
+
+    @Override public void showPaymentMadeInView(Payment payment) {
+        if (payment.isSuccessful()) {
+            mOffer.setStatus(Offer.Status.PAYMENT_MADE);
+            Intent intent = new Intent();
+            intent.putExtra(getString(R.string.extra_offer), mOffer);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            showSnack(R.string.payment_activity_error_payment);
+        }
     }
 
     @Override public void showCardAmericanExpressInView() {
@@ -210,7 +219,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @OnClick(R.id.pay_button)
     protected void onPayButtonClick() {
-        mPresenter.makePayment(mOffer.getId(), getCard());
+        mPresenter.makePayment(mOffer, getCard());
     }
 
     private Card getCard() {
@@ -308,7 +317,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     @Override protected void onStop() {
-        super.onStop();
         mPresenter.pause();
+        super.onStop();
     }
 }

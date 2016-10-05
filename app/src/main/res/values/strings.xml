@@ -53,7 +53,6 @@
     <string name="guide_price_per_kg">£ %1$s/kg</string>
     <string name="offer_price_per_kg">£%1$s/%2$d kg</string>
     <string name="add_expiry_date">Add expiry date</string>
-    <string name="pay">Pay £%1$.2f</string>
 
     <!-- Strings related to errors -->
     <string name="error_unknown">Unknown error.</string>
@@ -132,13 +131,10 @@
     <string name="email_subscription">I am subscribed to receive news and updates by email</string>
     <string name="payment_details">Payment details</string>
     <string name="credit_card">0000 0000 0000 0000</string>
-    <string name="error_category">Category not selected.</string>
     <string name="error_shipping">Shipping not selected.</string>
     <string name="error_condition">Condition not selected.</string>
     <string name="keyword">Keyword</string>
     <string name="add">Add</string>
-    <string name="card_number">Card number</string>
-    <string name="payment">Payment</string>
     <string name="add_payment">Add payment</string>
 
     <!--advert create activity start-->
@@ -175,6 +171,8 @@
     <string name="advert_create_save">Save in drafts</string>
     <string name="advert_create_error_photo">Photo not added</string>
     <string name="advert_create_error_title">Product title not added</string>
+    <string name="advert_create_error_category">Category not selected</string>
+    <string name="advert_create_error_subcategory">Subcategory not selected</string>
     <string name="advert_create_error_item_count">Unit amount not added</string>
     <string name="advert_create_error_minimum_order">Minimum order not added</string>
     <string name="advert_create_error_guide_price">Guide price not added</string>
@@ -349,4 +347,23 @@
     <string name="offer_buying_buyer_offer">My offer</string>
     <!--offer buying history end-->
 
+    <!--advert watching item start-->
+    <string name="advert_watching_item_guide_price">£ %1$s/%2$s</string>
+    <string name="advert_watching_item_additional">%1$s offers \u2022 %2$s questions \u2022 %3$s days left</string>
+    <string name="advert_watching_item_available_unit">available: %1$d%2$s</string>
+    <!--advert selling activity end-->
+
+    <!--watching activity start-->
+    <string name="watching_activity_toolbar_title">Watching</string>
+    <!--watching activity end-->
+
+    <!--payment activity start-->
+    <string name="payment_activity_card_number">Card number</string>
+    <string name="payment_activity_hint_cvv_code">CVV code</string>
+    <string name="payment_activity_hint_mm_yy">MM/YY</string>
+    <string name="payment_activity_make_payment">Pay £%1$.2f</string>
+    <string name="payment_activity_toolbar_title">Payment</string>
+    <string name="payment_activity_expiry_date">Expiry date</string>
+    <string name="payment_activity_error_payment">Payment failed</string>
+    <!--payment activity end-->
 </resources>
