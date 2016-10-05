@@ -9,7 +9,9 @@ import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 import static timber.log.Timber.e;
@@ -27,8 +29,8 @@ class AdvertsPresenter implements AdvertsContract.Presenter {
     private PaginatedList<Advert> mPaginatedList;
 
     AdvertsPresenter(@NonNull DataRepository dataRepository,
-                            @NonNull AdvertsContract.View view,
-                            @NonNull AdvertFilter filter) {
+                     @NonNull AdvertsContract.View view,
+                     @NonNull AdvertFilter filter) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mView = checkNotNull(view, "view cannot be null.");
         mFilter = checkNotNull(filter, "filter cannot be null.");
@@ -105,8 +107,17 @@ class AdvertsPresenter implements AdvertsContract.Presenter {
         }
     }
 
-    @Override public void addOrRemoveWatchingAdvert(final int advertId) {
-        Subscription subscription = mDataRepository.addRemoveAdvertWatching(advertId)
+    @Override public void addOrRemoveWatchingAdvert(final Advert advert, final int userId) {
+        Subscription subscription = mDataRepository.addRemoveAdvertWatching(advert.getId())
+                .doOnNext(new Action1<Advert.Subscriber>() {
+                    @Override public void call(Advert.Subscriber subscriber) {
+                        if (subscriber.isSubscribed()) {
+                            advert.addSubscriber(userId);
+                        } else {
+                            advert.removeSubscriber(userId);
+                        }
+                    }
+                })
                 .compose(RxTransformers.<Advert.Subscriber>applyObservableSchedulers())
                 .subscribe(new Subscriber<Advert.Subscriber>() {
                     @Override public void onCompleted() {
@@ -115,15 +126,15 @@ class AdvertsPresenter implements AdvertsContract.Presenter {
 
                     @Override public void onError(Throwable throwable) {
                         e(throwable);
-                        mView.showAdvertWatchingError(advertId);
+                        mView.showAdvertWatchingError(advert);
                     }
 
                     @Override public void onNext(Advert.Subscriber subscriber) {
-                        e(subscriber.toString());
+                        Timber.d(subscriber.toString());
                         if (subscriber.isSubscribed()) {
-                            mView.showAdvertAddedToWatching(subscriber.getAdvertId());
+                            mView.showAdvertAddedToWatching(advert);
                         } else {
-                            mView.showAdvertRemovedFromWatching(subscriber.getAdvertId());
+                            mView.showAdvertRemovedFromWatching(advert);
                         }
                     }
                 });

@@ -189,7 +189,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         @Override void bindAdvert(Advert advert) {
             super.bindAdvert(advert);
             watchingCheckBox.setOnCheckedChangeListener(null);
-//            watchingCheckBox.setChecked(mAdvert.hasSubscriber(sUserId));
+            watchingCheckBox.setChecked(mAdvert.hasSubscriber(mUserId));
             watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
             setItemViewActive(!isAdvertProcessing(mAdvert));
         }

@@ -21,11 +21,11 @@ interface AdvertsContract {
 
         void showTotalAdvertsCountInView(int count);
 
-        void showAdvertAddedToWatching(int advertId);
+        void showAdvertAddedToWatching(Advert advert);
 
-        void showAdvertRemovedFromWatching(int advertId);
+        void showAdvertRemovedFromWatching(Advert advert);
 
-        void showAdvertWatchingError(int advertId);
+        void showAdvertWatchingError(Advert advert);
 
         void showNetworkConnectionError();
 
@@ -45,7 +45,7 @@ interface AdvertsContract {
 
         void refreshAdverts();
 
-        void addOrRemoveWatchingAdvert(int advertId);
+        void addOrRemoveWatchingAdvert(Advert advert, int userId);
 
     }
 }

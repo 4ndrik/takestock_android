@@ -24,7 +24,7 @@ public class UserEntity extends RealmObject {
     private boolean mIsVatExempt;
     private double mAvgRating;
     private String mPhotoPath;
-    private int mPostcode;
+    private String mPostcode;
     private int mVatNumber;
     private String mBusinessName;
     private int mBusinessTypeId;
@@ -150,11 +150,11 @@ public class UserEntity extends RealmObject {
         mPhotoPath = photoPath;
     }
 
-    public int getPostcode() {
+    public String getPostcode() {
         return mPostcode;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(String postcode) {
         mPostcode = postcode;
     }
 

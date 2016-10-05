@@ -366,10 +366,6 @@ public class LocalDataSource implements DataSource {
         return null;
     }
 
-    @Override public Observable<List<Offer>> getOffersPerFilter(@NonNull OfferFilter filter) {
-        throw new UnsupportedOperationException("This operation not required.");
-    }
-
     @Override public Observable<PaginatedList<Offer>> getPaginatedOfferListWithFilter(@NonNull OfferFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -451,7 +447,7 @@ public class LocalDataSource implements DataSource {
     // Methods for Payment
     ///////////////////////////////////////////////////////////////////////////
 
-    @Override public Observable<String> addPayment(@NonNull Payment payment) {
+    @Override public Observable<Payment> makePayment(@NonNull Payment payment) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 }

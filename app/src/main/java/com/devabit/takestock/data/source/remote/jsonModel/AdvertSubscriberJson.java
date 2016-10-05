@@ -7,14 +7,14 @@ import com.devabit.takestock.data.model.Advert;
  */
 public class AdvertSubscriberJson {
 
-    public int advert_id;
+    public int item_id;
     public String status;
 
     public AdvertSubscriberJson(int advertId) {
-        this.advert_id = advertId;
+        this.item_id = advertId;
     }
 
     public Advert.Subscriber toSubscriber() {
-        return new Advert.Subscriber(advert_id, status);
+        return new Advert.Subscriber(item_id, status);
     }
 }

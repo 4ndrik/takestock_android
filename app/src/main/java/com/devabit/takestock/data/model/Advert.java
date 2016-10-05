@@ -3,6 +3,7 @@ package com.devabit.takestock.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,14 +56,14 @@ public class Advert implements Parcelable {
     private String mCategoryName;
 
     private Advert(int id, String name, String createdAt, String expiresAt, String updatedAt, String guidePrice,
-           String description, String location, int shippingId, String shippingDisplay, boolean isVatExempt,
-           List<Photo> photos, int authorId, int categoryId, int subcategoryId, int packagingId,
-           int minOrderQuantity, String size, Certification certification, String certificationExtra,
-           int certificationId, int conditionId, String conditionDisplay, int itemsCount, int itemsCountNow,
-           List<String> tags, Author author, String packagingName, String offersCount, String questionsCount,
-           String daysLeft, int[] subscribers, boolean isDrafts, int advertsViews, boolean canOffer,
-           int notifications, int newQuestionsCount, int newOffersCount, boolean isFood, int state,
-           String escapedDescription, String categoryName) {
+                   String description, String location, int shippingId, String shippingDisplay, boolean isVatExempt,
+                   List<Photo> photos, int authorId, int categoryId, int subcategoryId, int packagingId,
+                   int minOrderQuantity, String size, Certification certification, String certificationExtra,
+                   int certificationId, int conditionId, String conditionDisplay, int itemsCount, int itemsCountNow,
+                   List<String> tags, Author author, String packagingName, String offersCount, String questionsCount,
+                   String daysLeft, int[] subscribers, boolean isDrafts, int advertsViews, boolean canOffer,
+                   int notifications, int newQuestionsCount, int newOffersCount, boolean isFood, int state,
+                   String escapedDescription, String categoryName) {
         mId = id;
         mName = name;
         mCreatedAt = createdAt;
@@ -389,6 +390,43 @@ public class Advert implements Parcelable {
         return mCategoryName;
     }
 
+    public void removeSubscriber(int userId) {
+        for (int i = 0; i < mSubscribers.length; i++) {
+            if (mSubscribers[i] == userId) {
+                int[] newSubscribers = (int[]) Array.newInstance(mSubscribers.getClass().getComponentType(), mSubscribers.length - 1);
+                System.arraycopy(mSubscribers, 0, newSubscribers, 0, i);
+                if (i < mSubscribers.length - 1) {
+                    System.arraycopy(mSubscribers, i + 1, newSubscribers, i, mSubscribers.length - i - 1);
+                }
+                mSubscribers = newSubscribers;
+                break;
+            }
+        }
+    }
+
+    public void addSubscriber(int userId) {
+        int[] newSubscribers = copyArrayGrow1(mSubscribers);
+        newSubscribers[newSubscribers.length - 1] = userId;
+        mSubscribers = newSubscribers;
+    }
+
+    public boolean hasSubscriber(int userId) {
+        for (int id : mSubscribers) {
+            if (id == userId) return true;
+        }
+        return false;
+    }
+
+    private int[] copyArrayGrow1(int[] array) {
+        if (array != null) {
+            int arrayLength = Array.getLength(array);
+            int[] newArray = (int[]) Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
+            System.arraycopy(array, 0, newArray, 0, arrayLength);
+            return newArray;
+        }
+        return (int[]) Array.newInstance(Integer.TYPE, 1);
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -396,7 +434,6 @@ public class Advert implements Parcelable {
         Advert advert = (Advert) o;
 
         return mId == advert.mId;
-
     }
 
     @Override public int hashCode() {

@@ -40,7 +40,7 @@ public class Offer implements Parcelable {
     private int mPriceForStripe;
     private int mNotifications;
     private boolean mFromSeller;
-    private int[] mShipping;
+    private Object[] mShipping;
     private Offer[] mChildOffers;
     private int mLastOffer;
 
@@ -63,7 +63,7 @@ public class Offer implements Parcelable {
                   int priceForStripe,
                   int notifications,
                   boolean fromSeller,
-                  int[] shipping,
+                  Object[] shipping,
                   Offer[] childOffers,
                   int lastOffer) {
         mId = id;
@@ -104,7 +104,7 @@ public class Offer implements Parcelable {
         mPriceForStripe = in.readInt();
         mNotifications = in.readInt();
         mFromSeller = in.readByte() != 0;
-        mShipping = in.createIntArray();
+//        mShipping = in.createIntArray();
         mChildOffers = in.createTypedArray(Offer.CREATOR);
         mLastOffer = in.readInt();
     }
@@ -127,7 +127,7 @@ public class Offer implements Parcelable {
         dest.writeInt(mPriceForStripe);
         dest.writeInt(mNotifications);
         dest.writeByte((byte) (mFromSeller ? 1 : 0));
-        dest.writeIntArray(mShipping);
+//        dest.writeIntArray(mShipping);
         dest.writeTypedArray(mChildOffers, flags);
         dest.writeInt(mLastOffer);
     }
@@ -217,7 +217,7 @@ public class Offer implements Parcelable {
         return mFromSeller;
     }
 
-    public int[] getShipping() {
+    public Object[] getShipping() {
         return mShipping;
     }
 
@@ -239,46 +239,12 @@ public class Offer implements Parcelable {
 
         Offer offer = (Offer) o;
 
-        if (mId != offer.mId) return false;
-        if (mAdvertId != offer.mAdvertId) return false;
-        if (mCounterOfferId != offer.mCounterOfferId) return false;
-        if (mQuantity != offer.mQuantity) return false;
-        if (mUserId != offer.mUserId) return false;
-        if (mStatus != offer.mStatus) return false;
-        if (mStatusForBuyer != offer.mStatusForBuyer) return false;
-        if (mPriceForStripe != offer.mPriceForStripe) return false;
-        if (mNotifications != offer.mNotifications) return false;
-        if (mFromSeller != offer.mFromSeller) return false;
-        if (mPrice != null ? !mPrice.equals(offer.mPrice) : offer.mPrice != null) return false;
-        if (mComment != null ? !mComment.equals(offer.mComment) : offer.mComment != null) return false;
-        if (mStatusComment != null ? !mStatusComment.equals(offer.mStatusComment) : offer.mStatusComment != null)
-            return false;
-        if (mCreatedAt != null ? !mCreatedAt.equals(offer.mCreatedAt) : offer.mCreatedAt != null) return false;
-        if (mUpdatedAt != null ? !mUpdatedAt.equals(offer.mUpdatedAt) : offer.mUpdatedAt != null) return false;
-        if (mAuthor != null ? !mAuthor.equals(offer.mAuthor) : offer.mAuthor != null) return false;
-        return Arrays.equals(mShipping, offer.mShipping);
+        return mId == offer.mId;
 
     }
 
     @Override public int hashCode() {
-        int result = mId;
-        result = 31 * result + mAdvertId;
-        result = 31 * result + mCounterOfferId;
-        result = 31 * result + (mPrice != null ? mPrice.hashCode() : 0);
-        result = 31 * result + mQuantity;
-        result = 31 * result + mUserId;
-        result = 31 * result + mStatus;
-        result = 31 * result + mStatusForBuyer;
-        result = 31 * result + (mComment != null ? mComment.hashCode() : 0);
-        result = 31 * result + (mStatusComment != null ? mStatusComment.hashCode() : 0);
-        result = 31 * result + (mCreatedAt != null ? mCreatedAt.hashCode() : 0);
-        result = 31 * result + (mUpdatedAt != null ? mUpdatedAt.hashCode() : 0);
-        result = 31 * result + (mAuthor != null ? mAuthor.hashCode() : 0);
-        result = 31 * result + mPriceForStripe;
-        result = 31 * result + mNotifications;
-        result = 31 * result + (mFromSeller ? 1 : 0);
-        result = 31 * result + Arrays.hashCode(mShipping);
-        return result;
+        return mId;
     }
 
     @Override public String toString() {
@@ -323,7 +289,7 @@ public class Offer implements Parcelable {
         private int mPriceForStripe;
         private int mNotifications;
         private boolean mFromSeller;
-        private int[] mShipping;
+        private Object[] mShipping;
         private Offer[] mChildOffers;
         private int mLastOffer;
 
@@ -407,7 +373,7 @@ public class Offer implements Parcelable {
             return this;
         }
 
-        public Builder setShipping(int[] shipping) {
+        public Builder setShipping(Object[] shipping) {
             mShipping = shipping;
             return this;
         }

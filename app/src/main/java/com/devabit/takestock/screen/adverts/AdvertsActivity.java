@@ -170,7 +170,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
                     mAdvertsAdapter.stopAdvertProcessing(advert.getId());
                     startEntryActivity();
                 } else {
-                    mPresenter.addOrRemoveWatchingAdvert(advert.getId());
+                    mPresenter.addOrRemoveWatchingAdvert(advert, mAccount.getUserId());
                 }
             }
         });
@@ -235,12 +235,14 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         mCountTextView.setText(spString);
     }
 
-    @Override public void showAdvertAddedToWatching(int advertId) {
-        stopAdvertProcessing(advertId);
+    @Override public void showAdvertAddedToWatching(Advert advert) {
+        stopAdvertProcessing(advert.getId());
+        mAdvertsAdapter.refreshAdvert(advert);
     }
 
-    @Override public void showAdvertRemovedFromWatching(int advertId) {
-        stopAdvertProcessing(advertId);
+    @Override public void showAdvertRemovedFromWatching(Advert advert) {
+        stopAdvertProcessing(advert.getId());
+        mAdvertsAdapter.refreshAdvert(advert);
     }
 
     private void stopAdvertProcessing(int advertId) {
@@ -250,8 +252,8 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         }
     }
 
-    @Override public void showAdvertWatchingError(int advertId) {
-        mAdvertsAdapter.stopAdvertProcessing(advertId);
+    @Override public void showAdvertWatchingError(Advert advert) {
+        mAdvertsAdapter.stopAdvertProcessing(advert.getId());
     }
 
     @Override public void showNetworkConnectionError() {
@@ -279,8 +281,8 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         startActivity(CategoriesActivity.getStartIntent(AdvertsActivity.this));
     }
 
-    int mSortOrder = AdvertFilter.ORDER_DEFAULT;
-    int mSortOrderCheckedItem = -1;
+    int mSortOrder = AdvertFilter.ORDER_CREATED_AT_DESCENDING;
+    int mSortOrderCheckedItem = 1;
 
     private final static SparseIntArray SORT_VALUES = new SparseIntArray();
 
