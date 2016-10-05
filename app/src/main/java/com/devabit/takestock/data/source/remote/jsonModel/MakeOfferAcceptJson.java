@@ -11,7 +11,7 @@ public class MakeOfferAcceptJson implements JsonModel {
     public String street;
     public String house;
     public String city;
-    public String postcode;
+    public int postcode;
     public String phone;
     public String arrival_date;
     public String pick_up_date;

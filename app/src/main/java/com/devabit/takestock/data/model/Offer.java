@@ -40,7 +40,7 @@ public class Offer implements Parcelable {
     private int mPriceForStripe;
     private int mNotifications;
     private boolean mFromSeller;
-    private Object[] mShipping;
+    private Shipping[] mShipping;
     private Offer[] mChildOffers;
     private int mLastOffer;
 
@@ -63,7 +63,7 @@ public class Offer implements Parcelable {
                   int priceForStripe,
                   int notifications,
                   boolean fromSeller,
-                  Object[] shipping,
+                  Shipping[] shipping,
                   Offer[] childOffers,
                   int lastOffer) {
         mId = id;
@@ -87,6 +87,7 @@ public class Offer implements Parcelable {
         mLastOffer = lastOffer;
     }
 
+
     protected Offer(Parcel in) {
         mId = in.readInt();
         mAdvertId = in.readInt();
@@ -104,7 +105,7 @@ public class Offer implements Parcelable {
         mPriceForStripe = in.readInt();
         mNotifications = in.readInt();
         mFromSeller = in.readByte() != 0;
-//        mShipping = in.createIntArray();
+        mShipping = in.createTypedArray(Shipping.CREATOR);
         mChildOffers = in.createTypedArray(Offer.CREATOR);
         mLastOffer = in.readInt();
     }
@@ -127,7 +128,7 @@ public class Offer implements Parcelable {
         dest.writeInt(mPriceForStripe);
         dest.writeInt(mNotifications);
         dest.writeByte((byte) (mFromSeller ? 1 : 0));
-//        dest.writeIntArray(mShipping);
+        dest.writeTypedArray(mShipping, flags);
         dest.writeTypedArray(mChildOffers, flags);
         dest.writeInt(mLastOffer);
     }
@@ -217,7 +218,7 @@ public class Offer implements Parcelable {
         return mFromSeller;
     }
 
-    public Object[] getShipping() {
+    public Shipping[] getShipping() {
         return mShipping;
     }
 
@@ -289,7 +290,7 @@ public class Offer implements Parcelable {
         private int mPriceForStripe;
         private int mNotifications;
         private boolean mFromSeller;
-        private Object[] mShipping;
+        private Shipping[] mShipping;
         private Offer[] mChildOffers;
         private int mLastOffer;
 
@@ -373,7 +374,7 @@ public class Offer implements Parcelable {
             return this;
         }
 
-        public Builder setShipping(Object[] shipping) {
+        public Builder setShipping(Shipping[] shipping) {
             mShipping = shipping;
             return this;
         }
@@ -407,7 +408,7 @@ public class Offer implements Parcelable {
         private String mStreet;
         private String mHouse;
         private String mCity;
-        private String mPostcode;
+        private int mPostcode;
         private String mPhone;
         private boolean mStockInTransit;
         private boolean mFromSeller;
@@ -429,7 +430,7 @@ public class Offer implements Parcelable {
                        String street,
                        String house,
                        String city,
-                       String postcode,
+                       int postcode,
                        String phone,
                        boolean stockInTransit,
                        boolean fromSeller,
@@ -497,7 +498,7 @@ public class Offer implements Parcelable {
             return mCity;
         }
 
-        public String getPostcode() {
+        public int getPostcode() {
             return mPostcode;
         }
 
@@ -562,7 +563,7 @@ public class Offer implements Parcelable {
             private String mStreet;
             private String mHouse;
             private String mCity;
-            private String mPostcode;
+            private int mPostcode;
             private String mPhone;
             private boolean mStockInTransit;
             private boolean mFromSeller;
@@ -621,7 +622,7 @@ public class Offer implements Parcelable {
                 return this;
             }
 
-            public Builder setPostcode(String postcode) {
+            public Builder setPostcode(int postcode) {
                 mPostcode = postcode;
                 return this;
             }
@@ -664,6 +665,257 @@ public class Offer implements Parcelable {
             public Accept create() {
                 return new Accept(mId, mUserId, mOfferId, mStatus, mPrice, mComment, mQuantity, mStreet, mHouse, mCity,
                         mPostcode, mPhone, mStockInTransit, mFromSeller, mArrivalDate, mPickUpDate, mTracking, mCourierName);
+            }
+        }
+    }
+
+    public static class Shipping implements Parcelable {
+        private int mId;
+        private String mHouse;
+        private String mStreet;
+        private String mCity;
+        private int mPostcode;
+        private String mPhone;
+        private String mArrivalDate;
+        private String mPickUpDate;
+        private String mTracking;
+        private String mCourierName;
+        private boolean mFromSeller;
+        private boolean mStockInTransit;
+        private int mOfferId;
+
+        private Shipping(){}
+
+        private Shipping(int id,
+                        String house,
+                        String street,
+                        String city,
+                        int postcode,
+                        String phone,
+                        String arrivalDate,
+                        String pickUpDate,
+                        String tracking,
+                        String courierName,
+                        boolean fromSeller,
+                        boolean stockInTransit,
+                        int offerId) {
+            mId = id;
+            mHouse = house;
+            mStreet = street;
+            mCity = city;
+            mPostcode = postcode;
+            mPhone = phone;
+            mArrivalDate = arrivalDate;
+            mPickUpDate = pickUpDate;
+            mTracking = tracking;
+            mCourierName = courierName;
+            mFromSeller = fromSeller;
+            mStockInTransit = stockInTransit;
+            mOfferId = offerId;
+        }
+
+        protected Shipping(Parcel in) {
+            mId = in.readInt();
+            mHouse = in.readString();
+            mStreet = in.readString();
+            mCity = in.readString();
+            mPostcode = in.readInt();
+            mPhone = in.readString();
+            mArrivalDate = in.readString();
+            mPickUpDate = in.readString();
+            mTracking = in.readString();
+            mCourierName = in.readString();
+            mFromSeller = in.readByte() != 0;
+            mStockInTransit = in.readByte() != 0;
+            mOfferId = in.readInt();
+        }
+
+        public static final Creator<Shipping> CREATOR = new Creator<Shipping>() {
+            @Override
+            public Shipping createFromParcel(Parcel in) {
+                return new Shipping(in);
+            }
+
+            @Override
+            public Shipping[] newArray(int size) {
+                return new Shipping[size];
+            }
+        };
+
+        public int getId() {
+            return mId;
+        }
+
+        public String getHouse() {
+            return mHouse;
+        }
+
+        public String getStreet() {
+            return mStreet;
+        }
+
+        public String getCity() {
+            return mCity;
+        }
+
+        public int getPostcode() {
+            return mPostcode;
+        }
+
+        public String getPhone() {
+            return mPhone;
+        }
+
+        public String getArrivalDate() {
+            return mArrivalDate;
+        }
+
+        public String getPickUpDate() {
+            return mPickUpDate;
+        }
+
+        public String getTracking() {
+            return mTracking;
+        }
+
+        public String getCourierName() {
+            return mCourierName;
+        }
+
+        public boolean isFromSeller() {
+            return mFromSeller;
+        }
+
+        public boolean isStockInTransit() {
+            return mStockInTransit;
+        }
+
+        public int getOfferId() {
+            return mOfferId;
+        }
+
+        @Override public String toString() {
+            return "Shipping{" +
+                    "mId=" + mId +
+                    ", mHouse='" + mHouse + '\'' +
+                    ", mStreet='" + mStreet + '\'' +
+                    ", mCity='" + mCity + '\'' +
+                    ", mPostcode=" + mPostcode +
+                    ", mPhone='" + mPhone + '\'' +
+                    ", mArrivalDate='" + mArrivalDate + '\'' +
+                    ", mPickUpDate='" + mPickUpDate + '\'' +
+                    ", mTracking='" + mTracking + '\'' +
+                    ", mCourierName='" + mCourierName + '\'' +
+                    ", mFromSeller=" + mFromSeller +
+                    ", mStockInTransit=" + mStockInTransit +
+                    ", mOfferId=" + mOfferId +
+                    '}';
+        }
+
+        @Override public int describeContents() {
+            return 0;
+        }
+
+        @Override public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(mId);
+            dest.writeString(mHouse);
+            dest.writeString(mStreet);
+            dest.writeString(mCity);
+            dest.writeInt(mPostcode);
+            dest.writeString(mPhone);
+            dest.writeString(mArrivalDate);
+            dest.writeString(mPickUpDate);
+            dest.writeString(mTracking);
+            dest.writeString(mCourierName);
+            dest.writeByte((byte) (mFromSeller ? 1 : 0));
+            dest.writeByte((byte) (mStockInTransit ? 1 : 0));
+            dest.writeInt(mOfferId);
+        }
+
+        public static final class Builder {
+
+            private int mId;
+            private String mHouse;
+            private String mStreet;
+            private String mCity;
+            private int mPostcode;
+            private String mPhone;
+            private String mArrivalDate;
+            private String mPickUpDate;
+            private String mTracking;
+            private String mCourierName;
+            private boolean mFromSeller;
+            private boolean mStockInTransit;
+            private int mOfferId;
+
+            public Builder setId(int id) {
+                mId = id;
+                return this;
+            }
+
+            public Builder setHouse(String house) {
+                mHouse = house;
+                return this;
+            }
+
+            public Builder setStreet(String street) {
+                mStreet = street;
+                return this;
+            }
+
+            public Builder setCity(String city) {
+                mCity = city;
+                return this;
+            }
+
+            public Builder setPostcode(int postcode) {
+                mPostcode = postcode;
+                return this;
+            }
+
+            public Builder setPhone(String phone) {
+                mPhone = phone;
+                return this;
+            }
+
+            public Builder setArrivalDate(String arrivalDate) {
+                mArrivalDate = arrivalDate;
+                return this;
+            }
+
+            public Builder setPickUpDate(String pickUpDate) {
+                mPickUpDate = pickUpDate;
+                return this;
+            }
+
+            public Builder setTracking(String tracking) {
+                mTracking = tracking;
+                return this;
+            }
+
+            public Builder setCourierName(String courierName) {
+                mCourierName = courierName;
+                return this;
+            }
+
+            public Builder setFromSeller(boolean fromSeller) {
+                mFromSeller = fromSeller;
+                return this;
+            }
+
+            public Builder setStockInTransit(boolean stockInTransit) {
+                mStockInTransit = stockInTransit;
+                return this;
+            }
+
+            public Builder setOfferId(int offerId) {
+                mOfferId = offerId;
+                return this;
+            }
+
+            public Shipping create() {
+                return new Shipping(mId, mHouse, mStreet, mCity, mPostcode, mPhone, mArrivalDate,
+                        mPickUpDate, mTracking, mCourierName, mFromSeller, mStockInTransit, mOfferId);
             }
         }
     }

@@ -30,6 +30,7 @@ import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
 import com.devabit.takestock.screen.payment.PaymentActivity;
+import com.devabit.takestock.screen.shipping.ShippingActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.ControllableAppBarLayout;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
@@ -55,6 +56,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     }
 
     public static final int RC_PAYMENT = 101;
+    public static final int RC_SHIPPING = 102;
 
     @BindView(R.id.content_activity_offer) protected ViewGroup mContent;
     @BindView(R.id.appbar_layout) protected ControllableAppBarLayout mAppBarLayout;
@@ -151,7 +153,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         });
         mOffersAdapter.setOnShippingAddressClickListener(new OffersAdapter.OnShippingAddressClickListener() {
             @Override public void onShippingAddressSet(Offer offer) {
-                displayShippingAddressDialog(offer);
+                startActivityForResult(ShippingActivity.getStartIntent(OfferActivity.this, offer), RC_SHIPPING);
             }
         });
         mRecyclerView.setAdapter(mOffersAdapter);
@@ -215,10 +217,6 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         });
     }
 
-    private void displayShippingAddressDialog(Offer offer) {
-
-    }
-
     private List<Offer> fetchOffers(Offer offer) {
         List<Offer> offers = new ArrayList<>();
         offers.add(offer);
@@ -248,7 +246,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PAYMENT && resultCode == RESULT_OK) {
+        if (requestCode == RC_PAYMENT || requestCode == RC_SHIPPING && resultCode == RESULT_OK) {
             Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
             mOffersAdapter.refreshOffer(offer);
         }

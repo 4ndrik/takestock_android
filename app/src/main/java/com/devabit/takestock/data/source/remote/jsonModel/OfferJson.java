@@ -24,7 +24,7 @@ public class OfferJson {
     public boolean from_seller;
     public int last_offer;
     public int notifications;
-    public Object[] shipping;
+    public OfferShippingJson[] shipping;
 
     public Offer toOffer() {
         return new Offer.Builder()
@@ -42,7 +42,7 @@ public class OfferJson {
                 .setPriceForStripe(price_for_stripe)
                 .setFromSeller(from_seller)
                 .setNotifications(notifications)
-                .setShipping(shipping)
+                .setShipping(toShippings())
                 .setLastOffer(last_offer)
                 .setChildOffers(toChildOffers())
                 .create();
@@ -55,5 +55,13 @@ public class OfferJson {
             offers[i] = child_offers[i].toOffer();
         }
         return offers;
+    }
+
+    private Offer.Shipping[] toShippings() {
+        Offer.Shipping[] result = new Offer.Shipping[shipping.length];
+        for (int i = 0; i < shipping.length; i++) {
+            result[i] = shipping[i].toShipping();
+        }
+        return result;
     }
 }

@@ -1,9 +1,15 @@
 package com.devabit.takestock.screen.offer;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +86,9 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
             case R.layout.item_offer_buying_payment_made:
                 return new OfferPaymentMadeViewHolder(inflateViewType(viewType, parent));
 
+            case R.layout.item_offer_buying_address_received:
+                return new OfferAddressReceivedViewHolder(inflateViewType(viewType, parent));
+
             default:
                 return new OfferHistoryViewHolder(inflateViewType(viewType, parent));
         }
@@ -113,6 +122,9 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
                 case Offer.Status.PAYMENT_MADE:
                     return R.layout.item_offer_buying_payment_made;
+
+                case Offer.Status.ADDRESS_RECEIVED:
+                    return R.layout.item_offer_buying_address_received;
 
                 default:
                     return R.layout.item_offer_buying_countered;
@@ -160,6 +172,63 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
     ///////////////////////////////////////////////////////////////////////////
     // ViewHolders
     ///////////////////////////////////////////////////////////////////////////
+
+    class OfferAddressReceivedViewHolder extends ViewHolder {
+
+        @BindView(R.id.shipping_info_text_view) TextView shippingInfoTextView;
+
+        OfferAddressReceivedViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override void bindOffer(Offer offer) {
+            super.bindOffer(offer);
+            bindShipping(offer.getShipping()[0]);
+        }
+
+        void bindShipping(Offer.Shipping shipping) {
+            Resources resources = shippingInfoTextView.getResources();
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+//            builder.append(resources.getString(R.string.offer_buying_item_shipping_info));
+//            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_house));
+            String house = shipping.getHouse();
+            builder.append(house);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - house.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_street));
+            String street = shipping.getStreet();
+            builder.append(street);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - street.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_city));
+            String city = shipping.getCity();
+            builder.append(city);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - city.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_postcode));
+            String postcode = String.valueOf(shipping.getPostcode());
+            builder.append(postcode);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - postcode.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_phone));
+            String phone = shipping.getPhone();
+            builder.append(phone);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - phone.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            shippingInfoTextView.setText(builder);
+        }
+
+        @OnClick(R.id.seller_transport_button)
+        void onSellerTransportButtonClick() {
+
+        }
+
+        @OnClick(R.id.buyer_transport_button)
+        void onBuyerTransportButtonClick() {
+
+        }
+
+    }
 
     class OfferPaymentMadeViewHolder extends ViewHolder {
 
@@ -272,7 +341,14 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
             String offerString = offerTextView.getResources()
                     .getString(R.string.offer_item_offer, mOffer.getQuantity(), mPackaging, mOffer.getPrice(), mPackaging);
             offerTextView.setText(offerString);
-            commentTextView.setText(offer.getComment());
+
+            if (TextUtils.isEmpty(offer.getComment())) {
+                commentTextView.setVisibility(View.GONE);
+            } else {
+                commentTextView.setVisibility(View.VISIBLE);
+                commentTextView.setText(offer.getComment());
+            }
+
             setStatus();
         }
 

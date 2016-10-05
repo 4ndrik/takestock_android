@@ -299,12 +299,20 @@
     <string name="buying_activity_toolbar_title">Buying</string>
     <!--buying activity end-->
 
-    <!--offer buying item start-->
-    <string name="offer_buying_item_price">£%1$s/%2$d %3$s</string>
-    <!--offer buying item end-->
+    <!--offer activity start-->
+    <string name="offer_activity_advert_price">£ %1$s/%2$s</string>
+    <!--offer activity end-->
 
     <!--offer buying item start-->
-    <string name="offer_activity_advert_price">£ %1$s/%2$s</string>
+    <string name="offer_buying_item_price">£%1$s/%2$d %3$s</string>
+    <string name="offer_buying_item_seller_transport">Seller (me) arranges transport</string>
+    <string name="offer_buying_item_buyer_transport">Buyer arranges transport</string>
+    <string name="offer_buying_item_shipping_info">Shipping info</string>
+    <string name="offer_buying_item_house">House:\u0020</string>
+    <string name="offer_buying_item_street">Street:\u0020</string>
+    <string name="offer_buying_item_city">City:\u0020</string>
+    <string name="offer_buying_item_postcode">Postcode:\u0020</string>
+    <string name="offer_buying_item_phone">Phone:\u0020</string>
     <!--offer buying item end-->
 
     <!--advert selling item start-->
@@ -366,4 +374,20 @@
     <string name="payment_activity_expiry_date">Expiry date</string>
     <string name="payment_activity_error_payment">Payment failed</string>
     <!--payment activity end-->
+
+    <!--shipping activity start-->
+    <string name="shipping_activity_toolbar_title">Ship to</string>
+    <string name="shipping_activity_hint_house">House no</string>
+    <string name="shipping_activity_hint_street">Street</string>
+    <string name="shipping_activity_hint_city">City or town</string>
+    <string name="shipping_activity_hint_postcode">Postcode</string>
+    <string name="shipping_activity_hint_phone">Phone number</string>
+    <string name="shipping_activity_ok">OK</string>
+    <string name="shipping_activity_error_house">House is empty</string>
+    <string name="shipping_activity_error_street">Street is empty</string>
+    <string name="shipping_activity_error_city">City is empty</string>
+    <string name="shipping_activity_error_postcode">Postcode is empty</string>
+    <string name="shipping_activity_error_phone">Phone is incorrect</string>
+    <!--shipping activity end-->
+
 </resources>
