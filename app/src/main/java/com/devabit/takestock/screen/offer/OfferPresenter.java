@@ -68,8 +68,6 @@ class OfferPresenter implements OfferContract.Presenter {
                     @Override public void onNext(Offer offer) {
                         d(offer.toString());
                         mView.showOfferAcceptedInView(offer);
-//                        offer.setStatus(accept.getStatus());
-//                        mView.showOfferAcceptedInView(offer);
                     }
                 });
         mSubscriptions.add(subscription);

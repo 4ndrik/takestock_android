@@ -16,7 +16,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Author;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.screen.payment.PaymentActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.CircleImageView;
 
@@ -43,13 +42,25 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
     private OnStatusChangedListener mStatusChangedListener;
 
+    interface OnMakePaymentClickListener {
+        void onMakePayment(Offer offer);
+    }
+
+    private OnMakePaymentClickListener mMakePaymentClickListener;
+
+    interface OnShippingAddressClickListener {
+        void onShippingAddressSet(Offer offer);
+    }
+
+    private OnShippingAddressClickListener mShippingAddressClickListener;
+
     OffersAdapter(Context context, String packaging) {
         mPackaging = packaging;
         mLayoutInflater = LayoutInflater.from(context);
         mOffers = new ArrayList<>();
     }
 
-    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, @LayoutRes int viewType) {
         switch (viewType) {
             case R.layout.item_offer_buying_accepted:
                 return new OfferAcceptedViewHolder(inflateViewType(viewType, parent));
@@ -65,6 +76,9 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
             case R.layout.item_offer_buying_pending_seller:
                 return new OfferPendingSellerViewHolder(inflateViewType(viewType, parent));
+
+            case R.layout.item_offer_buying_payment_made:
+                return new OfferPaymentMadeViewHolder(inflateViewType(viewType, parent));
 
             default:
                 return new OfferHistoryViewHolder(inflateViewType(viewType, parent));
@@ -83,7 +97,7 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
         return mOffers.size();
     }
 
-    @Override public int getItemViewType(int position) {
+    @Override public @LayoutRes int getItemViewType(int position) {
         if (position == 0) {
             Offer offer = mOffers.get(position);
             int status = offer.getStatus();
@@ -97,6 +111,9 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
                 case Offer.Status.REJECTED:
                     return R.layout.item_offer_buying_rejected;
 
+                case Offer.Status.PAYMENT_MADE:
+                    return R.layout.item_offer_buying_payment_made;
+
                 default:
                     return R.layout.item_offer_buying_countered;
             }
@@ -105,14 +122,15 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
         }
     }
 
-    public void refreshOffers(List<Offer> offers) {
+    void refreshOffers(List<Offer> offers) {
         mOffers.clear();
         mOffers.addAll(offers);
         notifyDataSetChanged();
     }
 
-    public void refreshOffer(Offer offer) {
+    void refreshOffer(Offer offer) {
         int position = mOffers.indexOf(offer);
+        mOffers.set(position, offer);
         notifyItemChanged(position);
     }
 
@@ -129,6 +147,30 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
     void setOnStatusChangedListener(OnStatusChangedListener statusChangedListener) {
         mStatusChangedListener = statusChangedListener;
+    }
+
+    void setOnMakePaymentClickListener(OnMakePaymentClickListener makePaymentClickListener) {
+        mMakePaymentClickListener = makePaymentClickListener;
+    }
+
+    void setOnShippingAddressClickListener(OnShippingAddressClickListener shippingAddressClickListener) {
+        mShippingAddressClickListener = shippingAddressClickListener;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // ViewHolders
+    ///////////////////////////////////////////////////////////////////////////
+
+    class OfferPaymentMadeViewHolder extends ViewHolder {
+
+        OfferPaymentMadeViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @OnClick(R.id.shipping_address_button)
+        void onShippingAddress() {
+            if (mShippingAddressClickListener != null) mShippingAddressClickListener.onShippingAddressSet(mOffer);
+        }
     }
 
     class OfferPendingSellerViewHolder extends ViewHolder {
@@ -168,7 +210,7 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
         @OnClick(R.id.payment_button)
         void onPaymentButtonClick() {
-            this.itemView.getContext().startActivity(PaymentActivity.getStartIntent(itemView.getContext(), mOffer));
+            if (mMakePaymentClickListener != null) mMakePaymentClickListener.onMakePayment(mOffer);
         }
     }
 

@@ -18,5 +18,6 @@
     <string name="action_advert_saved">com.devabit.takestock.action.ADVERT_SAVED</string>
 
     <string name="extra_advert">com.devabit.takestock.extra.ADVERT</string>
+    <string name="extra_offer">com.devabit.takestock.extra.OFFER</string>
 
 </resources>

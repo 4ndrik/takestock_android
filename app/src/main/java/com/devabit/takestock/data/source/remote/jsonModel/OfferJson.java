@@ -24,7 +24,7 @@ public class OfferJson {
     public boolean from_seller;
     public int last_offer;
     public int notifications;
-    public int[] shipping;
+    public Object[] shipping;
 
     public Offer toOffer() {
         return new Offer.Builder()
@@ -48,7 +48,7 @@ public class OfferJson {
                 .create();
     }
 
-    protected Offer[] toChildOffers() {
+    private Offer[] toChildOffers() {
         if (child_offers == null) return new Offer[0];
         Offer[] offers = new Offer[child_offers.length];
         for (int i = 0; i < child_offers.length; i++) {

@@ -29,6 +29,7 @@ import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
+import com.devabit.takestock.screen.payment.PaymentActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.ControllableAppBarLayout;
 import com.devabit.takestock.widget.ListSpacingItemDecoration;
@@ -45,7 +46,6 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     private static final String EXTRA_OFFER = "com.devabit.takestock.screen.offer.EXTRA_OFFER";
     private static final String EXTRA_ADVERT = "com.devabit.takestock.screen.offer.EXTRA_ADVERT";
-    private RecyclerView recyclerView;
 
     public static Intent getStartIntent(Context context, Pair<Offer, Advert> offerAdvertPair) {
         Intent starter = new Intent(context, OfferActivity.class);
@@ -53,6 +53,8 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         starter.putExtra(EXTRA_ADVERT, offerAdvertPair.second);
         return starter;
     }
+
+    public static final int RC_PAYMENT = 101;
 
     @BindView(R.id.content_activity_offer) protected ViewGroup mContent;
     @BindView(R.id.appbar_layout) protected ControllableAppBarLayout mAppBarLayout;
@@ -62,6 +64,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     @BindView(R.id.advert_location_text_view) protected TextView mAdvertLocationTextView;
     @BindView(R.id.advert_date_text_view) protected TextView mAdvertDateTextView;
     @BindView(R.id.advert_price_text_view) protected TextView mAdvertPriceTextView;
+    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
     private Advert mAdvert;
     private OfferContract.Presenter mPresenter;
@@ -90,7 +93,6 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         });
     }
 
-
     private void setUpAppBarLayout() {
         mAppBarLayout.setOnStateChangeListener(new ControllableAppBarLayout.OnStateChangeListener() {
             @Override public void onStateChange(int toolbarChange) {
@@ -100,9 +102,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
                         mToolbar.setSubtitle(getString(R.string.offer_activity_advert_price, mAdvert.getGuidePrice(), mAdvert.getPackagingName()));
                         break;
                     case ControllableAppBarLayout.State.EXPANDED:
-
-//                        break;
-                    case ControllableAppBarLayout.State.IDLE: // Just fired once between switching states
+                    case ControllableAppBarLayout.State.IDLE:
                         mToolbar.setTitle("");
                         mToolbar.setSubtitle("");
                         break;
@@ -136,15 +136,25 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     }
 
     private void setUpRecyclerView(Advert advert) {
-        recyclerView = ButterKnife.findById(OfferActivity.this, R.id.recycler_view);
+        mRecyclerView = ButterKnife.findById(OfferActivity.this, R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(OfferActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
         ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
-        recyclerView.addItemDecoration(itemDecoration);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mOffersAdapter = new OffersAdapter(OfferActivity.this, advert.getPackagingName());
         mOffersAdapter.setOnStatusChangedListener(mOnStatusChangedListener);
-        recyclerView.setAdapter(mOffersAdapter);
+        mOffersAdapter.setOnMakePaymentClickListener(new OffersAdapter.OnMakePaymentClickListener() {
+            @Override public void onMakePayment(Offer offer) {
+                startActivityForResult(PaymentActivity.getStartIntent(OfferActivity.this, offer), RC_PAYMENT);
+            }
+        });
+        mOffersAdapter.setOnShippingAddressClickListener(new OffersAdapter.OnShippingAddressClickListener() {
+            @Override public void onShippingAddressSet(Offer offer) {
+                displayShippingAddressDialog(offer);
+            }
+        });
+        mRecyclerView.setAdapter(mOffersAdapter);
     }
 
     final OffersAdapter.OnStatusChangedListener mOnStatusChangedListener
@@ -205,6 +215,10 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         });
     }
 
+    private void displayShippingAddressDialog(Offer offer) {
+
+    }
+
     private List<Offer> fetchOffers(Offer offer) {
         List<Offer> offers = new ArrayList<>();
         offers.add(offer);
@@ -232,9 +246,17 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         mPresenter = presenter;
     }
 
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_PAYMENT && resultCode == RESULT_OK) {
+            Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
+            mOffersAdapter.refreshOffer(offer);
+        }
+    }
+
     @Override public void showOfferAcceptedInView(Offer offer) {
         mOffersAdapter.addOffer(offer);
-        recyclerView.scrollToPosition(0);
+        mRecyclerView.scrollToPosition(0);
     }
 
     @Override public void showNetworkConnectionError() {
@@ -250,8 +272,8 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     }
 
     @Override public void setProgressIndicator(boolean isActive) {
-        recyclerView.setEnabled(!isActive);
-        recyclerView.setAlpha(isActive ? 0.5f : 1f);
+        mRecyclerView.setEnabled(!isActive);
+        mRecyclerView.setAlpha(isActive ? 0.5f : 1f);
     }
 
     @Override protected void onPause() {
