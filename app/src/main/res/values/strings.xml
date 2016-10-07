@@ -309,8 +309,6 @@
 
     <!--offer buying item start-->
     <string name="offer_buying_item_price">£%1$s/%2$d %3$s</string>
-    <string name="offer_buying_item_seller_transport">Seller (me) arranges transport</string>
-    <string name="offer_buying_item_buyer_transport">Buyer arranges transport</string>
     <string name="offer_buying_item_shipping_info">Shipping info</string>
     <string name="offer_buying_item_house">House:\u0020</string>
     <string name="offer_buying_item_street">Street:\u0020</string>
@@ -318,6 +316,17 @@
     <string name="offer_buying_item_postcode">Postcode:\u0020</string>
     <string name="offer_buying_item_phone">Phone:\u0020</string>
     <!--offer buying item end-->
+
+    <!--offer selling item start-->
+    <string name="offer_selling_item_seller_transport">Seller (me) arranges transport</string>
+    <string name="offer_selling_item_buyer_transport">Buyer arranges transport</string>
+    <string name="offer_selling_item_house">House:\u0020</string>
+    <string name="offer_selling_item_street">Street:\u0020</string>
+    <string name="offer_selling_item_city">City:\u0020</string>
+    <string name="offer_selling_item_postcode">Postcode:\u0020</string>
+    <string name="offer_selling_item_phone">Phone:\u0020</string>
+    <string name="offer_selling_confirm_stock_dispatched">Confirm stock dispatched</string>
+    <!--offer selling item start-->
 
     <!--advert selling item start-->
     <string name="advert_selling_guide_price">£ %1$s/%2$s</string>
@@ -402,5 +411,20 @@
     <string name="photo_editor_dialog_choose_photo">Choose from library</string>
     <string name="advert_create_advert_edited">Advert edited</string>
     <!--photo editor dialog end-->
+
+    <!--dispatching activity start-->
+    <string name="dispatching_activity_toolbar_title">Dispatch</string>
+    <string name="dispatching_activity_confirm">Confirm</string>
+    <string name="dispatching_activity_tracking_number">Tracking number</string>
+    <string name="dispatching_activity_courier_name">Courier name</string>
+    <string name="dispatching_activity_arrival_date">Arrival date</string>
+    <string name="dispatching_activity_hint_date">dd/mm/yy</string>
+    <string name="dispatching_activity_error_arrival_date">Arrival date not added</string>
+    <string name="dispatching_activity_error_pick_up_date">Pick up date not added</string>
+    <string name="dispatching_activity_pick_up_date">Pick up date</string>
+    <string name="dispatching_activity_error_tracking_number">Tracking number not added</string>
+    <string name="dispatching_activity_error_courier_name">Courier name not added</string>
+    <string name="dispatching_activity_date">%1$d/%2$d/%3$d</string>
+    <!--dispatching activity end-->
 
 </resources>

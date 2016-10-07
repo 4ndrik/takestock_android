@@ -58,6 +58,14 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="TextAppearance.Small.Red" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/red_500</item>
+    </style>
+
+    <style name="TextAppearance.Small.Grey" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/grey_600</item>
+    </style>
+
     <style name="TextAppearance.Small.AllCaps" parent="TextAppearance.Small">
         <item name="android:textAllCaps">true</item>
     </style>

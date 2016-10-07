@@ -102,6 +102,9 @@
         <activity
                 android:name=".screen.shipping.ShippingActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screen.dispatching.DispatchingActivity"
+                android:screenOrientation="portrait"/>
 
         <service android:name=".authenticator.TakeStockAuthenticatorService"
                  android:exported="false">
