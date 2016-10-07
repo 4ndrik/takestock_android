@@ -50,7 +50,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion rootProject.ext.minSdkVersion
+            minSdkVersion 21
         }
 
         mock {

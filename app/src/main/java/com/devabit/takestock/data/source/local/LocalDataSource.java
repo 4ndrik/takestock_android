@@ -332,7 +332,7 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter) {
+    @Override public Observable<Advert> editAdvert(@NonNull Advert advert) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
@@ -351,10 +351,6 @@ public class LocalDataSource implements DataSource {
     /********* Offers Methods  ********/
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
-        throw new UnsupportedOperationException("This operation not required.");
-    }
-
-    @Override public Observable<Offer> updateOffer(@NonNull Offer offer) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 

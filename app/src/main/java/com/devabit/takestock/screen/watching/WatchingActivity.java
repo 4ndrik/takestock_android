@@ -20,7 +20,7 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.watching.adapter.WatchingAdvertsAdapter;
-import com.devabit.takestock.widget.ListSpacingItemDecoration;
+import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class WatchingActivity extends AppCompatActivity implements WatchingContr
                 }
             }
         });
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         mAdvertsAdapter = new WatchingAdvertsAdapter(WatchingActivity.this);
         mAdvertsAdapter.setOnItemClickListener(new WatchingAdvertsAdapter.OnItemClickListener() {

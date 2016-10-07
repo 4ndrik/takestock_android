@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:id="@+id/state_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/advert_editor_state"
+            android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
+
+    <RadioGroup
+            android:id="@+id/state_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+        <RadioButton
+                android:id="@+id/live_radio_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textAllCaps="true"
+                android:text="@string/advert_editor_live"/>
+
+        <RadioButton
+                android:id="@+id/on_hold_radio_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textAllCaps="true"
+                android:text="@string/advert_editor_on_hold"/>
+
+        <RadioButton
+                android:id="@+id/sold_out_radio_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:text="@string/advert_editor_sold_out"/>
+
+    </RadioGroup>
+
+</merge>

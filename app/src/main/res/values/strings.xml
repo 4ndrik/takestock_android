@@ -118,7 +118,7 @@
         wasted each year in the UK and we intend to make an impact on that at Takestock.
     </string>
     <string name="terms_and_conditions">Terms and Conditions</string>
-    <string name="terms_of_services_url">http://takestock.shalakh.in/legal/</string>
+    <string name="terms_of_services_url">http://uat.takestock.com/legal/</string>
     <string name="agreement">I agree to Takestock\'s</string>
     <string name="select">Select</string>
     <string name="my_business">My business</string>
@@ -137,7 +137,7 @@
     <string name="add">Add</string>
     <string name="add_payment">Add payment</string>
 
-    <!--advert create activity start-->
+    <!--advert editor activity start-->
     <string name="advert_create_toolbar_title_create">Create advert</string>
     <string name="advert_create_toolbar_title_edit">Edit advert</string>
     <string name="advert_create_product_title">Product title*</string>
@@ -168,7 +168,7 @@
     <string name="advert_create_hint_keywords">List as many as you like. Keywords help customers find your product
     </string>
     <string name="advert_create_preview_and_make_live"><![CDATA[Preview & make live]]></string>
-    <string name="advert_create_save">Save in drafts</string>
+    <string name="advert_create_save">Save</string>
     <string name="advert_create_error_photo">Photo not added</string>
     <string name="advert_create_error_title">Product title not added</string>
     <string name="advert_create_error_category">Category not selected</string>
@@ -183,7 +183,11 @@
     <string name="advert_create_error_certification_extra">Certification extra not added</string>
     <string name="advert_create_select_one">Select one</string>
     <string name="advert_create_advert_saved">Advert saved in drafts</string>
-    <!--advert create activity end-->
+    <string name="advert_editor_live">Live</string>
+    <string name="advert_editor_on_hold">On hold</string>
+    <string name="advert_editor_sold_out">Sold out</string>
+    <string name="advert_editor_state">Advert state</string>
+    <!--advert editor activity end-->
 
     <!--advert preview activity start-->
     <string name="advert_preview_guide_price">Guide price</string>
@@ -388,6 +392,15 @@
     <string name="shipping_activity_error_city">City is empty</string>
     <string name="shipping_activity_error_postcode">Postcode is empty</string>
     <string name="shipping_activity_error_phone">Phone is incorrect</string>
+    <string name="advert_create_photos">Photos*</string>
     <!--shipping activity end-->
+
+    <!--photo editor dialog start-->
+    <string name="photo_editor_dialog_title">Edit photo</string>
+    <string name="photo_editor_dialog_remove_photo">Remove photo</string>
+    <string name="photo_editor_dialog_take_photo">Take photo</string>
+    <string name="photo_editor_dialog_choose_photo">Choose from library</string>
+    <string name="advert_create_advert_edited">Advert edited</string>
+    <!--photo editor dialog end-->
 
 </resources>

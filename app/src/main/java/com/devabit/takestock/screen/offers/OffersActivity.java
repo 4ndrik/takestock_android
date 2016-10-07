@@ -28,7 +28,7 @@ import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.widget.ListSpacingItemDecoration;
+import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
 
 import java.util.List;
 
@@ -111,7 +111,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 OffersActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         mOffersAdapter = new OffersAdapter(OffersActivity.this, mAdvert.getPackagingName());
         mOffersAdapter.setOnStatusChangedListener(mStatusChangedListener);

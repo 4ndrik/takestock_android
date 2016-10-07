@@ -13,18 +13,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.screen.advert.edit.AdvertEditActivity;
 import com.devabit.takestock.screen.advert.selling.AdvertSellingActivity;
-import com.devabit.takestock.screen.offers.OffersActivity;
-import com.devabit.takestock.screen.questions.QuestionsActivity;
 import com.devabit.takestock.screen.selling.adapters.SellingAdvertsAdapter;
-import com.devabit.takestock.widget.ListSpacingItemDecoration;
+import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
 
 import java.util.List;
 
@@ -37,13 +35,13 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         return new Intent(context, SellingActivity.class);
     }
 
-    @BindView(R.id.content_activity_selling) protected View mContent;
-    @BindView(R.id.swipe_refresh_layout) protected SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.content_activity_selling) ViewGroup mContent;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mRefreshLayout;
 
-    private SellingContract.Presenter mPresenter;
-    private SellingAdvertsAdapter mAdvertsAdapter;
+    SellingContract.Presenter mPresenter;
+    SellingAdvertsAdapter mAdvertsAdapter;
 
-    private boolean mAreAdvertsLoading;
+    boolean mAreAdvertsLoading;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +79,7 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
                 }
             }
         });
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         mAdvertsAdapter = new SellingAdvertsAdapter(SellingActivity.this);
         mAdvertsAdapter.setOnItemClickListener(new SellingAdvertsAdapter.OnItemClickListener() {
@@ -89,7 +87,6 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
                 startAdvertSellingActivity(advert);
             }
         });
-        mAdvertsAdapter.setOnMenuItemClickListener(mMenuItemClickListener);
         recyclerView.setAdapter(mAdvertsAdapter);
     }
 
@@ -111,35 +108,8 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
         mPresenter.refreshAdverts();
     }
 
-    private final SellingAdvertsAdapter.OnMenuItemClickListener mMenuItemClickListener
-            = new SellingAdvertsAdapter.OnMenuItemClickListener() {
-        @Override public void manageOffers(Advert advert) {
-            startOffersActivity(advert);
-        }
-
-        @Override public void viewQuestions(Advert advert) {
-            startQuestionsActivity(advert);
-        }
-
-        @Override public void editAdvert(Advert advert) {
-//            startAdvertEditActivity(advert);
-        }
-    };
-
-    private void startOffersActivity(Advert advert) {
-        startActivity(OffersActivity.getStartIntent(SellingActivity.this, advert));
-    }
-
-    private void startQuestionsActivity(Advert advert) {
-        startActivity(QuestionsActivity.getStartIntent(SellingActivity.this, advert.getId()));
-    }
-
     private void startAdvertSellingActivity(Advert advert) {
         startActivity(AdvertSellingActivity.getStartIntent(SellingActivity.this, advert));
-    }
-
-    private void startAdvertEditActivity(Advert advert) {
-        startActivity(AdvertEditActivity.getStartIntent(SellingActivity.this, advert));
     }
 
     private int getUserId() {
@@ -172,5 +142,10 @@ public class SellingActivity extends AppCompatActivity implements SellingContrac
 
     @Override public void setRefreshingProgressIndicator(boolean isActive) {
         mRefreshLayout.setRefreshing(isActive);
+    }
+
+    @Override protected void onPause() {
+        mPresenter.pause();
+        super.onPause();
     }
 }

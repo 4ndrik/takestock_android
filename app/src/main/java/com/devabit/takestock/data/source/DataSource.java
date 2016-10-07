@@ -112,7 +112,7 @@ public interface DataSource {
 
     Observable<Advert> saveAdvert(@NonNull Advert advert);
 
-    Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter);
+    Observable<Advert> editAdvert(@NonNull Advert advert);
 
     Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter);
 
@@ -123,8 +123,6 @@ public interface DataSource {
     /********* Offers Methods  *********/
 
     Observable<Offer> makeOffer(@NonNull Offer offer);
-
-    Observable<Offer> updateOffer(@NonNull Offer offer);
 
     Observable<Offer.Accept> acceptOffer(@NonNull Offer.Accept accept);
 

@@ -14,38 +14,38 @@ import com.devabit.takestock.R;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class AdvertPhotoPickerDialog extends BottomSheetDialogFragment {
+public class PhotoPickerDialog extends BottomSheetDialogFragment {
 
-    public static AdvertPhotoPickerDialog newInstance() {
-        return new AdvertPhotoPickerDialog();
+    public static PhotoPickerDialog newInstance() {
+        return new PhotoPickerDialog();
     }
 
     private Unbinder mUnbinder;
 
     public interface OnPickListener {
-        void onPickFromCamera(AdvertPhotoPickerDialog dialog);
-        void onPickFromStorage(AdvertPhotoPickerDialog dialog);
+        void onPickFromCamera(PhotoPickerDialog dialog);
+        void onPickFromStorage(PhotoPickerDialog dialog);
     }
 
     private OnPickListener mPickListener;
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_advert_photo_picker, container, false);
+        return inflater.inflate(R.layout.dialog_photo_picker, container, false);
     }
 
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mUnbinder = ButterKnife.bind(AdvertPhotoPickerDialog.this, view);
+        mUnbinder = ButterKnife.bind(PhotoPickerDialog.this, view);
     }
 
     @OnClick(R.id.take_photo_text_view)
     protected void onTakePhotoButtonClick() {
-        if (mPickListener != null) mPickListener.onPickFromCamera(AdvertPhotoPickerDialog.this);
+        if (mPickListener != null) mPickListener.onPickFromCamera(PhotoPickerDialog.this);
     }
 
     @OnClick(R.id.choose_from_library_text_view)
     protected void onChooseButtonClick() {
-        if (mPickListener != null) mPickListener.onPickFromStorage(AdvertPhotoPickerDialog.this);
+        if (mPickListener != null) mPickListener.onPickFromStorage(PhotoPickerDialog.this);
     }
 
     public void setOnPickListener(OnPickListener pickListener) {

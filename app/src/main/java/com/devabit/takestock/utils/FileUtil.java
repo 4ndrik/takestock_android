@@ -20,9 +20,7 @@ public final class FileUtil {
     private static final String TAG = makeLogTag(FileUtil.class);
 
     public static File getPhotoFile() {
-        File publicPictureDirection = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        LOGD(TAG, "publicPictureDirection exists: " + publicPictureDirection.exists());
+        File publicPictureDirection = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File mediaStorageDir = new File(publicPictureDirection, "TakeStock");
         if (!mediaStorageDir.exists()) {
             LOGD(TAG, mediaStorageDir.getPath() + " created: " + mediaStorageDir.mkdirs());

@@ -33,7 +33,7 @@ import com.devabit.takestock.screen.payment.PaymentActivity;
 import com.devabit.takestock.screen.shipping.ShippingActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.ControllableAppBarLayout;
-import com.devabit.takestock.widget.ListSpacingItemDecoration;
+import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -142,7 +142,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         LinearLayoutManager layoutManager = new LinearLayoutManager(OfferActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         mRecyclerView.addItemDecoration(itemDecoration);
         mOffersAdapter = new OffersAdapter(OfferActivity.this, advert.getPackagingName());
         mOffersAdapter.setOnStatusChangedListener(mOnStatusChangedListener);

@@ -96,6 +96,7 @@ public class AdvertJson implements JsonModel {
                 .setNewQuestionsCount(new_q_count)
                 .setNewOffersCount(new_offers_count)
                 .setIsFood(is_food)
+                .setState(state)
                 .setEscapedDescription(escaped_description)
                 .setCategoryName(category_name)
                 .create();

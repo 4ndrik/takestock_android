@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -9,55 +8,56 @@
         android:orientation="horizontal" >
 
     <EditText
-            android:id="@+id/size_x_edit_text"
+            android:id="@+id/size_edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:hint="10"
-            style="@style/EditTextRoundedCornersPurple"
-            android:ems="2"
-            android:maxLength="2"
-            tools:ignore="LabelFor"/>
+            android:gravity="center"
+            android:maxLines="1"
+            android:digits="0123456789"
+            android:hint="10 x 10 x 5"
+            android:ems="8"
+            style="@style/EditTextRoundedCornersPurple"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:layout_gravity="center"
-            android:text="x"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            style="@style/TextViewGrey"/>
+    <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="8dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="x"-->
+            <!--android:textAppearance="@android:style/TextAppearance.Medium"-->
+            <!--style="@style/TextViewGrey"/>-->
 
-    <EditText
-            android:id="@+id/size_y_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="10"
-            style="@style/EditTextRoundedCornersPurple"
-            android:ems="2"
-            android:maxLength="2"
-            tools:ignore="LabelFor"/>
+    <!--<EditText-->
+            <!--android:id="@+id/size_y_edit_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:inputType="number"-->
+            <!--android:hint="10"-->
+            <!--style="@style/EditTextRoundedCornersPurple"-->
+            <!--android:ems="2"-->
+            <!--android:maxLength="2"-->
+            <!--tools:ignore="LabelFor"/>-->
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:layout_gravity="center"
-            android:text="x"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            style="@style/TextViewGrey"/>
+    <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="8dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="x"-->
+            <!--android:textAppearance="@android:style/TextAppearance.Medium"-->
+            <!--style="@style/TextViewGrey"/>-->
 
-    <EditText
-            android:id="@+id/size_z_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="5"
-            style="@style/EditTextRoundedCornersPurple"
-            android:ems="2"
-            android:maxLength="2"
-            tools:ignore="LabelFor"/>
+    <!--<EditText-->
+            <!--android:id="@+id/size_z_edit_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:inputType="number"-->
+            <!--android:hint="5"-->
+            <!--style="@style/EditTextRoundedCornersPurple"-->
+            <!--android:ems="2"-->
+            <!--android:maxLength="2"-->
+            <!--tools:ignore="LabelFor"/>-->
 
     <Spinner
             android:id="@+id/size_spinner"

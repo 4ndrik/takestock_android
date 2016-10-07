@@ -3,10 +3,10 @@ package com.devabit.takestock.screen.selling.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.LayoutRes;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.*;
-import android.widget.ImageButton;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -21,8 +21,6 @@ import com.devabit.takestock.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static butterknife.ButterKnife.findById;
 
 /**
  * Created by Victor Artemyev on 24/05/2016.
@@ -40,16 +38,6 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
     }
 
     private OnItemClickListener mItemClickListener;
-
-    public interface OnMenuItemClickListener {
-        void manageOffers(Advert advert);
-
-        void viewQuestions(Advert advert);
-
-        void editAdvert(Advert advert);
-    }
-
-    private OnMenuItemClickListener mMenuItemClickListener;
 
     public SellingAdvertsAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -111,10 +99,6 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
         mItemClickListener = onItemClickListener;
     }
 
-    public void setOnMenuItemClickListener(OnMenuItemClickListener itemClickListener) {
-        mMenuItemClickListener = itemClickListener;
-    }
-
     class ProgressViewHolder extends ViewHolder {
         ProgressViewHolder(View itemView) {
             super(itemView);
@@ -134,8 +118,6 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
         @BindView(R.id.views_text_view) TextView viewsTextView;
 
         Resources resources;
-        PopupMenu popupMenu;
-
         Advert advert;
 
         ItemViewHolder(View itemView) {
@@ -143,58 +125,6 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
             ButterKnife.bind(ItemViewHolder.this, itemView);
             Context context = itemView.getContext();
             resources = context.getResources();
-//            setUpMenu();
-        }
-
-        private void setUpMenu() {
-            ImageButton menuButton = findById(itemView, R.id.menu_button);
-            popupMenu = new PopupMenu(itemView.getContext(), menuButton);
-            MenuInflater menuInflater = popupMenu.getMenuInflater();
-            menuInflater.inflate(R.menu.advert_item_menu, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(mMenuItemClickListener);
-            menuButton.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    popupMenu.show();
-                }
-            });
-        }
-
-        private final PopupMenu.OnMenuItemClickListener mMenuItemClickListener
-                = new PopupMenu.OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-
-                    case R.id.action_manage_offers:
-                        onManageOffersAction();
-                        return true;
-
-                    case R.id.action_view_messages:
-                        onViewMassageAction();
-                        return true;
-
-                    case R.id.action_edit_advert:
-                        onEditAdvertAction();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        };
-
-        private void onManageOffersAction() {
-            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null)
-                SellingAdvertsAdapter.this.mMenuItemClickListener.manageOffers(advert);
-        }
-
-        private void onViewMassageAction() {
-            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null)
-                SellingAdvertsAdapter.this.mMenuItemClickListener.viewQuestions(advert);
-        }
-
-        private void onEditAdvertAction() {
-            if (SellingAdvertsAdapter.this.mMenuItemClickListener != null)
-                SellingAdvertsAdapter.this.mMenuItemClickListener.editAdvert(advert);
         }
 
         void bindAdvert(Advert advert) {
@@ -214,20 +144,10 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
             daysLeftTextView.setText(
                     resources.getString(R.string.advert_selling_days_left, advert.getDaysLeft()));
 
-            String offersCount = advert.getOffersCount();
-//            setMenuItemVisibility(R.id.action_manage_offers, !offersCount.equals("0"));
-            offersCountTextView.setText(offersCount);
-
-            String questionsCount = advert.getQuestionsCount();
-//            setMenuItemVisibility(R.id.action_view_messages, !questionsCount.equals("0"));
-            questionsCountTextView.setText(questionsCount);
-
+            offersCountTextView.setText(advert.getOffersCount());
+            questionsCountTextView.setText(advert.getQuestionsCount());
             viewsTextView.setText(String.valueOf(advert.getAdvertsViews()));
         }
-
-//        String buildCountString(String title, int count) {
-//
-//        }
 
         void bindPhoto(Photo photo) {
             Glide.with(imageView.getContext())
@@ -239,11 +159,6 @@ public class SellingAdvertsAdapter extends RecyclerView.Adapter<SellingAdvertsAd
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imageView);
         }
-
-//        void setMenuItemVisibility(@IdRes int itemId, boolean visible) {
-//            MenuItem item = popupMenu.getMenu().findItem(itemId);
-//            item.setVisible(visible);
-//        }
 
         @OnClick(R.id.content_item_advert_selling)
         void onContentClick() {

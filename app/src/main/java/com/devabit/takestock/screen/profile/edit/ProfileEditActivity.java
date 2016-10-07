@@ -23,7 +23,7 @@ import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.profile.edit.adapter.BusinessSubtypeSpinnerAdapter;
 import com.devabit.takestock.screen.profile.edit.adapter.BusinessTypeSpinnerAdapter;
 import com.devabit.takestock.screen.profile.edit.dialog.ProfilePhotoPickerDialog;
-import com.devabit.takestock.utils.ImagePickerUtil;
+import com.devabit.takestock.utils.ImagePicker;
 import com.devabit.takestock.widget.HintSpinnerAdapter;
 import timber.log.Timber;
 
@@ -128,12 +128,12 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
             = new ProfilePhotoPickerDialog.OnPickPhotoListener() {
         @Override public void pickFromCamera(ProfilePhotoPickerDialog dialog) {
             dialog.dismiss();
-            ImagePickerUtil.openCamera(ProfileEditActivity.this);
+            ImagePicker.openCamera(ProfileEditActivity.this);
         }
 
         @Override public void pickFromLibrary(ProfilePhotoPickerDialog dialog) {
             dialog.dismiss();
-            ImagePickerUtil.openGallery(ProfileEditActivity.this);
+            ImagePicker.openGallery(ProfileEditActivity.this);
         }
 
         @Override public void delete(ProfilePhotoPickerDialog dialog) {
@@ -143,8 +143,8 @@ public class ProfileEditActivity extends AppCompatActivity implements ProfileEdi
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ImagePickerUtil.handleActivityResult(requestCode, resultCode, data, ProfileEditActivity.this,
-                new ImagePickerUtil.OnImagePickedListener() {
+        ImagePicker.handleActivityResult(requestCode, resultCode, data, ProfileEditActivity.this,
+                new ImagePicker.OnImagePickedListener() {
                     @Override public void onImagePicked(File imageFile, String source) {
                         Timber.d("onImagePicked: %s, %s", imageFile.toString(), source);
                         setUpProfileImage(imageFile.getAbsolutePath());

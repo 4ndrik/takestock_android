@@ -278,8 +278,8 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.saveAdvert(advert);
     }
 
-    @Override public Observable<List<Advert>> getAdvertsWithFilter(@NonNull AdvertFilter filter) {
-        return mRemoteDataSource.getAdvertsWithFilter(filter);
+    @Override public Observable<Advert> editAdvert(@NonNull Advert advert) {
+        return mRemoteDataSource.editAdvert(advert);
     }
 
     @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter) {
@@ -298,10 +298,6 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
         return mRemoteDataSource.makeOffer(offer);
-    }
-
-    @Override public Observable<Offer> updateOffer(@NonNull Offer offer) {
-        return mRemoteDataSource.updateOffer(offer);
     }
 
     @Override public Observable<Offer.Accept> acceptOffer(@NonNull Offer.Accept accept) {

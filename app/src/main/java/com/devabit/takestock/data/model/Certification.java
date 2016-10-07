@@ -3,8 +3,6 @@ package com.devabit.takestock.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Objects;
-
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
@@ -15,7 +13,7 @@ public class Certification implements Parcelable {
     private final String mDescription;
     private final String mLogoUrl;
 
-    Certification(int id, String name, String description, String logoUrl) {
+    private Certification(int id, String name, String description, String logoUrl) {
         mId = id;
         mName = name;
         mDescription = description;
@@ -58,10 +56,6 @@ public class Certification implements Parcelable {
         return mId;
     }
 
-//    public void setId(int id) {
-//        mId = id;
-//    }
-
     public String getName() {
         return mName;
     }
@@ -70,21 +64,14 @@ public class Certification implements Parcelable {
         return mDescription;
     }
 
-//    public void setDescription(String description) {
-//        mDescription = description;
-//    }
-
     public String getLogoUrl() {
         return mLogoUrl;
     }
 
-//    public void setLogoUrl(String logoUrl) {
-//        mLogoUrl = logoUrl;
-//    }
-
     @Override public String toString() {
         return "Certification{" +
                 "mId=" + mId +
+                ", mName='" + mName + '\'' +
                 ", mDescription='" + mDescription + '\'' +
                 ", mLogoUrl='" + mLogoUrl + '\'' +
                 '}';
@@ -93,15 +80,15 @@ public class Certification implements Parcelable {
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Certification that = (Certification) o;
-        return mId == that.mId &&
-                Objects.equals(mName, that.mName) &&
-                Objects.equals(mDescription, that.mDescription) &&
-                Objects.equals(mLogoUrl, that.mLogoUrl);
+
+        return mId == that.mId;
+
     }
 
     @Override public int hashCode() {
-        return Objects.hash(mId, mName, mDescription, mLogoUrl);
+        return mId;
     }
 
     public static class Builder {

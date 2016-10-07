@@ -26,18 +26,18 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
-import static com.devabit.takestock.utils.BitmapUtil.QUALITY_75;
-
 /**
  * Created by Victor Artemyev on 21/09/2016.
  */
 
-public final class ImagePickerUtil {
+public final class ImagePicker {
 
-    private static final String TAG = ImagePickerUtil.class.getSimpleName();
+    private static final String TAG = ImagePicker.class.getSimpleName();
 
     private static final int RC_PICK_PICTURE = 7458;
     private static final int RC_TAKE_PICTURE = 7459;
+
+    private static final int QUALITY_75 = 75;
 
     private static final String KEY_CAMERA_IMAGE_PATH = "com.devabit.takestock.PHOTO_URI";
 
@@ -110,7 +110,7 @@ public final class ImagePickerUtil {
         File mediaStorageDir = new File(publicPictureDirection, "TakeStock");
         if (!mediaStorageDir.exists()) {
             boolean isCreated = mediaStorageDir.mkdirs();
-            Log.d(ImagePickerUtil.class.getSimpleName(), mediaStorageDir.getAbsolutePath() + " : " + isCreated);
+            Log.d(ImagePicker.class.getSimpleName(), mediaStorageDir.getAbsolutePath() + " : " + isCreated);
         }
         return new File(
                 mediaStorageDir.getPath() + File.separator

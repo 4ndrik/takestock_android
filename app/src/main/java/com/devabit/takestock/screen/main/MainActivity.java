@@ -20,7 +20,7 @@ import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
-import com.devabit.takestock.screen.advert.create.AdvertCreateActivity;
+import com.devabit.takestock.screen.advert.editor.AdvertEditorActivity;
 import com.devabit.takestock.screen.adverts.AdvertsActivity;
 import com.devabit.takestock.screen.buying.BuyingActivity;
 import com.devabit.takestock.screen.category.CategoriesActivity;
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void startSellSomethingActivity() {
-        startActivity(AdvertCreateActivity.getStartIntent(MainActivity.this));
+        startActivity(AdvertEditorActivity.getStartIntent(MainActivity.this));
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

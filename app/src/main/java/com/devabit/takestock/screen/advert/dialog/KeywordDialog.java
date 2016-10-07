@@ -11,18 +11,16 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import butterknife.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
+import butterknife.Unbinder;
 import com.devabit.takestock.R;
-
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 04/07/2016.
  */
-public class
-KeywordDialog extends DialogFragment implements DialogInterface.OnClickListener {
-
-    private static final String TAG = makeLogTag(KeywordDialog.class);
+public class KeywordDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static KeywordDialog newInstance() {
         return new KeywordDialog();
@@ -45,7 +43,7 @@ KeywordDialog extends DialogFragment implements DialogInterface.OnClickListener 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.keyword);
         builder.setPositiveButton(R.string.add, KeywordDialog.this);
-        builder.setNegativeButton(R.string.cancel, KeywordDialog.this);
+        builder.setNegativeButton(R.string.answer_dialog_cancel, KeywordDialog.this);
         View content = getActivity().getLayoutInflater().inflate(R.layout.dialog_keyword, null);
         builder.setView(content);
         AlertDialog dialog = builder.create();

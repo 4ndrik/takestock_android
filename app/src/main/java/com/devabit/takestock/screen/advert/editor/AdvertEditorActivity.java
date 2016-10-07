@@ -1,9 +1,10 @@
-package com.devabit.takestock.screen.advert.create;
+package com.devabit.takestock.screen.advert.editor;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -25,14 +26,15 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.*;
-import com.devabit.takestock.screen.advert.dialog.AdvertPhotoPickerDialog;
 import com.devabit.takestock.screen.advert.dialog.KeywordDialog;
+import com.devabit.takestock.screen.advert.dialog.PhotoEditorDialog;
+import com.devabit.takestock.screen.advert.dialog.PhotoPickerDialog;
 import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.utils.ImagePickerUtil;
 import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
 import com.devabit.takestock.widget.FlexboxLayout;
 import com.devabit.takestock.widget.HintSpinnerAdapter;
+import com.devabit.takestock.widget.ListHorizontalSpacingItemDecoration;
 import timber.log.Timber;
 
 import java.io.File;
@@ -40,13 +42,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static android.view.View.GONE;
 import static com.devabit.takestock.R.id.toolbar;
+import static com.devabit.takestock.utils.ImagePicker.*;
 import static com.devabit.takestock.utils.PermissionChecker.*;
 
 /**
  * Created by Victor Artemyev on 07/04/2016.
  */
-public class AdvertCreateActivity extends AppCompatActivity implements AdvertCreateContract.View {
+public class AdvertEditorActivity extends AppCompatActivity implements AdvertEditorContract.View {
 
     private static final String EXTRA_ADVERT = "ADVERT";
 
@@ -57,7 +61,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     public static Intent getStartIntent(Context context) {
-        return new Intent(context, AdvertCreateActivity.class);
+        return new Intent(context, AdvertEditorActivity.class);
     }
 
     private static final int RC_CAMERA_PERMISSION = 103;
@@ -68,7 +72,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
     @BindView(R.id.content_input) protected ViewGroup mContentInput;
 
-    @BindView(R.id.recycler_view) protected RecyclerView mPhotosRecyclerView;
+    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
     @BindView(R.id.category_spinner) protected Spinner mCategorySpinner;
     @BindView(R.id.subcategory_spinner) protected Spinner mSubcategorySpinner;
@@ -88,33 +92,36 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     @BindView(R.id.guide_price_edit_text) protected EditText mGuidePriceEditText;
     @BindView(R.id.description_edit_text) protected EditText mDescriptionEditText;
     @BindView(R.id.location_edit_text) protected EditText mLocationEditText;
-    @BindView(R.id.size_x_edit_text) protected EditText mSizeXEditText;
-    @BindView(R.id.size_y_edit_text) protected EditText mSizeYEditText;
-    @BindView(R.id.size_z_edit_text) protected EditText mSizeZEditText;
+    @BindView(R.id.size_edit_text) protected EditText mSizeEditText;
     @BindView(R.id.certification_extra_edit_text) protected EditText mCertificationExtraEditText;
     @BindView(R.id.keywords_flexbox_layout) protected FlexboxLayout mKeywordsFlexboxLayout;
     @BindView(R.id.expiry_date_text_view) protected TextView mExpiryDateTextView;
     @BindView(R.id.certification_group_view) protected CertificationRadioButtonGroupView mCertificationGroupView;
+    @BindView(R.id.state_text_view) protected TextView mStateTextView;
+    @BindView(R.id.state_radio_group) protected RadioGroup mStateRadioGroup;
+    @BindView(R.id.preview_button) protected Button mPreviewButton;
 
-    private PhotoGalleryAdapter mPhotoGalleryAdapter;
+    PhotosAdapter mPhotosAdapter;
+    AdvertEditorContract.Presenter mPresenter;
+    Advert mAdvert;
+    Photo mPhotoToReplace;
 
-    private AdvertCreateContract.Presenter mPresenter;
-    private Advert mAdvert;
+    boolean mIsEditable;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_advert_create);
-        ButterKnife.bind(AdvertCreateActivity.this);
+        setContentView(R.layout.activity_advert_editor);
+        ButterKnife.bind(AdvertEditorActivity.this);
         mAdvert = getIntent().getParcelableExtra(EXTRA_ADVERT);
+        mIsEditable = mAdvert != null;
         setUpToolbar();
         setUpRecyclerView();
+        setUpStateContent();
         createPresenter();
     }
 
     private void setUpToolbar() {
-        mToolbar.setTitle(mAdvert == null
-                ? R.string.advert_create_toolbar_title_create
-                : R.string.advert_create_toolbar_title_edit);
+        mToolbar.setTitle(mIsEditable ? R.string.advert_create_toolbar_title_edit : R.string.advert_create_toolbar_title_create);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
@@ -123,59 +130,110 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     private void setUpRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(
-                AdvertCreateActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        mPhotosRecyclerView.setLayoutManager(layoutManager);
-        mPhotoGalleryAdapter = new PhotoGalleryAdapter(AdvertCreateActivity.this);
-        mPhotoGalleryAdapter.setOnPickPhotoListener(new PhotoGalleryAdapter.OnPickPhotoListener() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(AdvertEditorActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        ListHorizontalSpacingItemDecoration itemDecoration
+                = new ListHorizontalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        mRecyclerView.addItemDecoration(itemDecoration);
+        mPhotosAdapter = new PhotosAdapter(AdvertEditorActivity.this);
+        mPhotosAdapter.setOnPickPhotoListener(new PhotosAdapter.OnPickPhotoListener() {
             @Override public void onPick() {
                 displayPhotoPickerDialog();
             }
         });
-        mPhotosRecyclerView.setAdapter(mPhotoGalleryAdapter);
+        mPhotosAdapter.setOnEditPhotoListener(new PhotosAdapter.OnEditPhotoListener() {
+            @Override public void onEdit(Photo photo) {
+                displayPhotoEditorDialog(photo);
+            }
+        });
+        mRecyclerView.setAdapter(mPhotosAdapter);
+    }
+
+    private void setUpStateContent() {
+        if (!mIsEditable || mAdvert.isInDrafts()) {
+            mStateTextView.setVisibility(GONE);
+            mStateRadioGroup.setVisibility(GONE);
+        } else if (mIsEditable) {
+            mPreviewButton.setVisibility(GONE);
+            mStateRadioGroup.check(getStateRadioButtonId(mAdvert.getState()));
+        }
+    }
+
+    private @IdRes int getStateRadioButtonId(int state) {
+        switch (state) {
+            case Advert.State.LIVE:
+                return R.id.live_radio_button;
+            case Advert.State.ON_HOLD:
+                return R.id.on_hold_radio_button;
+            case Advert.State.SOLD_OUT:
+                return R.id.sold_out_radio_button;
+            default:
+                return -1;
+        }
     }
 
     private void createPresenter() {
-        new AdvertCreatePresenter(
-                Injection.provideDataRepository(AdvertCreateActivity.this), AdvertCreateActivity.this);
+        new AdvertEditorPresenter(
+                Injection.provideDataRepository(AdvertEditorActivity.this), AdvertEditorActivity.this);
     }
 
-    @Override public void setPresenter(@NonNull AdvertCreateContract.Presenter presenter) {
+    @Override public void setPresenter(@NonNull AdvertEditorContract.Presenter presenter) {
         mPresenter = presenter;
         mPresenter.fetchAdvertRelatedData();
     }
 
     private void displayPhotoPickerDialog() {
-        AdvertPhotoPickerDialog pickerDialog = AdvertPhotoPickerDialog.newInstance();
+        PhotoPickerDialog pickerDialog = PhotoPickerDialog.newInstance();
         pickerDialog.show(getSupportFragmentManager(), pickerDialog.getClass().getName());
-        pickerDialog.setOnPickListener(new AdvertPhotoPickerDialog.OnPickListener() {
-            @Override public void onPickFromCamera(AdvertPhotoPickerDialog dialog) {
+        pickerDialog.setOnPickListener(new PhotoPickerDialog.OnPickListener() {
+            @Override public void onPickFromCamera(PhotoPickerDialog dialog) {
                 dialog.dismiss();
                 pickPhotoFromCamera();
             }
 
-            @Override public void onPickFromStorage(AdvertPhotoPickerDialog dialog) {
+            @Override public void onPickFromStorage(PhotoPickerDialog dialog) {
                 dialog.dismiss();
                 pickPhotoFromStorage();
             }
         });
     }
 
+    private void displayPhotoEditorDialog(final Photo photo) {
+        PhotoEditorDialog dialog = PhotoEditorDialog.newInstance();
+        dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
+        dialog.setOnEditListener(new PhotoEditorDialog.OnEditListener() {
+            @Override public void onRemove() {
+                mPhotosAdapter.removePhoto(photo);
+            }
+
+            @Override public void onTake() {
+                mPhotoToReplace = photo;
+                pickPhotoFromCamera();
+            }
+
+            @Override public void onChoose() {
+                mPhotoToReplace = photo;
+                pickPhotoFromStorage();
+            }
+        });
+    }
+
     private void pickPhotoFromCamera() {
-        if (lacksPermissions(AdvertCreateActivity.this, CAMERA_PERMISSIONS)) {
-            ActivityCompat.requestPermissions(AdvertCreateActivity.this,
+        if (lacksPermissions(AdvertEditorActivity.this, CAMERA_PERMISSIONS)) {
+            ActivityCompat.requestPermissions(AdvertEditorActivity.this,
                     CAMERA_PERMISSIONS, RC_CAMERA_PERMISSION);
         } else {
-            ImagePickerUtil.openCamera(AdvertCreateActivity.this);
+            openCamera(AdvertEditorActivity.this);
         }
     }
 
     private void pickPhotoFromStorage() {
-        if (lacksPermissions(AdvertCreateActivity.this, STORAGE_PERMISSIONS)) {
-            ActivityCompat.requestPermissions(AdvertCreateActivity.this,
+        if (lacksPermissions(AdvertEditorActivity.this, STORAGE_PERMISSIONS)) {
+            ActivityCompat.requestPermissions(AdvertEditorActivity.this,
                     STORAGE_PERMISSIONS, RC_GALLERY_PERMISSION);
         } else {
-            ImagePickerUtil.openGallery(AdvertCreateActivity.this);
+            openGallery(AdvertEditorActivity.this);
         }
     }
 
@@ -184,25 +242,26 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         if (!grantPermissions(grantResults)) return;
         switch (requestCode) {
             case RC_CAMERA_PERMISSION:
-                ImagePickerUtil.openCamera(AdvertCreateActivity.this);
+                openCamera(AdvertEditorActivity.this);
                 break;
             case RC_GALLERY_PERMISSION:
-                ImagePickerUtil.openGallery(AdvertCreateActivity.this);
+                openGallery(AdvertEditorActivity.this);
                 break;
         }
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ImagePickerUtil.handleActivityResult(requestCode, resultCode, data, AdvertCreateActivity.this,
-                new ImagePickerUtil.OnImagePickedListener() {
+        handleActivityResult(requestCode, resultCode, data, AdvertEditorActivity.this,
+                new OnImagePickedListener() {
                     @Override public void onImagePicked(File imageFile, String source) {
                         Timber.d("onImagePicked: %s, %s", imageFile.toString(), source);
-                        setUpImage(imageFile);
+                        addOrReplacePhoto(imageFile);
                     }
 
                     @Override public void onCanceled(String source) {
                         Timber.d("onCanceled: %s", source);
+                        mPhotoToReplace = null;
                     }
 
                     @Override public void onError(Throwable throwable, String source) {
@@ -211,12 +270,20 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
                 });
     }
 
-    private void setUpImage(File imageFile) {
-        Photo photo = new Photo.Builder()
+    private void addOrReplacePhoto(File imageFile) {
+        Photo photo = createPhoto(imageFile);
+        if (mPhotoToReplace == null) {
+            mPhotosAdapter.addPhoto(photo);
+        } else {
+            mPhotosAdapter.replacePhotoWith(mPhotoToReplace, photo);
+            mPhotoToReplace = null;
+        }
+    }
+
+    private Photo createPhoto(File imageFile) {
+        return new Photo.Builder()
                 .setImage(imageFile.getAbsolutePath())
                 .build();
-        mPhotoGalleryAdapter.addPhoto(photo);
-        mPhotosRecyclerView.scrollBy(mContent.getWidth() / 3, 0);
     }
 
     @OnClick(R.id.expiry_date_text_view)
@@ -230,7 +297,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dialog = new DatePickerDialog(AdvertCreateActivity.this, R.style.DatePickerDialogTheme,
+        DatePickerDialog dialog = new DatePickerDialog(AdvertEditorActivity.this, R.style.DatePickerDialogTheme,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         mExpiryDateTextView.setError(null);
@@ -241,9 +308,9 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showCategoriesInView(final List<Category> categories) {
-        CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertCreateActivity.this, categories);
+        CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(AdvertEditorActivity.this, categories);
         final HintSpinnerAdapter<Category> hintAdapter = new HintSpinnerAdapter<>(
-                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
+                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertEditorActivity.this);
         mCategorySpinner.setAdapter(hintAdapter);
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -255,6 +322,16 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
             }
         });
+        if (mAdvert != null) {
+            int categoryId = mAdvert.getCategoryId();
+            for (Category category : categories) {
+                if (categoryId == category.getId()) {
+                    int position = hintAdapter.getPosition(category);
+                    mCategorySpinner.setSelection(position);
+                    break;
+                }
+            }
+        }
     }
 
     private void showSubcategoriesInView(Category category) {
@@ -263,21 +340,31 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
             setSubcategoryContentVisibility(false);
         } else {
             SubcategorySpinnerAdapter adapter = new SubcategorySpinnerAdapter(
-                    AdvertCreateActivity.this, category.getSubcategories());
-            HintSpinnerAdapter<Subcategory> nothingSelectedAdapter = new HintSpinnerAdapter<>(
-                    adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
-            mSubcategorySpinner.setAdapter(nothingSelectedAdapter);
+                    AdvertEditorActivity.this, category.getSubcategories());
+            HintSpinnerAdapter<Subcategory> hintAdapter = new HintSpinnerAdapter<>(
+                    adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertEditorActivity.this);
+            mSubcategorySpinner.setAdapter(hintAdapter);
             setSubcategoryContentVisibility(true);
+            if (mAdvert != null) {
+                int categoryId = mAdvert.getSubcategoryId();
+                for (Subcategory subcategory : category.getSubcategories()) {
+                    if (categoryId == subcategory.getId()) {
+                        int position = hintAdapter.getPosition(subcategory);
+                        mSubcategorySpinner.setSelection(position);
+                        break;
+                    }
+                }
+            }
         }
     }
 
     private void setSubcategoryContentVisibility(boolean visible) {
-        mSubcategoryTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
-        mSubcategorySpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mSubcategoryTextView.setVisibility(visible ? View.VISIBLE : GONE);
+        mSubcategorySpinner.setVisibility(visible ? View.VISIBLE : GONE);
     }
 
     @Override public void showPackagingsInView(List<Packaging> packagings) {
-        final PackagingSpinnerAdapter adapter = new PackagingSpinnerAdapter(AdvertCreateActivity.this, packagings);
+        final PackagingSpinnerAdapter adapter = new PackagingSpinnerAdapter(AdvertEditorActivity.this, packagings);
         mPackagingSpinner.setAdapter(adapter);
         mPackagingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -299,21 +386,41 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showShippingsInView(List<Shipping> shippings) {
-        ShippingSpinnerAdapter adapter = new ShippingSpinnerAdapter(AdvertCreateActivity.this, shippings);
+        ShippingSpinnerAdapter adapter = new ShippingSpinnerAdapter(AdvertEditorActivity.this, shippings);
         HintSpinnerAdapter<Shipping> hintAdapter = new HintSpinnerAdapter<>(
-                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
+                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertEditorActivity.this);
         mShippingSpinner.setAdapter(hintAdapter);
+        if (mAdvert != null) {
+            int shippingId = mAdvert.getShippingId();
+            for (Shipping shipping : shippings) {
+                if (shippingId == shipping.getId()) {
+                    int position = hintAdapter.getPosition(shipping);
+                    mShippingSpinner.setSelection(position);
+                    break;
+                }
+            }
+        }
     }
 
     @Override public void showConditionsInView(List<Condition> conditions) {
-        ConditionSpinnerAdapter adapter = new ConditionSpinnerAdapter(AdvertCreateActivity.this, conditions);
+        ConditionSpinnerAdapter adapter = new ConditionSpinnerAdapter(AdvertEditorActivity.this, conditions);
         HintSpinnerAdapter<Condition> hintAdapter = new HintSpinnerAdapter<>(
-                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertCreateActivity.this);
+                adapter, R.layout.item_spinner, R.string.advert_create_select_one, AdvertEditorActivity.this);
         mConditionSpinner.setAdapter(hintAdapter);
+        if (mAdvert != null) {
+            int conditionId = mAdvert.getConditionId();
+            for (Condition condition : conditions) {
+                if (conditionId == condition.getId()) {
+                    int position = hintAdapter.getPosition(condition);
+                    mConditionSpinner.setSelection(position);
+                    break;
+                }
+            }
+        }
     }
 
     @Override public void showSizesInView(List<Size> sizes) {
-        SizeSpinnerAdapter adapter = new SizeSpinnerAdapter(AdvertCreateActivity.this, sizes);
+        SizeSpinnerAdapter adapter = new SizeSpinnerAdapter(AdvertEditorActivity.this, sizes);
         mSizeSpinner.setAdapter(adapter);
     }
 
@@ -327,7 +434,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private void setUpAdvert() {
         if (mAdvert == null) return;
-        mPhotoGalleryAdapter.setPhotos(mAdvert.getPhotos());
+        mPhotosAdapter.setPhotos(mAdvert.getPhotos());
         mTitleEditText.setText(mAdvert.getName());
         mItemCountEditText.setText(String.valueOf(mAdvert.getItemsCount()));
         mMinimumOrderEditText.setText(String.valueOf(mAdvert.getMinOrderQuantity()));
@@ -336,19 +443,12 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         mLocationEditText.setText(mAdvert.getLocation());
         mExpiryDateTextView.setText(DateUtil.formatToExpiryDate(mAdvert.getExpiresAt()));
         mCertificationGroupView.selectCertification(mAdvert.getCertification());
-        mCertificationExtraEditText.setText(mAdvert.getCertificationExtra());
-        String value = mAdvert.getSize();
-        if (!value.isEmpty()) {
-            String[] xyz = value.split("x");
-            mSizeXEditText.setText(xyz[0]);
-            mSizeYEditText.setText(xyz[1]);
-            mSizeZEditText.setText(xyz[2]);
-        }
+        mSizeEditText.setText(mAdvert.getSize());
     }
 
     @Override public void showEmptyPhotosError() {
         showSnack(R.string.advert_create_error_photo);
-        requestFocusOnView(mPhotosRecyclerView);
+        requestFocusOnView(mRecyclerView);
     }
 
     @Override public void showEmptyTitleError() {
@@ -357,8 +457,13 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showEmptyCategoryError() {
-        showSnack(R.string.error_category);
+        showSnack(R.string.advert_create_error_category);
         requestFocusOnView(mCategorySpinner);
+    }
+
+    @Override public void showEmptySubcategoryError() {
+        showSnack(R.string.advert_create_error_subcategory);
+        requestFocusOnView(mSubcategorySpinner);
     }
 
     @Override public void showEmptyItemCountError() {
@@ -403,8 +508,8 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     @Override public void showEmptySizeError() {
-        mSizeZEditText.setError(getText(R.string.error_empty_size));
-        requestFocusOnView(mSizeZEditText);
+        mSizeEditText.setError(getText(R.string.error_empty_size));
+        requestFocusOnView(mSizeEditText);
     }
 
     @Override public void showEmptyCertificationError() {
@@ -434,14 +539,19 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         showSnack(R.string.error_unknown);
     }
 
-    @Override public void showSavedAdvert(Advert advert) {
+    @Override public void showSavedAdvertInView(Advert advert) {
         showSnack(R.string.advert_create_advert_saved);
         mAdvert = advert;
         mToolbar.setTitle(R.string.advert_create_toolbar_title_edit);
+        mIsEditable = true;
     }
 
-    @Override public void showPreviewedAdvert(Advert advert) {
-        startActivity(AdvertPreviewActivity.getStartIntent(AdvertCreateActivity.this, advert));
+    @Override public void showEditedAdvertInView(Advert advert) {
+        showSnack(R.string.advert_create_advert_edited);
+    }
+
+    @Override public void showPreviewedAdvertInView(Advert advert) {
+        startActivity(AdvertPreviewActivity.getStartIntent(AdvertEditorActivity.this, advert));
     }
 
     private void showSnack(@StringRes int resId) {
@@ -455,7 +565,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     private void setProgressBarActive(boolean isActive) {
-        mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
+        mProgressBar.setVisibility(isActive ? View.VISIBLE : GONE);
     }
 
     private void setTouchDisabled(boolean isActive) {
@@ -509,7 +619,11 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     @OnClick(R.id.save_button)
     protected void onSaveButtonClick() {
-        mPresenter.saveAdvert(createAdvert());
+        if (mIsEditable) {
+            mPresenter.editAdvert(createAdvert());
+        } else {
+            mPresenter.saveAdvert(createAdvert());
+        }
     }
 
     @OnClick(R.id.preview_button)
@@ -519,6 +633,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
 
     private Advert createAdvert() {
         return new Advert.Builder()
+                .setId(mAdvert == null ? 0 : mAdvert.getId())
                 .setPhotos(getPhotos())
                 .setName(getAdvertTitle())
                 .setCategoryId(getCategoryId())
@@ -537,12 +652,13 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
                 .setCertificationId(getCertificationId())
                 .setCertificationExtra(getCertificationExtra())
                 .setTags(getKeywords())
+                .setState(getState())
                 .setAuthorId(getUserId())
                 .create();
     }
 
     private List<Photo> getPhotos() {
-        return mPhotoGalleryAdapter.getPhotos();
+        return mPhotosAdapter.getPhotos();
     }
 
     private String getAdvertTitle() {
@@ -609,12 +725,7 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
     }
 
     private String getSize() {
-        String xSize = mSizeXEditText.getText().toString().trim();
-        String ySize = mSizeYEditText.getText().toString().trim();
-        String zSize = mSizeZEditText.getText().toString().trim();
-        if (xSize.isEmpty() || ySize.isEmpty() || zSize.isEmpty()) return "";
-        mSizeZEditText.setError(null);
-        return String.format("%s x %s x %s", xSize, ySize, zSize);
+        return mSizeEditText.getText().toString().trim();
     }
 
     private int getCertificationId() {
@@ -636,12 +747,26 @@ public class AdvertCreateActivity extends AppCompatActivity implements AdvertCre
         return result;
     }
 
-    private int getUserId() {
-        return TakeStockAccount.get(AdvertCreateActivity.this).getUserId();
+    private int getState() {
+        int id = mStateRadioGroup.getCheckedRadioButtonId();
+        switch (id) {
+            case R.id.live_radio_button:
+                return Advert.State.LIVE;
+            case R.id.on_hold_radio_button:
+                return Advert.State.ON_HOLD;
+            case R.id.sold_out_radio_button:
+                return Advert.State.SOLD_OUT;
+            default:
+                return -1;
+        }
     }
 
-    @Override protected void onStop() {
-        super.onStop();
+    private int getUserId() {
+        return TakeStockAccount.get(AdvertEditorActivity.this).getUserId();
+    }
+
+    @Override protected void onPause() {
         mPresenter.pause();
+        super.onPause();
     }
 }

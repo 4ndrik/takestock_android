@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.advert.create;
+package com.devabit.takestock.screen.advert.editor;
 
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.BasePresenter;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-interface AdvertCreateContract {
+interface AdvertEditorContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -34,6 +34,8 @@ interface AdvertCreateContract {
         void showEmptyTitleError();
 
         void showEmptyCategoryError();
+
+        void showEmptySubcategoryError();
 
         void showEmptyItemCountError();
 
@@ -63,9 +65,11 @@ interface AdvertCreateContract {
 
         void showUnknownError();
 
-        void showSavedAdvert(Advert advert);
+        void showSavedAdvertInView(Advert advert);
 
-        void showPreviewedAdvert(Advert advert);
+        void showEditedAdvertInView(Advert advert);
+
+        void showPreviewedAdvertInView(Advert advert);
 
     }
 
@@ -74,6 +78,8 @@ interface AdvertCreateContract {
         void fetchAdvertRelatedData();
 
         void saveAdvert(Advert advert);
+
+        void editAdvert(Advert advert);
 
         void previewAdvert(Advert advert);
     }

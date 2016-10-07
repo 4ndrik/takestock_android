@@ -378,6 +378,10 @@ public class Advert implements Parcelable {
         return mIsFood;
     }
 
+    public void setState(int state) {
+        mState = state;
+    }
+
     public int getState() {
         return mState;
     }
@@ -485,6 +489,12 @@ public class Advert implements Parcelable {
                 ", mEscapedDescription='" + mEscapedDescription + '\'' +
                 ", mCategoryName='" + mCategoryName + '\'' +
                 '}';
+    }
+
+    public static final class State {
+        public static final int LIVE = 1;
+        public static final int ON_HOLD = 2;
+        public static final int SOLD_OUT = 3;
     }
 
     public static class Builder {

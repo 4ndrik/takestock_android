@@ -1,6 +1,7 @@
 package com.devabit.takestock.screen.advert.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,13 +19,13 @@ public class CategorySpinnerAdapter extends BaseSpinnerAdapter<Category> {
         super(context, categories);
     }
 
-    @Override public View getView(int position, View convertView, ViewGroup parent) {
+    @NonNull @Override public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         TextView textView = (TextView) super.getView(position, convertView, parent);
         textView.setText(getItem(position).getName());
         return textView;
     }
 
-    @Override public View getDropDownView(int position, View convertView, ViewGroup parent) {
+    @Override public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         TextView view = (TextView) super.getDropDownView(position, convertView, parent);
         view.setText(getItem(position).getName());
         return view;

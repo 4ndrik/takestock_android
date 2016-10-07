@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.advert.create;
+package com.devabit.takestock.screen.advert.editor;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.*;
@@ -21,18 +21,18 @@ import static timber.log.Timber.e;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
+class AdvertEditorPresenter implements AdvertEditorContract.Presenter {
 
     private final DataRepository mDataRepository;
-    private final AdvertCreateContract.View mCreateView;
+    private final AdvertEditorContract.View mCreateView;
 
     private CompositeSubscription mSubscriptions;
 
-    AdvertCreatePresenter(@NonNull DataRepository dataRepository, @NonNull AdvertCreateContract.View createView) {
+    AdvertEditorPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertEditorContract.View createView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mCreateView = checkNotNull(createView, "createView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mCreateView.setPresenter(AdvertCreatePresenter.this);
+        mCreateView.setPresenter(AdvertEditorPresenter.this);
     }
 
     @Override public void resume() {
@@ -153,7 +153,30 @@ class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
                     }
 
                     @Override public void onNext(Advert advert) {
-                        mCreateView.showSavedAdvert(advert);
+                        mCreateView.showSavedAdvertInView(advert);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override public void editAdvert(Advert advert) {
+        if (!isAdvertValid(advert)) return;
+        mCreateView.setProgressIndicator(true);
+        Subscription subscription = mDataRepository
+                .editAdvert(advert)
+                .compose(RxTransformers.<Advert>applyObservableSchedulers())
+                .subscribe(new Subscriber<Advert>() {
+                    @Override public void onCompleted() {
+                        mCreateView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable throwable) {
+                        mCreateView.setProgressIndicator(false);
+                        handleError(throwable);
+                    }
+
+                    @Override public void onNext(Advert advert) {
+                        mCreateView.showEditedAdvertInView(advert);
                     }
                 });
         mSubscriptions.add(subscription);
@@ -170,13 +193,14 @@ class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
 
     @Override public void previewAdvert(Advert advert) {
         if (!isAdvertValid(advert)) return;
-        mCreateView.showPreviewedAdvert(advert);
+        mCreateView.showPreviewedAdvertInView(advert);
     }
 
     private boolean isAdvertValid(Advert advert) {
         return validatePhotos(advert)
                 && validateName(advert)
                 && validateCategory(advert)
+                && validateSubcategory(advert)
                 && validateItemCount(advert)
                 && validateMinimumOrder(advert)
                 && validateGuidePrice(advert)
@@ -193,6 +217,14 @@ class AdvertCreatePresenter implements AdvertCreateContract.Presenter {
     private boolean validateCategory(Advert advert) {
         if (advert.getCategoryId() <= 0) {
             mCreateView.showEmptyCategoryError();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateSubcategory(Advert advert) {
+        if (advert.getSubcategoryId() <= 0) {
+            mCreateView.showEmptySubcategoryError();
             return false;
         }
         return true;
