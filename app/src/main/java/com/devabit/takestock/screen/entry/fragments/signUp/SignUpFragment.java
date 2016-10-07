@@ -148,7 +148,6 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
     }
 
     @Override public void showSingUpSuccess() {
-//        startActivity(MainActivity.getStartIntent(getActivity(), getString(R.string.action_sign_up)));
         getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();
     }

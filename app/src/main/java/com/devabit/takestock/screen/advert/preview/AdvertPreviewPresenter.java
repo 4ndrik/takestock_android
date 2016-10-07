@@ -19,7 +19,7 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
+class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
 
     private static final String TAG = makeLogTag(AdvertPreviewPresenter.class);
 
@@ -28,9 +28,8 @@ public class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
     private final AdvertPreviewContract.View mView;
 
     private CompositeSubscription mSubscriptions;
-    private boolean mIsAdvertDataShown;
 
-    public AdvertPreviewPresenter(@NonNull Advert advert,
+    AdvertPreviewPresenter(@NonNull Advert advert,
                                   @NonNull DataRepository dataRepository,
                                   @NonNull AdvertPreviewContract.View view) {
         mAdvert = checkNotNull(advert, "advert cannot be null.");
@@ -41,31 +40,28 @@ public class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
     }
 
     @Override public void resume() {
-        fetchAdvertData();
     }
 
-    private void fetchAdvertData() {
-        if (mIsAdvertDataShown) return;
+    @Override public void fetchAdvertRelatedData() {
         fetchShippingWithId(mAdvert.getShippingId());
         fetchCertificationWithId(mAdvert.getCertificationId());
         fetchConditionWithId(mAdvert.getConditionId());
-        mIsAdvertDataShown = true;
     }
 
     private void fetchShippingWithId(int id) {
-        Shipping shipping = mDataRepository.getShippingById(id);
+        Shipping shipping = mDataRepository.getShippingWithId(id);
         if (shipping == null) return;
         mView.showShippingInView(shipping);
     }
 
     private void fetchCertificationWithId(int id) {
-        Certification certification = mDataRepository.getCertificationById(id);
+        Certification certification = mDataRepository.getCertificationWithId(id);
         if (certification == null) return;
         mView.showCertificationInView(certification);
     }
 
     private void fetchConditionWithId(int id) {
-        Condition condition = mDataRepository.getConditionById(id);
+        Condition condition = mDataRepository.getConditionWithId(id);
         if (condition == null) return;
         mView.showConditionInView(condition);
     }

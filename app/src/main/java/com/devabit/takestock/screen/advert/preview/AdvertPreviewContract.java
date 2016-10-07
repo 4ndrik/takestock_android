@@ -10,7 +10,7 @@ import com.devabit.takestock.screen.BaseView;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public interface AdvertPreviewContract {
+interface AdvertPreviewContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -31,6 +31,8 @@ public interface AdvertPreviewContract {
     }
 
     interface Presenter extends BasePresenter {
+        void fetchAdvertRelatedData();
+
         void saveAdvert();
     }
 }

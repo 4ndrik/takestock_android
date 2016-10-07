@@ -18,10 +18,15 @@ public class TakeStockAccount {
 
     private static final String ACCOUNT_TYPE = "com.devabit.takestock.ACCOUNT";
     private static final String TOKEN_TYPE = "com.devabit.takestock.TOKEN";
-    private static final String USER_ID = "com.devabit.takestock.USER_ID";
-    private static final String USER_NAME = "com.devabit.takestock.USER_NAME";
-    private static final String USER_EMAIL = "com.devabit.takestock.USER_EMAIL";
-    private static final String USER_PASSWORD = "com.devabit.takestock.USER_PASSWORD";
+    private static final String ID = "com.devabit.takestock.ID";
+    private static final String NAME = "com.devabit.takestock.NAME";
+    private static final String EMAIL = "com.devabit.takestock.EMAIL";
+    private static final String PASSWORD = "com.devabit.takestock.PASSWORD";
+    private static final String BUSINESS_NAME = "com.devabit.takestock.BUSINESS_NAME";
+    private static final String BUSINESS_TYPE_ID = "com.devabit.takestock.BUSINESS_TYPE";
+    private static final String BUSINESS_SUBTYPE_ID = "com.devabit.takestock.BUSINESS_SUBTYPE";
+    private static final String POSTCODE = "com.devabit.takestock.POSTCODE";
+    private static final String VAT_NUMBER = "com.devabit.takestock.VAT_NUMBER";
 
     private static volatile TakeStockAccount sInstance;
 
@@ -51,10 +56,10 @@ public class TakeStockAccount {
     public void createAccount(AuthToken authToken, String password) {
         mAccount = new Account(authToken.email, ACCOUNT_TYPE);
         Bundle userData = new Bundle();
-        userData.putString(USER_ID, String.valueOf(authToken.userId));
-        userData.putString(USER_NAME, authToken.username);
-        userData.putString(USER_EMAIL, authToken.email);
-        userData.putString(USER_PASSWORD, password);
+        userData.putString(ID, String.valueOf(authToken.userId));
+        userData.putString(NAME, authToken.username);
+        userData.putString(EMAIL, authToken.email);
+        userData.putString(PASSWORD, password);
         mAccountManager.addAccountExplicitly(mAccount, null, userData);
         setAccessToken(authToken.token);
     }
@@ -71,23 +76,78 @@ public class TakeStockAccount {
 
     public int getUserId() {
         if (mAccount == null) return -1;
-        String id = mAccountManager.getUserData(mAccount, USER_ID);
+        String id = mAccountManager.getUserData(mAccount, ID);
         return Integer.valueOf(id);
     }
 
     public String getUserName() {
         if (mAccount == null) return "";
-        return mAccountManager.getUserData(mAccount, USER_NAME);
+        return mAccountManager.getUserData(mAccount, NAME);
     }
 
     public String getUserEmail() {
         if (mAccount == null) return "";
-        return mAccountManager.getUserData(mAccount, USER_EMAIL);
+        return mAccountManager.getUserData(mAccount, EMAIL);
     }
 
     public String getUserPassword() {
         if (mAccount == null) return "";
-        return mAccountManager.getUserData(mAccount, USER_PASSWORD);
+        return mAccountManager.getUserData(mAccount, PASSWORD);
+    }
+
+    public void setBusinessName(String businessName) {
+        if (mAccount == null) return;
+        mAccountManager.setUserData(mAccount, BUSINESS_NAME, businessName);
+    }
+
+    public String getBusinessName() {
+        if (mAccount == null) return "";
+        String name = mAccountManager.getUserData(mAccount, BUSINESS_NAME);
+        return name == null ? "" : name;
+    }
+
+    public void setPostcode(String businessName) {
+        if (mAccount == null) return;
+        mAccountManager.setUserData(mAccount, POSTCODE, businessName);
+    }
+
+    public String getPostcode() {
+        if (mAccount == null) return "";
+        String postcode = mAccountManager.getUserData(mAccount, POSTCODE);
+        return postcode == null ? "" : postcode;
+    }
+
+    public void setBusinessTypeId(int typeId) {
+        if (mAccount == null) return;
+        mAccountManager.setUserData(mAccount, BUSINESS_TYPE_ID, String.valueOf(typeId));
+    }
+
+    public int getBusinessTypeId() {
+        if (mAccount == null) return 0;
+        String typeId = mAccountManager.getUserData(mAccount, BUSINESS_TYPE_ID);
+        return typeId == null ? 0 : Integer.valueOf(typeId);
+    }
+
+    public void setBusinessSubtypeId(int subtypeId) {
+        if (mAccount == null) return;
+        mAccountManager.setUserData(mAccount, BUSINESS_SUBTYPE_ID, String.valueOf(subtypeId));
+    }
+
+    public int getBusinessSubtypeId() {
+        if (mAccount == null) return 0;
+        String typeId = mAccountManager.getUserData(mAccount, BUSINESS_SUBTYPE_ID);
+        return typeId == null ? 0 : Integer.valueOf(typeId);
+    }
+
+    public void setVatNumber(String vatNumber) {
+        if (mAccount == null) return;
+        mAccountManager.setUserData(mAccount, VAT_NUMBER, vatNumber);
+    }
+
+    public String getVatNumber() {
+        if (mAccount == null) return "";
+        String number = mAccountManager.getUserData(mAccount, VAT_NUMBER);
+        return number == null ? "" : number;
     }
 
     public interface OnAccountRemovedListener {

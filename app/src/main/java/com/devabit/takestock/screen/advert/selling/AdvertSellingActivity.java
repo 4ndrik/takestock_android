@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
@@ -23,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.screen.advert.editor.AdvertEditorActivity;
 import com.devabit.takestock.screen.advert.selling.fragment.offers.OffersFragment;
 import com.devabit.takestock.screen.advert.selling.fragment.questions.QuestionsFragment;
 import com.devabit.takestock.widget.ControllableAppBarLayout;
@@ -44,6 +44,8 @@ public class AdvertSellingActivity extends AppCompatActivity {
         return starter;
     }
 
+    private static final int RC_EDIT = 1001;
+
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.advert_image_view) ImageView mImageView;
     @BindView(R.id.advert_name_text_view) TextView mNameTextView;
@@ -53,15 +55,17 @@ public class AdvertSellingActivity extends AppCompatActivity {
     @BindView(R.id.table_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
+    Advert mAdvert;
+
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert_selling);
         ButterKnife.bind(AdvertSellingActivity.this);
         setUpToolbar();
-        Advert advert = getIntent().getParcelableExtra(EXTRA_ADVERT);
-        setUpAppBarLayout(advert);
-        setUpAdvert(advert);
-        setUpTabLayout(advert);
+        mAdvert = getIntent().getParcelableExtra(EXTRA_ADVERT);
+        setUpAppBarLayout(mAdvert);
+        setUpAdvert(mAdvert);
+        setUpTabLayout(mAdvert);
     }
 
     private void setUpToolbar() {
@@ -76,7 +80,7 @@ public class AdvertSellingActivity extends AppCompatActivity {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_edit_advert:
-                        Toast.makeText(AdvertSellingActivity.this, "Edit Advert not yet implemented!", Toast.LENGTH_LONG).show();
+                        startActivityForResult(AdvertEditorActivity.getStartIntent(AdvertSellingActivity.this, mAdvert), RC_EDIT);
                         return true;
                     default:
                         return false;

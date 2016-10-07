@@ -62,7 +62,7 @@ public class UserJsonMapper implements JsonMapper<User> {
         user.setBusinessName(jsonObject.isNull(BUSINESS_NAME) ? "" : jsonObject.getString(BUSINESS_NAME));
         user.setBusinessTypeId(jsonObject.isNull(BUSINESS_TYPE) ? -1 : jsonObject.getInt(BUSINESS_TYPE));
         user.setBusinessSubtypeId(jsonObject.isNull(BUSINESS_SUBTYPE) ? -1 : jsonObject.getInt(BUSINESS_SUBTYPE));
-        user.setPostcode(jsonObject.isNull(POSTCODE) ? -1 : jsonObject.getInt(POSTCODE));
+        user.setPostcode(jsonObject.isNull(POSTCODE) ? "" : jsonObject.getString(POSTCODE));
         user.setVatExempt(jsonObject.getBoolean(IS_VAT_EXEMPT));
         user.setVatNumber(jsonObject.isNull(VAT_NUMBER) ? -1 : jsonObject.getInt(VAT_NUMBER));
 
@@ -85,7 +85,7 @@ public class UserJsonMapper implements JsonMapper<User> {
         if (!target.getBusinessName().isEmpty()) jsonObject.put(BUSINESS_NAME, target.getBusinessName());
         if (target.getBusinessTypeId() > 0) jsonObject.put(BUSINESS_TYPE, target.getBusinessTypeId());
         jsonObject.put(BUSINESS_SUBTYPE, target.getBusinessSubtypeId() > 0 ? target.getBusinessSubtypeId() : null);
-        if (target.getPostcode() > 0) jsonObject.put(POSTCODE, target.getPostcode());
+        if (!target.getPostcode().isEmpty()) jsonObject.put(POSTCODE, target.getPostcode());
         jsonObject.put(IS_VAT_EXEMPT, target.isVatExempt());
         if (target.getVatNumber() > 0) jsonObject.put(VAT_NUMBER, target.getVatNumber());
         if (!target.getPhotoPath().isEmpty()) {

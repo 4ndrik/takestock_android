@@ -21,7 +21,7 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
-import com.devabit.takestock.widget.ListSpacingItemDecoration;
+import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class OffersFragment extends Fragment implements OffersContract.View {
         RecyclerView recyclerView = ButterKnife.findById(view, R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        ListSpacingItemDecoration itemDecoration = new ListSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
+        ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
         mOffersAdapter = new OffersAdapter(view.getContext(), mAdvert.getPackagingName());
         mOffersAdapter.setOnStatusChangedListener(mStatusChangedListener);

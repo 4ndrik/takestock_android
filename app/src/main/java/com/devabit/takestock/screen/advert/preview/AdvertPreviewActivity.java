@@ -53,28 +53,18 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
     @BindView(R.id.content_preview) protected ViewGroup mPreviewContent;
 
     private AdvertPreviewContract.Presenter mPresenter;
-    private Advert mAdvert;
-    private boolean mIsSaved;
+
+    private boolean mIsAdvertSaved;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert_preview);
         ButterKnife.bind(AdvertPreviewActivity.this);
-        mAdvert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
-        setUpPresenter(mAdvert);
-        setUpToolbar(mAdvert);
-        setUpAdvertPhotos(mAdvert.getPhotos());
-        setUpAdvert(mAdvert);
-    }
-
-    private void setUpPresenter(Advert advert) {
-        new AdvertPreviewPresenter(advert,
-                Injection.provideDataRepository(AdvertPreviewActivity.this),
-                AdvertPreviewActivity.this);
-    }
-
-    @Override public void setPresenter(@NonNull AdvertPreviewContract.Presenter presenter) {
-        mPresenter = presenter;
+        Advert advert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
+        setUpToolbar(advert);
+        setUpAdvertPhotos(advert.getPhotos());
+        setUpAdvert(advert);
+        createPresenter(advert);
     }
 
     private void setUpToolbar(Advert advert) {
@@ -88,9 +78,9 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
     }
 
     private void setUpAdvertPhotos(List<Photo> photos) {
-        RecyclerView recyclerView = ButterKnife.findById(AdvertPreviewActivity.this, R.id.advert_photos_recycler_view);
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(AdvertPreviewActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = ButterKnife.findById(AdvertPreviewActivity.this, R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(AdvertPreviewActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
         AdvertPhotosAdapter photosAdapter = new AdvertPhotosAdapter(AdvertPreviewActivity.this, photos);
         recyclerView.setAdapter(photosAdapter);
@@ -103,7 +93,16 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
         mQtyAvailableTextView.setText(getString(R.string.advert_preview_qty_available_unit, advert.getItemsCount(), packaging));
         mDescriptionTextView.setText(advert.getDescription());
         mLocationTextView.setText(advert.getLocation());
-        mExpiryTextView.setText(DateUtil.formatToExpiryDate(advert.getDateExpiresAt()));
+        mExpiryTextView.setText(DateUtil.formatToExpiryDate(advert.getExpiresAt()));
+    }
+
+    private void createPresenter(Advert advert) {
+        new AdvertPreviewPresenter(advert, Injection.provideDataRepository(AdvertPreviewActivity.this), AdvertPreviewActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull AdvertPreviewContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.fetchAdvertRelatedData();
     }
 
     @Override protected void onResume() {
@@ -153,10 +152,9 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
 
     @Override public void showAdvertSaved(Advert advert) {
         Button button = ButterKnife.findById(this, R.id.make_live_button);
-        button.setEnabled(false);
-        button.setAlpha(0.5f);
-        mIsSaved = true;
+        button.setVisibility(View.GONE);
         showSnack(R.string.advert_preview_advert_saved);
+        mIsAdvertSaved = true;
     }
 
     @Override public void showNetworkConnectionError() {
@@ -172,7 +170,7 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
     }
 
     @Override public void onBackPressed() {
-        if (mIsSaved) {
+        if (mIsAdvertSaved) {
             startActivity(MainActivity.getStartIntent(AdvertPreviewActivity.this, getString(R.string.action_advert_saved)));
         } else {
             super.onBackPressed();
