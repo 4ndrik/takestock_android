@@ -2,11 +2,13 @@ package com.devabit.takestock.screen.advert.detail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,15 +59,16 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
     @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
     @BindView(R.id.view_switcher) protected ViewSwitcher mViewSwitcher;
-    @BindView(R.id.make_offer_fab) protected FloatingActionButton mMakeOfferFAB;
+    @BindView(R.id.watching_fab) protected FloatingActionButton mWatchingFAB;
 
-    @BindViews({R.id.recycler_view, R.id.make_offer_fab, R.id.ask_button, R.id.make_button})
+    @BindViews({R.id.recycler_view, R.id.watching_fab, R.id.ask_button, R.id.make_button})
     protected List<View> mViews;
 
     TakeStockAccount mAccount;
     Advert mAdvert;
     Offer mOffer;
     AdvertDetailContract.Presenter mPresenter;
+    boolean mIsWatching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         setUpToolbar(mAdvert);
         setUpRecyclerView(mAdvert);
         setUpAdvertDetail(mAdvert);
+        setUpWatchingFAB(mAdvert);
         createPresenter();
     }
 
@@ -104,7 +108,6 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mCertificationTextView.setText(certification == null ? "" : certification.getName());
         mLocationTextView.setText(advert.getLocation());
         mViewSwitcher.setDisplayedChild(advert.canOffer() ? CHILD_MAKE_OFFER_BUTTON : CHILD_THANK_FOR_OFFER_TEXT);
-        mMakeOfferFAB.setVisibility(advert.canOffer() ? View.VISIBLE : View.GONE);
     }
 
     private void setUpRecyclerView(Advert advert) {
@@ -127,9 +130,9 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mPresenter.fetchConditionById(mAdvert.getConditionId());
     }
 
-    @OnClick(R.id.make_offer_fab)
-    protected void onMakeOfferFabClick() {
-        displayOfferMakerDialog();
+    @OnClick(R.id.watching_fab)
+    protected void onWatchingFabClick() {
+        mPresenter.addOrRemoveWatchingAdvert(mAdvert, mAccount.getUserId());
     }
 
     @OnClick(R.id.make_button)
@@ -174,9 +177,34 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @Override public void showOfferMadeInView(Offer offer) {
         mOffer = offer;
         showSnack(R.string.advert_detail_offer_made);
-        mMakeOfferFAB.setVisibility(View.GONE);
         mViewSwitcher.setDisplayedChild(CHILD_THANK_FOR_OFFER_TEXT);
         mAdvert.setCanOffer(false);
+    }
+
+    @Override public void showAdvertAddedToWatching(Advert advert) {
+        mIsWatching = true;
+        setUpWatchingFAB(advert);
+    }
+
+    @Override public void showAdvertRemovedFromWatching(Advert advert) {
+        mIsWatching = true;
+        setUpWatchingFAB(advert);
+    }
+
+    private void setUpWatchingFAB(Advert advert) {
+        int color;
+        if (advert.hasSubscriber(mAccount.getUserId())) {
+            mWatchingFAB.setImageResource(R.drawable.ic_eye_white_24dp);
+            color = ContextCompat.getColor(AdvertDetailActivity.this, R.color.jam);
+        } else {
+            mWatchingFAB.setImageResource(R.drawable.ic_eye_grey_24dp);
+            color = ContextCompat.getColor(AdvertDetailActivity.this, R.color.white);
+        }
+        mWatchingFAB.setBackgroundTintList(ColorStateList.valueOf(color));
+    }
+
+    @Override public void showAdvertWatchingError(Advert advert) {
+
     }
 
     @Override public void showNetworkConnectionError() {
@@ -225,13 +253,13 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     @Override public void onBackPressed() {
-        if (mOffer == null) {
-            super.onBackPressed();
-        } else {
+        if (mOffer != null || mIsWatching) {
             Intent intent = new Intent();
             intent.putExtra(getString(R.string.extra_advert), mAdvert);
             setResult(RESULT_OK, intent);
             finish();
+        } else {
+            super.onBackPressed();
         }
     }
 
