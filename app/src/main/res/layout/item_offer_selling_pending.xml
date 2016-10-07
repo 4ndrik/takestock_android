@@ -22,7 +22,8 @@
                 android:paddingBottom="8dp"
                 android:layout_alignParentStart="true"
                 android:textAllCaps="true"
-                android:textColor="@color/red_500"
+                android:textStyle="bold"
+                android:textColor="@color/gold"
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="Pending"/>
 

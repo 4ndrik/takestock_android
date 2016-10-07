@@ -32,7 +32,7 @@ import java.util.List;
  * Created by Victor Artemyev on 27/09/2016.
  */
 
-class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
+class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewHolder> {
 
     private final String mPackaging;
     private final LayoutInflater mLayoutInflater;
@@ -60,37 +60,50 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
     private OnShippingAddressClickListener mShippingAddressClickListener;
 
-    OffersAdapter(Context context, String packaging) {
+    interface OnConfirmGoodsListener {
+        void onConfirm(Offer offer);
+    }
+
+    private OnConfirmGoodsListener mConfirmGoodsListener;
+
+    OffersBuyingAdapter(Context context, String packaging) {
         mPackaging = packaging;
         mLayoutInflater = LayoutInflater.from(context);
         mOffers = new ArrayList<>();
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, @LayoutRes int viewType) {
+        View itemView = inflateViewType(viewType, parent);
         switch (viewType) {
             case R.layout.item_offer_buying_accepted:
-                return new OfferAcceptedViewHolder(inflateViewType(viewType, parent));
+                return new OfferAcceptedViewHolder(itemView);
 
             case R.layout.item_offer_buying_countered:
-                return new OfferCounteredViewHolder(inflateViewType(viewType, parent));
+                return new OfferCounteredViewHolder(itemView);
 
             case R.layout.item_offer_buying_rejected:
-                return new OfferRejectedViewHolder(inflateViewType(viewType, parent));
+                return new OfferRejectedViewHolder(itemView);
 
             case R.layout.item_offer_buying_pending:
-                return new OfferPendingViewHolder(inflateViewType(viewType, parent));
+                return new OfferPendingViewHolder(itemView);
 
             case R.layout.item_offer_buying_pending_seller:
-                return new OfferPendingSellerViewHolder(inflateViewType(viewType, parent));
+                return new OfferPendingSellerViewHolder(itemView);
 
             case R.layout.item_offer_buying_payment_made:
-                return new OfferPaymentMadeViewHolder(inflateViewType(viewType, parent));
+                return new OfferPaymentMadeViewHolder(itemView);
 
             case R.layout.item_offer_buying_address_received:
-                return new OfferAddressReceivedViewHolder(inflateViewType(viewType, parent));
+                return new OfferAddressReceivedViewHolder(itemView);
+
+            case R.layout.item_offer_buying_stock_in_transit:
+                return new OfferStockInTransitViewHolder(itemView);
+
+            case R.layout.item_offer_buying_goods_received:
+                return new OfferGoodsReceivedViewHolder(itemView);
 
             default:
-                return new OfferHistoryViewHolder(inflateViewType(viewType, parent));
+                return new OfferHistoryViewHolder(itemView);
         }
     }
 
@@ -125,6 +138,12 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
                 case Offer.Status.ADDRESS_RECEIVED:
                     return R.layout.item_offer_buying_address_received;
+
+                case Offer.Status.STOCK_IN_TRANSIT:
+                    return R.layout.item_offer_buying_stock_in_transit;
+
+                case Offer.Status.GOODS_RECEIVED:
+                    return R.layout.item_offer_buying_goods_received;
 
                 default:
                     return R.layout.item_offer_buying_countered;
@@ -169,9 +188,64 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
         mShippingAddressClickListener = shippingAddressClickListener;
     }
 
+    void setOnConfirmGoodsListener(OnConfirmGoodsListener onConfirmGoodsListener) {
+        mConfirmGoodsListener = onConfirmGoodsListener;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // ViewHolders
     ///////////////////////////////////////////////////////////////////////////
+
+    class OfferGoodsReceivedViewHolder extends ViewHolder {
+
+        OfferGoodsReceivedViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    class OfferStockInTransitViewHolder extends ViewHolder {
+
+        @BindView(R.id.dispatching_info_text_view) TextView dispatchingInfoTextView;
+
+        OfferStockInTransitViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override void bindOffer(Offer offer) {
+            super.bindOffer(offer);
+            bindShipping(offer.getShipping()[0]);
+        }
+
+        void bindShipping(Offer.Shipping shipping) {
+            Resources resources = dispatchingInfoTextView.getResources();
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(resources.getString(R.string.offer_buying_item_arrival_date));
+            String arrivalDate = DateUtil.formatToDispatchingDate(shipping.getArrivalDate());
+            builder.append(arrivalDate);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - arrivalDate.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_pick_up_date));
+            String pickUpDate = DateUtil.formatToDispatchingDate(shipping.getPickUpDate());
+            builder.append(pickUpDate);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - pickUpDate.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_tracking_number));
+            String tracking = shipping.getTracking();
+            builder.append(tracking);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - tracking.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append("\n");
+            builder.append(resources.getString(R.string.offer_buying_item_courier_name));
+            String courierName = shipping.getCourierName();
+            builder.append(courierName);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - courierName.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            dispatchingInfoTextView.setText(builder);
+        }
+
+        @OnClick(R.id.confirm_goods_button)
+        void onConfirmGoodsButtonClick() {
+            if (mConfirmGoodsListener != null) mConfirmGoodsListener.onConfirm(mOffer);
+        }
+    }
 
     class OfferAddressReceivedViewHolder extends ViewHolder {
 
@@ -189,8 +263,6 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
         void bindShipping(Offer.Shipping shipping) {
             Resources resources = shippingInfoTextView.getResources();
             SpannableStringBuilder builder = new SpannableStringBuilder();
-//            builder.append(resources.getString(R.string.offer_buying_item_shipping_info));
-//            builder.append("\n");
             builder.append(resources.getString(R.string.offer_buying_item_house));
             String house = shipping.getHouse();
             builder.append(house);
@@ -217,17 +289,6 @@ class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
             builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - phone.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             shippingInfoTextView.setText(builder);
         }
-
-        @OnClick(R.id.seller_transport_button)
-        void onSellerTransportButtonClick() {
-
-        }
-
-        @OnClick(R.id.buyer_transport_button)
-        void onBuyerTransportButtonClick() {
-
-        }
-
     }
 
     class OfferPaymentMadeViewHolder extends ViewHolder {

@@ -70,7 +70,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     private Advert mAdvert;
     private OfferContract.Presenter mPresenter;
-    private OffersAdapter mOffersAdapter;
+    private OffersBuyingAdapter mOffersBuyingAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +83,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         setUpRecyclerView(mAdvert);
         Offer offer = getIntent().getParcelableExtra(EXTRA_OFFER);
         List<Offer> offers = fetchOffers(offer);
-        mOffersAdapter.addOffers(offers);
+        mOffersBuyingAdapter.addOffers(offers);
         createPresenter();
     }
 
@@ -144,23 +144,32 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         mRecyclerView.setLayoutManager(layoutManager);
         ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         mRecyclerView.addItemDecoration(itemDecoration);
-        mOffersAdapter = new OffersAdapter(OfferActivity.this, advert.getPackagingName());
-        mOffersAdapter.setOnStatusChangedListener(mOnStatusChangedListener);
-        mOffersAdapter.setOnMakePaymentClickListener(new OffersAdapter.OnMakePaymentClickListener() {
+        mOffersBuyingAdapter = new OffersBuyingAdapter(OfferActivity.this, advert.getPackagingName());
+        setUpListenersOnAdapter(mOffersBuyingAdapter);
+        mRecyclerView.setAdapter(mOffersBuyingAdapter);
+    }
+
+    private void setUpListenersOnAdapter(OffersBuyingAdapter adapter) {
+        adapter.setOnStatusChangedListener(mOnStatusChangedListener);
+        adapter.setOnMakePaymentClickListener(new OffersBuyingAdapter.OnMakePaymentClickListener() {
             @Override public void onMakePayment(Offer offer) {
                 startActivityForResult(PaymentActivity.getStartIntent(OfferActivity.this, offer), RC_PAYMENT);
             }
         });
-        mOffersAdapter.setOnShippingAddressClickListener(new OffersAdapter.OnShippingAddressClickListener() {
+        adapter.setOnShippingAddressClickListener(new OffersBuyingAdapter.OnShippingAddressClickListener() {
             @Override public void onShippingAddressSet(Offer offer) {
                 startActivityForResult(ShippingActivity.getStartIntent(OfferActivity.this, offer), RC_SHIPPING);
             }
         });
-        mRecyclerView.setAdapter(mOffersAdapter);
+        adapter.setOnConfirmGoodsListener(new OffersBuyingAdapter.OnConfirmGoodsListener() {
+            @Override public void onConfirm(Offer offer) {
+                confirmGoodsReceived(offer);
+            }
+        });
     }
 
-    final OffersAdapter.OnStatusChangedListener mOnStatusChangedListener
-            = new OffersAdapter.OnStatusChangedListener() {
+    final OffersBuyingAdapter.OnStatusChangedListener mOnStatusChangedListener
+            = new OffersBuyingAdapter.OnStatusChangedListener() {
         @Override public void onAccepted(Offer offer) {
             displayAcceptOfferDialog(offer);
         }
@@ -217,6 +226,15 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         });
     }
 
+    private void confirmGoodsReceived(Offer offer) {
+        Offer.Accept accept = new Offer.Accept.Builder()
+                .setOfferId(offer.getId())
+                .setStatus(Offer.Status.GOODS_RECEIVED)
+                .setFromSeller(false)
+                .create();
+        mPresenter.acceptOffer(offer, accept);
+    }
+
     private List<Offer> fetchOffers(Offer offer) {
         List<Offer> offers = new ArrayList<>();
         offers.add(offer);
@@ -248,12 +266,12 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_PAYMENT || requestCode == RC_SHIPPING && resultCode == RESULT_OK) {
             Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
-            mOffersAdapter.refreshOffer(offer);
+            mOffersBuyingAdapter.refreshOffer(offer);
         }
     }
 
     @Override public void showOfferAcceptedInView(Offer offer) {
-        mOffersAdapter.addOffer(offer);
+        mOffersBuyingAdapter.addOffer(offer);
         mRecyclerView.scrollToPosition(0);
     }
 

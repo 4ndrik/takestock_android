@@ -100,32 +100,32 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="Shipping info:"/>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/shipping_info_text_view"
-                android:paddingTop="8dp"
-                android:orientation="horizontal">
+        <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/shipping_info_text_view"-->
+                <!--android:paddingTop="8dp"-->
+                <!--android:orientation="horizontal">-->
 
-            <Button
-                    android:id="@+id/seller_transport_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/offer_buying_item_seller_transport"
-                    android:textStyle="bold"
-                    android:theme="@style/Widget.TakeStock.Button.Gold"/>
+            <!--<Button-->
+                    <!--android:id="@+id/seller_transport_button"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="@string/offer_buying_item_seller_transport"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:theme="@style/Widget.TakeStock.Button.Gold"/>-->
 
-            <Button
-                    android:id="@+id/buyer_transport_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/offer_buying_item_buyer_transport"
-                    android:textStyle="bold"
-                    android:theme="@style/Widget.TakeStock.Button.Jam"/>
+            <!--<Button-->
+                    <!--android:id="@+id/buyer_transport_button"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="@string/offer_buying_item_buyer_transport"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:theme="@style/Widget.TakeStock.Button.Jam"/>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
     </RelativeLayout>
 

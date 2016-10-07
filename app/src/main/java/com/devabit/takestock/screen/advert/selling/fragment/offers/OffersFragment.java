@@ -1,6 +1,8 @@
 package com.devabit.takestock.screen.advert.selling.fragment.offers;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,9 +23,12 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
+import com.devabit.takestock.screen.dispatching.DispatchingActivity;
 import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
 
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Victor Artemyev on 30/09/2016.
@@ -41,11 +46,13 @@ public class OffersFragment extends Fragment implements OffersContract.View {
         return fragment;
     }
 
+    private static final int RC_DISPATCHING = 2001;
+
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     Advert mAdvert;
     OffersContract.Presenter mPresenter;
-    OffersAdapter mOffersAdapter;
+    OffersSellingAdapter mOffersAdapter;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,32 +85,61 @@ public class OffersFragment extends Fragment implements OffersContract.View {
         recyclerView.setLayoutManager(layoutManager);
         ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         recyclerView.addItemDecoration(itemDecoration);
-        mOffersAdapter = new OffersAdapter(view.getContext(), mAdvert.getPackagingName());
-        mOffersAdapter.setOnStatusChangedListener(mStatusChangedListener);
+        mOffersAdapter = new OffersSellingAdapter(view.getContext(), mAdvert.getPackagingName());
+        setUpListenersOnAdapter(mOffersAdapter);
         recyclerView.setAdapter(mOffersAdapter);
     }
 
-    private final OffersAdapter.OnStatusChangedListener mStatusChangedListener
-            = new OffersAdapter.OnStatusChangedListener() {
-        @Override public void onAccepted(Offer offer) {
-         displayAcceptOfferDialog(offer);
-        }
+    private void setUpListenersOnAdapter(@NonNull OffersSellingAdapter adapter) {
+        adapter.setOnStatusChangedListener(new OffersSellingAdapter.OnStatusChangedListener() {
+            @Override public void onAccepted(Offer offer) {
+                displayAcceptOfferDialog(offer);
+            }
 
-        @Override public void onCountered(Offer offer) {
-            displayCounterOfferDialog(offer);
-        }
+            @Override public void onCountered(Offer offer) {
+                displayCounterOfferDialog(offer);
+            }
 
-        @Override public void onRejected(Offer offer) {
-            displayRejectOfferDialog(offer);
-        }
-    };
+            @Override public void onRejected(Offer offer) {
+                displayRejectOfferDialog(offer);
+            }
+        });
+
+        adapter.setOnTransportArrangedListener(new OffersSellingAdapter.OnTransportArrangedListener() {
+            @Override public void onSellerArrange(Offer offer) {
+                arrangeTransport(offer);
+            }
+
+            @Override public void onBuyerArrange(Offer offer) {
+                arrangeTransport(offer);
+            }
+        });
+
+        adapter.setOnConfirmStockDispatchedListener(new OffersSellingAdapter.OnConfirmStockDispatchedListener() {
+            @Override public void onConfirm(Offer offer) {
+                startActivityForResult(DispatchingActivity.getStartIntent(getActivity(), offer), RC_DISPATCHING);
+            }
+        });
+
+        adapter.setOnContactListener(new OffersSellingAdapter.OnContactListener() {
+            @Override public void onContactBuyer(Offer offer) {
+
+            }
+
+            @Override public void onContactSupport(Offer offer) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "admin@wetakestock.com", null));
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+            }
+        });
+    }
 
     private void displayAcceptOfferDialog(final Offer offer) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.accept_offer_dialog_title)
                 .setMessage(getString(R.string.accept_offer_dialog_message,
-                                offer.getQuantity(), mAdvert.getPackagingName(),
-                                offer.getPrice(), mAdvert.getPackagingName()))
+                        offer.getQuantity(), mAdvert.getPackagingName(),
+                        offer.getPrice(), mAdvert.getPackagingName()))
                 .setPositiveButton(R.string.accept_offer_dialog_accept, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         Offer.Accept accept = new Offer.Accept.Builder()
@@ -140,6 +176,15 @@ public class OffersFragment extends Fragment implements OffersContract.View {
         });
     }
 
+    private void arrangeTransport(Offer offer) {
+        Offer.Accept accept = new Offer.Accept.Builder()
+                .setOfferId(offer.getId())
+                .setStatus(Offer.Status.AWAIT_CONFIRM_STOCK_DISPATCHED)
+                .setFromSeller(true)
+                .create();
+        mPresenter.acceptOffer(offer, accept);
+    }
+
     private void createPresenter(View view) {
         new OffersPresenter(mAdvert.getId(), Injection.provideDataRepository(view.getContext()), OffersFragment.this);
     }
@@ -147,6 +192,14 @@ public class OffersFragment extends Fragment implements OffersContract.View {
     @Override public void setPresenter(@NonNull OffersContract.Presenter presenter) {
         mPresenter = presenter;
         mPresenter.refreshOffers();
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_DISPATCHING && resultCode == RESULT_OK) {
+            Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
+            mOffersAdapter.refreshOffer(offer);
+        }
     }
 
     @Override public void showRefreshedOffersInView(List<Offer> offers) {

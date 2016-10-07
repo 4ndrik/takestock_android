@@ -18,6 +18,7 @@ public final class DateUtil {
     private static final String TAG = Logger.makeLogTag(DateUtil.class);
 
     private static final DateFormat API_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH);
+    private static final DateFormat DISPATCHING_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
     private static final DateFormat DEFAULT_FORMAT = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
     private static final DateFormat EXPIRY_FORMAT = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
 
@@ -47,6 +48,17 @@ public final class DateUtil {
         if (TextUtils.isEmpty(value)) return"";
         try {
             Date date = API_FORMAT.parse(value);
+            return DEFAULT_FORMAT.format(date);
+        } catch (ParseException e) {
+            LOGE(TAG, "BOOM:", e);
+            return "";
+        }
+    }
+
+    public static String formatToDispatchingDate(String value) {
+        if (TextUtils.isEmpty(value)) return"";
+        try {
+            Date date = DISPATCHING_FORMAT.parse(value);
             return DEFAULT_FORMAT.format(date);
         } catch (ParseException e) {
             LOGE(TAG, "BOOM:", e);

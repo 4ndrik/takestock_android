@@ -22,10 +22,10 @@
                 android:paddingBottom="8dp"
                 android:layout_alignParentStart="true"
                 android:textAllCaps="true"
+                android:textColor="@color/red_500"
                 android:textStyle="bold"
-                android:textColor="@color/gold"
                 android:textAppearance="?android:textAppearanceSmall"
-                tools:text="Countered"/>
+                tools:text="Address received"/>
 
         <com.devabit.takestock.widget.CircleImageView
                 android:id="@+id/user_image_view"
@@ -34,7 +34,7 @@
                 android:layout_below="@+id/status_text_view"
                 android:src="@drawable/ic_placeholder_user_96dp"
                 app:civ_border_width="2dp"
-                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_color="@color/gold"
                 tools:ignore="ContentDescription"/>
 
         <TextView
@@ -69,25 +69,49 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/date_text_view"
                 android:layout_toEndOf="@id/user_image_view"
-                android:paddingTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:padding="8dp"
                 android:textColor="@color/black"
                 android:textAppearance="?android:textAppearanceMedium"
                 tools:text="100 kg - £ 1000.00/kg"/>
 
         <TextView
-                android:id="@+id/comment_text_view"
-                android:layout_width="wrap_content"
+                android:id="@+id/shipping_info_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/offer_text_view"
-                android:layout_toEndOf="@id/user_image_view"
-                android:paddingTop="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:textColor="@color/black"
+                android:paddingBottom="8dp"
+                android:textColor="@color/translucent_black_80"
                 android:textAppearance="?android:textAppearanceSmall"
-                tools:text="Many businesses in large distributed industries have a problem with stock being"/>
+                tools:text="Shipping info:"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shipping_info_text_view"
+                android:paddingTop="8dp"
+                android:orientation="horizontal">
+
+            <Button
+                    android:id="@+id/seller_transport_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/offer_selling_item_seller_transport"
+                    android:textStyle="bold"
+                    android:theme="@style/Widget.TakeStock.Button.Gold"/>
+
+            <Button
+                    android:id="@+id/buyer_transport_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/offer_selling_item_buyer_transport"
+                    android:textStyle="bold"
+                    android:theme="@style/Widget.TakeStock.Button.Jam"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

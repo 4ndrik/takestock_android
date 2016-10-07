@@ -315,6 +315,10 @@
     <string name="offer_buying_item_city">City:\u0020</string>
     <string name="offer_buying_item_postcode">Postcode:\u0020</string>
     <string name="offer_buying_item_phone">Phone:\u0020</string>
+    <string name="offer_buying_item_arrival_date">Arrival date:\u0020</string>
+    <string name="offer_buying_item_pick_up_date">Pick up date:\u0020</string>
+    <string name="offer_buying_item_tracking_number">Tracking number:\u0020</string>
+    <string name="offer_buying_item_courier_name">Courier name:\u0020</string>
     <!--offer buying item end-->
 
     <!--offer selling item start-->
@@ -425,6 +429,10 @@
     <string name="dispatching_activity_error_tracking_number">Tracking number not added</string>
     <string name="dispatching_activity_error_courier_name">Courier name not added</string>
     <string name="dispatching_activity_date">%1$d/%2$d/%3$d</string>
+    <string name="offer_selling_contact_buyer">Contact buyer</string>
+    <string name="offer_selling_contact_support">Contact customer support</string>
+    <string name="offer_buying_confirm_goods_received">Confirm goods received</string>
+    <string name="offer_buying_raise_dispute">Raise dispute</string>
     <!--dispatching activity end-->
 
 </resources>
