@@ -24,7 +24,7 @@ import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.about.AboutActivity;
 import com.devabit.takestock.screen.help.HelpActivity;
 import com.devabit.takestock.screen.main.MainActivity;
-import com.devabit.takestock.screen.profile.edit.ProfileEditActivity;
+import com.devabit.takestock.screen.profile.edit.ProfileEditorActivity;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.
@@ -49,9 +49,9 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_account);
         ButterKnife.bind(ProfileAccountActivity.this);
-        setUpToolbar();
-        setUpPresenter();
         mAccount = TakeStockAccount.get(ProfileAccountActivity.this);
+        setUpToolbar();
+        createPresenter();
     }
 
     private void setUpToolbar() {
@@ -63,7 +63,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         });
         toolbar.inflateMenu(R.menu.profile_account_menu);
         toolbar.setOnMenuItemClickListener(mMenuItemClickListener);
-        toolbar.setTitle(R.string.profile);
+        toolbar.setTitle(R.string.navigation_drawer_profile);
     }
 
     private final Toolbar.OnMenuItemClickListener mMenuItemClickListener
@@ -81,7 +81,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
     };
 
     private void startProfileEditActivity() {
-        Intent starter = ProfileEditActivity.getStartIntent(ProfileAccountActivity.this, mUser);
+        Intent starter = ProfileEditorActivity.getStartIntent(ProfileAccountActivity.this, mUser);
         startActivityForResult(starter, RC_EDIT_PROFILE);
     }
 
@@ -93,14 +93,14 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         }
     }
 
-    private void setUpPresenter() {
-        new ProfileAccountPresenter(
+    private void createPresenter() {
+        new ProfileAccountPresenter(mAccount.getUserId(),
                 Injection.provideDataRepository(ProfileAccountActivity.this), ProfileAccountActivity.this);
     }
 
-    @Override protected void onStart() {
-        super.onStart();
-        mPresenter.fetchUserById(mAccount.getUserId());
+    @Override public void setPresenter(@NonNull ProfileAccountContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.loadUser();
     }
 
     @Override public void showUserInView(User user) {
@@ -109,7 +109,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
 
     private void setUpUser(User user) {
         mUser = user;
-        loadProfilePhoto(mUser.getPhotoPath());
+        loadProfilePhoto(mUser.getPhoto());
         mProfileNameTextView.setText(mUser.getUserName());
     }
 
@@ -132,10 +132,6 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
 
     @Override public void setProgressIndicator(boolean isActive) {
 
-    }
-
-    @Override public void setPresenter(@NonNull ProfileAccountContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     @OnClick(R.id.help_and_contact_button)
@@ -188,8 +184,8 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         });
     }
 
-    @Override protected void onStop() {
-        super.onStop();
+    @Override protected void onPause() {
+        super.onPause();
         mPresenter.pause();
     }
 }

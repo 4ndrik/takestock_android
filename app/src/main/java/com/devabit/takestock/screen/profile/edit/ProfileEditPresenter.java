@@ -6,16 +6,13 @@ import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
-import com.devabit.takestock.utils.Logger;
+import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import java.util.List;
 
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
@@ -23,14 +20,10 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
  */
 class ProfileEditPresenter implements ProfileEditContract.Presenter {
 
-    private static final String TAG = Logger.makeLogTag(ProfileEditPresenter.class);
-
     private final DataRepository mDataRepository;
     private final ProfileEditContract.View mProfileView;
 
     private CompositeSubscription mSubscriptions;
-
-    private boolean mIsUserProfileRelatedDataShowed;
 
     ProfileEditPresenter(@NonNull DataRepository dataRepository, @NonNull ProfileEditContract.View profileView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
@@ -43,16 +36,23 @@ class ProfileEditPresenter implements ProfileEditContract.Presenter {
     }
 
     @Override public void fetchUserProfileData() {
-        if (mIsUserProfileRelatedDataShowed) return;
         mProfileView.setProgressIndicator(true);
         Subscription subscription = mDataRepository.getBusinessTypes()
                 .compose(RxTransformers.<List<BusinessType>>applyObservableSchedulers())
-                .subscribe(new Action1<List<BusinessType>>() {
-                    @Override public void call(List<BusinessType> businessTypes) {
-                        mProfileView.showBusinessTypesInView(businessTypes);
-                        mIsUserProfileRelatedDataShowed = true;
+                .subscribe(new Subscriber<List<BusinessType>>() {
+                    @Override public void onCompleted() {
+                        mProfileView.setProgressIndicator(false);
                     }
-                }, getOnError(), getOnCompleted());
+
+                    @Override public void onError(Throwable e) {
+                        mProfileView.setProgressIndicator(false);
+                        handleError(e);
+                    }
+
+                    @Override public void onNext(List<BusinessType> businessTypes) {
+                        mProfileView.showBusinessTypesInView(businessTypes);
+                    }
+                });
         mSubscriptions.add(subscription);
     }
 
@@ -60,39 +60,30 @@ class ProfileEditPresenter implements ProfileEditContract.Presenter {
         mProfileView.setProgressIndicator(true);
         Subscription subscription = mDataRepository.updateUser(user)
                 .compose(RxTransformers.<User>applyObservableSchedulers())
-                .doOnNext(new Action1<User>() {
-                    @Override public void call(User user) {
-                        LOGD(TAG, user);
+                .subscribe(new Subscriber<User>() {
+                    @Override public void onCompleted() {
+                        mProfileView.setProgressIndicator(false);
                     }
-                })
-                .subscribe(new Action1<User>() {
-                    @Override public void call(User user) {
+
+                    @Override public void onError(Throwable e) {
+                        mProfileView.setProgressIndicator(false);
+                        handleError(e);
+                    }
+
+                    @Override public void onNext(User user) {
                         mProfileView.showUserUpdatedInView(user);
                     }
-                }, getOnError(), getOnCompleted());
+                });
         mSubscriptions.add(subscription);
     }
 
-    @NonNull private Action1<Throwable> getOnError() {
-        return new Action1<Throwable>() {
-            @Override public void call(Throwable throwable) {
-                mProfileView.setProgressIndicator(false);
-                LOGE(TAG, "BOOM:", throwable);
-                if (throwable instanceof NetworkConnectionException) {
-                    mProfileView.showNetworkConnectionError();
-                } else {
-                    mProfileView.showUnknownError();
-                }
-            }
-        };
-    }
-
-    @NonNull private Action0 getOnCompleted() {
-        return new Action0() {
-            @Override public void call() {
-                mProfileView.setProgressIndicator(false);
-            }
-        };
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mProfileView.showNetworkConnectionError();
+        } else {
+            mProfileView.showUnknownError();
+        }
     }
 
     @Override public void pause() {

@@ -93,7 +93,6 @@ public class SignInFragment extends Fragment implements SignInContract.View {
     }
 
     @Override public void showSignInSuccess() {
-//        startActivity(MainActivity.getStartIntent(getActivity(), getString(R.string.action_sign_in)));
         getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();
     }
@@ -183,12 +182,12 @@ public class SignInFragment extends Fragment implements SignInContract.View {
     }
 
     @Override public void onPause() {
-        super.onPause();
         mPresenter.pause();
+        super.onPause();
     }
 
     @Override public void onDestroyView() {
-        super.onDestroyView();
         mUnbinder.unbind();
+        super.onDestroyView();
     }
 }

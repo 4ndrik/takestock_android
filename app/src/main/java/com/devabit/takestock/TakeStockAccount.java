@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import com.devabit.takestock.data.model.AuthToken;
 
+
 /**
  * Created by Victor Artemyev on 31/08/2016.
  */
@@ -22,11 +23,6 @@ public class TakeStockAccount {
     private static final String NAME = "com.devabit.takestock.NAME";
     private static final String EMAIL = "com.devabit.takestock.EMAIL";
     private static final String PASSWORD = "com.devabit.takestock.PASSWORD";
-    private static final String BUSINESS_NAME = "com.devabit.takestock.BUSINESS_NAME";
-    private static final String BUSINESS_TYPE_ID = "com.devabit.takestock.BUSINESS_TYPE";
-    private static final String BUSINESS_SUBTYPE_ID = "com.devabit.takestock.BUSINESS_SUBTYPE";
-    private static final String POSTCODE = "com.devabit.takestock.POSTCODE";
-    private static final String VAT_NUMBER = "com.devabit.takestock.VAT_NUMBER";
 
     private static volatile TakeStockAccount sInstance;
 
@@ -54,14 +50,14 @@ public class TakeStockAccount {
     }
 
     public void createAccount(AuthToken authToken, String password) {
-        mAccount = new Account(authToken.email, ACCOUNT_TYPE);
+        mAccount = new Account(authToken.getEmail(), ACCOUNT_TYPE);
         Bundle userData = new Bundle();
-        userData.putString(ID, String.valueOf(authToken.userId));
-        userData.putString(NAME, authToken.username);
-        userData.putString(EMAIL, authToken.email);
+        userData.putString(ID, String.valueOf(authToken.getUserId()));
+        userData.putString(NAME, authToken.getUsername());
+        userData.putString(EMAIL, authToken.getEmail());
         userData.putString(PASSWORD, password);
         mAccountManager.addAccountExplicitly(mAccount, null, userData);
-        setAccessToken(authToken.token);
+        setAccessToken(authToken.getToken());
     }
 
     public void setAccessToken(String token) {
@@ -95,59 +91,9 @@ public class TakeStockAccount {
         return mAccountManager.getUserData(mAccount, PASSWORD);
     }
 
-    public void setBusinessName(String businessName) {
+    public void setPassword(String password) {
         if (mAccount == null) return;
-        mAccountManager.setUserData(mAccount, BUSINESS_NAME, businessName);
-    }
-
-    public String getBusinessName() {
-        if (mAccount == null) return "";
-        String name = mAccountManager.getUserData(mAccount, BUSINESS_NAME);
-        return name == null ? "" : name;
-    }
-
-    public void setPostcode(String businessName) {
-        if (mAccount == null) return;
-        mAccountManager.setUserData(mAccount, POSTCODE, businessName);
-    }
-
-    public String getPostcode() {
-        if (mAccount == null) return "";
-        String postcode = mAccountManager.getUserData(mAccount, POSTCODE);
-        return postcode == null ? "" : postcode;
-    }
-
-    public void setBusinessTypeId(int typeId) {
-        if (mAccount == null) return;
-        mAccountManager.setUserData(mAccount, BUSINESS_TYPE_ID, String.valueOf(typeId));
-    }
-
-    public int getBusinessTypeId() {
-        if (mAccount == null) return 0;
-        String typeId = mAccountManager.getUserData(mAccount, BUSINESS_TYPE_ID);
-        return typeId == null ? 0 : Integer.valueOf(typeId);
-    }
-
-    public void setBusinessSubtypeId(int subtypeId) {
-        if (mAccount == null) return;
-        mAccountManager.setUserData(mAccount, BUSINESS_SUBTYPE_ID, String.valueOf(subtypeId));
-    }
-
-    public int getBusinessSubtypeId() {
-        if (mAccount == null) return 0;
-        String typeId = mAccountManager.getUserData(mAccount, BUSINESS_SUBTYPE_ID);
-        return typeId == null ? 0 : Integer.valueOf(typeId);
-    }
-
-    public void setVatNumber(String vatNumber) {
-        if (mAccount == null) return;
-        mAccountManager.setUserData(mAccount, VAT_NUMBER, vatNumber);
-    }
-
-    public String getVatNumber() {
-        if (mAccount == null) return "";
-        String number = mAccountManager.getUserData(mAccount, VAT_NUMBER);
-        return number == null ? "" : number;
+        mAccountManager.setUserData(mAccount, PASSWORD, password);
     }
 
     public interface OnAccountRemovedListener {

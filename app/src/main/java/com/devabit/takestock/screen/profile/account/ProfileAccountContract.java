@@ -7,7 +7,7 @@ import com.devabit.takestock.screen.BaseView;
 /**
  * Created by Victor Artemyev on 07/06/2016.
  */
-public interface ProfileAccountContract {
+interface ProfileAccountContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -23,7 +23,7 @@ public interface ProfileAccountContract {
 
     interface Presenter extends BasePresenter {
 
-        void fetchUserById(int id);
+        void loadUser();
 
     }
 }

@@ -1,37 +1,30 @@
 package com.devabit.takestock.screen.profile.account;
 
 import android.support.annotation.NonNull;
-import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
-import com.devabit.takestock.utils.Logger;
-import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-import java.util.List;
-
-import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.
  */
-public class ProfileAccountPresenter implements ProfileAccountContract.Presenter {
+final class ProfileAccountPresenter implements ProfileAccountContract.Presenter {
 
-    private static final String TAG = Logger.makeLogTag(ProfileAccountPresenter.class);
-
+    private final int mUserId;
     private final DataRepository mDataRepository;
     private final ProfileAccountContract.View mProfileView;
 
     private CompositeSubscription mSubscriptions;
 
-    public ProfileAccountPresenter(@NonNull DataRepository dataRepository, @NonNull ProfileAccountContract.View profileView) {
+    ProfileAccountPresenter(int userId, @NonNull DataRepository dataRepository, @NonNull ProfileAccountContract.View profileView) {
+        mUserId = userId;
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mProfileView = checkNotNull(profileView, "profileView cannot be null.");
         mSubscriptions = new CompositeSubscription();
@@ -42,47 +35,36 @@ public class ProfileAccountPresenter implements ProfileAccountContract.Presenter
 
     }
 
-    @Override public void fetchUserById(int id) {
+    @Override public void loadUser() {
         mProfileView.setProgressIndicator(true);
-        UserFilter filter = new UserFilter();
-        filter.setUserId(id);
-        Subscription subscription = mDataRepository
-                .getUsersPerFilter(filter)
-                .flatMap(new Func1<List<User>, Observable<User>>() {
-                    @Override public Observable<User> call(List<User> users) {
-                        return Observable.from(users);
-                    }
-                })
-                .first()
+        Subscription subscription = mDataRepository.getUserWithId(mUserId)
                 .compose(RxTransformers.<User>applyObservableSchedulers())
-                .subscribe(new Action1<User>() {
-                    @Override public void call(User user) {
-                        mProfileView.showUserInView(user);
+                .subscribe(new Subscriber<User>() {
+                    @Override public void onCompleted() {
+                        mProfileView.setProgressIndicator(false);
                     }
-                }, getOnError(), getOnCompleted());
+
+                    @Override public void onError(Throwable e) {
+                        mProfileView.setProgressIndicator(false);
+                        handleError(e);
+
+                    }
+
+                    @Override public void onNext(User author) {
+                        mProfileView.showUserInView(author);
+                    }
+                });
         mSubscriptions.add(subscription);
     }
 
-    @NonNull private Action1<Throwable> getOnError() {
-        return new Action1<Throwable>() {
-            @Override public void call(Throwable throwable) {
-                mProfileView.setProgressIndicator(false);
-                LOGE(TAG, "BOOM:", throwable);
-                if (throwable instanceof NetworkConnectionException) {
-                    mProfileView.showNetworkConnectionError();
-                } else {
-                    mProfileView.showUnknownError();
-                }
-            }
-        };
-    }
 
-    @NonNull private Action0 getOnCompleted() {
-        return new Action0() {
-            @Override public void call() {
-                mProfileView.setProgressIndicator(false);
-            }
-        };
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mProfileView.showNetworkConnectionError();
+        } else {
+            mProfileView.showUnknownError();
+        }
     }
 
     @Override public void pause() {
