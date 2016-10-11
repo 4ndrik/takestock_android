@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.filter.OfferFilter;
 import com.devabit.takestock.data.filter.QuestionFilter;
-import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.*;
 import rx.Observable;
 
@@ -120,6 +119,10 @@ public interface DataSource {
 
     Observable<Advert.Subscriber> addRemoveAdvertWatching(int advertId);
 
+    Observable<Advert> viewAdvertWithId(int advertId);
+
+    Observable<Advert> unnotifyAdvertWithId(int advertId);
+
     /********* Offers Methods  *********/
 
     Observable<Offer> makeOffer(@NonNull Offer offer);
@@ -144,17 +147,13 @@ public interface DataSource {
 
     Observable<Answer> saveAnswer(@NonNull Answer answer);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for User
-    ///////////////////////////////////////////////////////////////////////////
+    /********** User Methods **********/
 
     Observable<User> saveUser(@NonNull User user);
 
     Observable<User> updateUser(@NonNull User user);
 
-    Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter);
-
-    Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter);
+    Observable<User> getUserWithId(int id);
 
     /********** Payment Methods **********/
 

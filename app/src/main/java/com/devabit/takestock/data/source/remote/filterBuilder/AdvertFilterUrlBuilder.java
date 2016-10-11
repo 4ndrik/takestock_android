@@ -30,7 +30,7 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
     private static final String GUIDE_PRICE = "guide_price";
     private static final String GUIDE_PRICE_DESCENDING = "-guide_price";
     private static final String FILTER = "filter";
-    private static final String WATCHLIST = "watchlist";
+    private static final String RELATED_BY = "related_by_advert";
 
     public AdvertFilterUrlBuilder(String baseUrl, AdvertFilter filter) {
         super(baseUrl, filter);
@@ -77,13 +77,17 @@ public class AdvertFilterUrlBuilder extends FilterUrlBuilder<AdvertFilter> {
             appendQueryParameter(IDS, ids);
         }
 
-        if (mFilter.isWatchlist()) {
-            appendQueryParameter(FILTER, WATCHLIST);
+        if (mFilter.hasAdditionalFilter()) {
+            appendQueryParameter(FILTER, mFilter.getAdditionalFilter());
         }
 
         String[] additions = mFilter.getAdditions();
         if (additions != null && additions.length > 0) {
             appendQueryParameter(IN, additions);
+        }
+
+        if (mFilter.getRelatedId() > 0) {
+            appendQueryParameter(RELATED_BY, mFilter.getRelatedId());
         }
 
         return mBuilder.toString();

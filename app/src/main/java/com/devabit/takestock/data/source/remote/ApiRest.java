@@ -5,8 +5,9 @@ import com.devabit.takestock.BuildConfig;
 /**
  * Created by Victor Artemyev on 22/04/2016.
  */
-interface ApiRest {
+public interface ApiRest {
 
+    String BASE_URL = BuildConfig.BASE_URL;
     String API_BASE_URL = BuildConfig.API_URL;
 
     String TOKEN_AUTH = API_BASE_URL + "/token/auth/";

@@ -38,7 +38,7 @@ public class Advert implements Parcelable {
     private int mItemsCount;
     private int mItemsCountNow;
     private List<String> mTags;
-    private Author mAuthor;
+    private User mUser;
     private String mPackagingName;
     private String mOffersCount;
     private String mQuestionsCount;
@@ -60,7 +60,7 @@ public class Advert implements Parcelable {
                    List<Photo> photos, int authorId, int categoryId, int subcategoryId, int packagingId,
                    int minOrderQuantity, String size, Certification certification, String certificationExtra,
                    int certificationId, int conditionId, String conditionDisplay, int itemsCount, int itemsCountNow,
-                   List<String> tags, Author author, String packagingName, String offersCount, String questionsCount,
+                   List<String> tags, User user, String packagingName, String offersCount, String questionsCount,
                    String daysLeft, int[] subscribers, boolean isDrafts, int advertsViews, boolean canOffer,
                    int notifications, int newQuestionsCount, int newOffersCount, boolean isFood, int state,
                    String escapedDescription, String categoryName) {
@@ -90,7 +90,7 @@ public class Advert implements Parcelable {
         mItemsCount = itemsCount;
         mItemsCountNow = itemsCountNow;
         mTags = tags;
-        mAuthor = author;
+        mUser = user;
         mPackagingName = packagingName;
         mOffersCount = offersCount;
         mQuestionsCount = questionsCount;
@@ -318,8 +318,8 @@ public class Advert implements Parcelable {
         return mTags;
     }
 
-    public Author getAuthor() {
-        return mAuthor;
+    public User getUser() {
+        return mUser;
     }
 
     public String getPackagingName() {
@@ -472,7 +472,7 @@ public class Advert implements Parcelable {
                 ", mItemsCount=" + mItemsCount +
                 ", mItemsCountNow=" + mItemsCountNow +
                 ", mTags=" + mTags +
-                ", mAuthor=" + mAuthor +
+                ", mAuthor=" + mUser +
                 ", mPackagingName='" + mPackagingName + '\'' +
                 ", mOffersCount='" + mOffersCount + '\'' +
                 ", mQuestionsCount='" + mQuestionsCount + '\'' +
@@ -524,7 +524,7 @@ public class Advert implements Parcelable {
         private int mItemsCount;
         private int mItemsCountNow;
         private List<String> mTags;
-        private Author mAuthor;
+        private User mUser;
         private String mPackagingName;
         private String mOffersCount;
         private String mQuestionsCount;
@@ -671,8 +671,8 @@ public class Advert implements Parcelable {
             return this;
         }
 
-        public Builder setAuthor(Author author) {
-            mAuthor = author;
+        public Builder setUser(User user) {
+            mUser = user;
             return this;
         }
 
@@ -755,7 +755,7 @@ public class Advert implements Parcelable {
             return new Advert(mId, mName, mCreatedAt, mExpiresAt, mUpdatedAt, mGuidePrice, mDescription, mLocation,
                     mShippingId, mShippingDisplay, mIsVatExempt, mPhotos, mAuthorId, mCategoryId, mSubcategoryId,
                     mPackagingId, mMinOrderQuantity, mSize, mCertification, mCertificationExtra, mCertificationId,
-                    mConditionId, mConditionDisplay, mItemsCount, mItemsCountNow, mTags, mAuthor, mPackagingName,
+                    mConditionId, mConditionDisplay, mItemsCount, mItemsCountNow, mTags, mUser, mPackagingName,
                     mOffersCount, mQuestionsCount, mDaysLeft, mSubscribers, mInDrafts, mAdvertsViews, mCanOffer,
                     mNotifications, mNewQuestionsCount, mNewOffersCount, mIsFood, mState, mEscapedDescription, mCategoryName);
         }

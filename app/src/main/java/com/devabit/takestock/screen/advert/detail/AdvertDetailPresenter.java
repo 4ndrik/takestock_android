@@ -1,18 +1,23 @@
 package com.devabit.takestock.screen.advert.detail;
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
+import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.Condition;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.Shipping;
+import com.devabit.takestock.data.model.PaginatedList;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
+
+import java.util.List;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
@@ -21,12 +26,14 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
  */
 class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
 
+    private final int mAdvertId;
     private final DataRepository mDataRepository;
     private final AdvertDetailContract.View mAdvertView;
 
     private CompositeSubscription mSubscriptions;
 
-    AdvertDetailPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertDetailContract.View advertView) {
+    AdvertDetailPresenter(int advertId, @NonNull DataRepository dataRepository, @NonNull AdvertDetailContract.View advertView) {
+        mAdvertId = advertId;
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mAdvertView = checkNotNull(advertView, "view cannot be null.");
         mSubscriptions = new CompositeSubscription();
@@ -37,16 +44,44 @@ class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
 
     }
 
-    @Override public void fetchShippingById(int id) {
-        Shipping shipping = mDataRepository.getShippingWithId(id);
-        if (shipping == null) return;
-        mAdvertView.showShippingInView(shipping);
+    @Override public void loadAdvert() {
+        mAdvertView.setProgressIndicator(true);
+        Subscription subscription = Observable
+                .zip(
+                        mDataRepository.viewAdvertWithId(mAdvertId),
+                        buildSimilarAdvertsObservable(),
+                        new Func2<Advert, PaginatedList<Advert>, Pair<Advert, PaginatedList<Advert>>>() {
+                            @Override public Pair<Advert, PaginatedList<Advert>> call(Advert advert, PaginatedList<Advert> paginatedList) {
+                                return Pair.create(advert, paginatedList);
+                            }
+                        }
+                )
+                .compose(RxTransformers.<Pair<Advert, PaginatedList<Advert>>>applyObservableSchedulers())
+                .subscribe(new Subscriber<Pair<Advert, PaginatedList<Advert>>>() {
+                    @Override public void onCompleted() {
+                        mAdvertView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        mAdvertView.setProgressIndicator(false);
+                        handleError(e);
+                    }
+
+                    @Override public void onNext(Pair<Advert, PaginatedList<Advert>> pair) {
+                        mAdvertView.showAdvertInView(pair.first);
+                        List<Advert> similarAdverts = pair.second.getResults();
+                        mAdvertView.showSimilarAdvertsInView(similarAdverts);
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
-    @Override public void fetchConditionById(int id) {
-        Condition condition = mDataRepository.getConditionWithId(id);
-        if (condition == null) return;
-        mAdvertView.showConditionInView(condition);
+    private Observable<PaginatedList<Advert>> buildSimilarAdvertsObservable() {
+        AdvertFilter filter = new AdvertFilter.Builder()
+                .setRelatedId(mAdvertId)
+                .setOrder(AdvertFilter.ORDER_UPDATED_AT_DESCENDING)
+                .create();
+        return mDataRepository.getPaginatedAdvertListWithFilter(filter);
     }
 
     @Override public void makeOffer(Offer offer) {
@@ -69,15 +104,6 @@ class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
                     }
                 });
         mSubscriptions.add(subscription);
-    }
-
-    private void handleError(Throwable throwable) {
-        Timber.e(throwable);
-        if (throwable instanceof NetworkConnectionException) {
-            mAdvertView.showNetworkConnectionError();
-        } else {
-            mAdvertView.showUnknownError();
-        }
     }
 
     @Override public void addOrRemoveWatchingAdvert(final Advert advert, final int userId) {
@@ -112,6 +138,15 @@ class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
                     }
                 });
         mSubscriptions.add(subscription);
+    }
+
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mAdvertView.showNetworkConnectionError();
+        } else {
+            mAdvertView.showUnknownError();
+        }
     }
 
     @Override public void pause() {

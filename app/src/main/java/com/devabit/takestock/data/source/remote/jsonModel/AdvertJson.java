@@ -38,7 +38,7 @@ public class AdvertJson implements JsonModel {
     public int items_count;
     public int items_count_now;
     public String[] tags;
-    public AuthorJson author_detailed;
+    public UserJson author_detailed;
     public String packaging_name;
     public String offers_count;
     public String questions_count;
@@ -83,7 +83,7 @@ public class AdvertJson implements JsonModel {
                 .setItemsCount(items_count)
                 .setItemsCountNow(items_count_now)
                 .setTags(Arrays.asList(tags))
-                .setAuthor(author_detailed.toAuthor())
+                .setUser(author_detailed.toUser())
                 .setPackagingName(packaging_name)
                 .setOffersCount(offers_count)
                 .setQuestionsCount(questions_count)

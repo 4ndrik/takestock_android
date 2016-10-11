@@ -8,16 +8,14 @@ import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.filter.OfferFilter;
 import com.devabit.takestock.data.filter.QuestionFilter;
-import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.remote.filterBuilder.AdvertFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.filterBuilder.OfferFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.filterBuilder.QuestionFilterUrlBuilder;
-import com.devabit.takestock.data.source.remote.filterBuilder.UserFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.jsonModel.*;
 import com.devabit.takestock.data.source.remote.jsonModel.deserializer.*;
-import com.devabit.takestock.data.source.remote.mapper.*;
+import com.devabit.takestock.data.source.remote.mapper.BusinessTypeJsonMapper;
 import com.devabit.takestock.exception.HttpResponseException;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.google.gson.Gson;
@@ -25,12 +23,10 @@ import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import org.json.JSONException;
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -130,11 +126,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     private String refreshAccessToken(String token) {
         synchronized (mOkHttpClient) {
-            AuthToken authToken = new AuthToken();
-            authToken.token = token;
             try {
-                String tokeJson = new AuthTokenJsonMapper().toJsonString(authToken);
-                Request request = buildPOSTRequest(TOKEN_VERIFY, tokeJson);
+                String jsonString = mGson.toJson(new TokenJson(token));
+                Request request = buildPOSTRequest(TOKEN_VERIFY, jsonString);
                 ResponseBody body = mOkHttpClient.newCall(request).execute().body();
                 return body.string();
             } catch (Exception e) {
@@ -163,19 +157,20 @@ public class RemoteDataSource implements ApiRest, DataSource {
      **********/
 
     @Override public Observable<AuthToken> signUp(@NonNull final UserCredentials credentials) {
-        return buildUserCredentialsAsJsonStringObservable(credentials)
+        return Observable.just(credentials)
+                .map(new Func1<UserCredentials, String>() {
+                    @Override public String call(UserCredentials credentials) {
+                        return mGson.toJson(new SignUpJson(credentials));
+                    }
+                })
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
                         return Observable.fromCallable(createPOSTCallable(TOKEN_REGISTER, json));
                     }
                 }).map(new Func1<String, AuthToken>() {
-                    @Override public AuthToken call(String json) {
-                        try {
-                            d(json);
-                            return new AuthTokenJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public AuthToken call(String jsonString) {
+                        AuthTokenJson json = mGson.fromJson(jsonString, AuthTokenJson.class);
+                        return json.toAuthToken();
                     }
                 })
                 .doOnNext(new Action1<AuthToken>() {
@@ -187,40 +182,28 @@ public class RemoteDataSource implements ApiRest, DataSource {
     }
 
     @Override public Observable<AuthToken> signIn(@NonNull final UserCredentials credentials) {
-        return buildUserCredentialsAsJsonStringObservable(credentials)
+        return Observable.just(credentials)
+                .map(new Func1<UserCredentials, String>() {
+                    @Override public String call(UserCredentials credentials) {
+                        return mGson.toJson(new SignInJson(credentials));
+                    }
+                })
                 .flatMap(new Func1<String, Observable<String>>() {
-                    @Override public Observable<String> call(String json) {
-                        d(json);
-                        return Observable.fromCallable(createPOSTCallable(TOKEN_AUTH, json));
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(TOKEN_AUTH, jsonString));
                     }
                 })
                 .map(new Func1<String, AuthToken>() {
-                    @Override public AuthToken call(String json) {
-                        try {
-                            d(json);
-                            return new AuthTokenJsonMapper().fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                    @Override public AuthToken call(String jsonString) {
+                        AuthTokenJson json = mGson.fromJson(jsonString, AuthTokenJson.class);
+                        return json.toAuthToken();
                     }
                 })
                 .doOnNext(new Action1<AuthToken>() {
                     @Override public void call(AuthToken authToken) {
                         d(authToken.toString());
                         mAccount.createAccount(authToken, credentials.password);
-                    }
-                });
-    }
-
-    private Observable<String> buildUserCredentialsAsJsonStringObservable(UserCredentials credentials) {
-        return Observable.just(credentials)
-                .map(new Func1<UserCredentials, String>() {
-                    @Override public String call(UserCredentials userCredentials) {
-                        try {
-                            return new UserCredentialsJsonMapper().toJsonString(userCredentials);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
                     }
                 });
     }
@@ -592,6 +575,28 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public Observable<Advert> viewAdvertWithId(int advertId) {
+        String url = ADVERTS + advertId + "?update=counter";
+        return Observable.fromCallable(createGETCallable(url))
+                .map(new Func1<String, Advert>() {
+                    @Override public Advert call(String jsonString) {
+                        AdvertJson json = mGson.fromJson(jsonString, AdvertJson.class);
+                        return json.toAdvert();
+                    }
+                });
+    }
+
+    @Override public Observable<Advert> unnotifyAdvertWithId(int advertId) {
+        String url = ADVERTS + advertId + "?update=notifications";
+        return Observable.fromCallable(createGETCallable(url))
+                .map(new Func1<String, Advert>() {
+                    @Override public Advert call(String jsonString) {
+                        AdvertJson json = mGson.fromJson(jsonString, AdvertJson.class);
+                        return json.toAdvert();
+                    }
+                });
+    }
+
     /*********
      * Offers Methods
      ********/
@@ -761,22 +766,21 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for User
-    ///////////////////////////////////////////////////////////////////////////
+    /**********
+     * User Methods
+     **********/
 
     @Override public Observable<User> saveUser(@NonNull User user) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<User> updateUser(@NonNull User user) {
-        final UserJsonMapper jsonMapper = new UserJsonMapper();
         return Observable.just(user)
                 .map(new Func1<User, String>() {
                     @Override public String call(User user) {
                         try {
-                            return jsonMapper.toJsonString(user);
-                        } catch (Exception e) {
+                            return mGson.toJson(new UserJson(user));
+                        } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -787,49 +791,23 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     }
                 })
                 .map(new Func1<String, User>() {
-                    @Override public User call(String json) {
-                        LOGD(TAG, json);
-                        try {
-                            return jsonMapper.fromJsonString(json);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(json);
-                        }
+                    @Override public User call(String jsonString) {
+                        d(jsonString);
+                        UserJson json = mGson.fromJson(jsonString, UserJson.class);
+                        return json.toUser();
                     }
                 });
     }
 
-    @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {
-        return Observable.just(filter)
-                .map(new Func1<UserFilter, String>() {
-                    @Override public String call(UserFilter userFilter) {
-                        return new UserFilterUrlBuilder(USERS, userFilter).buildUrl();
-                    }
-                })
-                .flatMap(new Func1<String, Observable<List<User>>>() {
-                    @Override public Observable<List<User>> call(final String page) {
-                        return Observable.create(new Observable.OnSubscribe<List<User>>() {
-                            @Override public void call(Subscriber<? super List<User>> subscriber) {
-                                try {
-                                    UserPaginatedListJsonMapper jsonMapper = new UserPaginatedListJsonMapper();
-                                    PaginatedList<User> paginatedList = jsonMapper.fromJsonString(createGET(page));
-                                    List<User> result = new ArrayList<>(paginatedList.getResults());
-                                    while (paginatedList.hasNext()) {
-                                        String nextPage = paginatedList.getNext();
-                                        paginatedList = jsonMapper.fromJsonString(createGET(nextPage));
-                                        result.addAll(paginatedList.getResults());
-                                    }
-                                    subscriber.onNext(result);
-                                } catch (Exception e) {
-                                    subscriber.onError(e);
-                                }
-                            }
-                        });
+    @Override public Observable<User> getUserWithId(int id) {
+        String url = USERS + id + "/";
+        return Observable.fromCallable(createGETCallable(url))
+                .map(new Func1<String, User>() {
+                    @Override public User call(String jsonString) {
+                        UserJson json = mGson.fromJson(jsonString, UserJson.class);
+                        return json.toUser();
                     }
                 });
-    }
-
-    @Override public Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
-        return null;
     }
 
     /**********

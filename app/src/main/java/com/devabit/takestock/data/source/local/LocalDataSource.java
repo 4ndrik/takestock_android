@@ -5,14 +5,17 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.filter.OfferFilter;
 import com.devabit.takestock.data.filter.QuestionFilter;
-import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.data.source.DataSource;
 import com.devabit.takestock.data.source.local.dao.*;
-import com.devabit.takestock.data.source.local.entity.*;
-import com.devabit.takestock.data.source.local.filterBuilders.UserFilterQueryBuilder;
-import com.devabit.takestock.data.source.local.mapper.*;
-import io.realm.*;
+import com.devabit.takestock.data.source.local.entity.BusinessSubtypeEntity;
+import com.devabit.takestock.data.source.local.entity.BusinessTypeEntity;
+import com.devabit.takestock.data.source.local.mapper.BusinessSubtypeDataMapper;
+import com.devabit.takestock.data.source.local.mapper.BusinessTypeDataMapper;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -344,6 +347,14 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<Advert> viewAdvertWithId(int advertId) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Advert> unnotifyAdvertWithId(int advertId) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -390,53 +401,29 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for User
-    ///////////////////////////////////////////////////////////////////////////
+    /********** User Methods **********/
 
     @Override public Observable<User> saveUser(@NonNull User user) {
-        return Observable.just(user)
-                .doOnNext(new Action1<User>() {
-                    @Override public void call(User user) {
-                        Realm realm = Realm.getDefaultInstance();
-                        try {
-                            realm.beginTransaction();
-                            UserEntity entity = new UserEntityDataMapper().transformToEntity(user);
-                            realm.copyToRealmOrUpdate(entity);
-                            realm.commitTransaction();
-                        } finally {
-                            realm.close();
-                        }
-                    }
-                });
+        return updateUser(user);
     }
 
     @Override public Observable<User> updateUser(@NonNull User user) {
-        return saveUser(user);
-    }
-
-    @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {
-        return Observable.just(filter)
-                .map(new Func1<UserFilter, RealmResults<UserEntity>>() {
-                    @Override public RealmResults<UserEntity> call(UserFilter userFilter) {
-                        RealmQuery<UserEntity> query = new UserFilterQueryBuilder().buildQuery(userFilter);
-                        return query.findAll();
-                    }
-                })
-                .filter(new Func1<RealmResults<UserEntity>, Boolean>() {
-                    @Override public Boolean call(RealmResults<UserEntity> userEntities) {
-                        return !userEntities.isEmpty();
-                    }
-                })
-                .map(new Func1<RealmResults<UserEntity>, List<User>>() {
-                    @Override public List<User> call(RealmResults<UserEntity> userEntities) {
-                        return new UserEntityDataMapper().transformFromEntitiesToList(userEntities);
+        return Observable.just(user)
+                .doOnNext(new Action1<User>() {
+                    @Override public void call(User user) {
+                        UserRealmDao dao = new UserRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateUser(user);
                     }
                 });
     }
 
-    @Override public Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
-        return null;
+    @Override public Observable<User> getUserWithId(final int id) {
+        return Observable.fromCallable(new Callable<User>() {
+            @Override public User call() throws Exception {
+                UserRealmDao dao = new UserRealmDao(mRealmConfiguration);
+                return dao.getUserWithId(id);
+            }
+        });
     }
 
     ///////////////////////////////////////////////////////////////////////////

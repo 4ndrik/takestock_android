@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.filter.OfferFilter;
 import com.devabit.takestock.data.filter.QuestionFilter;
-import com.devabit.takestock.data.filter.UserFilter;
 import com.devabit.takestock.data.model.*;
 import rx.Observable;
 import rx.functions.Action1;
@@ -64,7 +63,9 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.signIn(credentials)
                 .flatMap(new Func1<AuthToken, Observable<AuthToken>>() {
                     @Override public Observable<AuthToken> call(AuthToken authToken) {
-                        return Observable.zip(Observable.just(authToken), mLocalDataSource.saveUser(authToken.user),
+                        return Observable.zip(
+                                Observable.just(authToken),
+                                mLocalDataSource.saveUser(authToken.getUser()),
                                 new Func2<AuthToken, User, AuthToken>() {
                                     @Override public AuthToken call(AuthToken authToken, User user) {
                                         return authToken;
@@ -294,6 +295,14 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.addRemoveAdvertWatching(advertId);
     }
 
+    @Override public Observable<Advert> viewAdvertWithId(int advertId) {
+        return mRemoteDataSource.viewAdvertWithId(advertId);
+    }
+
+    @Override public Observable<Advert> unnotifyAdvertWithId(int advertId) {
+        return mRemoteDataSource.unnotifyAdvertWithId(advertId);
+    }
+
     /********* Offers Methods  ********/
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
@@ -338,12 +347,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.saveAnswer(answer);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for User
-    ///////////////////////////////////////////////////////////////////////////
+    /********* User Methods  ********/
 
     @Override public Observable<User> saveUser(@NonNull User user) {
-        return null;
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     @Override public Observable<User> updateUser(@NonNull User user) {
@@ -355,14 +362,15 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    @Override public Observable<List<User>> getUsersPerFilter(@NonNull UserFilter filter) {
-        Observable<List<User>> localUsers = mLocalDataSource.getUsersPerFilter(filter);
-        Observable<List<User>> remoteUsers = mRemoteDataSource.getUsersPerFilter(filter);
-        return Observable.concat(localUsers, remoteUsers).first();
-    }
-
-    @Override public Observable<PaginatedList<User>> getUserResultListPerFilter(@NonNull UserFilter filter) {
-        return mRemoteDataSource.getUserResultListPerFilter(filter);
+    @Override public Observable<User> getUserWithId(int id) {
+        Observable<User> localUser = mLocalDataSource.getUserWithId(id);
+        Observable<User> remoteUser = mRemoteDataSource.getUserWithId(id)
+                .flatMap(new Func1<User, Observable<User>>() {
+                    @Override public Observable<User> call(User author) {
+                        return mRemoteDataSource.saveUser(author);
+                    }
+                });
+        return Observable.concat(localUser, remoteUser).first();
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -3,68 +3,84 @@ package com.devabit.takestock.screen.advert.detail;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.*;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
-import com.devabit.takestock.data.model.*;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Certification;
+import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
 import com.devabit.takestock.screen.advert.detail.dialogs.OfferDialog;
 import com.devabit.takestock.screen.askQuestion.AskQuestionActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.utils.DateUtil;
+import com.devabit.takestock.widget.GravitySnapHelper;
+import com.devabit.takestock.widget.GridSpacingItemDecoration;
 import timber.log.Timber;
 
 import java.util.List;
 
 public class AdvertDetailActivity extends AppCompatActivity implements AdvertDetailContract.View {
 
-    public static Intent getStartIntent(Context context, Advert advert) {
+    public static final String EXTRA_ADVERT_ID = "EXTRA_ADVERT_ID";
+
+    public static Intent getStartIntent(Context context, int advertId) {
         Intent starter = new Intent(context, AdvertDetailActivity.class);
-        starter.putExtra(Advert.class.getSimpleName(), advert);
+        starter.putExtra(EXTRA_ADVERT_ID, advertId);
         return starter;
     }
 
     private static final int RC_ENTRY = 100;
 
-    private static final int CHILD_MAKE_OFFER_BUTTON = 0;
-    private static final int CHILD_THANK_FOR_OFFER_TEXT = 1;
-
-    @BindView(R.id.content_product_detail) protected View mContent;
-    @BindView(R.id.guide_price_text_view) protected TextView mGuidePriceTextView;
-    @BindView(R.id.minimum_order_text_view) protected TextView mMinimumOrderTextView;
-    @BindView(R.id.qty_available_text_view) protected TextView mQtyAvailableTextView;
-    @BindView(R.id.description_text_view) protected TextView mDescriptionTextView;
-    @BindView(R.id.location_text_view) protected TextView mLocationTextView;
-    @BindView(R.id.shipping_text_view) protected TextView mShippingTextView;
-    @BindView(R.id.expiry_date_text_view) protected TextView mExpiryTextView;
-    @BindView(R.id.certification_text_view) protected TextView mCertificationTextView;
-    @BindView(R.id.condition_text_view) protected TextView mConditionTextView;
-    @BindView(R.id.view_switcher) protected ViewSwitcher mViewSwitcher;
-    @BindView(R.id.watching_fab) protected FloatingActionButton mWatchingFAB;
-
-    @BindViews({R.id.recycler_view, R.id.watching_fab, R.id.ask_button, R.id.make_button})
-    protected List<View> mViews;
+    @BindView(R.id.content) View mContent;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.photo_recycler_view) RecyclerView mPhotosRecyclerView;
+    @BindView(R.id.photo_count_text_view) TextView mPhotoCountTextView;
+    @BindView(R.id.scroll_view) NestedScrollView mScrollView;
+    @BindView(R.id.title_text_view) TextView mNameTextView;
+    @BindView(R.id.guide_price_text_view) TextView mGuidePriceTextView;
+    @BindView(R.id.minimum_order_text_view) TextView mMinimumOrderTextView;
+    @BindView(R.id.qty_available_text_view) TextView mQtyAvailableTextView;
+    @BindView(R.id.description_text_view) TextView mDescriptionTextView;
+    @BindView(R.id.location_text_view) TextView mLocationTextView;
+    @BindView(R.id.shipping_text_view) TextView mShippingTextView;
+    @BindView(R.id.expiry_date_text_view) TextView mExpiryTextView;
+    @BindView(R.id.certification_text_view) TextView mCertificationTextView;
+    @BindView(R.id.condition_text_view) TextView mConditionTextView;
+    @BindView(R.id.watching_fab) FloatingActionButton mWatchingFAB;
+    @BindView(R.id.user_name_text_view) TextView mUserNameTextView;
+    @BindView(R.id.user_image_view) ImageView mUserImageView;
+    @BindView(R.id.user_rating_bar) RatingBar mUserRatingBar;
+    @BindView(R.id.similar_listing_text_view) TextView mSimilarListingTextView;
 
     TakeStockAccount mAccount;
+    AdvertPhotosAdapter mPhotosAdapter;
+    AdvertListingAdapter mListingAdapter;
     Advert mAdvert;
     Offer mOffer;
     AdvertDetailContract.Presenter mPresenter;
@@ -75,59 +91,88 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert_detail);
         ButterKnife.bind(AdvertDetailActivity.this);
-
         mAccount = TakeStockAccount.get(AdvertDetailActivity.this);
-        mAdvert = getIntent().getParcelableExtra(Advert.class.getSimpleName());
-        Timber.d(mAdvert.toString());
-
-        setUpToolbar(mAdvert);
-        setUpRecyclerView(mAdvert);
-        setUpAdvertDetail(mAdvert);
-        setUpWatchingFAB(mAdvert);
-        createPresenter();
+        setUpToolbar();
+        setUpPhotosRecyclerView();
+        setUpSimilarAdvertsRecyclerView();
+//        setUpScrollView();
+        int advertId = getIntent().getIntExtra(EXTRA_ADVERT_ID, 0);
+        createPresenter(advertId);
     }
 
-    private void setUpToolbar(Advert advert) {
-        Toolbar toolbar = ButterKnife.findById(AdvertDetailActivity.this, R.id.toolbar);
-        toolbar.setTitle(advert.getName());
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+    private void setUpToolbar() {
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
         });
     }
 
-    private void setUpAdvertDetail(Advert advert) {
-        String packaging = advert.getPackagingName();
-        mGuidePriceTextView.setText(getString(R.string.advert_detail_guide_price_per_unit, advert.getGuidePrice(), packaging));
-        mMinimumOrderTextView.setText(getString(R.string.advert_detail_minimum_order_unit, advert.getMinOrderQuantity(), packaging));
-        mQtyAvailableTextView.setText(getString(R.string.advert_detail_qty_available_unit, advert.getItemsCount(), packaging));
-        mDescriptionTextView.setText(advert.getDescription());
-        mExpiryTextView.setText(DateUtil.formatToExpiryDate(advert.getExpiresAt()));
-        Certification certification = advert.getCertification();
-        mCertificationTextView.setText(certification == null ? "" : certification.getName());
-        mLocationTextView.setText(advert.getLocation());
-        mViewSwitcher.setDisplayedChild(advert.canOffer() ? CHILD_MAKE_OFFER_BUTTON : CHILD_THANK_FOR_OFFER_TEXT);
-    }
-
-    private void setUpRecyclerView(Advert advert) {
-        RecyclerView recyclerView = ButterKnife.findById(AdvertDetailActivity.this, R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(AdvertDetailActivity.this);
+    private void setUpPhotosRecyclerView() {
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(AdvertDetailActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(layoutManager);
-        AdvertPhotosAdapter adapter = new AdvertPhotosAdapter(AdvertDetailActivity.this, advert.getPhotos());
-        recyclerView.setAdapter(adapter);
+        mPhotosRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int firstVisibleItems = layoutManager.findLastCompletelyVisibleItemPosition();
+                setPhotoPosition(firstVisibleItems);
+            }
+        });
+        mPhotosRecyclerView.setLayoutManager(layoutManager);
+        SnapHelper snapHelper = new GravitySnapHelper(Gravity.START);
+        snapHelper.attachToRecyclerView(mPhotosRecyclerView);
+        setUpPhotosAdapter(mPhotosRecyclerView);
     }
 
-    private void createPresenter() {
-        new AdvertDetailPresenter(
+    private void setUpPhotosAdapter(RecyclerView recyclerView) {
+        mPhotosAdapter = new AdvertPhotosAdapter(AdvertDetailActivity.this);
+        recyclerView.setAdapter(mPhotosAdapter);
+    }
+
+    private void setUpSimilarAdvertsRecyclerView() {
+        RecyclerView recyclerView = ButterKnife.findById(AdvertDetailActivity.this, R.id.similar_advert_recycler_view);
+        LinearLayoutManager layoutManager = new GridLayoutManager(AdvertDetailActivity.this, 2);
+        recyclerView.setLayoutManager(layoutManager);
+        GridSpacingItemDecoration itemDecoration = new GridSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_grid_space_4dp), 2);
+        recyclerView.addItemDecoration(itemDecoration);
+        setUpListingAdapter(recyclerView);
+    }
+
+    private void setUpListingAdapter(RecyclerView recyclerView) {
+        mListingAdapter = new AdvertListingAdapter(recyclerView.getContext());
+        mListingAdapter.setOnItemClickListener(new AdvertListingAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Advert advert) {
+                startActivity(AdvertDetailActivity.getStartIntent(AdvertDetailActivity.this, advert.getId()));
+            }
+        });
+        recyclerView.setAdapter(mListingAdapter);
+    }
+
+    private void setUpScrollView() {
+        mScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            final Rect scrollBounds = new Rect();
+            boolean isToolbarTitle;
+
+            @Override public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                mScrollView.getHitRect(scrollBounds);
+                if (mNameTextView.getLocalVisibleRect(scrollBounds) && isToolbarTitle) {
+                    mToolbar.setTitle("");
+                    isToolbarTitle = false;
+                } else if (!isToolbarTitle) {
+                    mToolbar.setTitle(mAdvert.getName());
+                    isToolbarTitle = true;
+                }
+            }
+        });
+    }
+
+    private void createPresenter(int advertId) {
+        new AdvertDetailPresenter(advertId,
                 Injection.provideDataRepository(AdvertDetailActivity.this), AdvertDetailActivity.this);
     }
 
     @Override public void setPresenter(@NonNull AdvertDetailContract.Presenter presenter) {
         mPresenter = presenter;
-        mPresenter.fetchShippingById(mAdvert.getShippingId());
-        mPresenter.fetchConditionById(mAdvert.getConditionId());
+        mPresenter.loadAdvert();
     }
 
     @OnClick(R.id.watching_fab)
@@ -166,18 +211,56 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         }
     }
 
-    @Override public void showShippingInView(Shipping shipping) {
-        mShippingTextView.setText(shipping.getType());
+    @Override public void showAdvertInView(Advert advert) {
+        mAdvert = advert;
+        bindAdvert(mAdvert);
+        setUpWatchingFAB(mAdvert);
     }
 
-    @Override public void showConditionInView(Condition condition) {
-        mConditionTextView.setText(condition.getState());
+    private void bindAdvert(Advert advert) {
+        mPhotosAdapter.addPhotos(advert.getPhotos());
+        setPhotoPosition(0);
+        mNameTextView.setText(advert.getName());
+        String packaging = advert.getPackagingName();
+        mGuidePriceTextView.setText(getString(R.string.advert_detail_guide_price_per_unit, advert.getGuidePrice(), packaging));
+        mMinimumOrderTextView.setText(getString(R.string.advert_detail_minimum_order_unit, advert.getMinOrderQuantity(), packaging));
+        mQtyAvailableTextView.setText(getString(R.string.advert_detail_qty_available_unit, advert.getItemsCount(), packaging));
+        mDescriptionTextView.setText(advert.getDescription());
+        mExpiryTextView.setText(DateUtil.formatToExpiryDate(advert.getExpiresAt()));
+        Certification certification = advert.getCertification();
+        mCertificationTextView.setText(certification == null ? "" : certification.getName());
+        mShippingTextView.setText(advert.getShippingDisplay());
+        mConditionTextView.setText(advert.getConditionDisplay());
+        mLocationTextView.setText(advert.getLocation());
+        setUpWatchingFAB(advert);
+        bindUser(advert.getUser());
+    }
+
+    private void setPhotoPosition(int position) {
+        if (position < 0) return;
+        mPhotoCountTextView.setText(getString(R.string.advert_detail_photo_count, position + 1, mPhotosAdapter.getItemCount()));
+    }
+
+    private void bindUser(User user) {
+        mUserNameTextView.setText(user.getUserName());
+        mUserRatingBar.setRating((float) user.getAvgRating());
+        Glide.with(mUserNameTextView.getContext())
+                .load(user.getPhoto())
+                .error(R.drawable.ic_placeholder_user_96dp)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(mUserImageView);
+    }
+
+    @Override public void showSimilarAdvertsInView(List<Advert> adverts) {
+        if (adverts.isEmpty()) return;
+        mSimilarListingTextView.setVisibility(View.VISIBLE);
+        mListingAdapter.addAdverts(adverts);
     }
 
     @Override public void showOfferMadeInView(Offer offer) {
         mOffer = offer;
         showSnack(R.string.advert_detail_offer_made);
-        mViewSwitcher.setDisplayedChild(CHILD_THANK_FOR_OFFER_TEXT);
         mAdvert.setCanOffer(false);
     }
 
@@ -220,8 +303,10 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     @Override public void setProgressIndicator(boolean isActive) {
+        mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
+        mPhotosRecyclerView.setAlpha(isActive ? 0.5f : 1f);
+        mScrollView.setAlpha(isActive ? 0.5f : 1f);
         setTouchDisabled(isActive);
-        ButterKnife.apply(mViews, TRANSPARENCY, isActive);
     }
 
     private void setTouchDisabled(boolean isActive) {

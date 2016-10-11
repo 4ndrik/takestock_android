@@ -11,6 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Photo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,9 +22,15 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
     private final LayoutInflater mLayoutInflater;
     private final List<Photo> mPhotos;
 
-    public AdvertPhotosAdapter(Context context, List<Photo> photos) {
+    public interface OnPositionListener {
+        void onPosition(int position, int count);
+    }
+
+    private OnPositionListener mPositionListener;
+
+    public AdvertPhotosAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
-        mPhotos = photos;
+        mPhotos = new ArrayList<>();
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,6 +39,7 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
+        if (mPositionListener != null) mPositionListener.onPosition(position, getItemCount());
         Photo photo = mPhotos.get(position);
         holder.loadPhoto(photo);
     }
@@ -40,21 +48,30 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
         return mPhotos.size();
     }
 
+    public void addPhotos(List<Photo> photos) {
+        mPhotos.addAll(photos);
+        notifyDataSetChanged();
+    }
+
+    public void setOnPositionListener(OnPositionListener positionListener) {
+        mPositionListener = positionListener;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final Context mContext;
         final ImageView mImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mContext = itemView.getContext().getApplicationContext();
             mImageView = (ImageView) itemView;
         }
 
         void loadPhoto(Photo photo) {
-            Glide.with(mContext)
-                    .load(photo.getImagePath())
-                    .placeholder(R.color.grey_400)
+            Glide.with(mImageView.getContext())
+                    .load(photo.getImage())
+                    .placeholder(R.color.grey_200)
+                    .centerCrop()
+                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mImageView);
         }

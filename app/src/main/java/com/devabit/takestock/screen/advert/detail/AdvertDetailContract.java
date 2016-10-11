@@ -1,11 +1,11 @@
 package com.devabit.takestock.screen.advert.detail;
 
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.Condition;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.Shipping;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
+
+import java.util.List;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.
@@ -14,9 +14,9 @@ interface AdvertDetailContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showShippingInView(Shipping shipping);
+        void showAdvertInView(Advert advert);
 
-        void showConditionInView(Condition condition);
+        void showSimilarAdvertsInView(List<Advert> adverts);
 
         void showOfferMadeInView(Offer offer);
 
@@ -36,9 +36,7 @@ interface AdvertDetailContract {
 
     interface Presenter extends BasePresenter {
 
-        void fetchShippingById(int id);
-
-        void fetchConditionById(int id);
+        void loadAdvert();
 
         void makeOffer(Offer offer);
 

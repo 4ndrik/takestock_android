@@ -157,7 +157,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         void bindPhoto(final Photo photo) {
             mPhoto = photo;
             Glide.with(imageView.getContext())
-                    .load(photo.getImagePath())
+                    .load(photo.getImage())
                     .placeholder(R.color.grey_400)
                     .centerCrop()
                     .crossFade()
