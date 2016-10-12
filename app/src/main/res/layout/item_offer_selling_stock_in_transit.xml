@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/offer_text_view"
                 android:layout_centerInParent="true"
-                android:text="@string/offer_selling_contact_buyer"
+                android:text="@string/offer_selling_item_contact_buyer"
                 android:textStyle="bold"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/contact_buyer_button"
                 android:layout_centerInParent="true"
-                android:text="@string/offer_selling_contact_support"
+                android:text="@string/offer_selling_item_contact_support"
                 android:textStyle="bold"
                 android:textColor="@color/gold"
                 style="@style/Widget.AppCompat.Button.Borderless"/>

@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/dispatching_info_text_view"
                 android:layout_centerInParent="true"
-                android:text="@string/offer_buying_confirm_goods_received"
+                android:text="@string/offer_buying_item_confirm_goods_received"
                 android:textStyle="bold"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>
 

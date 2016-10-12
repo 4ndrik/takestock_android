@@ -36,7 +36,7 @@ public class Offer implements Parcelable {
     private String mStatusComment;
     private String mCreatedAt;
     private String mUpdatedAt;
-    private Author mAuthor;
+    private User mUser;
     private int mPriceForStripe;
     private int mNotifications;
     private boolean mFromSeller;
@@ -59,7 +59,7 @@ public class Offer implements Parcelable {
                   String statusComment,
                   String createdAt,
                   String updatedAt,
-                  Author author,
+                  User user,
                   int priceForStripe,
                   int notifications,
                   boolean fromSeller,
@@ -78,7 +78,7 @@ public class Offer implements Parcelable {
         mStatusComment = statusComment;
         mCreatedAt = createdAt;
         mUpdatedAt = updatedAt;
-        mAuthor = author;
+        mUser = user;
         mPriceForStripe = priceForStripe;
         mNotifications = notifications;
         mFromSeller = fromSeller;
@@ -101,7 +101,7 @@ public class Offer implements Parcelable {
         mStatusComment = in.readString();
         mCreatedAt = in.readString();
         mUpdatedAt = in.readString();
-        mAuthor = in.readParcelable(Author.class.getClassLoader());
+        mUser = in.readParcelable(User.class.getClassLoader());
         mPriceForStripe = in.readInt();
         mNotifications = in.readInt();
         mFromSeller = in.readByte() != 0;
@@ -124,7 +124,7 @@ public class Offer implements Parcelable {
         dest.writeString(mStatusComment);
         dest.writeString(mCreatedAt);
         dest.writeString(mUpdatedAt);
-        dest.writeParcelable(mAuthor, flags);
+        dest.writeParcelable(mUser, flags);
         dest.writeInt(mPriceForStripe);
         dest.writeInt(mNotifications);
         dest.writeByte((byte) (mFromSeller ? 1 : 0));
@@ -198,8 +198,8 @@ public class Offer implements Parcelable {
         return mStatusComment;
     }
 
-    public Author getAuthor() {
-        return mAuthor;
+    public User getUser() {
+        return mUser;
     }
 
     public int getStatusForBuyer() {
@@ -262,7 +262,7 @@ public class Offer implements Parcelable {
                 ", mStatusComment='" + mStatusComment + '\'' +
                 ", mCreatedAt='" + mCreatedAt + '\'' +
                 ", mUpdatedAt='" + mUpdatedAt + '\'' +
-                ", mAuthor=" + mAuthor +
+                ", mAuthor=" + mUser +
                 ", mPriceForStripe=" + mPriceForStripe +
                 ", mNotifications=" + mNotifications +
                 ", mFromSeller=" + mFromSeller +
@@ -286,7 +286,7 @@ public class Offer implements Parcelable {
         private String mStatusComment;
         private String mCreatedAt;
         private String mUpdatedAt;
-        private Author mAuthor;
+        private User mUser;
         private int mPriceForStripe;
         private int mNotifications;
         private boolean mFromSeller;
@@ -354,8 +354,8 @@ public class Offer implements Parcelable {
             return this;
         }
 
-        public Builder setAuthor(Author author) {
-            mAuthor = author;
+        public Builder setUser(User user) {
+            mUser = user;
             return this;
         }
 
@@ -391,7 +391,7 @@ public class Offer implements Parcelable {
 
         public Offer create() {
             return new Offer(mId, mAdvertId, mCounterOfferId, mPrice, mQuantity, mUserId,
-                    mStatus, mStatusForBuyer, mComment, mStatusComment, mCreatedAt, mUpdatedAt, mAuthor,
+                    mStatus, mStatusForBuyer, mComment, mStatusComment, mCreatedAt, mUpdatedAt, mUser,
                     mPriceForStripe, mNotifications, mFromSeller, mShipping, mChildOffers, mLastOffer);
         }
     }

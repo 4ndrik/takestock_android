@@ -84,7 +84,7 @@
                 android:name=".screen.profile.account.ProfileAccountActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.profile.edit.ProfileEditActivity"
+                android:name=".screen.profile.edit.ProfileEditorActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"/>
         <activity

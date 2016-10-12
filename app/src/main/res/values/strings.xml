@@ -42,11 +42,9 @@
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
     <string name="back">back</string>
-    <string name="user_name">User name</string>
     <string name="action_settings">Settings</string>
     <string name="qty_available">Qty available</string>
     <string name="per_packaging">/ %1$s</string>
-    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="user_name_or_email">Username or email</string>
     <string name="title_activity_login">Sign in</string>
@@ -73,14 +71,8 @@
     <string name="take_photo">Take photo</string>
     <string name="choose_from_library">Choose from Library</string>
     <string name="error_empty_size">Please, add size.</string>
-    <string name="profile">Profile</string>
-    <string name="notifications">Notifications</string>
-    <string name="my_takestock">My Takestock</string>
-    <string name="watching">Watching</string>
-    <string name="purchases">Purchases</string>
     <string name="offers">Offers</string>
     <string name="offer">Offer</string>
-    <string name="selling">Selling</string>
     <string name="help_and_contact"><![CDATA[Help & Contact]]></string>
     <string name="settings">Settings</string>
     <string name="new_to_takestock">New to Takestock?</string>
@@ -88,7 +80,6 @@
     <string name="no_connection">No connection</string>
     <string name="retry">Retry</string>
     <string name="questions">Questions</string>
-    <string name="buying">Buying</string>
     <string name="accept">Accept</string>
     <string name="counter">Counter</string>
     <string name="reject">Reject</string>
@@ -128,7 +119,6 @@
     <string name="postcode">Postcode</string>
     <string name="vat_registered">I am VAT registered</string>
     <string name="vat_number">VAT number</string>
-    <string name="email_subscription">I am subscribed to receive news and updates by email</string>
     <string name="payment_details">Payment details</string>
     <string name="credit_card">0000 0000 0000 0000</string>
     <string name="error_shipping">Shipping not selected.</string>
@@ -238,6 +228,7 @@
     <string name="advert_detail_make_offer">Make offer</string>
     <string name="advert_detail_offer_made">Offer made</string>
     <string name="advert_detail_thank_for_offer">Thank you for offer!\nWaiting for response!</string>
+    <string name="advert_detail_photo_count">%1$d / %2$d</string>
     <!--adverts detail activity end-->
 
     <!--offer dialog start-->
@@ -319,6 +310,8 @@
     <string name="offer_buying_item_pick_up_date">Pick up date:\u0020</string>
     <string name="offer_buying_item_tracking_number">Tracking number:\u0020</string>
     <string name="offer_buying_item_courier_name">Courier name:\u0020</string>
+    <string name="offer_buying_item_confirm_goods_received">Confirm goods received</string>
+    <string name="offer_buying_item_raise_dispute">Raise dispute</string>
     <!--offer buying item end-->
 
     <!--offer selling item start-->
@@ -329,7 +322,9 @@
     <string name="offer_selling_item_city">City:\u0020</string>
     <string name="offer_selling_item_postcode">Postcode:\u0020</string>
     <string name="offer_selling_item_phone">Phone:\u0020</string>
-    <string name="offer_selling_confirm_stock_dispatched">Confirm stock dispatched</string>
+    <string name="offer_selling_item_confirm_stock_dispatched">Confirm stock dispatched</string>
+    <string name="offer_selling_item_contact_buyer">Contact buyer</string>
+    <string name="offer_selling_item_contact_support">Contact customer support</string>
     <!--offer selling item start-->
 
     <!--advert selling item start-->
@@ -339,6 +334,7 @@
     <string name="advert_selling_offers">offers</string>
     <string name="advert_selling_questions">questions</string>
     <string name="advert_selling_views">views</string>
+    <string name="advert_selling_new_count">%1$d new</string>
     <!--advert selling item end-->
 
     <!--counter offer dialog start-->
@@ -370,7 +366,7 @@
     <!--offer buying history item start-->
     <string name="offer_buying_seller_offer">Seller offer</string>
     <string name="offer_buying_buyer_offer">My offer</string>
-    <!--offer buying history end-->
+    <!--offer buying history item end-->
 
     <!--advert watching item start-->
     <string name="advert_watching_item_guide_price">£ %1$s/%2$s</string>
@@ -429,10 +425,33 @@
     <string name="dispatching_activity_error_tracking_number">Tracking number not added</string>
     <string name="dispatching_activity_error_courier_name">Courier name not added</string>
     <string name="dispatching_activity_date">%1$d/%2$d/%3$d</string>
-    <string name="offer_selling_contact_buyer">Contact buyer</string>
-    <string name="offer_selling_contact_support">Contact customer support</string>
-    <string name="offer_buying_confirm_goods_received">Confirm goods received</string>
-    <string name="offer_buying_raise_dispute">Raise dispute</string>
     <!--dispatching activity end-->
+
+    <!--navigation drawer start-->
+    <string name="navigation_drawer_profile">Profile</string>
+    <string name="navigation_drawer_notifications">Notifications</string>
+    <string name="navigation_drawer_my_takestock">My Takestock</string>
+    <string name="navigation_drawer_buying">Buying</string>
+    <string name="navigation_drawer_watching">Watching</string>
+    <string name="navigation_drawer_selling">Selling</string>
+    <string name="no_connection_content_retry">Retry</string>
+    <string name="no_connection_content_title">No connection</string>
+    <string name="selling_toolbar_title_active">Active</string>
+    <string name="selling_toolbar_title_draft">Draft</string>
+    <string name="selling_toolbar_title_expired">Expired</string>
+    <!--navigation drawer end-->
+
+    <!--profile editor activity start-->
+    <string name="profile_editor_activity_user_name">User name</string>
+    <string name="profile_editor_activity_email">Email</string>
+    <string name="profile_editor_activity_email_subscription">I am subscribed to receive news and updates by email</string>
+    <string name="profile_editor_activity_password">Password</string>
+    <string name="profile_editor_activity_saved">Profile saved</string>
+    <string name="advert_detail_similar_listing">Similar listing</string>
+    <!--profile editor activity end-->
+
+    <!--advert listing item start-->
+    <string name="advert_listing_item_guide_price">£ %1$s/%2$s</string>
+    <!--advert listing item end-->
 
 </resources>

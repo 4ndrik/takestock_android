@@ -17,16 +17,16 @@ import static timber.log.Timber.e;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-class SellingPresenter implements SellingContract.Presenter {
+public abstract class SellingPresenter implements SellingContract.Presenter {
 
-    private final int mUserId;
-    private final DataRepository mDataRepository;
-    private final SellingContract.View mSellingView;
+    protected final int mUserId;
+    private DataRepository mDataRepository;
+    private SellingContract.View mSellingView;
 
     private CompositeSubscription mSubscriptions;
     private PaginatedList<Advert> mAdvertPaginatedList;
 
-    SellingPresenter(int userId, @NonNull DataRepository dataRepository, @NonNull SellingContract.View sellingView) {
+    protected SellingPresenter(int userId, @NonNull DataRepository dataRepository, @NonNull SellingContract.View sellingView) {
         mUserId = userId;
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mSellingView = checkNotNull(sellingView, "sellingView cannot be null.");
@@ -39,7 +39,7 @@ class SellingPresenter implements SellingContract.Presenter {
     }
 
     @Override public void refreshAdverts() {
-        mSellingView.setLoadingProgressIndicator(true);
+        mSellingView.setRefreshingProgressIndicator(true);
         Subscription subscription = mDataRepository
                 .getPaginatedAdvertListWithFilter(createFilter())
                 .compose(RxTransformers.<PaginatedList<Advert>>applyObservableSchedulers())
@@ -61,13 +61,14 @@ class SellingPresenter implements SellingContract.Presenter {
         mSubscriptions.add(subscription);
     }
 
-    private AdvertFilter createFilter() {
-        return new AdvertFilter.Builder()
-                .setAuthorId(mUserId)
-                .setOrder(AdvertFilter.ORDER_UPDATED_AT_DESCENDING)
-                .setAdditions(AdvertFilter.Addition.POSTED, AdvertFilter.Addition.HOLD_ON)
-                .create();
-    }
+//    private AdvertFilter createFilter() {
+//        return new AdvertFilter.Builder()
+//                .setAuthorId(mUserId)
+//                .setOrder(AdvertFilter.ORDER_UPDATED_AT_DESCENDING)
+//                .setAdditions(AdvertFilter.Addition.POSTED, AdvertFilter.Addition.HOLD_ON)
+//                .create();
+//    }
+    protected abstract AdvertFilter createFilter();
 
     @Override public void loadAdverts() {
         if (mAdvertPaginatedList != null && mAdvertPaginatedList.hasNext()) {

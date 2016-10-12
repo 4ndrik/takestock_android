@@ -9,16 +9,26 @@ import android.os.Parcelable;
 public class Photo implements Parcelable {
 
     private int mId;
-    private String mImagePath;
+    private String mImage;
+    private String mThumbnail;
+    private String mThumbnailLarge;
     private boolean mIsMain;
     private int mWidth;
     private int mHeight;
 
     public Photo(){}
 
-    private Photo(int id, String imagePath, boolean isMain, int width, int height) {
+    private Photo(int id,
+                  String image,
+                  String thumbnail,
+                  String thumbnailLarge,
+                  boolean isMain,
+                  int width,
+                  int height) {
         mId = id;
-        mImagePath = imagePath;
+        mImage = image;
+        mThumbnail = thumbnail;
+        mThumbnailLarge = thumbnailLarge;
         mIsMain = isMain;
         mWidth = width;
         mHeight = height;
@@ -26,7 +36,9 @@ public class Photo implements Parcelable {
 
     protected Photo(Parcel in) {
         mId = in.readInt();
-        mImagePath = in.readString();
+        mImage = in.readString();
+        mThumbnail = in.readString();
+        mThumbnailLarge = in.readString();
         mIsMain = in.readByte() != 0;
         mWidth = in.readInt();
         mHeight = in.readInt();
@@ -48,40 +60,28 @@ public class Photo implements Parcelable {
         return mId;
     }
 
-    public void setId(int id) {
-        mId = id;
+    public String getImage() {
+        return mImage;
     }
 
-    public String getImagePath() {
-        return mImagePath;
+    public String getThumbnail() {
+        return mThumbnail;
     }
 
-    public void setImagePath(String imagePath) {
-        mImagePath = imagePath;
+    public String getThumbnailLarge() {
+        return mThumbnailLarge;
     }
 
     public boolean isMain() {
         return mIsMain;
     }
 
-    public void setMain(boolean main) {
-        mIsMain = main;
-    }
-
     public int getWidth() {
         return mWidth;
     }
 
-    public void setWidth(int width) {
-        mWidth = width;
-    }
-
     public int getHeight() {
         return mHeight;
-    }
-
-    public void setHeight(int height) {
-        mHeight = height;
     }
 
     @Override public boolean equals(Object o) {
@@ -94,13 +94,17 @@ public class Photo implements Parcelable {
         if (mIsMain != photo.mIsMain) return false;
         if (mWidth != photo.mWidth) return false;
         if (mHeight != photo.mHeight) return false;
-        return mImagePath != null ? mImagePath.equals(photo.mImagePath) : photo.mImagePath == null;
+        if (mImage != null ? !mImage.equals(photo.mImage) : photo.mImage != null) return false;
+        if (mThumbnail != null ? !mThumbnail.equals(photo.mThumbnail) : photo.mThumbnail != null) return false;
+        return mThumbnailLarge != null ? mThumbnailLarge.equals(photo.mThumbnailLarge) : photo.mThumbnailLarge == null;
 
     }
 
     @Override public int hashCode() {
         int result = mId;
-        result = 31 * result + (mImagePath != null ? mImagePath.hashCode() : 0);
+        result = 31 * result + (mImage != null ? mImage.hashCode() : 0);
+        result = 31 * result + (mThumbnail != null ? mThumbnail.hashCode() : 0);
+        result = 31 * result + (mThumbnailLarge != null ? mThumbnailLarge.hashCode() : 0);
         result = 31 * result + (mIsMain ? 1 : 0);
         result = 31 * result + mWidth;
         result = 31 * result + mHeight;
@@ -110,7 +114,9 @@ public class Photo implements Parcelable {
     @Override public String toString() {
         return "Photo{" +
                 "mId=" + mId +
-                ", mImagePath='" + mImagePath + '\'' +
+                ", mImage='" + mImage + '\'' +
+                ", mThumbnail='" + mThumbnail + '\'' +
+                ", mThumbnailLarge='" + mThumbnailLarge + '\'' +
                 ", mIsMain=" + mIsMain +
                 ", mWidth=" + mWidth +
                 ", mHeight=" + mHeight +
@@ -123,7 +129,9 @@ public class Photo implements Parcelable {
 
     @Override public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
-        dest.writeString(mImagePath);
+        dest.writeString(mImage);
+        dest.writeString(mThumbnail);
+        dest.writeString(mThumbnailLarge);
         dest.writeByte((byte) (mIsMain ? 1 : 0));
         dest.writeInt(mWidth);
         dest.writeInt(mHeight);
@@ -131,7 +139,9 @@ public class Photo implements Parcelable {
 
     public static class Builder {
         private int mId;
-        private String mImagePath;
+        private String mImage;
+        private String mThumbnail;
+        private String mThumbnailLarge;
         private boolean mIsMain;
         private int mWidth;
         private int mHeight;
@@ -142,7 +152,17 @@ public class Photo implements Parcelable {
         }
 
         public Builder setImage(String imagePath) {
-            mImagePath = imagePath;
+            mImage = imagePath;
+            return this;
+        }
+
+        public Builder setThumbnail(String thumbnail) {
+            mThumbnail = thumbnail;
+            return this;
+        }
+
+        public Builder setThumbnailLarge(String thumbnailLarge) {
+            mThumbnailLarge = thumbnailLarge;
             return this;
         }
 
@@ -162,7 +182,7 @@ public class Photo implements Parcelable {
         }
 
         public Photo build() {
-            return new Photo(mId, mImagePath, mIsMain, mWidth, mHeight);
+            return new Photo(mId, mImage, mThumbnail, mThumbnailLarge, mIsMain, mWidth, mHeight);
         }
     }
 }

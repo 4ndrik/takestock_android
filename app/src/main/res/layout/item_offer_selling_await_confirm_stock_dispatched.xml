@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/offer_text_view"
-                android:text="@string/offer_selling_confirm_stock_dispatched"
+                android:text="@string/offer_selling_item_confirm_stock_dispatched"
                 android:textStyle="bold"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>

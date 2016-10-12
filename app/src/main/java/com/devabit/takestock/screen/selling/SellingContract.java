@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 29/04/2016.
  */
-interface SellingContract {
+public interface SellingContract {
 
     interface View extends BaseView<Presenter> {
 

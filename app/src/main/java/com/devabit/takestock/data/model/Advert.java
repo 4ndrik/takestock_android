@@ -366,6 +366,10 @@ public class Advert implements Parcelable {
         return mNotifications;
     }
 
+    public boolean hasNotifications() {
+        return mNotifications > 0;
+    }
+
     public int getNewQuestionsCount() {
         return mNewQuestionsCount;
     }

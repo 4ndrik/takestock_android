@@ -14,16 +14,15 @@
             android:drawablePadding="16dp"
             android:textAppearance="@android:style/TextAppearance.Small"
             android:textColor="@color/grey_600"
-            android:text="No connection"/>
+            android:text="@string/no_connection_content_title"/>
 
     <Button
             android:id="@+id/retry_connection_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="32dp"
-            android:text="Retry"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:theme="@style/Widget.TakeStock.Button.Grey"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/no_connection_content_retry"
+            android:theme="@style/Widget.TakeStock.Button.Jam"/>
 
 </LinearLayout>
