@@ -33,8 +33,8 @@ import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
+import com.devabit.takestock.screen.advert.active.AdvertActiveActivity;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
-import com.devabit.takestock.screen.advert.selling.AdvertSellingActivity;
 import com.devabit.takestock.screen.adverts.adapter.AdvertsAdapter;
 import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
@@ -178,11 +178,11 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void startAdvertSellingActivity(Advert advert) {
-        startActivity(AdvertSellingActivity.getStartIntent(AdvertsActivity.this, advert));
+        startActivity(AdvertActiveActivity.getStartIntent(AdvertsActivity.this, advert));
     }
 
     private void startAdvertDetailActivity(Advert advert) {
-        startActivityForResult(AdvertDetailActivity.getStartIntent(AdvertsActivity.this, advert), RC_ADVERT_DETAIL);
+        startActivityForResult(AdvertDetailActivity.getStartIntent(AdvertsActivity.this, advert.getId()), RC_ADVERT_DETAIL);
     }
 
     private void startEntryActivity() {

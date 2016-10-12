@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.profile.account;
+package com.devabit.takestock.screen.accountProfile;
 
 import android.content.Context;
 import android.content.DialogInterface;

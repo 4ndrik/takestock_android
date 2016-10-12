@@ -181,7 +181,7 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
                 return;
             }
             Glide.with(photoImageView.getContext())
-                    .load(photo.getImagePath())
+                    .load(photo.getImage())
                     .placeholder(R.color.grey_400)
                     .error(R.drawable.ic_image_48dp)
                     .centerCrop()

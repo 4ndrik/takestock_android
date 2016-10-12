@@ -106,8 +106,9 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     }
 
     public void addAdverts(List<Advert> adverts) {
+        int startPosition = mAdverts.size() - 1;
         mAdverts.addAll(adverts);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(startPosition, adverts.size());
     }
 
     public void refreshAdverts(List<Advert> adverts) {
@@ -252,8 +253,8 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
         void loadPhoto(Photo photo) {
             Glide.with(photoImageView.getContext())
-                    .load(photo.getImagePath())
-                    .placeholder(R.color.grey_400)
+                    .load(photo.getThumbnail())
+                    .placeholder(R.color.grey_200)
                     .error(R.color.grey_400)
                     .centerCrop()
                     .crossFade()

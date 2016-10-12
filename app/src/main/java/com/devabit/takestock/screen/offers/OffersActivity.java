@@ -79,7 +79,7 @@ public class OffersActivity extends AppCompatActivity implements OffersContract.
 
     private void loadAdvertPhoto(Photo photo) {
         Glide.with(OffersActivity.this)
-                .load(photo.getImagePath())
+                .load(photo.getImage())
                 .placeholder(R.color.grey_400)
                 .error(R.drawable.ic_image_48dp)
                 .centerCrop()

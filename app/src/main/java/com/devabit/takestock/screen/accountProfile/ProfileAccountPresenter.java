@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.profile.account;
+package com.devabit.takestock.screen.accountProfile;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.User;
@@ -50,8 +50,8 @@ final class ProfileAccountPresenter implements ProfileAccountContract.Presenter 
 
                     }
 
-                    @Override public void onNext(User author) {
-                        mProfileView.showUserInView(author);
+                    @Override public void onNext(User user) {
+                        mProfileView.showUserInView(user);
                     }
                 });
         mSubscriptions.add(subscription);

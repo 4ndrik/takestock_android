@@ -127,7 +127,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
             mAdvertImageView.setImageResource(R.drawable.ic_image_48dp);
         } else {
             Glide.with(OfferActivity.this)
-                    .load(photos.get(0).getImagePath())
+                    .load(photos.get(0).getImage())
                     .placeholder(R.color.grey_400)
                     .error(R.drawable.ic_image_48dp)
                     .centerCrop()

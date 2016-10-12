@@ -25,7 +25,7 @@ import com.devabit.takestock.screen.adverts.AdvertsActivity;
 import com.devabit.takestock.screen.buying.BuyingActivity;
 import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
-import com.devabit.takestock.screen.profile.account.ProfileAccountActivity;
+import com.devabit.takestock.screen.accountProfile.ProfileAccountActivity;
 import com.devabit.takestock.screen.selling.SellingActivity;
 import com.devabit.takestock.screen.watching.WatchingActivity;
 

@@ -20,7 +20,7 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.Author;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.CircleImageView;
@@ -395,7 +395,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
         void bindOffer(Offer offer) {
             mOffer = offer;
-            Author user = mOffer.getAuthor();
+            User user = mOffer.getUser();
             bindUserImage(user.getPhoto());
             nameTextView.setText(user.getUserName());
             dateTextView.setText(DateUtil.formatToDefaultDate(mOffer.getCreatedAt()));

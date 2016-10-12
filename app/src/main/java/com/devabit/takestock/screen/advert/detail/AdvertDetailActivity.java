@@ -37,6 +37,7 @@ import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
 import com.devabit.takestock.screen.advert.detail.dialogs.OfferDialog;
 import com.devabit.takestock.screen.askQuestion.AskQuestionActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
+import com.devabit.takestock.screen.userProfile.UserProfileActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.GravitySnapHelper;
 import com.devabit.takestock.widget.GridSpacingItemDecoration;
@@ -335,6 +336,11 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     private void startQuestionActivity() {
         startActivity(AskQuestionActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
+    }
+
+    @OnClick(R.id.content_user)
+    void onUserContentClick() {
+        startActivity(UserProfileActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getUser()));
     }
 
     @Override public void onBackPressed() {

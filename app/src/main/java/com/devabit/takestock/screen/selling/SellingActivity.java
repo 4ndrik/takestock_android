@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.devabit.takestock.R;
 import com.devabit.takestock.screen.selling.fragment.BaseAdvertsFragment;
-import com.devabit.takestock.screen.selling.fragment.activeAdverts.ActiveAdvertsAdvertsFragment;
+import com.devabit.takestock.screen.selling.fragment.activeAdverts.ActiveAdvertsFragment;
 import com.devabit.takestock.screen.selling.fragment.draftAdverts.DraftAdvertsAdvertsFragment;
 import com.devabit.takestock.screen.selling.fragment.expiredAdverts.ExpiredAdvertsAdvertsFragment;
 
@@ -61,7 +61,7 @@ public class SellingActivity extends AppCompatActivity {
 
     private void setUpTabLayout() {
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.addFragment(ActiveAdvertsAdvertsFragment.newInstance());
+        mPagerAdapter.addFragment(ActiveAdvertsFragment.newInstance());
         mPagerAdapter.addFragment(DraftAdvertsAdvertsFragment.newInstance());
         mPagerAdapter.addFragment(ExpiredAdvertsAdvertsFragment.newInstance());
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());

@@ -64,6 +64,12 @@ public abstract class BaseAdvertsAdapter extends RecyclerView.Adapter<BaseAdvert
         notifyDataSetChanged();
     }
 
+    public void refreshAdvert(Advert advert) {
+        int position = mAdverts.indexOf(advert);
+        mAdverts.set(position, advert);
+        notifyItemChanged(position);
+    }
+
     public void addAdverts(List<Advert> adverts) {
         mAdverts.addAll(adverts);
         notifyDataSetChanged();

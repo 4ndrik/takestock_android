@@ -97,7 +97,7 @@ public class WatchingActivity extends AppCompatActivity implements WatchingContr
     }
 
     private void startAdvertDetailActivity(Advert advert) {
-        startActivity(AdvertDetailActivity.getStartIntent(WatchingActivity.this, advert));
+        startActivity(AdvertDetailActivity.getStartIntent(WatchingActivity.this, advert.getId()));
     }
 
     private void setUpRefreshLayout() {

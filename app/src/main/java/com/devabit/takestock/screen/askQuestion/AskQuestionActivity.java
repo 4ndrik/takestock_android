@@ -129,6 +129,7 @@ public class AskQuestionActivity extends AppCompatActivity implements AskQuestio
 
     @OnClick(R.id.send_question_button)
     protected void onQuestionSendButtonClick() {
+        if (getMessage().isEmpty()) return;
         mPresenter.makeQuestion(createQuestion());
     }
 

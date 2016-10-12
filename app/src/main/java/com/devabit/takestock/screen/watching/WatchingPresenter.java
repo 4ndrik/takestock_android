@@ -61,7 +61,7 @@ final class WatchingPresenter implements WatchingContract.Presenter {
 
     private AdvertFilter createFilter() {
         return new AdvertFilter.Builder()
-                .setIsWatchlist(true)
+                .setAdditionalFilter(AdvertFilter.AdditionalFilter.WATCHLIST)
                 .setOrder(AdvertFilter.ORDER_UPDATED_AT_DESCENDING)
                 .create();
     }
