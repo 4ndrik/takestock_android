@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -58,10 +60,23 @@ public class KeywordDialog extends DialogFragment implements DialogInterface.OnC
         mAddButtonActiveColor = mAddButton.getCurrentTextColor();
         mAddButtonInactiveColor = ContextCompat.getColor(mAddButton.getContext(), R.color.translucent_jam_80);
         setPositiveButtonActive(false);
+        mKeywordEditText.setFilters(new InputFilter[]{mInputFilter});
 
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
+
+    final InputFilter mInputFilter = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end,
+                                   Spanned dest, int dstart, int dend) {
+            for (int i = start; i < end; i++) {
+                if (Character.isWhitespace(source.charAt(i))) {
+                    return "";
+                }
+            }
+            return null;
+        }
+    };
 
     @Override public void onClick(DialogInterface dialog, int which) {
         switch (which) {
