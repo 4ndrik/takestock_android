@@ -58,7 +58,9 @@ public class MakeAdvertJson implements JsonModel {
         String[] result = new String[photos.size()];
         for (int i = 0; i < photos.size(); i++) {
             Photo photo = photos.get(i);
-            result[i] = "data:image/jpg;base64," + Encoder.encodeFileToBase64(photo.getImagePath());
+            result[i] = photo.getImage().startsWith("http")
+                    ? "data:image/jpg;base64," + Encoder.encodeUrlToBase64(photo.getImage())
+                    : "data:image/jpg;base64," + Encoder.encodeFileToBase64(photo.getImage());
         }
         return result;
     }

@@ -107,6 +107,7 @@ public interface DataSource {
 
     BusinessSubtype getBusinessSubtypeById(int id);
 
+
     /********* Advert Methods  *********/
 
     Observable<Advert> saveAdvert(@NonNull Advert advert);
@@ -123,6 +124,7 @@ public interface DataSource {
 
     Observable<Advert> unnotifyAdvertWithId(int advertId);
 
+
     /********* Offers Methods  *********/
 
     Observable<Offer> makeOffer(@NonNull Offer offer);
@@ -135,6 +137,7 @@ public interface DataSource {
 
     Observable<PaginatedList<Offer>> getPaginatedOfferListPerPage(@NonNull String page);
 
+
     /********* Questions Methods  *********/
 
     Observable<Question> saveQuestion(@NonNull Question question);
@@ -143,9 +146,11 @@ public interface DataSource {
 
     Observable<PaginatedList<Question>> getPaginatedQuestionListPerPage(@NonNull String page);
 
+
     /********** Answers Methods **********/
 
     Observable<Answer> saveAnswer(@NonNull Answer answer);
+
 
     /********** User Methods **********/
 
@@ -154,6 +159,7 @@ public interface DataSource {
     Observable<User> updateUser(@NonNull User user);
 
     Observable<User> getUserWithId(int id);
+
 
     /********** Payment Methods **********/
 

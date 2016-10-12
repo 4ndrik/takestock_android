@@ -81,7 +81,7 @@
                 android:name=".screen.questions.QuestionsActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.profile.account.ProfileAccountActivity"
+                android:name=".screen.accountProfile.ProfileAccountActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screen.profile.edit.ProfileEditorActivity"
@@ -104,6 +104,9 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screen.dispatching.DispatchingActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screen.userProfile.UserProfileActivity"
                 android:screenOrientation="portrait"/>
 
         <service android:name=".authenticator.TakeStockAuthenticatorService"

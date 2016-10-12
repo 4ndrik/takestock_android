@@ -89,7 +89,7 @@
     <string name="edit_profile">Edit profile</string>
     <string name="change_profile_picture">Change profile picture</string>
     <string name="delete_photo">Delete photo</string>
-    <string name="edit_advert">Edit advertId</string>
+    <string name="edit_advert">Edit advert</string>
     <string name="about">About</string>
     <string name="help_guide">There are detailed selling guides and best practice on our main website at</string>
     <string name="help_questions_message">If you have any questions about using our app you can message us</string>
@@ -127,9 +127,9 @@
     <string name="add">Add</string>
     <string name="add_payment">Add payment</string>
 
-    <!--advertId editor activity start-->
-    <string name="advert_create_toolbar_title_create">Create advertId</string>
-    <string name="advert_create_toolbar_title_edit">Edit advertId</string>
+    <!--advert editor activity start-->
+    <string name="advert_create_toolbar_title_create">Create advert</string>
+    <string name="advert_create_toolbar_title_edit">Edit advert</string>
     <string name="advert_create_product_title">Product title*</string>
     <string name="advert_create_add_product_title">Add product title</string>
     <string name="advert_create_category">Category*</string>
@@ -177,9 +177,9 @@
     <string name="advert_editor_on_hold">On hold</string>
     <string name="advert_editor_sold_out">Sold out</string>
     <string name="advert_editor_state">Advert state</string>
-    <!--advertId editor activity end-->
+    <!--advert editor activity end-->
 
-    <!--advertId preview activity start-->
+    <!--advert preview activity start-->
     <string name="advert_preview_guide_price">Guide price</string>
     <string name="advert_preview_minimum_order">Minimum order</string>
     <string name="advert_preview_qty_available">Qty available</string>
@@ -195,7 +195,7 @@
     <string name="advert_preview_minimum_order_unit">%1$d %2$s</string>
     <string name="advert_preview_qty_available_unit">%1$d %2$s</string>
     <string name="advert_preview_advert_saved">Advert saved</string>
-    <!--advertId preview activity end-->
+    <!--advert preview activity end-->
 
     <!--adverts activity start-->
     <string name="adverts_query_toolbar_title">%1$s in %2$s</string>
@@ -253,11 +253,11 @@
     <string name="selling_toolbar_title">Selling</string>
     <!--selling activity end-->
 
-    <!--advertId item menu start-->
+    <!--advert item menu start-->
     <string name="advert_item_menu_view_questions">View questions</string>
     <string name="advert_item_menu_manage_offers">Manage offers</string>
-    <string name="advert_item_menu_edit_advert">Edit advertId</string>
-    <!--advertId item menu end-->
+    <string name="advert_item_menu_edit_advert">Edit advert</string>
+    <!--advert item menu end-->
 
     <!--questions activity start-->
     <string name="questions_toolbar_title">Questions</string>
@@ -327,7 +327,7 @@
     <string name="offer_selling_item_contact_support">Contact customer support</string>
     <!--offer selling item start-->
 
-    <!--advertId selling item start-->
+    <!--advert selling item start-->
     <string name="advert_selling_guide_price">£ %1$s/%2$s</string>
     <string name="advert_selling_available">Available: £ %1$d %2$s</string>
     <string name="advert_selling_days_left">Days left: %1$s</string>
@@ -335,7 +335,7 @@
     <string name="advert_selling_questions">questions</string>
     <string name="advert_selling_views">views</string>
     <string name="advert_selling_new_count">%1$d new</string>
-    <!--advertId selling item end-->
+    <!--advert selling item end-->
 
     <!--counter offer dialog start-->
     <string name="counter_offer_dialog_title">Counter offer</string>
@@ -357,22 +357,22 @@
     <string name="accept_offer_dialog_message">%1$d %2$s - £ %3$s/%4$s</string>
     <!--accept offer dialog end-->
 
-    <!--advertId selling activity start-->
+    <!--advert selling activity start-->
     <string name="advert_selling_activity_guide_price">£ %1$s/%2$s</string>
     <string name="advert_selling_activity_available">Available: £ %1$d %2$s</string>
     <string name="advert_selling_activity_days_left">Days left: %1$s</string>
-    <!--advertId selling activity end-->
+    <!--advert selling activity end-->
 
     <!--offer buying history item start-->
     <string name="offer_buying_seller_offer">Seller offer</string>
     <string name="offer_buying_buyer_offer">My offer</string>
     <!--offer buying history item end-->
 
-    <!--advertId watching item start-->
+    <!--advert watching item start-->
     <string name="advert_watching_item_guide_price">£ %1$s/%2$s</string>
     <string name="advert_watching_item_additional">%1$s offers \u2022 %2$s questions \u2022 %3$s days left</string>
     <string name="advert_watching_item_available_unit">available: %1$d%2$s</string>
-    <!--advertId selling activity end-->
+    <!--advert selling activity end-->
 
     <!--watching activity start-->
     <string name="watching_activity_toolbar_title">Watching</string>
@@ -450,8 +450,12 @@
     <string name="advert_detail_similar_listing">Similar listing</string>
     <!--profile editor activity end-->
 
-    <!--advertId listing item start-->
+    <!--advert listing item start-->
     <string name="advert_listing_item_guide_price">£ %1$s/%2$s</string>
-    <!--advertId listing item end-->
+    <!--advert listing item end-->
+
+    <!--user profile activity start-->
+    <string name="user_profile_activity_averts_count">aa</string>
+    <!--user profile activity end-->
 
 </resources>

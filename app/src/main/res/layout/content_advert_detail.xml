@@ -307,6 +307,7 @@
               style="@style/ViewDivider"/>
 
         <FrameLayout
+                android:id="@+id/content_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
@@ -348,10 +349,14 @@
 
         </FrameLayout>
 
+        <View android:layout_width="match_parent"
+              style="@style/ViewDivider"/>
+
         <TextView
                 android:id="@+id/similar_listing_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
                 android:textColor="@color/grey_600"
                 android:fontFamily="sans-serif-light"
                 android:textAppearance="@android:style/TextAppearance.Medium"

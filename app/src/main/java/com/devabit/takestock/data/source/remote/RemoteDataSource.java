@@ -786,8 +786,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     }
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
-                    @Override public Observable<String> call(String json) {
-                        return Observable.fromCallable(createPATCHCallable(ME, json));
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPATCHCallable(ME, jsonString));
                     }
                 })
                 .map(new Func1<String, User>() {

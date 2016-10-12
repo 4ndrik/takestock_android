@@ -19,7 +19,7 @@ public class OfferJson {
     public String comment;
     public String created_at;
     public String updated_at;
-    public AuthorJson user_detailed;
+    public UserJson user_detailed;
     public int price_for_stripe;
     public boolean from_seller;
     public int last_offer;
@@ -38,7 +38,7 @@ public class OfferJson {
                 .setComment(comment)
                 .setCreatedAt(created_at)
                 .setUpdatedAt(updated_at)
-                .setAuthor(user_detailed.toAuthor())
+                .setUser(user_detailed.toUser())
                 .setPriceForStripe(price_for_stripe)
                 .setFromSeller(from_seller)
                 .setNotifications(notifications)

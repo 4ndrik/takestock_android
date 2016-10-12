@@ -9,4 +9,9 @@
         <item quantity="one">%1$s question</item>
         <item quantity="other">%1$s questions</item>
     </plurals>
+
+    <plurals name="adverts">
+        <item quantity="one">%1$d advert</item>
+        <item quantity="other">%1$d adverts</item>
+    </plurals>
 </resources>
