@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.advert.selling.fragment.questions;
+package com.devabit.takestock.screen.advert.active.fragment.questions;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.filter.QuestionFilter;

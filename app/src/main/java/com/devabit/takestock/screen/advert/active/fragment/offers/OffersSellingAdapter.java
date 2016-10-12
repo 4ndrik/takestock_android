@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.advert.selling.fragment.offers;
+package com.devabit.takestock.screen.advert.active.fragment.offers;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -19,7 +19,7 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.Author;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.utils.DateUtil;
 
@@ -310,7 +310,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
 
         void bindOffer(Offer offer) {
             mOffer = offer;
-            Author user = mOffer.getAuthor();
+            User user = mOffer.getUser();
             bindUserImage(user.getPhoto());
             nameTextView.setText(user.getUserName());
             dateTextView.setText(DateUtil.formatToDefaultDate(mOffer.getCreatedAt()));

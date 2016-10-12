@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.advert.selling.fragment.questions;
+package com.devabit.takestock.screen.advert.active.fragment.questions;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;

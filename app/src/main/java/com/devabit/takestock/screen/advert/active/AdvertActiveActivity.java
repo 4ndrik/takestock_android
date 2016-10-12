@@ -1,8 +1,9 @@
-package com.devabit.takestock.screen.advert.selling;
+package com.devabit.takestock.screen.advert.active;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,13 +20,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.screen.advert.editor.AdvertEditorActivity;
-import com.devabit.takestock.screen.advert.selling.fragment.offers.OffersFragment;
-import com.devabit.takestock.screen.advert.selling.fragment.questions.QuestionsFragment;
+import com.devabit.takestock.screen.advert.active.fragment.offers.OffersFragment;
+import com.devabit.takestock.screen.advert.active.fragment.questions.QuestionsFragment;
 import com.devabit.takestock.widget.ControllableAppBarLayout;
+import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +37,12 @@ import java.util.List;
  * Created by Victor Artemyev on 30/09/2016.
  */
 
-public class AdvertSellingActivity extends AppCompatActivity {
+public class AdvertActiveActivity extends AppCompatActivity implements AdvertActiveContract.View {
 
     private static final String EXTRA_ADVERT = "EXTRA_ADVERT";
 
     public static Intent getStartIntent(Context context, Advert advert) {
-        Intent starter = new Intent(context, AdvertSellingActivity.class);
+        Intent starter = new Intent(context, AdvertActiveActivity.class);
         starter.putExtra(EXTRA_ADVERT, advert);
         return starter;
     }
@@ -56,20 +59,22 @@ public class AdvertSellingActivity extends AppCompatActivity {
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
     Advert mAdvert;
+    AdvertActiveContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert_selling);
-        ButterKnife.bind(AdvertSellingActivity.this);
+        ButterKnife.bind(AdvertActiveActivity.this);
         setUpToolbar();
         mAdvert = getIntent().getParcelableExtra(EXTRA_ADVERT);
         setUpAppBarLayout(mAdvert);
         setUpAdvert(mAdvert);
         setUpTabLayout(mAdvert);
+        createPresenter(mAdvert);
     }
 
     private void setUpToolbar() {
-        Toolbar toolbar = ButterKnife.findById(AdvertSellingActivity.this, R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(AdvertActiveActivity.this, R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
@@ -80,7 +85,7 @@ public class AdvertSellingActivity extends AppCompatActivity {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_edit_advert:
-                        startActivityForResult(AdvertEditorActivity.getStartIntent(AdvertSellingActivity.this, mAdvert), RC_EDIT);
+                        startActivityForResult(AdvertEditorActivity.getStartIntent(AdvertActiveActivity.this, mAdvert), RC_EDIT);
                         return true;
                     default:
                         return false;
@@ -90,7 +95,7 @@ public class AdvertSellingActivity extends AppCompatActivity {
     }
 
     private void setUpAppBarLayout(final Advert advert) {
-        ControllableAppBarLayout appBarLayout = ButterKnife.findById(AdvertSellingActivity.this, R.id.appbar_layout);
+        ControllableAppBarLayout appBarLayout = ButterKnife.findById(AdvertActiveActivity.this, R.id.appbar_layout);
         appBarLayout.setOnStateChangeListener(new ControllableAppBarLayout.OnStateChangeListener() {
             @Override public void onStateChange(int toolbarChange) {
                 switch (toolbarChange) {
@@ -121,7 +126,7 @@ public class AdvertSellingActivity extends AppCompatActivity {
             mImageView.setImageResource(R.drawable.ic_image_48dp);
         } else {
             Glide.with(mImageView.getContext())
-                    .load(photos.get(0).getImagePath())
+                    .load(photos.get(0).getImage())
                     .placeholder(R.color.grey_400)
                     .error(R.drawable.ic_image_48dp)
                     .centerCrop()
@@ -141,6 +146,33 @@ public class AdvertSellingActivity extends AppCompatActivity {
                 getResources().getQuantityString(R.plurals.questions, Integer.valueOf(advert.getQuestionsCount()), advert.getQuestionsCount()));
         mViewPager.setAdapter(pagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    private void createPresenter(Advert advert) {
+        new AdvertActivePresenter(advert,
+                Injection.provideDataRepository(AdvertActiveActivity.this), AdvertActiveActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull AdvertActiveContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.unnotifyAdvert();
+    }
+
+    @Override public void showUnnotifiedAdvertInView(Advert advert) {
+        Timber.d("Unnotified Advert: %s", advert);
+        mAdvert = advert;
+    }
+
+    @Override public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(getString(R.string.extra_advert), mAdvert);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override protected void onPause() {
+        mPresenter.pause();
+        super.onPause();
     }
 
     static class PagerAdapter extends FragmentPagerAdapter {

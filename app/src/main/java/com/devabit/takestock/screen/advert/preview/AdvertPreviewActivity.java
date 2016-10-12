@@ -40,7 +40,7 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
         return starter;
     }
 
-    @BindView(R.id.content_product_detail) protected ViewGroup mContent;
+    @BindView(R.id.content) protected ViewGroup mContent;
     @BindView(R.id.guide_price_text_view) protected TextView mGuidePriceTextView;
     @BindView(R.id.minimum_order_text_view) protected TextView mMinimumOrderTextView;
     @BindView(R.id.qty_available_text_view) protected TextView mQtyAvailableTextView;
@@ -82,7 +82,8 @@ public class AdvertPreviewActivity extends AppCompatActivity implements AdvertPr
         LinearLayoutManager layoutManager = new LinearLayoutManager(AdvertPreviewActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        AdvertPhotosAdapter photosAdapter = new AdvertPhotosAdapter(AdvertPreviewActivity.this, photos);
+        AdvertPhotosAdapter photosAdapter = new AdvertPhotosAdapter(AdvertPreviewActivity.this);
+        photosAdapter.addPhotos(photos);
         recyclerView.setAdapter(photosAdapter);
     }
 

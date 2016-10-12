@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.advert.selling.fragment.questions;
+package com.devabit.takestock.screen.advert.active.fragment.questions;
 
 import com.devabit.takestock.data.model.Answer;
 import com.devabit.takestock.data.model.Question;

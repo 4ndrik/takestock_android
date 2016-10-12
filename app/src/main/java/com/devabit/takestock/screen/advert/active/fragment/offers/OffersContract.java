@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.advert.selling.fragment.offers;
+package com.devabit.takestock.screen.advert.active.fragment.offers;
 
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.BasePresenter;
