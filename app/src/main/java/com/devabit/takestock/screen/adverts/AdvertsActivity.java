@@ -201,7 +201,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_ADVERT_DETAIL || requestCode == RC_ADVERT_ACTIVE
+        if ((requestCode == RC_ADVERT_DETAIL || requestCode == RC_ADVERT_ACTIVE)
                 && resultCode == RESULT_OK) {
             Advert advert = data.getParcelableExtra(getString(R.string.extra_advert));
             mAdvertsAdapter.refreshAdvert(advert);
