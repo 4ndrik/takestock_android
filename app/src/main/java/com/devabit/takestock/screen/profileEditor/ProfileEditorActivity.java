@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.profile.edit;
+package com.devabit.takestock.screen.profileEditor;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,9 +21,10 @@ import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.BusinessSubtype;
 import com.devabit.takestock.data.model.BusinessType;
 import com.devabit.takestock.data.model.User;
-import com.devabit.takestock.screen.profile.edit.adapter.BusinessSubtypeSpinnerAdapter;
-import com.devabit.takestock.screen.profile.edit.adapter.BusinessTypeSpinnerAdapter;
-import com.devabit.takestock.screen.profile.edit.dialog.ProfilePhotoPickerDialog;
+import com.devabit.takestock.screen.profileEditor.adapter.BusinessSubtypeSpinnerAdapter;
+import com.devabit.takestock.screen.profileEditor.adapter.BusinessTypeSpinnerAdapter;
+import com.devabit.takestock.screen.profileEditor.dialog.PasswordDialog;
+import com.devabit.takestock.screen.profileEditor.dialog.PhotoPickerDialog;
 import com.devabit.takestock.utils.ImagePicker;
 import com.devabit.takestock.widget.HintSpinnerAdapter;
 import timber.log.Timber;
@@ -34,7 +35,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 08/06/2016.
  */
-public class ProfileEditorActivity extends AppCompatActivity implements ProfileEditContract.View {
+public class ProfileEditorActivity extends AppCompatActivity implements ProfileEditorContract.View {
 
     public static Intent getStartIntent(Context context, User user) {
         Intent starter = new Intent(context, ProfileEditorActivity.class);
@@ -66,11 +67,11 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
 
     private boolean mIsUpdated;
 
-    private ProfileEditContract.Presenter mPresenter;
+    private ProfileEditorContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_edit);
+        setContentView(R.layout.activity_profile_editor);
         ButterKnife.bind(ProfileEditorActivity.this);
         mAccount = TakeStockAccount.get(ProfileEditorActivity.this);
         setUpToolbar();
@@ -80,11 +81,11 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     }
 
     private void createPresenter() {
-        new ProfileEditPresenter(
+        new ProfileEditorPresenter(
                 Injection.provideDataRepository(ProfileEditorActivity.this), ProfileEditorActivity.this);
     }
 
-    @Override public void setPresenter(@NonNull ProfileEditContract.Presenter presenter) {
+    @Override public void setPresenter(@NonNull ProfileEditorContract.Presenter presenter) {
         mPresenter = presenter;
         mPresenter.fetchUserProfileData();
     }
@@ -165,24 +166,24 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     }
 
     private void displayPhotoPickerDialog() {
-        ProfilePhotoPickerDialog dialog = ProfilePhotoPickerDialog.newInstance();
+        PhotoPickerDialog dialog = PhotoPickerDialog.newInstance();
         dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
         dialog.setOnPickPhotoListener(mPickPhotoListener);
     }
 
-    private final ProfilePhotoPickerDialog.OnPickPhotoListener mPickPhotoListener
-            = new ProfilePhotoPickerDialog.OnPickPhotoListener() {
-        @Override public void pickFromCamera(ProfilePhotoPickerDialog dialog) {
+    private final PhotoPickerDialog.OnPickPhotoListener mPickPhotoListener
+            = new PhotoPickerDialog.OnPickPhotoListener() {
+        @Override public void pickFromCamera(PhotoPickerDialog dialog) {
             dialog.dismiss();
             ImagePicker.openCamera(ProfileEditorActivity.this);
         }
 
-        @Override public void pickFromLibrary(ProfilePhotoPickerDialog dialog) {
+        @Override public void pickFromLibrary(PhotoPickerDialog dialog) {
             dialog.dismiss();
             ImagePicker.openGallery(ProfileEditorActivity.this);
         }
 
-        @Override public void delete(ProfilePhotoPickerDialog dialog) {
+        @Override public void delete(PhotoPickerDialog dialog) {
             dialog.dismiss();
         }
     };
@@ -223,6 +224,12 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
             }
         });
         setUserBusinessTypeSelection(nothingSelectedAdapter, businessTypes);
+    }
+
+    @Override public void showChangedPasswordInView(String password) {
+        mAccount.setPassword(password);
+        mPasswordEditText.setText(password);
+        showSnack(R.string.profile_editor_activity_password_changed);
     }
 
     private void setUserBusinessTypeSelection(HintSpinnerAdapter<BusinessType> adapter, List<BusinessType> types) {
@@ -329,6 +336,10 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
         showSnack(R.string.profile_editor_activity_saved);
     }
 
+    @Override public void showPasswordError() {
+        showSnack(R.string.profile_editor_activity_password_changed_error);
+    }
+
     private void setUpUser(User user) {
         setUpProfileImage(user.getPhoto());
         mUserNameEditText.setText(user.getUserName());
@@ -342,7 +353,17 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
 
     @OnClick(R.id.password_edit_text)
     void onPasswordEditTextClick() {
-        Timber.d("Password click");
+        displayPasswordDialog();
+    }
+
+    private void displayPasswordDialog() {
+        PasswordDialog dialog = PasswordDialog.newInstance(mAccount.getUserPassword());
+        dialog.setOnPasswordChangeListener(new PasswordDialog.OnPasswordChangeListener() {
+            @Override public void onPasswordChanged(String newPassword) {
+                mPresenter.changePassword(mAccount.getUserPassword(), newPassword);
+            }
+        });
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
     }
 
     @Override public void showNetworkConnectionError() {

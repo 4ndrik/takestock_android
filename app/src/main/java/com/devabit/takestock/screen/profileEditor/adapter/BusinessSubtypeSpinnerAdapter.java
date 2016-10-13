@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.profile.edit.adapter;
+package com.devabit.takestock.screen.profileEditor.adapter;
 
 import android.content.Context;
 import android.view.View;

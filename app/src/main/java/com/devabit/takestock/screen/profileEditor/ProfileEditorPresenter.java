@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.profile.edit;
+package com.devabit.takestock.screen.profileEditor;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.BusinessType;
@@ -18,18 +18,18 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 07/06/2016.
  */
-class ProfileEditPresenter implements ProfileEditContract.Presenter {
+class ProfileEditorPresenter implements ProfileEditorContract.Presenter {
 
     private final DataRepository mDataRepository;
-    private final ProfileEditContract.View mProfileView;
+    private final ProfileEditorContract.View mProfileView;
 
     private CompositeSubscription mSubscriptions;
 
-    ProfileEditPresenter(@NonNull DataRepository dataRepository, @NonNull ProfileEditContract.View profileView) {
+    ProfileEditorPresenter(@NonNull DataRepository dataRepository, @NonNull ProfileEditorContract.View profileView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mProfileView = checkNotNull(profileView, "profileView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mProfileView.setPresenter(ProfileEditPresenter.this);
+        mProfileView.setPresenter(ProfileEditorPresenter.this);
     }
 
     @Override public void resume() {
@@ -51,6 +51,31 @@ class ProfileEditPresenter implements ProfileEditContract.Presenter {
 
                     @Override public void onNext(List<BusinessType> businessTypes) {
                         mProfileView.showBusinessTypesInView(businessTypes);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override public void changePassword(String currentPass, final String newPass) {
+        mProfileView.setProgressIndicator(true);
+        Subscription subscription = mDataRepository.changePassword(currentPass, newPass)
+                .compose(RxTransformers.<Boolean>applyObservableSchedulers())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override public void onCompleted() {
+                        mProfileView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        mProfileView.setProgressIndicator(false);
+                        handleError(e);
+                    }
+
+                    @Override public void onNext(Boolean success) {
+                        if (success) {
+                            mProfileView.showChangedPasswordInView(newPass);
+                        } else {
+                            mProfileView.showPasswordError();
+                        }
                     }
                 });
         mSubscriptions.add(subscription);

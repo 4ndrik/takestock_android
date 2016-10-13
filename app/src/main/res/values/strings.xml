@@ -229,6 +229,7 @@
     <string name="advert_detail_offer_made">Offer made</string>
     <string name="advert_detail_thank_for_offer">Thank you for offer!\nWaiting for response!</string>
     <string name="advert_detail_photo_count">%1$d / %2$d</string>
+    <string name="advert_detail_similar_listing">Similar listing</string>
     <!--adverts detail activity end-->
 
     <!--offer dialog start-->
@@ -447,15 +448,20 @@
     <string name="profile_editor_activity_email_subscription">I am subscribed to receive news and updates by email</string>
     <string name="profile_editor_activity_password">Password</string>
     <string name="profile_editor_activity_saved">Profile saved</string>
-    <string name="advert_detail_similar_listing">Similar listing</string>
+    <string name="profile_editor_activity_password_changed">Password changed</string>
     <!--profile editor activity end-->
 
     <!--advert listing item start-->
     <string name="advert_listing_item_guide_price">£ %1$s/%2$s</string>
     <!--advert listing item end-->
 
-    <!--user profile activity start-->
-    <string name="user_profile_activity_averts_count">aa</string>
-    <!--user profile activity end-->
+    <!--password dialog start-->
+    <string name="password_dialog_cancel">Cancel</string>
+    <string name="password_dialog_current_password">Current password</string>
+    <string name="password_dialog_new_password">New password</string>
+    <string name="password_dialog_show_password">Show password</string>
+    <string name="password_dialog_change">Change</string>
+    <string name="profile_editor_activity_password_changed_error">Changing password failed</string>
+    <!--password dialog end-->
 
 </resources>

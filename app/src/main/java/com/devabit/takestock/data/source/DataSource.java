@@ -160,6 +160,8 @@ public interface DataSource {
 
     Observable<User> getUserWithId(int id);
 
+    Observable<Boolean> changePassword(String currentPass, String newPass);
+
 
     /********** Payment Methods **********/
 

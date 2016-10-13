@@ -31,4 +31,5 @@ public interface ApiRest {
     String ME = API_BASE_URL + "/me/";
     String WATCHLIST = API_BASE_URL + "/to_watchlist/";
     String PAY = API_BASE_URL + "/pay/";
+    String CHANGE_PASSWORD = API_BASE_URL + "/change_password/";
 }

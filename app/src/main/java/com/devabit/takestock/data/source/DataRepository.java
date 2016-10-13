@@ -373,6 +373,10 @@ public class DataRepository implements DataSource {
         return Observable.concat(localUser, remoteUser).first();
     }
 
+    @Override public Observable<Boolean> changePassword(String currentPass, String newPass) {
+        return mRemoteDataSource.changePassword(currentPass, newPass);
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Payment
     ///////////////////////////////////////////////////////////////////////////

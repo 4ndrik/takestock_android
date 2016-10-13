@@ -811,6 +811,28 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public Observable<Boolean> changePassword(String currentPass, String newPass) {
+        return Observable.just(new ChangePasswordJson(currentPass, newPass))
+                .map(new Func1<ChangePasswordJson, String>() {
+                    @Override public String call(ChangePasswordJson changePasswordJson) {
+                        return mGson.toJson(changePasswordJson);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(CHANGE_PASSWORD, jsonString));
+                    }
+                })
+                .map(new Func1<String, Boolean>() {
+                    @Override public Boolean call(String jsonString) {
+                        d(jsonString);
+                        ChangePasswordJson json = mGson.fromJson(jsonString, ChangePasswordJson.class);
+                        return json.isSuccessful();
+                    }
+                });
+    }
+
     /**********
      * Payment Methods
      **********/

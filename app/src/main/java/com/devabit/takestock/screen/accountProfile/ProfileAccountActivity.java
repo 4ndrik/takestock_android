@@ -24,7 +24,7 @@ import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.about.AboutActivity;
 import com.devabit.takestock.screen.help.HelpActivity;
 import com.devabit.takestock.screen.main.MainActivity;
-import com.devabit.takestock.screen.profile.edit.ProfileEditorActivity;
+import com.devabit.takestock.screen.profileEditor.ProfileEditorActivity;
 
 /**
  * Created by Victor Artemyev on 07/06/2016.

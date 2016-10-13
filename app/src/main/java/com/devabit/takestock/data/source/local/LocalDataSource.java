@@ -426,6 +426,10 @@ public class LocalDataSource implements DataSource {
         });
     }
 
+    @Override public Observable<Boolean> changePassword(String currentPass, String newPass) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Methods for Payment
     ///////////////////////////////////////////////////////////////////////////
