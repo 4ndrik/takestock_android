@@ -62,8 +62,8 @@ public class CounterOfferDialog extends DialogFragment {
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         Activity parentActivity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity, R.style.AppTheme_Dialog_Alert_Purple);
-        builder.setTitle(R.string.counter_offer_dialog_title);
-        builder.setPositiveButton(R.string.counter_offer_dialog_make, null);
+//        builder.setTitle(R.string.counter_offer_dialog_title);
+        builder.setPositiveButton(R.string.counter_offer_dialog_send, null);
         builder.setNegativeButton(R.string.counter_offer_dialog_cancel, null);
         builder.setView(R.layout.dialog_counter_offer);
         return builder.create();

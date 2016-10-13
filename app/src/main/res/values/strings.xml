@@ -339,7 +339,7 @@
 
     <!--counter offer dialog start-->
     <string name="counter_offer_dialog_title">Counter offer</string>
-    <string name="counter_offer_dialog_make">Make</string>
+    <string name="counter_offer_dialog_send">Send counter offer</string>
     <string name="counter_offer_dialog_cancel">Cancel</string>
     <string name="counter_offer_dialog_error_price">Price not added</string>
     <string name="counter_offer_dialog_error_quantity">Quantity not added</string>
