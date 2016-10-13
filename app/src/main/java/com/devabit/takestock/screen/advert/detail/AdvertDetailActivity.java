@@ -321,13 +321,6 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         }
     }
 
-    private static final ButterKnife.Setter<View, Boolean> TRANSPARENCY
-            = new ButterKnife.Setter<View, Boolean>() {
-        @Override public void set(@NonNull View view, Boolean isActive, int index) {
-            view.setAlpha(isActive ? 0.5f : 1.0f);
-        }
-    };
-
     @OnClick(R.id.ask_button)
     protected void onAskButtonClick() {
         if (mAccount.lacksAccount()) startEntryActivity();
