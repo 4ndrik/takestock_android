@@ -120,7 +120,7 @@
                 android:drawablePadding="8dp"
                 android:paddingBottom="4dp"
                 android:drawableStart="@drawable/ic_question_white_24dp"
-                android:text="@string/advert_detail_ask_away"
+                android:text="@string/advert_detail_q_and_a"
                 android:textColor="@color/white"
                 android:background="@drawable/bg_button_rounded_corners_jam"
                 style="@style/Widget.AppCompat.Button"/>

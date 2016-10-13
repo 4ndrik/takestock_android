@@ -224,7 +224,7 @@
     <string name="advert_detail_expiry">Expiry</string>
     <string name="advert_detail_certification">Certification</string>
     <string name="advert_detail_condition">Condition</string>
-    <string name="advert_detail_ask_away">Ask away</string>
+    <string name="advert_detail_q_and_a">Q&amp;A</string>
     <string name="advert_detail_make_offer">Make offer</string>
     <string name="advert_detail_offer_made">Offer made</string>
     <string name="advert_detail_thank_for_offer">Thank you for offer!\nWaiting for response!</string>
@@ -245,7 +245,7 @@
     <!--offer dialog end-->
 
     <!--ask questions activity start-->
-    <string name="ask_question_toolbar_title">Ask Question</string>
+    <string name="ask_question_toolbar_title">Questions &amp; Answers</string>
     <string name="ask_question_write_question">Write a question…</string>
     <!--ask questions activity end-->
 

@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.askQuestion;
+package com.devabit.takestock.screen.queAndAns;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,6 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Question;
-import com.devabit.takestock.screen.askQuestion.adapters.QuestionsAdapter;
 import com.devabit.takestock.widget.DividerItemDecoration;
 
 import java.util.List;
@@ -32,12 +31,12 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 30/05/2016.
  */
-public class AskQuestionActivity extends AppCompatActivity implements AskQuestionContract.View {
+public class QueAndAnsActivity extends AppCompatActivity implements QueAndAnsContract.View {
 
     private static final String EXTRA_ADVERT_ID = "ADVERT_ID";
 
     public static Intent getStartIntent(Context context, int advertId) {
-        Intent starter = new Intent(context, AskQuestionActivity.class);
+        Intent starter = new Intent(context, QueAndAnsActivity.class);
         starter.putExtra(EXTRA_ADVERT_ID, advertId);
         return starter;
     }
@@ -50,15 +49,15 @@ public class AskQuestionActivity extends AppCompatActivity implements AskQuestio
 
     private int mAdvertId;
     private TakeStockAccount mAccount;
-    private QuestionsAdapter mQuestionsAdapter;
-    private AskQuestionContract.Presenter mPresenter;
+    private QueAndAnsAdapter mQueAndAnsAdapter;
+    private QueAndAnsContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ask_question);
-        ButterKnife.bind(AskQuestionActivity.this);
+        setContentView(R.layout.activity_que_and_ans);
+        ButterKnife.bind(QueAndAnsActivity.this);
         mAdvertId = getIntent().getIntExtra(EXTRA_ADVERT_ID, 0);
-        mAccount = TakeStockAccount.get(AskQuestionActivity.this);
+        mAccount = TakeStockAccount.get(QueAndAnsActivity.this);
         setUpToolbar();
         setUpRefreshLayout();
         setUpRecyclerView();
@@ -66,17 +65,17 @@ public class AskQuestionActivity extends AppCompatActivity implements AskQuestio
     }
 
     private void createPresenter() {
-        new AskQuestionPresenter(
-                Injection.provideDataRepository(AskQuestionActivity.this), AskQuestionActivity.this);
+        new QueAndAnsPresenter(
+                Injection.provideDataRepository(QueAndAnsActivity.this), QueAndAnsActivity.this);
     }
 
-    @Override public void setPresenter(@NonNull AskQuestionContract.Presenter presenter) {
+    @Override public void setPresenter(@NonNull QueAndAnsContract.Presenter presenter) {
         mPresenter = presenter;
         mPresenter.fetchQuestionsWithAdvertId(mAdvertId);
     }
 
     private void setUpToolbar() {
-        Toolbar toolbar = ButterKnife.findById(AskQuestionActivity.this, R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(QueAndAnsActivity.this, R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
@@ -98,14 +97,14 @@ public class AskQuestionActivity extends AppCompatActivity implements AskQuestio
     }
 
     private void setUpRecyclerView() {
-        mRecyclerView = ButterKnife.findById(AskQuestionActivity.this, R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(AskQuestionActivity.this);
+        mRecyclerView = ButterKnife.findById(QueAndAnsActivity.this, R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(QueAndAnsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(AskQuestionActivity.this, R.drawable.divider_grey300));
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(QueAndAnsActivity.this, R.drawable.divider_grey300));
         mRecyclerView.addItemDecoration(itemDecoration);
-        mQuestionsAdapter = new QuestionsAdapter(AskQuestionActivity.this);
-        mRecyclerView.setAdapter(mQuestionsAdapter);
+        mQueAndAnsAdapter = new QueAndAnsAdapter(QueAndAnsActivity.this);
+        mRecyclerView.setAdapter(mQueAndAnsAdapter);
     }
 
     @OnTextChanged(R.id.question_edit_text)
@@ -118,12 +117,12 @@ public class AskQuestionActivity extends AppCompatActivity implements AskQuestio
     }
 
     @Override public void showQuestionsInView(List<Question> questions) {
-        mQuestionsAdapter.refreshQuestions(questions);
+        mQueAndAnsAdapter.refreshQuestions(questions);
     }
 
     @Override public void showQuestionInView(Question question) {
-        mQuestionsAdapter.addQuestion(question);
-        mRecyclerView.smoothScrollToPosition(mQuestionsAdapter.getItemCount() - 1);
+        mQueAndAnsAdapter.addQuestion(question);
+        mRecyclerView.smoothScrollToPosition(mQueAndAnsAdapter.getItemCount() - 1);
         mQuestionEditText.getText().clear();
     }
 

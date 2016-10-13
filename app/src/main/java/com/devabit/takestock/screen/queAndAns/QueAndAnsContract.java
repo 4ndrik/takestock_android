@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.askQuestion;
+package com.devabit.takestock.screen.queAndAns;
 
 import com.devabit.takestock.data.model.Question;
 import com.devabit.takestock.screen.BasePresenter;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
-public interface AskQuestionContract {
+public interface QueAndAnsContract {
 
     interface View extends BaseView<Presenter> {
 

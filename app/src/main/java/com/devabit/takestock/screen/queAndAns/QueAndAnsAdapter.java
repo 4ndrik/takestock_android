@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.askQuestion.adapters;
+package com.devabit.takestock.screen.queAndAns;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +18,12 @@ import java.util.List;
 /**
  * Created by Victor Artemyev on 30/05/2016.
  */
-public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.ViewHolder> {
+class QueAndAnsAdapter extends RecyclerView.Adapter<QueAndAnsAdapter.ViewHolder> {
 
     private final LayoutInflater mLayoutInflater;
     private final List<Question> mQuestions;
 
-    public QuestionsAdapter(Context context) {
+    QueAndAnsAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
         mQuestions = new ArrayList<>();
     }
@@ -46,12 +46,12 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
         notifyDataSetChanged();
     }
 
-    public void addQuestion(Question question) {
+    void addQuestion(Question question) {
         mQuestions.add(question);
         notifyItemInserted(mQuestions.size());
     }
 
-    public void refreshQuestions(List<Question> questions) {
+    void refreshQuestions(List<Question> questions) {
         mQuestions.clear();
         mQuestions.addAll(questions);
         notifyDataSetChanged();
