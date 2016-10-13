@@ -547,6 +547,7 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
     }
 
     @Override public void showEditedAdvertInView(Advert advert) {
+        mAdvert = advert;
         showSnack(R.string.advert_create_advert_edited);
     }
 
@@ -763,6 +764,13 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
 
     private int getUserId() {
         return TakeStockAccount.get(AdvertEditorActivity.this).getUserId();
+    }
+
+    @Override public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(getString(R.string.extra_advert), mAdvert);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override protected void onPause() {

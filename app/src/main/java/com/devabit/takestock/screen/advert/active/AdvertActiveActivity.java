@@ -63,14 +63,14 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_advert_selling);
+        setContentView(R.layout.activity_advert_active);
         ButterKnife.bind(AdvertActiveActivity.this);
         setUpToolbar();
-        mAdvert = getIntent().getParcelableExtra(EXTRA_ADVERT);
-        setUpAppBarLayout(mAdvert);
-        setUpAdvert(mAdvert);
-        setUpTabLayout(mAdvert);
-        createPresenter(mAdvert);
+        Advert advert = getIntent().getParcelableExtra(EXTRA_ADVERT);
+        setUpAppBarLayout(advert);
+        setUpTabLayout(advert);
+        createPresenter(advert);
+        bindAdvert(advert);
     }
 
     private void setUpToolbar() {
@@ -85,13 +85,17 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
             @Override public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_edit_advert:
-                        startActivityForResult(AdvertEditorActivity.getStartIntent(AdvertActiveActivity.this, mAdvert), RC_EDIT);
+                        startAdvertEditorActivity();
                         return true;
                     default:
                         return false;
                 }
             }
         });
+    }
+
+    private void startAdvertEditorActivity() {
+        startActivityForResult(AdvertEditorActivity.getStartIntent(AdvertActiveActivity.this, mAdvert), RC_EDIT);
     }
 
     private void setUpAppBarLayout(final Advert advert) {
@@ -111,29 +115,6 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
                 }
             }
         });
-    }
-
-    private void setUpAdvert(Advert advert) {
-        mNameTextView.setText(advert.getName());
-        mQtyAvailableTextView.setText(getString(R.string.advert_selling_activity_available, advert.getItemsCountNow(), advert.getPackagingName()));
-        mDaysLeftTextView.setText(getString(R.string.advert_selling_activity_days_left, advert.getDaysLeft()));
-        mGuidePriceTextView.setText(getString(R.string.advert_selling_activity_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
-        setUpPhotos(advert.getPhotos());
-    }
-
-    void setUpPhotos(List<Photo> photos) {
-        if (photos.isEmpty()) {
-            mImageView.setImageResource(R.drawable.ic_image_48dp);
-        } else {
-            Glide.with(mImageView.getContext())
-                    .load(photos.get(0).getImage())
-                    .placeholder(R.color.grey_400)
-                    .error(R.drawable.ic_image_48dp)
-                    .centerCrop()
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(mImageView);
-        }
     }
 
     private void setUpTabLayout(Advert advert) {
@@ -161,6 +142,38 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
     @Override public void showUnnotifiedAdvertInView(Advert advert) {
         Timber.d("Unnotified Advert: %s", advert);
         mAdvert = advert;
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_EDIT && resultCode == RESULT_OK) {
+            Advert advert = data.getParcelableExtra(getString(R.string.extra_advert));
+            bindAdvert(advert);
+        }
+    }
+
+    private void bindAdvert(Advert advert) {
+        mAdvert = advert;
+        mNameTextView.setText(advert.getName());
+        mQtyAvailableTextView.setText(getString(R.string.advert_selling_activity_available, advert.getItemsCountNow(), advert.getPackagingName()));
+        mDaysLeftTextView.setText(getString(R.string.advert_selling_activity_days_left, advert.getDaysLeft()));
+        mGuidePriceTextView.setText(getString(R.string.advert_selling_activity_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
+        setUpPhotos(advert.getPhotos());
+    }
+
+    void setUpPhotos(List<Photo> photos) {
+        if (photos.isEmpty()) {
+            mImageView.setImageResource(R.drawable.ic_image_48dp);
+        } else {
+            Glide.with(mImageView.getContext())
+                    .load(photos.get(0).getImage())
+                    .placeholder(R.color.grey_400)
+                    .error(R.drawable.ic_image_48dp)
+                    .centerCrop()
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(mImageView);
+        }
     }
 
     @Override public void onBackPressed() {
