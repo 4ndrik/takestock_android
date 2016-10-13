@@ -35,7 +35,7 @@ import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
 import com.devabit.takestock.screen.advert.detail.dialogs.OfferDialog;
-import com.devabit.takestock.screen.askQuestion.AskQuestionActivity;
+import com.devabit.takestock.screen.queAndAns.QueAndAnsActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.userProfile.UserProfileActivity;
 import com.devabit.takestock.utils.DateUtil;
@@ -227,7 +227,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mMinimumOrderTextView.setText(getString(R.string.advert_detail_minimum_order_unit, advert.getMinOrderQuantity(), packaging));
         mQtyAvailableTextView.setText(getString(R.string.advert_detail_qty_available_unit, advert.getItemsCount(), packaging));
         mDescriptionTextView.setText(advert.getDescription());
-        mExpiryTextView.setText(DateUtil.formatToExpiryDate(advert.getExpiresAt()));
+        mExpiryTextView.setText(DateUtil.formatToDefaultDate(advert.getExpiresAt()));
         Certification certification = advert.getCertification();
         mCertificationTextView.setText(certification == null ? "" : certification.getName());
         mShippingTextView.setText(advert.getShippingDisplay());
@@ -335,7 +335,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     private void startQuestionActivity() {
-        startActivity(AskQuestionActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
+        startActivity(QueAndAnsActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getId()));
     }
 
     @OnClick(R.id.content_user)
