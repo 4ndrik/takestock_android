@@ -53,6 +53,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     private static final String EXTRA_CATEGORY = "EXTRA_CATEGORY";
     private static final String EXTRA_SUBCATEGORY = "EXTRA_SUBCATEGORY";
     private static final String EXTRA_QUERY = "EXTRA_QUERY";
+    private static final int RC_ADVERT_ACTIVE = 102;
 
     public static Intent getSearchingStartIntent(Context context, String query) {
         Intent starter = new Intent(context, AdvertsActivity.class);
@@ -178,7 +179,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void startAdvertSellingActivity(Advert advert) {
-        startActivity(AdvertActiveActivity.getStartIntent(AdvertsActivity.this, advert));
+        startActivityForResult(AdvertActiveActivity.getStartIntent(AdvertsActivity.this, advert), RC_ADVERT_ACTIVE);
     }
 
     private void startAdvertDetailActivity(Advert advert) {
@@ -200,7 +201,8 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_ADVERT_DETAIL && resultCode == RESULT_OK) {
+        if (requestCode == RC_ADVERT_DETAIL || requestCode == RC_ADVERT_ACTIVE
+                && resultCode == RESULT_OK) {
             Advert advert = data.getParcelableExtra(getString(R.string.extra_advert));
             mAdvertsAdapter.refreshAdvert(advert);
         }
