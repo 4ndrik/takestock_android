@@ -54,7 +54,7 @@
                         android:padding="8dp"
                         android:textAppearance="@android:style/TextAppearance.Small"
                         android:textColor="@color/black"
-                        android:text="@string/terms_and_conditions"/>
+                        android:text="@string/sign_up_fragment_term_and_conditions"/>
 
             </android.support.v7.widget.CardView>
 

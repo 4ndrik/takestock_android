@@ -92,7 +92,6 @@
                         android:layout_weight="0.5"
                         android:gravity="center"
                         android:text="@string/sign_in"
-                        android:textAppearance="@android:style/TextAppearance.Small"
                         android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
             </LinearLayout>
@@ -126,15 +125,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="@string/sign_up"
+                        android:text="@string/sign_up_fragment_sign_up"
                         android:theme="@style/FlatButtonPurple"
-                        android:textAppearance="@android:style/TextAppearance.Small"
                         style="@style/Widget.AppCompat.Button.Borderless"/>
 
             </LinearLayout>
 
         </LinearLayout>
-
 
     </ScrollView>
 

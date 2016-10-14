@@ -99,7 +99,7 @@ public class SignInFragment extends Fragment implements SignInContract.View {
 
     @Override public void showUserNameError() {
         mUserNameInputLayout.setErrorEnabled(true);
-        mUserNameInputLayout.setError(getString(R.string.error_incorrect_username));
+        mUserNameInputLayout.setError(getString(R.string.sign_up_fragment_error_username));
     }
 
     @OnTextChanged(R.id.user_name_edit_text)

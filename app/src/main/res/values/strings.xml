@@ -39,7 +39,6 @@
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="slogan">Unlocking value\nin the food industry</string>
-    <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
     <string name="back">back</string>
     <string name="action_settings">Settings</string>
@@ -56,7 +55,6 @@
     <string name="error_unknown">Unknown error.</string>
     <string name="error_incorrect_credentials">Unable to login with provided credentials.</string>
     <string name="error_no_network_connection">There is no network connection right now.</string>
-    <string name="error_incorrect_username">User name is incorrect</string>
     <string name="error_incorrect_password">Password is incorrect</string>
     <string name="error_incorrect_email">Email address is incorrect</string>
     <string name="error_user_exists">A author with that username already exists.</string>
@@ -108,9 +106,7 @@
         of experience across multiple tech and food sectors. We think it is unacceptable that nearly £1Bn in food is
         wasted each year in the UK and we intend to make an impact on that at Takestock.
     </string>
-    <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="terms_of_services_url">http://uat.takestock.com/legal/</string>
-    <string name="agreement">I agree to Takestock\'s</string>
     <string name="select">Select</string>
     <string name="my_business">My business</string>
     <string name="business_name">Business name</string>
@@ -463,5 +459,20 @@
     <string name="password_dialog_change">Change</string>
     <string name="profile_editor_activity_password_changed_error">Changing password failed</string>
     <!--password dialog end-->
+
+    <!--account not activated dialog start-->
+    <string name="account_not_activated_dialog_message">Your account is being activated so you can\'t buy or sell anything just yet. Our team will activate your account within 24 hours.</string>
+    <string name="account_not_activated_dialog_ok">OK</string>
+    <!--account not activated dialog start end-->
+
+    <!--sign up fragment start-->
+    <string name="sign_up_fragment_agreement">By creating an account, you agree to Takestock\'s\u0020</string>
+    <string name="sign_up_fragment_term_and_conditions">Term and Conditions</string>
+    <string name="sign_up_fragment_error_username">User name is incorrect</string>
+    <string name="sign_up_fragment_user_name">User name</string>
+    <string name="sign_up_fragment_email">Email</string>
+    <string name="sign_up_fragment_password">Password</string>
+    <string name="sign_up_fragment_sign_up">Sign up</string>
+    <!--sign up fragment end-->
 
 </resources>
