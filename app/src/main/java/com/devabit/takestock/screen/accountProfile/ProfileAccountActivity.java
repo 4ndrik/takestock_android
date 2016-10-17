@@ -12,11 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
@@ -39,6 +41,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
 
     @BindView(R.id.profile_image_view) protected ImageView mProfileImageView;
     @BindView(R.id.profile_name_text_view) protected TextView mProfileNameTextView;
+    @BindView(R.id.rating_bar) protected RatingBar mRatingBar;
 
     private ProfileAccountContract.Presenter mPresenter;
 
@@ -51,7 +54,14 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
         ButterKnife.bind(ProfileAccountActivity.this);
         mAccount = TakeStockAccount.get(ProfileAccountActivity.this);
         setUpToolbar();
-        createPresenter();
+        bindAccount();
+//        createPresenter();
+    }
+
+    private void bindAccount() {
+        loadProfilePhoto(mAccount.getPhoto());
+        mProfileNameTextView.setText(mAccount.getName());
+        mRatingBar.setRating(mAccount.getRating());
     }
 
     private void setUpToolbar() {
@@ -81,20 +91,21 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
     };
 
     private void startProfileEditActivity() {
-        Intent starter = ProfileEditorActivity.getStartIntent(ProfileAccountActivity.this, mUser);
+        Intent starter = ProfileEditorActivity.getStartIntent(ProfileAccountActivity.this);
         startActivityForResult(starter, RC_EDIT_PROFILE);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_EDIT_PROFILE && resultCode == RESULT_OK) {
-            User user = data.getParcelableExtra(User.class.getName());
-            setUpUser(user);
+//            User user = data.getParcelableExtra(User.class.getName());
+//            setUpUser(user);
+            bindAccount();
         }
     }
 
     private void createPresenter() {
-        new ProfileAccountPresenter(mAccount.getUserId(),
+        new ProfileAccountPresenter(mAccount.getId(),
                 Injection.provideDataRepository(ProfileAccountActivity.this), ProfileAccountActivity.this);
     }
 
@@ -119,6 +130,7 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
                 .load(photoPath)
                 .error(R.drawable.ic_placeholder_user_96dp)
                 .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mProfileImageView);
     }
 
@@ -186,6 +198,6 @@ public class ProfileAccountActivity extends AppCompatActivity implements Profile
 
     @Override protected void onPause() {
         super.onPause();
-        mPresenter.pause();
+//        mPresenter.pause();
     }
 }

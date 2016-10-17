@@ -126,7 +126,7 @@ public class OfferDialog extends DialogFragment implements OfferContract.View {
     }
 
     private int getUserId() {
-        return TakeStockAccount.get(getActivity()).getUserId();
+        return TakeStockAccount.get(getActivity()).getId();
     }
 
     private int getQuantityAsInt() {

@@ -37,7 +37,7 @@ final class ProfileAccountPresenter implements ProfileAccountContract.Presenter 
 
     @Override public void loadUser() {
         mProfileView.setProgressIndicator(true);
-        Subscription subscription = mDataRepository.getUserWithId(mUserId)
+        Subscription subscription = mDataRepository.getAccountUserWithId(mUserId)
                 .compose(RxTransformers.<User>applyObservableSchedulers())
                 .subscribe(new Subscriber<User>() {
                     @Override public void onCompleted() {

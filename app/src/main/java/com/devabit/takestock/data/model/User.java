@@ -43,6 +43,7 @@ public class User implements Parcelable {
     private boolean mHasNotifications;
     private int mBusinessTypeId;
     private int mBusinessSubtypeId;
+    private boolean mIsVerifiedByStaffMember;
     //            "stripe_id": null
     //            "last4": null
 
@@ -52,7 +53,8 @@ public class User implements Parcelable {
                  String groupReferences, String groupCode, boolean isSeller, String description, String oldId,
                  String email, boolean isStaff, boolean isActive, String dateJoined, boolean isSubscribed,
                  boolean isVerified, boolean isVatExempt, double avgRating, String photo, String businessName,
-                 String postcode, String vatNumber, boolean hasNotifications, int businessTypeId, int businessSubtypeId) {
+                 String postcode, String vatNumber, boolean hasNotifications, int businessTypeId, int businessSubtypeId,
+                 boolean isVerifiedByStaffMember) {
         mId = id;
         mUserName = userName;
         mFirstName = firstName;
@@ -88,6 +90,7 @@ public class User implements Parcelable {
         mHasNotifications = hasNotifications;
         mBusinessTypeId = businessTypeId;
         mBusinessSubtypeId = businessSubtypeId;
+        mIsVerifiedByStaffMember = isVerifiedByStaffMember;
     }
 
     protected User(Parcel in) {
@@ -126,6 +129,7 @@ public class User implements Parcelable {
         mHasNotifications = in.readByte() != 0;
         mBusinessTypeId = in.readInt();
         mBusinessSubtypeId = in.readInt();
+        mIsVerifiedByStaffMember = in.readByte() != 0;
     }
 
     @Override
@@ -165,6 +169,7 @@ public class User implements Parcelable {
         dest.writeByte((byte) (mHasNotifications ? 1 : 0));
         dest.writeInt(mBusinessTypeId);
         dest.writeInt(mBusinessSubtypeId);
+        dest.writeByte((byte) (mIsVerifiedByStaffMember ? 1 : 0));
     }
 
     @Override
@@ -324,8 +329,12 @@ public class User implements Parcelable {
         return mBusinessSubtypeId;
     }
 
+    public boolean isVerifiedByStaffMember() {
+        return mIsVerifiedByStaffMember;
+    }
+
     @Override public String toString() {
-        return "Author{" +
+        return "User{" +
                 "mId=" + mId +
                 ", mUserName='" + mUserName + '\'' +
                 ", mFirstName='" + mFirstName + '\'' +
@@ -361,6 +370,7 @@ public class User implements Parcelable {
                 ", mHasNotifications=" + mHasNotifications +
                 ", mBusinessTypeId=" + mBusinessTypeId +
                 ", mBusinessSubtypeId=" + mBusinessSubtypeId +
+                ", mIsVerifiedByStaffMember=" + mIsVerifiedByStaffMember +
                 '}';
     }
 
@@ -401,6 +411,7 @@ public class User implements Parcelable {
         private boolean mHasNotifications;
         private int mBusinessTypeId;
         private int mBusinessSubtypeId;
+        private boolean mIsVerifiedByStaffMember;
 
         public Builder setId(int id) {
             mId = id;
@@ -577,12 +588,18 @@ public class User implements Parcelable {
             return this;
         }
 
+        public Builder setVerifiedByStaffMember(boolean verifiedByStaffMember) {
+            mIsVerifiedByStaffMember = verifiedByStaffMember;
+            return this;
+        }
+
         public User build() {
             return new User(mId, mUserName, mFirstName, mLastName, mBusinessTypeName, mBusinessSubtypeName,
                     mLastLogin, mIsSuperuser, mRole, mPartnerParent, mPartner, mRememberToken, mPaymentMethod,
                     mAccountNumber, mService, mGroupReferences, mGroupCode, mIsSeller, mDescription, mOldId,
                     mEmail, mIsStaff, mIsActive, mDateJoined, mIsSubscribed, mIsVerified, mIsVatExempt, mAvgRating,
-                    mPhoto, mBusinessName, mPostcode, mVatNumber, mHasNotifications, mBusinessTypeId, mBusinessSubtypeId);
+                    mPhoto, mBusinessName, mPostcode, mVatNumber, mHasNotifications, mBusinessTypeId, mBusinessSubtypeId,
+                    mIsVerifiedByStaffMember);
         }
     }
 }

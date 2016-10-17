@@ -35,6 +35,10 @@ public class AuthToken {
         return mToken;
     }
 
+    public void setUser(User user) {
+        mUser = user;
+    }
+
     public User getUser() {
         return mUser;
     }

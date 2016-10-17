@@ -88,7 +88,7 @@ public abstract class BaseAdvertsFragment extends Fragment implements SellingCon
     protected abstract void createPresenter();
 
     protected int getUserId() {
-        return TakeStockAccount.get(getActivity()).getUserId();
+        return TakeStockAccount.get(getActivity()).getId();
     }
 
     public abstract void onDisplay();

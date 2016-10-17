@@ -157,7 +157,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void setUpAdvertAdapter(RecyclerView recyclerView) {
-        mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext(), mAccount.getUserId());
+        mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext(), mAccount.getId());
         mAdvertsAdapter.setOnItemClickListener(new AdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Advert advert, boolean isAccount) {
                 if (isAccount) startAdvertSellingActivity(advert);
@@ -171,7 +171,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
                     mAdvertsAdapter.stopAdvertProcessing(advert.getId());
                     startEntryActivity();
                 } else {
-                    mPresenter.addOrRemoveWatchingAdvert(advert, mAccount.getUserId());
+                    mPresenter.addOrRemoveWatchingAdvert(advert, mAccount.getId());
                 }
             }
         });

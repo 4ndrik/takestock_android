@@ -8,7 +8,7 @@ import com.devabit.takestock.rx.RxTransformers;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Func7;
+import rx.functions.Func8;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -26,8 +26,6 @@ class MainPresenter implements MainContract.Presenter {
 
     private CompositeSubscription mSubscriptions;
 
-    private boolean mIsDataLoaded;
-
     MainPresenter(@NonNull DataRepository dataRepository, @NonNull MainContract.View mainView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mMainView = checkNotNull(mainView, "mainView cannot be null.");
@@ -36,15 +34,13 @@ class MainPresenter implements MainContract.Presenter {
     }
 
     @Override public void resume() {
-        updateData();
     }
 
-    @Override public void updateData() {
-//        mMainView.showDataUpdated();
-        if (mIsDataLoaded) return;
+    @Override public void updateData(final int userId) {
         mMainView.setProgressIndicator(true);
         Subscription subscription = Observable
                 .zip(
+                        mDataRepository.refreshAccountUserWithId(userId),
                         mDataRepository.refreshCategories(),
                         mDataRepository.refreshCertifications(),
                         mDataRepository.refreshConditions(),
@@ -52,8 +48,8 @@ class MainPresenter implements MainContract.Presenter {
                         mDataRepository.refreshShippings(),
                         mDataRepository.refreshSizes(),
                         mDataRepository.updateBusinessTypes(),
-                        new Func7<List<Category>, List<Certification>, List<Condition>, List<Packaging>, List<Shipping>, List<Size>, List<BusinessType>, Void>() {
-                            @Override public Void call(List<Category> categories, List<Certification> certifications, List<Condition> conditions, List<Packaging> packagings, List<Shipping> shippings, List<Size> sizes, List<BusinessType> businessTypes) {
+                        new Func8<User, List<Category>, List<Certification>, List<Condition>, List<Packaging>, List<Shipping>, List<Size>, List<BusinessType>, Void>() {
+                            @Override public Void call(User user, List<Category> categories, List<Certification> certifications, List<Condition> conditions, List<Packaging> packagings, List<Shipping> shippings, List<Size> sizes, List<BusinessType> businessTypes) {
                                 return null;
                             }
                         }
@@ -61,7 +57,6 @@ class MainPresenter implements MainContract.Presenter {
                 .compose(RxTransformers.<Void>applyObservableSchedulers())
                 .subscribe(new Subscriber<Void>() {
                     @Override public void onCompleted() {
-                        mIsDataLoaded = true;
                         mMainView.setProgressIndicator(false);
                         mMainView.showDataUpdated();
                     }

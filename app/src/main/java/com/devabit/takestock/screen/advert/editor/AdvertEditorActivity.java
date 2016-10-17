@@ -763,7 +763,7 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
     }
 
     private int getUserId() {
-        return TakeStockAccount.get(AdvertEditorActivity.this).getUserId();
+        return TakeStockAccount.get(AdvertEditorActivity.this).getId();
     }
 
     @Override public void onBackPressed() {

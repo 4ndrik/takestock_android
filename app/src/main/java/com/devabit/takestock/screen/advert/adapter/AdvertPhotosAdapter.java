@@ -22,12 +22,6 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
     private final LayoutInflater mLayoutInflater;
     private final List<Photo> mPhotos;
 
-    public interface OnPositionListener {
-        void onPosition(int position, int count);
-    }
-
-    private OnPositionListener mPositionListener;
-
     public AdvertPhotosAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
         mPhotos = new ArrayList<>();
@@ -39,7 +33,6 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
-        if (mPositionListener != null) mPositionListener.onPosition(position, getItemCount());
         Photo photo = mPhotos.get(position);
         holder.loadPhoto(photo);
     }
@@ -51,10 +44,6 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
     public void addPhotos(List<Photo> photos) {
         mPhotos.addAll(photos);
         notifyDataSetChanged();
-    }
-
-    public void setOnPositionListener(OnPositionListener positionListener) {
-        mPositionListener = positionListener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,7 +58,6 @@ public class AdvertPhotosAdapter extends RecyclerView.Adapter<AdvertPhotosAdapte
         void loadPhoto(Photo photo) {
             Glide.with(mImageView.getContext())
                     .load(photo.getImage())
-                    .placeholder(R.color.grey_200)
                     .centerCrop()
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)

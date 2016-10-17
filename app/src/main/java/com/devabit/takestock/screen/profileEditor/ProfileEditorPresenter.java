@@ -35,7 +35,7 @@ class ProfileEditorPresenter implements ProfileEditorContract.Presenter {
     @Override public void resume() {
     }
 
-    @Override public void fetchUserProfileData() {
+    @Override public void loadBusinessTypes() {
         mProfileView.setProgressIndicator(true);
         Subscription subscription = mDataRepository.getBusinessTypes()
                 .compose(RxTransformers.<List<BusinessType>>applyObservableSchedulers())

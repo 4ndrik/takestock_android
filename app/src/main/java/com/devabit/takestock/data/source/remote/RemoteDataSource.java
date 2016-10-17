@@ -15,6 +15,7 @@ import com.devabit.takestock.data.source.remote.filterBuilder.OfferFilterUrlBuil
 import com.devabit.takestock.data.source.remote.filterBuilder.QuestionFilterUrlBuilder;
 import com.devabit.takestock.data.source.remote.jsonModel.*;
 import com.devabit.takestock.data.source.remote.jsonModel.deserializer.*;
+import com.devabit.takestock.data.source.remote.jsonModel.serializer.UserJsonSerializer;
 import com.devabit.takestock.data.source.remote.mapper.BusinessTypeJsonMapper;
 import com.devabit.takestock.exception.HttpResponseException;
 import com.devabit.takestock.exception.NetworkConnectionException;
@@ -83,7 +84,8 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .registerTypeAdapter(OfferStatusListJson.class, new OfferStatusJsonDeserializer())
                 .registerTypeAdapter(PackagingListJson.class, new PackagingJsonDeserializer())
                 .registerTypeAdapter(ShippingListJson.class, new ShippingJsonDeserializer())
-                .registerTypeAdapter(SizeListJson.class, new SizeJsonDeserializer());
+                .registerTypeAdapter(SizeListJson.class, new SizeJsonDeserializer())
+                .registerTypeAdapter(UserEditorJson.class, new UserJsonSerializer());
         return builder.create();
     }
 
@@ -779,7 +781,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 .map(new Func1<User, String>() {
                     @Override public String call(User user) {
                         try {
-                            return mGson.toJson(new UserJson(user));
+                            return mGson.toJson(new UserEditorJson(user));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -797,7 +799,25 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         UserJson json = mGson.fromJson(jsonString, UserJson.class);
                         return json.toUser();
                     }
+                })
+                .doOnNext(new Action1<User>() {
+                    @Override public void call(User user) {
+                        mAccount.refreshAccount(user);
+                    }
                 });
+    }
+
+    @Override public Observable<User> refreshAccountUserWithId(int userId) {
+        return getUserWithId(userId)
+                .doOnNext(new Action1<User>() {
+                    @Override public void call(User user) {
+                       mAccount.refreshAccount(user);
+                    }
+                });
+    }
+
+    @Override public Observable<User> getAccountUserWithId(int userId) {
+        return null;
     }
 
     @Override public Observable<User> getUserWithId(int id) {

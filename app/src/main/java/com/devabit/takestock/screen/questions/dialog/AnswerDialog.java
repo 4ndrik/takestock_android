@@ -103,7 +103,7 @@ public class AnswerDialog extends DialogFragment implements DialogInterface.OnCl
     }
 
     private int getUserId() {
-        return TakeStockAccount.get(getActivity()).getUserId();
+        return TakeStockAccount.get(getActivity()).getId();
     }
 
     private String getAnswer() {

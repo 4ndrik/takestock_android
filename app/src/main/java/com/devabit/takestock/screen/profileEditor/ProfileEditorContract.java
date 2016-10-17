@@ -27,12 +27,11 @@ interface ProfileEditorContract {
         void showUnknownError();
 
         void setProgressIndicator(boolean isActive);
-
     }
 
     interface Presenter extends BasePresenter {
 
-        void fetchUserProfileData();
+        void loadBusinessTypes();
 
         void changePassword(String currentPass, String newPass);
 

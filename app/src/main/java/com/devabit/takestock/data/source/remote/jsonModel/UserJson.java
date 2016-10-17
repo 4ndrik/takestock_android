@@ -49,6 +49,7 @@ public class UserJson {
     public String stripe_id;
     public int last4;
     public boolean has_notifications;
+    public boolean verified_by_staff_member;
 
     public UserJson(User user) throws IOException {
         this.id = user.getId();
@@ -79,9 +80,7 @@ public class UserJson {
         this.is_verified = user.isVerified();
         this.is_vat_exempt = user.isVatExempt();
         this.avg_rating = user.getAvgRating();
-        this.photo_b64 = user.getPhoto() == null
-                ? null
-                : Encoder.encodeFileToBase64(user.getPhoto());
+        this.photo_b64 = user.getPhoto() == null ? null : Encoder.encodeFileToBase64(user.getPhoto());
         this.bussines_name = user.getBusinessName();
         this.postcode = user.getPostcode();
         this.vat_number = user.getVatNumber();
@@ -90,6 +89,7 @@ public class UserJson {
         this.stripe_id = "";
         this.last4 = 0;
         this.has_notifications = user.hasNotifications();
+        this.verified_by_staff_member = user.isVerifiedByStaffMember();
     }
 
     public User toUser() {
@@ -128,6 +128,7 @@ public class UserJson {
                 .setHasNotifications(has_notifications)
                 .setBusinessTypeId(bussines_type)
                 .setBusinessSubtypeId(business_sub_type)
+                .setVerifiedByStaffMember(verified_by_staff_member)
                 .build();
     }
 

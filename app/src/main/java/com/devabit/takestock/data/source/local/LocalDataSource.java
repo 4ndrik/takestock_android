@@ -45,12 +45,13 @@ public class LocalDataSource implements DataSource {
     private final RealmConfiguration mRealmConfiguration;
 
     private LocalDataSource(Context context) {
-        mRealmConfiguration = buildRealmConfiguration(context);
+        Realm.init(context);
+        mRealmConfiguration = buildRealmConfiguration();
         Realm.setDefaultConfiguration(mRealmConfiguration);
     }
 
-    private RealmConfiguration buildRealmConfiguration(Context context) {
-        return new RealmConfiguration.Builder(context)
+    private RealmConfiguration buildRealmConfiguration() {
+        return new RealmConfiguration.Builder()
                 .name("takestock.realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
@@ -415,6 +416,19 @@ public class LocalDataSource implements DataSource {
                         dao.storeOrUpdateUser(user);
                     }
                 });
+    }
+
+    @Override public Observable<User> refreshAccountUserWithId(int userId) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<User> getAccountUserWithId(final int userId) {
+        return Observable.fromCallable(new Callable<User>() {
+            @Override public User call() throws Exception {
+                UserRealmDao dao = new UserRealmDao(mRealmConfiguration);
+                return dao.getUserWithId(userId);
+            }
+        });
     }
 
     @Override public Observable<User> getUserWithId(final int id) {

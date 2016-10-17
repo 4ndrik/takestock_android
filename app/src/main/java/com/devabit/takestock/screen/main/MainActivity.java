@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.*;
@@ -20,12 +21,12 @@ import butterknife.OnClick;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
+import com.devabit.takestock.screen.accountProfile.ProfileAccountActivity;
 import com.devabit.takestock.screen.advert.editor.AdvertEditorActivity;
 import com.devabit.takestock.screen.adverts.AdvertsActivity;
 import com.devabit.takestock.screen.buying.BuyingActivity;
 import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
-import com.devabit.takestock.screen.accountProfile.ProfileAccountActivity;
 import com.devabit.takestock.screen.selling.SellingActivity;
 import com.devabit.takestock.screen.watching.WatchingActivity;
 
@@ -71,50 +72,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         ButterKnife.bind(MainActivity.this);
         mAccount = TakeStockAccount.get(MainActivity.this);
         createPresenter();
-        setUpNavigationView();
         setUpSearchEditText();
-        setUpTitleNavigationView();
+        setUpNavigationView();
+        setUpHeaderNavigationView();
     }
 
     private void createPresenter() {
-        new MainPresenter(
-                Injection.provideDataRepository(MainActivity.this), MainActivity.this);
+        new MainPresenter(Injection.provideDataRepository(MainActivity.this), MainActivity.this);
     }
 
     @Override public void setPresenter(@NonNull MainContract.Presenter presenter) {
         mPresenter = presenter;
-    }
-
-    private void setUpNavigationView() {
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                switch (itemId) {
-                    case R.id.nav_profile:
-                        onProfileMenuItemClick();
-                        return true;
-
-                    case R.id.nav_notifications:
-                        onNotificationMenuItemClick();
-                        return true;
-
-                    case R.id.nav_watching:
-                        onWatchingMenuItemClick();
-                        return true;
-
-                    case R.id.nav_buying:
-                        onBuyingMenuItemClick();
-                        return true;
-
-                    case R.id.nav_selling:
-                        onSellingMenuItemClick();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        });
+        mPresenter.updateData(mAccount.getId());
     }
 
     private void setUpSearchEditText() {
@@ -158,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onNotificationMenuItemClick() {
-//        if (lacksAccount()) startEntryActivity(REQUEST_CODE_NOTIFICATIONS_ACTIVITY);
         showNotYetImplementedSnackbar();
     }
 
@@ -190,7 +158,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onSellSomethingButtonClick() {
         closeDrawer();
         if (lacksAccount()) startEntryActivity();
-        else startSellSomethingActivity();
+        if (mAccount.isVerified()) {
+            startSellSomethingActivity();
+        } else {
+            displayAccountNotActivatedDialog();
+        }
+    }
+
+    private void displayAccountNotActivatedDialog() {
+        new AlertDialog.Builder(MainActivity.this)
+                .setMessage(R.string.account_not_activated_dialog_message)
+                .setPositiveButton(R.string.account_not_activated_dialog_ok, null)
+                .show();
     }
 
     private void startEntryActivity() {
@@ -208,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_ENTRY && resultCode == RESULT_OK) {
-            setUpTitleNavigationView();
+            setUpHeaderNavigationView();
         }
     }
 
@@ -219,23 +198,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         if (action.equals(getString(R.string.action_sign_in))
                 || action.equals(getString(R.string.action_sign_up))
                 || action.equals(getString(R.string.action_log_out))) {
-            setUpTitleNavigationView();
-        }
-    }
-
-    private void setUpTitleNavigationView() {
-        TextView titleTextView = ButterKnife.findById(mNavigationView.getHeaderView(0), R.id.title_drawer_header_text_view);
-        if (lacksAccount()) {
-            titleTextView.setText(R.string.sign_in);
-            titleTextView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    closeDrawer();
-                    startEntryActivity();
-                }
-            });
-        } else {
-            titleTextView.setText(mAccount.getUserName());
-            titleTextView.setOnClickListener(null);
+            setUpHeaderNavigationView();
         }
     }
 
@@ -248,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override protected void onStart() {
-        super.onStart();
         mPresenter.resume();
+        super.onStart();
     }
 
     @OnClick(R.id.browse_categories_button)
@@ -280,6 +243,57 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override public void showDataUpdated() {
         mViewSwitcher.setDisplayedChild(INDEX_MAIN_CONTENT);
+        setUpNavigationView();
+        setUpHeaderNavigationView();
+    }
+
+    private void setUpNavigationView() {
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                switch (itemId) {
+                    case R.id.nav_profile:
+                        onProfileMenuItemClick();
+                        return true;
+
+                    case R.id.nav_notifications:
+                        onNotificationMenuItemClick();
+                        return true;
+
+                    case R.id.nav_watching:
+                        onWatchingMenuItemClick();
+                        return true;
+
+                    case R.id.nav_buying:
+                        onBuyingMenuItemClick();
+                        return true;
+
+                    case R.id.nav_selling:
+                        onSellingMenuItemClick();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+    }
+
+    private void setUpHeaderNavigationView() {
+        TextView titleTextView = ButterKnife.findById(mNavigationView.getHeaderView(0), R.id.title_drawer_header_text_view);
+        if (lacksAccount()) {
+            titleTextView.setText(R.string.sign_in);
+            titleTextView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    closeDrawer();
+                    startEntryActivity();
+                }
+            });
+        } else {
+            titleTextView.setText(mAccount.getName());
+            titleTextView.setOnClickListener(null);
+        }
     }
 
     @Override public void showLoadingDataError() {
@@ -295,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Snackbar.make(mContent, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        mPresenter.updateData();
+                        mPresenter.updateData(mAccount.getId());
                     }
                 })
                 .setActionTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))

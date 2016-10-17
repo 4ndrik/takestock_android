@@ -90,6 +90,7 @@ public class UserRealm extends RealmObject {
         return new User.Builder()
                 .setId(mId)
                 .setBusinessName(mBusinessName)
+                .setBusinessTypeName(mBusinessTypeName)
                 .setBusinessSubtypeName(mBusinessSubtypeName)
                 .setLastLogin(mLastLogin)
                 .setIsSuperuser(mIsSuperuser)
@@ -103,6 +104,7 @@ public class UserRealm extends RealmObject {
                 .setGroupReferences(mGroupReferences)
                 .setGroupCode(mGroupCode)
                 .setIsSeller(mIsSeller)
+                .setDescription(mDescription)
                 .setOldId(mOldId)
                 .setUserName(mUserName)
                 .setFirstName(mFirstName)
@@ -123,6 +125,5 @@ public class UserRealm extends RealmObject {
                 .setBusinessTypeId(mBusinessTypeId)
                 .setBusinessSubtypeId(mBusinessSubtypeId)
                 .build();
-
     }
 }

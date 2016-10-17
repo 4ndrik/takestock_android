@@ -56,7 +56,20 @@ public class DataRepository implements DataSource {
     /********* Entries Methods  ********/
 
     @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
-        return mRemoteDataSource.signUp(credentials);
+        return mRemoteDataSource.signUp(credentials)
+                .flatMap(new Func1<AuthToken, Observable<AuthToken>>() {
+                    @Override public Observable<AuthToken> call(AuthToken authToken) {
+                        return Observable.zip(
+                                Observable.just(authToken),
+                                refreshAccountUserWithId(authToken.getUserId()),
+                                new Func2<AuthToken, User, AuthToken>() {
+                                    @Override public AuthToken call(AuthToken authToken, User user) {
+                                        authToken.setUser(user);
+                                        return authToken;
+                                    }
+                                });
+                    }
+                });
     }
 
     @Override public Observable<AuthToken> signIn(@NonNull UserCredentials credentials) {
@@ -360,6 +373,20 @@ public class DataRepository implements DataSource {
                         return mLocalDataSource.updateUser(user);
                     }
                 });
+    }
+
+    @Override public Observable<User> refreshAccountUserWithId(int userId) {
+        if (userId <= 0) return Observable.just(null);
+        return mRemoteDataSource.refreshAccountUserWithId(userId)
+                .flatMap(new Func1<User, Observable<User>>() {
+                    @Override public Observable<User> call(User user) {
+                        return mLocalDataSource.updateUser(user);
+                    }
+                });
+    }
+
+    @Override public Observable<User> getAccountUserWithId(int userId) {
+        return mLocalDataSource.getAccountUserWithId(userId);
     }
 
     @Override public Observable<User> getUserWithId(int id) {

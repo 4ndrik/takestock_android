@@ -134,7 +134,7 @@ public class QueAndAnsActivity extends AppCompatActivity implements QueAndAnsCon
 
     private Question createQuestion() {
         return new Question.Builder()
-                .setUserId(mAccount.getUserId())
+                .setUserId(mAccount.getId())
                 .setAdvertId(mAdvertId)
                 .setMessage(getMessage())
                 .create();

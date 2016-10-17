@@ -158,6 +158,10 @@ public interface DataSource {
 
     Observable<User> updateUser(@NonNull User user);
 
+    Observable<User> refreshAccountUserWithId(int userId);
+
+    Observable<User> getAccountUserWithId(int userId);
+
     Observable<User> getUserWithId(int id);
 
     Observable<Boolean> changePassword(String currentPass, String newPass);

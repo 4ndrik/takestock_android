@@ -3,7 +3,6 @@ package com.devabit.takestock.screen.advert.detail;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -11,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
 import android.view.Gravity;
@@ -29,14 +29,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
-import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.data.model.Certification;
-import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.User;
+import com.devabit.takestock.data.model.*;
 import com.devabit.takestock.screen.advert.adapter.AdvertPhotosAdapter;
 import com.devabit.takestock.screen.advert.detail.dialogs.OfferDialog;
-import com.devabit.takestock.screen.queAndAns.QueAndAnsActivity;
 import com.devabit.takestock.screen.entry.EntryActivity;
+import com.devabit.takestock.screen.queAndAns.QueAndAnsActivity;
 import com.devabit.takestock.screen.userProfile.UserProfileActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.GravitySnapHelper;
@@ -96,7 +93,6 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         setUpToolbar();
         setUpPhotosRecyclerView();
         setUpSimilarAdvertsRecyclerView();
-//        setUpScrollView();
         int advertId = getIntent().getIntExtra(EXTRA_ADVERT_ID, 0);
         createPresenter(advertId);
     }
@@ -148,24 +144,6 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         recyclerView.setAdapter(mListingAdapter);
     }
 
-    private void setUpScrollView() {
-        mScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            final Rect scrollBounds = new Rect();
-            boolean isToolbarTitle;
-
-            @Override public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                mScrollView.getHitRect(scrollBounds);
-                if (mNameTextView.getLocalVisibleRect(scrollBounds) && isToolbarTitle) {
-                    mToolbar.setTitle("");
-                    isToolbarTitle = false;
-                } else if (!isToolbarTitle) {
-                    mToolbar.setTitle(mAdvert.getName());
-                    isToolbarTitle = true;
-                }
-            }
-        });
-    }
-
     private void createPresenter(int advertId) {
         new AdvertDetailPresenter(advertId,
                 Injection.provideDataRepository(AdvertDetailActivity.this), AdvertDetailActivity.this);
@@ -178,12 +156,18 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     @OnClick(R.id.watching_fab)
     protected void onWatchingFabClick() {
-        mPresenter.addOrRemoveWatchingAdvert(mAdvert, mAccount.getUserId());
+        mPresenter.addOrRemoveWatchingAdvert(mAdvert, mAccount.getId());
     }
 
     @OnClick(R.id.make_button)
     protected void onMakeOfferButtonClick() {
-        displayOfferMakerDialog();
+        if (mAccount.lacksAccount()) {
+            startEntryActivity();
+        } else if (mAccount.isVerified()) {
+            displayOfferMakerDialog();
+        } else {
+            displayAccountNotActivatedDialog();
+        }
     }
 
     private void displayOfferMakerDialog() {
@@ -213,14 +197,12 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     }
 
     @Override public void showAdvertInView(Advert advert) {
-        mAdvert = advert;
-        bindAdvert(mAdvert);
-        setUpWatchingFAB(mAdvert);
+        bindAdvert(advert);
     }
 
     private void bindAdvert(Advert advert) {
-        mPhotosAdapter.addPhotos(advert.getPhotos());
-        setPhotoPosition(0);
+        mAdvert = advert;
+        setUpPhotos(advert.getPhotos());
         mNameTextView.setText(advert.getName());
         String packaging = advert.getPackagingName();
         mGuidePriceTextView.setText(getString(R.string.advert_detail_guide_price_per_unit, advert.getGuidePrice(), packaging));
@@ -235,6 +217,12 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mLocationTextView.setText(advert.getLocation());
         setUpWatchingFAB(advert);
         bindUser(advert.getUser());
+    }
+
+    private void setUpPhotos(List<Photo> photos) {
+        mPhotosAdapter.addPhotos(photos);
+        mPhotoCountTextView.setVisibility(View.VISIBLE);
+        setPhotoPosition(0);
     }
 
     private void setPhotoPosition(int position) {
@@ -277,7 +265,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     private void setUpWatchingFAB(Advert advert) {
         int color;
-        if (advert.hasSubscriber(mAccount.getUserId())) {
+        if (advert.hasSubscriber(mAccount.getId())) {
             mWatchingFAB.setImageResource(R.drawable.ic_eye_white_24dp);
             color = ContextCompat.getColor(AdvertDetailActivity.this, R.color.jam);
         } else {
@@ -321,10 +309,13 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         }
     }
 
-    @OnClick(R.id.ask_button)
-    protected void onAskButtonClick() {
-        if (mAccount.lacksAccount()) startEntryActivity();
-        else startQuestionActivity();
+    @OnClick(R.id.question_button)
+    protected void onQuestionButtonClick() {
+        if (mAccount.lacksAccount()) {
+            startEntryActivity();
+        } else if (mAccount.isVerified()) {
+            startQuestionActivity();
+        } else displayAccountNotActivatedDialog();
     }
 
     private void startQuestionActivity() {
@@ -334,6 +325,13 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @OnClick(R.id.content_user)
     void onUserContentClick() {
         startActivity(UserProfileActivity.getStartIntent(AdvertDetailActivity.this, mAdvert.getUser()));
+    }
+
+    private void displayAccountNotActivatedDialog() {
+        new AlertDialog.Builder(AdvertDetailActivity.this)
+                .setMessage(R.string.account_not_activated_dialog_message)
+                .setPositiveButton(R.string.account_not_activated_dialog_ok, null)
+                .show();
     }
 
     @Override public void onBackPressed() {

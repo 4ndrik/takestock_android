@@ -13,6 +13,7 @@
             android:id="@+id/appbar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/grey_200"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -45,7 +46,13 @@
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:layout_gravity="bottom|center"
                     app:layout_collapseMode="parallax"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     tools:text="0 / 0"/>
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="?attr/actionBarSize"
+                  android:background="@drawable/bg_gradient_top"/>
 
             <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -111,7 +118,7 @@
                 style="@style/Widget.AppCompat.Button"/>
 
         <Button
-                android:id="@+id/ask_button"
+                android:id="@+id/question_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"

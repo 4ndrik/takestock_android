@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
@@ -37,10 +38,8 @@ import java.util.List;
  */
 public class ProfileEditorActivity extends AppCompatActivity implements ProfileEditorContract.View {
 
-    public static Intent getStartIntent(Context context, User user) {
-        Intent starter = new Intent(context, ProfileEditorActivity.class);
-        starter.putExtra(User.class.getName(), user);
-        return starter;
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, ProfileEditorActivity.class);
     }
 
     @BindView(R.id.content) protected View mContent;
@@ -61,7 +60,7 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     @BindView(R.id.email_subscription_check_box) protected CheckBox mEmailSubscriptionCheckBox;
 
     private TakeStockAccount mAccount;
-    private User mUser;
+//    private User mUser;
     private Menu mMenu;
     private String mImageFilePath;
 
@@ -73,21 +72,10 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_editor);
         ButterKnife.bind(ProfileEditorActivity.this);
-        mAccount = TakeStockAccount.get(ProfileEditorActivity.this);
         setUpToolbar();
-        mUser = getIntent().getParcelableExtra(User.class.getName());
-        setUpUser(mUser);
+        mAccount = TakeStockAccount.get(ProfileEditorActivity.this);
+        bindAccount(mAccount);
         createPresenter();
-    }
-
-    private void createPresenter() {
-        new ProfileEditorPresenter(
-                Injection.provideDataRepository(ProfileEditorActivity.this), ProfileEditorActivity.this);
-    }
-
-    @Override public void setPresenter(@NonNull ProfileEditorContract.Presenter presenter) {
-        mPresenter = presenter;
-        mPresenter.fetchUserProfileData();
     }
 
     private void setUpToolbar() {
@@ -124,40 +112,37 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
 
     private User createUser() {
         return new User.Builder()
-                .setId(mUser.getId())
-                .setBusinessSubtypeName(null)
-                .setLastLogin(mUser.getLastLogin())
-                .setIsSuperuser(mUser.isSuperuser())
-                .setRole(mUser.getRole())
-                .setPartnerParent(mUser.getPartnerParent())
-                .setPartner(mUser.getPartner())
-                .setRememberToken(mUser.getRememberToken())
-                .setPaymentMethod(mUser.getPaymentMethod())
-                .setAccountNumber(mUser.getAccountNumber())
-                .setService(mUser.getService())
-                .setGroupReferences(mUser.getGroupReferences())
-                .setGroupCode(mUser.getGroupCode())
-                .setIsSeller(mUser.isSeller())
-                .setOldId(mUser.getOldId())
+                .setId(mAccount.getId())
                 .setUserName(getName())
-                .setFirstName(mUser.getFirstName())
-                .setLastName(mUser.getLastName())
                 .setEmail(getEmail())
-                .setIsStaff(mUser.isStaff())
-                .setIsActive(mUser.isActive())
-                .setDateJoined(mUser.getDateJoined())
                 .setIsSubscribed(isEmailSubscribed())
-                .setIsVerified(mUser.isVerified())
-                .setIsVatExempt(mUser.isVatExempt())
-                .setAvgRating(mUser.getAvgRating())
                 .setBusinessName(getBusinessName())
                 .setPhoto(getPhoto())
                 .setPostcode(getPostcode())
                 .setVatNumber(getVatNumber())
-                .setHasNotifications(mUser.hasNotifications())
                 .setBusinessTypeId(getBusinessTypeId())
                 .setBusinessSubtypeId(getBusinessSubtypeId())
                 .build();
+    }
+
+    private void bindAccount(TakeStockAccount account) {
+        setUpProfileImage(account.getPhoto());
+        mUserNameEditText.setText(account.getName());
+        mEmailEditText.setText(account.getEmail());
+        mPasswordEditText.setText(account.getPassword());
+        mEmailSubscriptionCheckBox.setChecked(account.isSubscribed());
+        mBusinessNameEditText.setText(account.getBusinessName());
+        mPostcodeEditText.setText(account.getPostcode());
+        mVatNumberEditText.setText(account.getVatNumber());
+    }
+
+    private void createPresenter() {
+        new ProfileEditorPresenter(Injection.provideDataRepository(ProfileEditorActivity.this), ProfileEditorActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull ProfileEditorContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.loadBusinessTypes();
     }
 
     @OnClick(R.id.profile_image_view)
@@ -233,7 +218,7 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     }
 
     private void setUserBusinessTypeSelection(HintSpinnerAdapter<BusinessType> adapter, List<BusinessType> types) {
-        BusinessType type = getBusinessTypeById(mUser.getBusinessTypeId(), types);
+        BusinessType type = getBusinessTypeById(mAccount.getBusinessTypeId(), types);
         if (type == null) return;
         int position = adapter.getPosition(type);
         mBusinessTypeSpinner.setSelection(position);
@@ -264,7 +249,7 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
 
     private void setUserBusinessSubtypesTypeSelection(HintSpinnerAdapter<BusinessSubtype> adapter,
                                                       List<BusinessSubtype> subtypes) {
-        BusinessSubtype subtype = getBusinessSubtypeById(mUser.getBusinessSubtypeId(), subtypes);
+        BusinessSubtype subtype = getBusinessSubtypeById(mAccount.getBusinessSubtypeId(), subtypes);
         if (subtype == null) return;
         int position = adapter.getPosition(subtype);
         mBusinessSubtypeSpinner.setSelection(position);
@@ -289,6 +274,7 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
                 .load(mImageFilePath)
                 .error(R.drawable.ic_placeholder_user_96dp)
                 .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mProfileImageView);
     }
 
@@ -305,7 +291,7 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     }
 
     private String getPhoto() {
-        return mImageFilePath.equals(mUser.getPhoto()) ? null : mImageFilePath;
+        return mImageFilePath.equals(mAccount.getPhoto()) ? null : mImageFilePath;
     }
 
     private String getPostcode() {
@@ -331,7 +317,8 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     }
 
     @Override public void showUserUpdatedInView(User user) {
-        mUser = user;
+        Timber.d(user.toString());
+//        mUser = user;
         mIsUpdated = true;
         showSnack(R.string.profile_editor_activity_saved);
     }
@@ -339,17 +326,18 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     @Override public void showPasswordError() {
         showSnack(R.string.profile_editor_activity_password_changed_error);
     }
-
-    private void setUpUser(User user) {
-        setUpProfileImage(user.getPhoto());
-        mUserNameEditText.setText(user.getUserName());
-        mEmailEditText.setText(user.getEmail());
-        mPasswordEditText.setText(mAccount.getUserPassword());
-        mEmailSubscriptionCheckBox.setChecked(user.isSubscribed());
-        mBusinessNameEditText.setText(user.getBusinessName());
-        mPostcodeEditText.setText(user.getPostcode());
-        mVatNumberEditText.setText(user.getVatNumber());
-    }
+//
+//    private void setUpUser(User user) {
+//        mUser = user;
+//        setUpProfileImage(user.getPhoto());
+//        mUserNameEditText.setText(user.getUserName());
+//        mEmailEditText.setText(user.getEmail());
+//        mPasswordEditText.setText(mAccount.getPassword());
+//        mEmailSubscriptionCheckBox.setChecked(user.isSubscribed());
+//        mBusinessNameEditText.setText(user.getBusinessName());
+//        mPostcodeEditText.setText(user.getPostcode());
+//        mVatNumberEditText.setText(user.getVatNumber());
+//    }
 
     @OnClick(R.id.password_edit_text)
     void onPasswordEditTextClick() {
@@ -357,10 +345,10 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     }
 
     private void displayPasswordDialog() {
-        PasswordDialog dialog = PasswordDialog.newInstance(mAccount.getUserPassword());
+        PasswordDialog dialog = PasswordDialog.newInstance(mAccount.getPassword());
         dialog.setOnPasswordChangeListener(new PasswordDialog.OnPasswordChangeListener() {
             @Override public void onPasswordChanged(String newPassword) {
-                mPresenter.changePassword(mAccount.getUserPassword(), newPassword);
+                mPresenter.changePassword(mAccount.getPassword(), newPassword);
             }
         });
         dialog.show(getFragmentManager(), dialog.getClass().getName());
@@ -413,9 +401,10 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
 
     @Override public void onBackPressed() {
         if (mIsUpdated) {
-            Intent intent = new Intent();
-            intent.putExtra(User.class.getName(), mUser);
-            setResult(RESULT_OK, intent);
+//            Intent intent = new Intent();
+//            intent.putExtra(User.class.getName(), mUser);
+//            setResult(RESULT_OK, intent);
+            setResult(RESULT_OK);
             finish();
         } else {
             super.onBackPressed();
