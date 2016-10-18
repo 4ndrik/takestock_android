@@ -82,22 +82,6 @@
                     android:background="?attr/selectableItemBackground"/>
 
             <TextView
-                    android:id="@+id/settings_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="24dp"
-                    android:gravity="start|center"
-                    android:textAllCaps="false"
-                    android:textColor="@color/grey_600"
-                    android:drawablePadding="32dp"
-                    android:drawableStart="@drawable/ic_settings_grey600_24dp"
-                    android:text="@string/settings"
-                    android:background="?attr/selectableItemBackground"/>
-
-            <TextView
                     android:id="@+id/about_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

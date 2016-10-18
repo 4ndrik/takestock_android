@@ -60,11 +60,8 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     @BindView(R.id.email_subscription_check_box) protected CheckBox mEmailSubscriptionCheckBox;
 
     private TakeStockAccount mAccount;
-//    private User mUser;
     private Menu mMenu;
     private String mImageFilePath;
-
-    private boolean mIsUpdated;
 
     private ProfileEditorContract.Presenter mPresenter;
 
@@ -317,27 +314,13 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
     }
 
     @Override public void showUserUpdatedInView(User user) {
-        Timber.d(user.toString());
-//        mUser = user;
-        mIsUpdated = true;
-        showSnack(R.string.profile_editor_activity_saved);
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override public void showPasswordError() {
         showSnack(R.string.profile_editor_activity_password_changed_error);
     }
-//
-//    private void setUpUser(User user) {
-//        mUser = user;
-//        setUpProfileImage(user.getPhoto());
-//        mUserNameEditText.setText(user.getUserName());
-//        mEmailEditText.setText(user.getEmail());
-//        mPasswordEditText.setText(mAccount.getPassword());
-//        mEmailSubscriptionCheckBox.setChecked(user.isSubscribed());
-//        mBusinessNameEditText.setText(user.getBusinessName());
-//        mPostcodeEditText.setText(user.getPostcode());
-//        mVatNumberEditText.setText(user.getVatNumber());
-//    }
 
     @OnClick(R.id.password_edit_text)
     void onPasswordEditTextClick() {
@@ -396,18 +379,6 @@ public class ProfileEditorActivity extends AppCompatActivity implements ProfileE
         for (int i = 0; i < mContentInput.getChildCount(); i++) {
             View view = mContentInput.getChildAt(i);
             view.setAlpha(isActive ? 0.5f : 1.0f);
-        }
-    }
-
-    @Override public void onBackPressed() {
-        if (mIsUpdated) {
-//            Intent intent = new Intent();
-//            intent.putExtra(User.class.getName(), mUser);
-//            setResult(RESULT_OK, intent);
-            setResult(RESULT_OK);
-            finish();
-        } else {
-            super.onBackPressed();
         }
     }
 

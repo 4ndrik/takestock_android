@@ -441,9 +441,9 @@
     <!--profile editor activity start-->
     <string name="profile_editor_activity_user_name">User name</string>
     <string name="profile_editor_activity_email">Email</string>
-    <string name="profile_editor_activity_email_subscription">I am subscribed to receive news and updates by email</string>
+    <string name="profile_editor_activity_email_subscription">Yes, please subscribe me to receive updates from Takestock only (no 3rd parties)</string>
     <string name="profile_editor_activity_password">Password</string>
-    <string name="profile_editor_activity_saved">Profile saved</string>
+    <string name="profile_editor_activity_profile_saved">Profile saved</string>
     <string name="profile_editor_activity_password_changed">Password changed</string>
     <!--profile editor activity end-->
 
@@ -463,7 +463,7 @@
     <!--account not activated dialog start-->
     <string name="account_not_activated_dialog_message">Your account is being activated so you can\'t buy or sell anything just yet. Our team will activate your account within 24 hours.</string>
     <string name="account_not_activated_dialog_ok">OK</string>
-    <!--account not activated dialog start end-->
+    <!--account not activated dialog end-->
 
     <!--sign up fragment start-->
     <string name="sign_up_fragment_agreement">By creating an account, you agree to Takestock\'s\u0020</string>
@@ -474,5 +474,11 @@
     <string name="sign_up_fragment_password">Password</string>
     <string name="sign_up_fragment_sign_up">Sign up</string>
     <!--sign up fragment end-->
+
+    <!--log out dialog start-->
+    <string name="log_out_dialog_message">Are you sure?</string>
+    <string name="log_out_dialog_yes">Yes</string>
+    <string name="log_out_dialog_no">No</string>
+    <!--log out dialog end-->
 
 </resources>
