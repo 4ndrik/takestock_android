@@ -3,9 +3,7 @@ package com.devabit.takestock.screen.entry.fragments.signUp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,15 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.StyleSpan;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -31,6 +24,7 @@ import butterknife.*;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.UserCredentials;
+import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
@@ -133,24 +127,14 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
     }
 
     private void displayEmailConfirmationDialog(String email) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(buildEmailConfirmation(email));
-        builder.setPositiveButton(R.string.email_confirmation_dialog_ok, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+        EmailConfirmationDialog dialog = EmailConfirmationDialog.newInstance(email);
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
+        dialog.setOnOkButtonClickListener(new EmailConfirmationDialog.OnOkButtonClickListener() {
+            @Override public void onOkClick() {
                 getActivity().setResult(Activity.RESULT_OK);
                 getActivity().finish();
             }
         });
-        builder.show();
-    }
-
-    private Spannable buildEmailConfirmation(String email) {
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(getString(R.string.email_confirmation_dialog_message_part_one));
-        builder.append(email);
-        builder.setSpan(new StyleSpan(Typeface.BOLD), builder.length() - email.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        builder.append(getString(R.string.email_confirmation_dialog_message_part_two));
-        return builder;
     }
 
     @Override public void showUserNameError() {
