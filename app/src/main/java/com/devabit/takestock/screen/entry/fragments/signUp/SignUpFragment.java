@@ -3,7 +3,9 @@ package com.devabit.takestock.screen.entry.fragments.signUp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +13,15 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.StyleSpan;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -22,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.*;
 import com.devabit.takestock.R;
+import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.UserCredentials;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
@@ -120,9 +128,29 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         return mPasswordEditText.getText().toString().trim();
     }
 
-    @Override public void showSingUpSuccess() {
-        getActivity().setResult(Activity.RESULT_OK);
-        getActivity().finish();
+    @Override public void showAuthTokenInView(AuthToken authToken) {
+        displayEmailConfirmationDialog(authToken.getEmail());
+    }
+
+    private void displayEmailConfirmationDialog(String email) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(buildEmailConfirmation(email));
+        builder.setPositiveButton(R.string.email_confirmation_dialog_ok, new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            }
+        });
+        builder.show();
+    }
+
+    private Spannable buildEmailConfirmation(String email) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(getString(R.string.email_confirmation_dialog_message_part_one));
+        builder.append(email);
+        builder.setSpan(new StyleSpan(Typeface.BOLD), builder.length() - email.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.append(getString(R.string.email_confirmation_dialog_message_part_two));
+        return builder;
     }
 
     @Override public void showUserNameError() {
@@ -132,8 +160,10 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
 
     @OnTextChanged(R.id.user_name_edit_text)
     protected void onUserNameTextChanged() {
-        mUserNameInputLayout.setError(null);
-        mUserNameInputLayout.setErrorEnabled(false);
+        if (mUserNameInputLayout.isErrorEnabled()) {
+            mUserNameInputLayout.setError(null);
+            mUserNameInputLayout.setErrorEnabled(false);
+        }
     }
 
     @Override public void showEmailError() {
@@ -143,8 +173,10 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
 
     @OnTextChanged(R.id.email_edit_text)
     protected void onEmailTextChanged() {
-        mEmailInputLayout.setError(null);
-        mEmailInputLayout.setErrorEnabled(false);
+        if (mEmailInputLayout.isErrorEnabled()) {
+            mEmailInputLayout.setError(null);
+            mEmailInputLayout.setErrorEnabled(false);
+        }
     }
 
     @Override public void showPasswordError() {
@@ -154,8 +186,10 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
 
     @OnTextChanged(R.id.password_edit_text)
     protected void onPasswordTextChanged() {
-        mPasswordInputLayout.setError(null);
-        mPasswordInputLayout.setErrorEnabled(false);
+        if (mPasswordInputLayout.isErrorEnabled()) {
+            mPasswordInputLayout.setError(null);
+            mPasswordInputLayout.setErrorEnabled(false);
+        }
     }
 
     @Override public void showCredentialsError() {
@@ -207,7 +241,7 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
     }
 
     @Override public void onDestroyView() {
-        super.onDestroyView();
         mUnbinder.unbind();
+        super.onDestroyView();
     }
 }

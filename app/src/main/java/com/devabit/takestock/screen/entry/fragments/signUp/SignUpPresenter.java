@@ -64,7 +64,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                     }
 
                     @Override public void onNext(AuthToken authToken) {
-                        mSignUpView.showSingUpSuccess();
+                        mSignUpView.showAuthTokenInView(authToken);
                     }
                 });
         mSubscriptions.add(subscription);

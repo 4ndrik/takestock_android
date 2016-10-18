@@ -481,4 +481,13 @@
     <string name="log_out_dialog_no">No</string>
     <!--log out dialog end-->
 
+    <!--email confirmation dialog start-->
+    <string name="email_confirmation_dialog_message">Registration almost complete, please check <n>%1$s</n> for a
+        confirmation link.
+    </string>
+    <string name="email_confirmation_dialog_message_part_one">Registration almost complete, please check\u0020</string>
+    <string name="email_confirmation_dialog_message_part_two">\u0020for a confirmation link.</string>
+    <string name="email_confirmation_dialog_ok">OK</string>
+    <!--email confirmation dialog end-->
+
 </resources>

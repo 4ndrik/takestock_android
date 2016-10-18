@@ -1,16 +1,13 @@
 package com.devabit.takestock;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import com.devabit.takestock.data.model.AuthToken;
 import com.devabit.takestock.data.model.User;
@@ -30,6 +27,7 @@ public class TakeStockAccount {
     private static final String PHOTO = "com.devabit.takestock.PHOTO";
     private static final String RATING = "com.devabit.takestock.RATING";
     private static final String IS_VERIFIED = "com.devabit.takestock.IS_VERIFIED";
+    private static final String IS_VERIFIED_BY_STAFF = "com.devabit.takestock.IS_VERIFIED_BY_STAFF";
     private static final String IS_SUBSCRIBED = "com.devabit.takestock.IS_SUBSCRIBED";
     private static final String BUSINESS_TYPE_ID = "com.devabit.takestock.BUSINESS_TYPE";
     private static final String BUSINESS_SUBTYPE_ID = "com.devabit.takestock.BUSINESS_SUBTYPE";
@@ -72,7 +70,8 @@ public class TakeStockAccount {
         User user = authToken.getUser();
         userData.putString(PHOTO, user == null ? "" : user.getPhoto());
         userData.putString(RATING, user == null ? "0.0" : String.valueOf(user.getAvgRating()));
-        userData.putString(IS_VERIFIED, user == null ? "false" : String.valueOf(user.isVerifiedByStaffMember()));
+        userData.putString(IS_VERIFIED, user == null ? "false" : String.valueOf(user.isVerified()));
+        userData.putString(IS_VERIFIED_BY_STAFF, user == null ? "false" : String.valueOf(user.isVerifiedByStaffMember()));
         userData.putString(IS_SUBSCRIBED, user == null ? "false" : String.valueOf(user.isSubscribed()));
         userData.putString(BUSINESS_TYPE_ID, user == null ? "0" : String.valueOf(user.getBusinessTypeId()));
         userData.putString(BUSINESS_SUBTYPE_ID, user == null ? "0" : String.valueOf(user.getBusinessSubtypeId()));
@@ -91,6 +90,7 @@ public class TakeStockAccount {
         mAccountManager.setUserData(mAccount, PHOTO, user.getPhoto());
         mAccountManager.setUserData(mAccount, RATING, String.valueOf(user.getAvgRating()));
         mAccountManager.setUserData(mAccount, IS_VERIFIED, String.valueOf(user.isVerified()));
+        mAccountManager.setUserData(mAccount, IS_VERIFIED_BY_STAFF, String.valueOf(user.isVerifiedByStaffMember()));
         mAccountManager.setUserData(mAccount, IS_SUBSCRIBED, String.valueOf(user.isSubscribed()));
         mAccountManager.setUserData(mAccount, BUSINESS_TYPE_ID, String.valueOf(user.getBusinessTypeId()));
         mAccountManager.setUserData(mAccount, BUSINESS_SUBTYPE_ID, String.valueOf(user.getBusinessSubtypeId()));
@@ -149,6 +149,12 @@ public class TakeStockAccount {
     public boolean isVerified() {
         if(lacksAccount()) return false;
         String isVerified = mAccountManager.getUserData(mAccount, IS_VERIFIED);
+        return isVerified == null ? false : Boolean.valueOf(isVerified);
+    }
+
+    public boolean isVerifiedByStaff() {
+        if(lacksAccount()) return false;
+        String isVerified = mAccountManager.getUserData(mAccount, IS_VERIFIED_BY_STAFF);
         return isVerified == null ? false : Boolean.valueOf(isVerified);
     }
 
