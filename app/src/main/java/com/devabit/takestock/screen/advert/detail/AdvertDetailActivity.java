@@ -163,7 +163,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     protected void onMakeOfferButtonClick() {
         if (mAccount.lacksAccount()) {
             startEntryActivity();
-        } else if (mAccount.isVerified()) {
+        } else if (mAccount.isVerifiedByStaff()) {
             displayOfferMakerDialog();
         } else {
             displayAccountNotActivatedDialog();
@@ -313,7 +313,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     protected void onQuestionButtonClick() {
         if (mAccount.lacksAccount()) {
             startEntryActivity();
-        } else if (mAccount.isVerified()) {
+        } else if (mAccount.isVerifiedByStaff()) {
             startQuestionActivity();
         } else displayAccountNotActivatedDialog();
     }
