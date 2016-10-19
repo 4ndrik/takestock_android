@@ -149,7 +149,7 @@ public class OfferAdvertPairsAdapter extends RecyclerView.Adapter<OfferAdvertPai
                 imageView.setImageResource(R.drawable.ic_image_48dp);
             } else {
                 Glide.with(imageView.getContext())
-                        .load(photos.get(0).getImage())
+                        .load(photos.get(0).getThumbnail())
                         .placeholder(R.color.grey_200)
                         .error(R.drawable.ic_image_48dp)
                         .centerCrop()
