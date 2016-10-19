@@ -8,7 +8,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.*;
@@ -26,6 +25,8 @@ import com.devabit.takestock.screen.advert.editor.AdvertEditorActivity;
 import com.devabit.takestock.screen.adverts.AdvertsActivity;
 import com.devabit.takestock.screen.buying.BuyingActivity;
 import com.devabit.takestock.screen.category.CategoriesActivity;
+import com.devabit.takestock.screen.dialog.accountNotVerified.AccountNotVerifiedDialog;
+import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.selling.SellingActivity;
 import com.devabit.takestock.screen.watching.WatchingActivity;
@@ -48,14 +49,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private static final int INDEX_MAIN_CONTENT = 0;
     private static final int INDEX_NO_CONNECTION_CONTENT = 1;
 
-    @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
-    @BindView(R.id.navigation_view) protected NavigationView mNavigationView;
-    @BindView(R.id.content_activity_main) protected View mContent;
-    @BindView(R.id.view_switcher) protected ViewSwitcher mViewSwitcher;
-    @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
-    @BindView(R.id.search_products_edit_text) protected EditText mSearchEditText;
-    @BindView(R.id.browse_categories_button) protected Button mBrowseProductsButton;
-    @BindView(R.id.sell_something_button) protected Button mSellSomethingButton;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.navigation_view) NavigationView mNavigationView;
+    @BindView(R.id.content_activity_main) View mContent;
+    @BindView(R.id.view_switcher) ViewSwitcher mViewSwitcher;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.search_products_edit_text) EditText mSearchEditText;
+    @BindView(R.id.browse_categories_button) Button mBrowseProductsButton;
+    @BindView(R.id.sell_something_button) Button mSellSomethingButton;
 
     @BindViews({R.id.menu_button, R.id.logo_image_view, R.id.search_products_edit_text,
             R.id.browse_categories_button, R.id.sell_something_button})
@@ -73,8 +74,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         mAccount = TakeStockAccount.get(MainActivity.this);
         createPresenter();
         setUpSearchEditText();
-        setUpNavigationView();
-        setUpHeaderNavigationView();
+        setUpNavigationItemSelectedListener();
     }
 
     private void createPresenter() {
@@ -104,9 +104,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             public boolean onTouch(View v, MotionEvent event) {
                 final int DRAWABLE_END = 2;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (mSearchEditText.getRight() - mSearchEditText.getCompoundDrawables()[DRAWABLE_END].getBounds().width())) {
-                        String query = mSearchEditText.getText().toString().trim();
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    int drawableWidth = mSearchEditText.getCompoundDrawables()[DRAWABLE_END].getBounds().width();
+                    float drawableCoordinate = mSearchEditText.getRight() - drawableWidth;
+                    if (event.getRawX() >= drawableCoordinate) {
+                        String query = getSearchQuery();
                         if (TextUtils.isEmpty(query)) return false;
                         startAdvertsActivity(query);
                         return true;
@@ -117,9 +119,53 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         });
     }
 
+    private String getSearchQuery() {
+        return mSearchEditText.getText().toString().trim();
+    }
+
+    private void startAdvertsActivity(String query) {
+        startActivity(AdvertsActivity.getSearchingStartIntent(MainActivity.this, query));
+    }
+
+    private void setUpNavigationItemSelectedListener() {
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                switch (itemId) {
+                    case R.id.nav_profile:
+                        onProfileMenuItemClick();
+                        return true;
+
+                    case R.id.nav_notifications:
+                        onNotificationMenuItemClick();
+                        return true;
+
+                    case R.id.nav_selling:
+                        onSellingMenuItemClick();
+                        return true;
+
+                    case R.id.nav_buying:
+                        onBuyingMenuItemClick();
+                        return true;
+
+                    case R.id.nav_watching:
+                        onWatchingMenuItemClick();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+    }
+
     private void onProfileMenuItemClick() {
-        if (lacksAccount()) startEntryActivity();
-        else startProfileAccountActivity();
+        if (!mAccount.lacksAccount()) {
+            startProfileAccountActivity();
+        } else {
+            startEntryActivity();
+        }
     }
 
     private void startProfileAccountActivity() {
@@ -130,58 +176,81 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         showNotYetImplementedSnackbar();
     }
 
-    private void onWatchingMenuItemClick() {
-        closeDrawer();
-        if (lacksAccount()) startEntryActivity();
-        else startWatchingActivity();
-    }
-
-    private void startWatchingActivity() {
-        startActivity(WatchingActivity.getStartIntent(MainActivity.this));
-    }
-
-    private void onBuyingMenuItemClick() {
-        if (lacksAccount()) startEntryActivity();
-        else startBuyingActivity();
+    private void showNotYetImplementedSnackbar() {
+        Snackbar.make(mContent, "Not yet implemented.", Snackbar.LENGTH_LONG).show();
     }
 
     private void onSellingMenuItemClick() {
-        if (lacksAccount()) startEntryActivity();
-        else startSellingActivity();
-    }
-
-    private void startBuyingActivity() {
-        startActivity(BuyingActivity.getStartIntent(MainActivity.this));
-    }
-
-    @OnClick(R.id.sell_something_button)
-    protected void onSellSomethingButtonClick() {
-        closeDrawer();
-        if (lacksAccount()) startEntryActivity();
-        if (mAccount.isVerified()) {
-            startSellSomethingActivity();
-        } else {
-            displayAccountNotActivatedDialog();
+        if (isAccountValid()) {
+            startSellingActivity();
         }
-    }
-
-    private void displayAccountNotActivatedDialog() {
-        new AlertDialog.Builder(MainActivity.this)
-                .setMessage(R.string.account_not_activated_dialog_message)
-                .setPositiveButton(R.string.account_not_activated_dialog_ok, null)
-                .show();
-    }
-
-    private void startEntryActivity() {
-        startActivityForResult(EntryActivity.getStartIntent(MainActivity.this), RC_ENTRY);
     }
 
     private void startSellingActivity() {
         startActivity(SellingActivity.getStartIntent(MainActivity.this));
     }
 
-    private void startSellSomethingActivity() {
+    private void onBuyingMenuItemClick() {
+        if (isAccountValid()) {
+            startBuyingActivity();
+        }
+    }
+
+    private void startBuyingActivity() {
+        startActivity(BuyingActivity.getStartIntent(MainActivity.this));
+    }
+
+    private void onWatchingMenuItemClick() {
+        if (isAccountValid()) {
+            startWatchingActivity();
+        }
+    }
+
+    private void startWatchingActivity() {
+        startActivity(WatchingActivity.getStartIntent(MainActivity.this));
+    }
+
+    @OnClick(R.id.sell_something_button)
+    protected void onSellSomethingButtonClick() {
+        if (isAccountValid()) {
+            startAdvertEditorActivity();
+        }
+    }
+
+    private void startAdvertEditorActivity() {
         startActivity(AdvertEditorActivity.getStartIntent(MainActivity.this));
+    }
+
+    private boolean isAccountValid() {
+        if (mAccount.lacksAccount()) {
+            startEntryActivity();
+            return false;
+        }
+        if (!mAccount.isVerified()) {
+            displayEmailConfirmationDialog();
+            return false;
+        }
+
+        if (!mAccount.isVerifiedByStaff()) {
+            displayAccountNotActivatedDialog();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void startEntryActivity() {
+        startActivityForResult(EntryActivity.getStartIntent(MainActivity.this), RC_ENTRY);
+    }
+
+    private void displayEmailConfirmationDialog() {
+        EmailConfirmationDialog dialog = EmailConfirmationDialog.newInstance(mAccount.getEmail());
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
+    }
+
+    private void displayAccountNotActivatedDialog() {
+        AccountNotVerifiedDialog dialog = AccountNotVerifiedDialog.newInstance();
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -202,18 +271,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
-    private boolean lacksAccount() {
-        return mAccount.lacksAccount();
-    }
-
-    private void startAdvertsActivity(String query) {
-        startActivity(AdvertsActivity.getSearchingStartIntent(MainActivity.this, query));
-    }
-
-    @Override protected void onStart() {
-        mPresenter.resume();
-        super.onStart();
-    }
+//    private boolean lacksAccount() {
+//        return mAccount.lacksAccount();
+//    }
 
     @OnClick(R.id.browse_categories_button)
     protected void onBrowseCategoriesButtonClick() {
@@ -243,46 +303,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override public void showDataUpdated() {
         mViewSwitcher.setDisplayedChild(INDEX_MAIN_CONTENT);
-        setUpNavigationView();
         setUpHeaderNavigationView();
-    }
-
-    private void setUpNavigationView() {
-
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                switch (itemId) {
-                    case R.id.nav_profile:
-                        onProfileMenuItemClick();
-                        return true;
-
-                    case R.id.nav_notifications:
-                        onNotificationMenuItemClick();
-                        return true;
-
-                    case R.id.nav_watching:
-                        onWatchingMenuItemClick();
-                        return true;
-
-                    case R.id.nav_buying:
-                        onBuyingMenuItemClick();
-                        return true;
-
-                    case R.id.nav_selling:
-                        onSellingMenuItemClick();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        });
     }
 
     private void setUpHeaderNavigationView() {
         TextView titleTextView = ButterKnife.findById(mNavigationView.getHeaderView(0), R.id.title_drawer_header_text_view);
-        if (lacksAccount()) {
+        if (mAccount.lacksAccount()) {
             titleTextView.setText(R.string.sign_in);
             titleTextView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -316,10 +342,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 .show();
     }
 
-    private void showNotYetImplementedSnackbar() {
-        Snackbar.make(mContent, "Not yet implemented.", Snackbar.LENGTH_LONG).show();
-    }
-
     @Override public void setProgressIndicator(boolean isActive) {
         mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
         setTouchDisabled(isActive);
@@ -344,8 +366,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     };
 
-    @Override protected void onStop() {
-        super.onStop();
+
+    @Override protected void onPause() {
         mPresenter.pause();
+        super.onPause();
     }
 }
