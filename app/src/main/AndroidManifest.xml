@@ -117,6 +117,23 @@
             <meta-data android:name="android.accounts.AccountAuthenticator"
                        android:resource="@xml/authenticator"/>
         </service>
+
+        <service
+                android:name=".fcm.TakeStockFirebaseMessagingService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+                android:name=".fcm.TakeStockFirebaseInstanceIdService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_iid_service] -->
     </application>
 
 </manifest>

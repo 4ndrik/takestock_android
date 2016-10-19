@@ -41,8 +41,8 @@ android {
             buildConfigField("String", "BASE_URL", '"http://uat.takestock.com"')
             buildConfigField("String", "STRIPE_API_KEY", '"pk_test_qevXdEtyHKRjlP1WOXLcsd0s"')
             buildConfigField("boolean", "LOGGING_ENABLED", "true")
-            applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
+//            applicationIdSuffix ".debug"
+//            versionNameSuffix "-debug"
             // Run code coverage reports by default on debug builds.
             // testCoverageEnabled = true
         }
@@ -50,7 +50,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 21
+            minSdkVersion rootProject.ext.minSdkVersion
         }
 
         mock {
@@ -90,6 +90,9 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.google.code.gson:gson:2.7'
 
+    // Firebase dependencies
+    compile 'com.google.firebase:firebase-messaging:9.6.1'
+
     // RxJava dependencies
     compile 'io.reactivex:rxjava:1.1.9'
     compile 'io.reactivex:rxandroid:1.2.1'
@@ -111,3 +114,5 @@ dependencies {
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
 }
+
+apply plugin: 'com.google.gms.google-services'
