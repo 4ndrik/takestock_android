@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.screen.about.AboutActivity;
+import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 import com.devabit.takestock.screen.help.HelpActivity;
 import com.devabit.takestock.screen.main.MainActivity;
 import com.devabit.takestock.screen.profileEditor.ProfileEditorActivity;
@@ -77,7 +78,7 @@ public class ProfileAccountActivity extends AppCompatActivity {
         @Override public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_edit_profile:
-                    startProfileEditActivity();
+                    onActionEditProfileClick();
                     return true;
 
                 default:
@@ -86,9 +87,22 @@ public class ProfileAccountActivity extends AppCompatActivity {
         }
     };
 
-    private void startProfileEditActivity() {
+    private void onActionEditProfileClick() {
+        if (mAccount.isVerified()) {
+            startProfileEditorActivity();
+        } else {
+            displayEmailConfirmationDialog();
+        }
+    }
+
+    private void startProfileEditorActivity() {
         Intent starter = ProfileEditorActivity.getStartIntent(ProfileAccountActivity.this);
         startActivityForResult(starter, RC_EDIT_PROFILE);
+    }
+
+    private void displayEmailConfirmationDialog() {
+        EmailConfirmationDialog dialog = EmailConfirmationDialog.newInstance(mAccount.getEmail());
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
