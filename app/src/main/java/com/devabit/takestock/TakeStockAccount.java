@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.Authentication;
 import com.devabit.takestock.data.model.User;
 
 
@@ -60,14 +60,14 @@ public class TakeStockAccount {
         return accounts.length > 0 ? accounts[0] : null;
     }
 
-    public void createAccount(AuthToken authToken, String password) {
-        mAccount = new Account(authToken.getEmail(), ACCOUNT_TYPE);
+    public void createAccount(Authentication authentication, String password) {
+        mAccount = new Account(authentication.getEmail(), ACCOUNT_TYPE);
         Bundle userData = new Bundle();
-        userData.putString(ID, String.valueOf(authToken.getUserId()));
-        userData.putString(NAME, authToken.getUsername());
-        userData.putString(EMAIL, authToken.getEmail());
+        userData.putString(ID, String.valueOf(authentication.getUserId()));
+        userData.putString(NAME, authentication.getUsername());
+        userData.putString(EMAIL, authentication.getEmail());
         userData.putString(PASSWORD, password);
-        User user = authToken.getUser();
+        User user = authentication.getUser();
         userData.putString(PHOTO, user == null ? "" : user.getPhoto());
         userData.putString(RATING, user == null ? "0.0" : String.valueOf(user.getAvgRating()));
         userData.putString(IS_VERIFIED, user == null ? "false" : String.valueOf(user.isVerified()));
@@ -79,7 +79,7 @@ public class TakeStockAccount {
         userData.putString(BUSINESS_NAME, user == null ? "" : user.getBusinessName());
         userData.putString(VAT_NUMBER, user == null ? "" : user.getVatNumber());
         mAccountManager.addAccountExplicitly(mAccount, null, userData);
-        setAccessToken(authToken.getToken());
+        setAccessToken(authentication.getToken());
     }
 
     public void refreshAccount(@Nullable User user) {
@@ -107,6 +107,25 @@ public class TakeStockAccount {
     public String getAccessToken() {
         if (lacksAccount()) return "";
         return mAccountManager.peekAuthToken(mAccount, TOKEN_TYPE);
+    }
+
+    @Nullable public User getUser() {
+        if (lacksAccount()) return null;
+        return new User.Builder()
+                .setId(getId())
+                .setUserName(getName())
+                .setEmail(getEmail())
+                .setPhoto(getPhoto())
+                .setAvgRating(getRating())
+                .setIsVerified(isVerified())
+                .setVerifiedByStaffMember(isVerifiedByStaff())
+                .setIsSubscribed(isSubscribed())
+                .setBusinessName(getBusinessName())
+                .setPostcode(getPostcode())
+                .setBusinessTypeId(getBusinessTypeId())
+                .setBusinessSubtypeId(getBusinessSubtypeId())
+                .setVatNumber(getVatNumber())
+                .build();
     }
 
     public int getId() {

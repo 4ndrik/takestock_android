@@ -3,6 +3,7 @@ package com.devabit.takestock.screen.entry.fragments.signIn;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import android.widget.ProgressBar;
 import butterknife.*;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockPref;
+import com.devabit.takestock.data.model.Device;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.screen.entry.fragments.signUp.SignUpFragment;
 import com.devabit.takestock.screen.entry.fragments.signUp.SignUpPresenter;
@@ -90,6 +93,20 @@ public class SignInFragment extends Fragment implements SignInContract.View {
 
     private String getPassword() {
         return mPasswordEditText.getText().toString().trim();
+    }
+
+    @Override @Nullable public Device getDevice() {
+        if (TakeStockPref.isDeviceRegistered(getActivity())) return null;
+        return new Device.Builder()
+                .setId(Build.ID)
+                .setName(Build.MODEL)
+                .setRegistrationId(TakeStockPref.getFCMToken(getActivity()))
+                .setIsActive(true)
+                .create();
+    }
+
+    @Override public void showDeviceRegisteredInView() {
+        TakeStockPref.putIsDeviceRegistered(getActivity(), true);
     }
 
     @Override public void showSignInSuccess() {

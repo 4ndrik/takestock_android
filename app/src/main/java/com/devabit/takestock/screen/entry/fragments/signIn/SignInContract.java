@@ -1,5 +1,6 @@
 package com.devabit.takestock.screen.entry.fragments.signIn;
 
+import com.devabit.takestock.data.model.Device;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
@@ -7,9 +8,13 @@ import com.devabit.takestock.screen.BaseView;
 /**
  * Created by Victor Artemyev on 25/04/2016.
  */
-public interface SignInContract {
+interface SignInContract {
 
     interface View extends BaseView<Presenter> {
+
+        Device getDevice();
+
+        void showDeviceRegisteredInView();
 
         void showSignInSuccess();
 

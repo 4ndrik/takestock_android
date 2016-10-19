@@ -59,13 +59,13 @@ public class LocalDataSource implements DataSource {
 
     /********** Entries Methods ********/
 
-    @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
+    @Override public Observable<Authentication> signUp(@NonNull UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
         // AccessToken from server.
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    @Override public Observable<AuthToken> signIn(@NonNull UserCredentials credentials) {
+    @Override public Observable<Authentication> signIn(@NonNull UserCredentials credentials) {
         // Not required because the {@link RemoteDataSource} handles the logic of obtaining the
         // AccessToken from server.
         throw new UnsupportedOperationException("This operation not required.");
@@ -382,7 +382,7 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
-    /********* Questions Methods  ********/
+    /********* Q&A Methods  ********/
 
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -395,8 +395,6 @@ public class LocalDataSource implements DataSource {
     @Override public Observable<PaginatedList<Question>> getPaginatedQuestionListPerPage(@NonNull String page) {
         throw new UnsupportedOperationException("This operation not required.");
     }
-
-    /********** Answers Methods **********/
 
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -449,6 +447,10 @@ public class LocalDataSource implements DataSource {
     ///////////////////////////////////////////////////////////////////////////
 
     @Override public Observable<Payment> makePayment(@NonNull Payment payment) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Boolean> registerDevice(@NonNull Device device) {
         throw new UnsupportedOperationException("This operation not required.");
     }
 }

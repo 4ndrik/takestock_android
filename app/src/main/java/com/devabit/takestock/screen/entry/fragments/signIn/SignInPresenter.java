@@ -2,16 +2,21 @@ package com.devabit.takestock.screen.entry.fragments.signIn;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import com.devabit.takestock.data.model.Device;
 import com.devabit.takestock.data.source.DataRepository;
-import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.Authentication;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.exception.HttpResponseException;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import com.devabit.takestock.utils.Validator;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static com.devabit.takestock.utils.Logger.LOGE;
 import static com.devabit.takestock.utils.Logger.makeLogTag;
@@ -45,8 +50,24 @@ public class SignInPresenter implements SignInContract.Presenter {
         mSignInView.setProgressIndicator(true);
         mSubscriptions.clear();
         Subscription subscription = mDataRepository.signIn(credentials)
-                .compose(RxTransformers.<AuthToken>applyObservableSchedulers())
-                .subscribe(new Subscriber<AuthToken>() {
+                .flatMap(new Func1<Authentication, Observable<Authentication>>() {
+                    @Override public Observable<Authentication> call(Authentication authentication) {
+                        final Device device = mSignInView.getDevice();
+                        if (device == null) return Observable.just(authentication);
+                        return Observable.zip(
+                                Observable.just(authentication),
+                                mDataRepository.registerDevice(device),
+                                new Func2<Authentication, Boolean, Authentication>() {
+                                    @Override public Authentication call(Authentication authentication, Boolean isDeviceReg) {
+                                        Timber.d("%s registered - %s", device, isDeviceReg);
+                                        if (isDeviceReg) mSignInView.showDeviceRegisteredInView();
+                                        return authentication;
+                                    }
+                                });
+                    }
+                })
+                .compose(RxTransformers.<Authentication>applyObservableSchedulers())
+                .subscribe(new Subscriber<Authentication>() {
                     @Override public void onCompleted() {
                         mSignInView.setProgressIndicator(false);
                     }
@@ -64,7 +85,7 @@ public class SignInPresenter implements SignInContract.Presenter {
                         }
                     }
 
-                    @Override public void onNext(AuthToken authToken) {
+                    @Override public void onNext(Authentication authToken) {
                         mSignInView.showSignInSuccess();
                     }
                 });

@@ -3,7 +3,7 @@ package com.devabit.takestock.data.model;
 /**
  * Created by Victor Artemyev on 25/04/2016.
  */
-public class AuthToken {
+public class Authentication {
 
     private int mUserId;
     private String mUsername;
@@ -11,7 +11,7 @@ public class AuthToken {
     private String mToken;
     private User mUser;
 
-    private AuthToken(int userId, String username, String email, String token, User user) {
+    private Authentication(int userId, String username, String email, String token, User user) {
         mUserId = userId;
         mUsername = username;
         mEmail = email;
@@ -86,8 +86,8 @@ public class AuthToken {
             return this;
         }
 
-        public AuthToken create() {
-            return new AuthToken(mUserId, mUsername, mEmail, mToken, mUser);
+        public Authentication create() {
+            return new Authentication(mUserId, mUsername, mEmail, mToken, mUser);
         }
     }
 }

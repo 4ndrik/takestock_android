@@ -16,9 +16,9 @@ public interface DataSource {
 
     /********* Entries Methods  *********/
 
-    Observable<AuthToken> signUp(@NonNull UserCredentials credentials);
+    Observable<Authentication> signUp(@NonNull UserCredentials credentials);
 
-    Observable<AuthToken> signIn(@NonNull UserCredentials credentials);
+    Observable<Authentication> signIn(@NonNull UserCredentials credentials);
 
 
     /********* Categories Methods  *********/
@@ -170,5 +170,10 @@ public interface DataSource {
     /********** Payment Methods **********/
 
     Observable<Payment> makePayment(@NonNull Payment payment);
+
+
+    /********** Device Method **********/
+
+    Observable<Boolean> registerDevice(@NonNull Device device);
 
 }

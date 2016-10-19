@@ -53,42 +53,46 @@ public class DataRepository implements DataSource {
         sInstance = null;
     }
 
-    /********* Entries Methods  ********/
+    /*********
+     * Entries Methods
+     ********/
 
-    @Override public Observable<AuthToken> signUp(@NonNull UserCredentials credentials) {
+    @Override public Observable<Authentication> signUp(@NonNull UserCredentials credentials) {
         return mRemoteDataSource.signUp(credentials)
-                .flatMap(new Func1<AuthToken, Observable<AuthToken>>() {
-                    @Override public Observable<AuthToken> call(AuthToken authToken) {
+                .flatMap(new Func1<Authentication, Observable<Authentication>>() {
+                    @Override public Observable<Authentication> call(Authentication auth) {
                         return Observable.zip(
-                                Observable.just(authToken),
-                                refreshAccountUserWithId(authToken.getUserId()),
-                                new Func2<AuthToken, User, AuthToken>() {
-                                    @Override public AuthToken call(AuthToken authToken, User user) {
-                                        authToken.setUser(user);
-                                        return authToken;
+                                Observable.just(auth),
+                                refreshAccountUserWithId(auth.getUserId()),
+                                new Func2<Authentication, User, Authentication>() {
+                                    @Override public Authentication call(Authentication authentication, User user) {
+                                        authentication.setUser(user);
+                                        return authentication;
                                     }
                                 });
                     }
                 });
     }
 
-    @Override public Observable<AuthToken> signIn(@NonNull UserCredentials credentials) {
+    @Override public Observable<Authentication> signIn(@NonNull UserCredentials credentials) {
         return mRemoteDataSource.signIn(credentials)
-                .flatMap(new Func1<AuthToken, Observable<AuthToken>>() {
-                    @Override public Observable<AuthToken> call(AuthToken authToken) {
+                .flatMap(new Func1<Authentication, Observable<Authentication>>() {
+                    @Override public Observable<Authentication> call(Authentication authentication) {
                         return Observable.zip(
-                                Observable.just(authToken),
-                                mLocalDataSource.saveUser(authToken.getUser()),
-                                new Func2<AuthToken, User, AuthToken>() {
-                                    @Override public AuthToken call(AuthToken authToken, User user) {
-                                        return authToken;
+                                Observable.just(authentication),
+                                mLocalDataSource.saveUser(authentication.getUser()),
+                                new Func2<Authentication, User, Authentication>() {
+                                    @Override public Authentication call(Authentication authentication, User user) {
+                                        return authentication;
                                     }
                                 });
                     }
                 });
     }
 
-    /********* Categories Methods  ********/
+    /*********
+     * Categories Methods
+     ********/
 
     @Override public Observable<List<Category>> saveCategories(@NonNull List<Category> categories) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -109,7 +113,9 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    /********* Sizes Methods  ********/
+    /*********
+     * Sizes Methods
+     ********/
 
     @Override public Observable<List<Size>> saveSizes(@NonNull List<Size> sizes) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -130,7 +136,9 @@ public class DataRepository implements DataSource {
                 });
     }
 
-    /********* Certifications Methods  ********/
+    /*********
+     * Certifications Methods
+     ********/
 
     @Override public Observable<List<Certification>> saveCertifications(@NonNull List<Certification> certifications) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -144,18 +152,20 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<List<Certification>> refreshCertifications() {
         return mRemoteDataSource.refreshCertifications()
-               .flatMap(new Func1<List<Certification>, Observable<List<Certification>>>() {
-                   @Override public Observable<List<Certification>> call(List<Certification> certifications) {
-                       return mLocalDataSource.saveCertifications(certifications);
-                   }
-               });
+                .flatMap(new Func1<List<Certification>, Observable<List<Certification>>>() {
+                    @Override public Observable<List<Certification>> call(List<Certification> certifications) {
+                        return mLocalDataSource.saveCertifications(certifications);
+                    }
+                });
     }
 
     @Override public Certification getCertificationWithId(int id) {
         return mLocalDataSource.getCertificationWithId(id);
     }
 
-    /********** Shipping Methods ********/
+    /**********
+     * Shipping Methods
+     ********/
 
     @Override public Observable<List<Shipping>> saveShippings(@NonNull List<Shipping> shippings) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -180,7 +190,9 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getShippingWithId(id);
     }
 
-    /********** Conditions Methods ********/
+    /**********
+     * Conditions Methods
+     ********/
 
     @Override public Observable<List<Condition>> saveConditions(@NonNull List<Condition> conditions) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -205,7 +217,9 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getConditionWithId(id);
     }
 
-    /********** Packagings Methods ********/
+    /**********
+     * Packagings Methods
+     ********/
 
     @Override public Observable<List<Packaging>> savePackagings(@NonNull List<Packaging> packagings) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -230,7 +244,9 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getPackagingWithId(id);
     }
 
-    /********* OfferStatuses Methods  ********/
+    /*********
+     * OfferStatuses Methods
+     ********/
 
     @Override public Observable<List<OfferStatus>> saveOfferStatuses(@NonNull List<OfferStatus> statuses) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -238,11 +254,11 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<List<OfferStatus>> refreshOfferStatuses() {
         return mRemoteDataSource.refreshOfferStatuses()
-             .flatMap(new Func1<List<OfferStatus>, Observable<List<OfferStatus>>>() {
-                 @Override public Observable<List<OfferStatus>> call(List<OfferStatus> offerStatuses) {
-                     return mLocalDataSource.saveOfferStatuses(offerStatuses);
-                 }
-             });
+                .flatMap(new Func1<List<OfferStatus>, Observable<List<OfferStatus>>>() {
+                    @Override public Observable<List<OfferStatus>> call(List<OfferStatus> offerStatuses) {
+                        return mLocalDataSource.saveOfferStatuses(offerStatuses);
+                    }
+                });
     }
 
     @Override public Observable<List<OfferStatus>> getOfferStatuses() {
@@ -286,7 +302,9 @@ public class DataRepository implements DataSource {
         return mLocalDataSource.getBusinessSubtypeById(id);
     }
 
-    /********* Adverts Methods  ********/
+    /*********
+     * Adverts Methods
+     ********/
 
     @Override public Observable<Advert> saveAdvert(@NonNull Advert advert) {
         return mRemoteDataSource.saveAdvert(advert);
@@ -316,7 +334,9 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.unnotifyAdvertWithId(advertId);
     }
 
-    /********* Offers Methods  ********/
+    /*********
+     * Offers Methods
+     ********/
 
     @Override public Observable<Offer> makeOffer(@NonNull Offer offer) {
         return mRemoteDataSource.makeOffer(offer);
@@ -338,7 +358,9 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getPaginatedOfferListPerPage(page);
     }
 
-    /********* Questions Methods  ********/
+    /*********
+     * Q&A Methods
+     ********/
 
     @Override public Observable<Question> saveQuestion(@NonNull Question question) {
         return mRemoteDataSource.saveQuestion(question);
@@ -352,15 +374,13 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.getPaginatedQuestionListPerPage(page);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Answer
-    ///////////////////////////////////////////////////////////////////////////
-
     @Override public Observable<Answer> saveAnswer(@NonNull Answer answer) {
         return mRemoteDataSource.saveAnswer(answer);
     }
 
-    /********* User Methods  ********/
+    /*********
+     * User Methods
+     ********/
 
     @Override public Observable<User> saveUser(@NonNull User user) {
         throw new UnsupportedOperationException("This operation not required.");
@@ -404,11 +424,20 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.changePassword(currentPass, newPass);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Methods for Payment
-    ///////////////////////////////////////////////////////////////////////////
+    /**********
+     * Payment Method
+     **********/
 
     @Override public Observable<Payment> makePayment(@NonNull Payment payment) {
         return mRemoteDataSource.makePayment(payment);
+    }
+
+
+    /**********
+     * Device Method
+     **********/
+
+    @Override public Observable<Boolean> registerDevice(@NonNull Device device) {
+        return mRemoteDataSource.registerDevice(device);
     }
 }

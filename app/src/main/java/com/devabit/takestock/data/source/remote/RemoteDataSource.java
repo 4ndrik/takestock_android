@@ -64,6 +64,9 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private static final int WRITE_TIMEOUT = 10;
     private static final int READ_TIMEOUT = 30;
 
+    private static final int STATUS_CODE_BAD_REQUEST = 400;
+    private static final int STATUS_CODE_UNAUTHORIZED = 401;
+
     private final TakeStockAccount mAccount;
     private final ConnectivityManager mConnectivityManager;
     private final Gson mGson;
@@ -112,7 +115,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     request = builder.build();
                     response = chain.proceed(request);
 
-                    if (response.code() == 401) { //if unauthorized
+                    if (response.code() == STATUS_CODE_UNAUTHORIZED) {
                         accessToken = refreshAccessToken(accessToken);
                         mAccount.setAccessToken(accessToken);
                         setAuthHeader(builder, accessToken);
@@ -147,7 +150,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     private Response checkResponsePerCode(Response response) throws IOException {
         int code = response.code();
         switch (code) {
-            case 400: //if bad request
+            case STATUS_CODE_BAD_REQUEST:
                 throw new HttpResponseException(code, response.message(), response.body().string());
             default:
                 return response;
@@ -158,7 +161,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
      * Entries Methods
      **********/
 
-    @Override public Observable<AuthToken> signUp(@NonNull final UserCredentials credentials) {
+    @Override public Observable<Authentication> signUp(@NonNull final UserCredentials credentials) {
         return Observable.just(credentials)
                 .map(new Func1<UserCredentials, String>() {
                     @Override public String call(UserCredentials credentials) {
@@ -169,21 +172,21 @@ public class RemoteDataSource implements ApiRest, DataSource {
                     @Override public Observable<String> call(String json) {
                         return Observable.fromCallable(createPOSTCallable(TOKEN_REGISTER, json));
                     }
-                }).map(new Func1<String, AuthToken>() {
-                    @Override public AuthToken call(String jsonString) {
-                        AuthTokenJson json = mGson.fromJson(jsonString, AuthTokenJson.class);
-                        return json.toAuthToken();
+                }).map(new Func1<String, Authentication>() {
+                    @Override public Authentication call(String jsonString) {
+                        AuthenticationJson json = mGson.fromJson(jsonString, AuthenticationJson.class);
+                        return json.toAuthentication();
                     }
                 })
-                .doOnNext(new Action1<AuthToken>() {
-                    @Override public void call(AuthToken authToken) {
-                        d(authToken.toString());
-                        mAccount.createAccount(authToken, credentials.password);
+                .doOnNext(new Action1<Authentication>() {
+                    @Override public void call(Authentication authentication) {
+                        d(authentication.toString());
+                        mAccount.createAccount(authentication, credentials.password);
                     }
                 });
     }
 
-    @Override public Observable<AuthToken> signIn(@NonNull final UserCredentials credentials) {
+    @Override public Observable<Authentication> signIn(@NonNull final UserCredentials credentials) {
         return Observable.just(credentials)
                 .map(new Func1<UserCredentials, String>() {
                     @Override public String call(UserCredentials credentials) {
@@ -196,16 +199,16 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return Observable.fromCallable(createPOSTCallable(TOKEN_AUTH, jsonString));
                     }
                 })
-                .map(new Func1<String, AuthToken>() {
-                    @Override public AuthToken call(String jsonString) {
-                        AuthTokenJson json = mGson.fromJson(jsonString, AuthTokenJson.class);
-                        return json.toAuthToken();
+                .map(new Func1<String, Authentication>() {
+                    @Override public Authentication call(String jsonString) {
+                        AuthenticationJson json = mGson.fromJson(jsonString, AuthenticationJson.class);
+                        return json.toAuthentication();
                     }
                 })
-                .doOnNext(new Action1<AuthToken>() {
-                    @Override public void call(AuthToken authToken) {
-                        d(authToken.toString());
-                        mAccount.createAccount(authToken, credentials.password);
+                .doOnNext(new Action1<Authentication>() {
+                    @Override public void call(Authentication authentication) {
+                        d(authentication.toString());
+                        mAccount.createAccount(authentication, credentials.password);
                     }
                 });
     }
@@ -811,7 +814,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
         return getUserWithId(userId)
                 .doOnNext(new Action1<User>() {
                     @Override public void call(User user) {
-                       mAccount.refreshAccount(user);
+                        mAccount.refreshAccount(user);
                     }
                 });
     }
@@ -875,6 +878,32 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         PaymentStatusJson json = mGson.fromJson(jsonString, PaymentStatusJson.class);
                         payment.setStatus(json.status);
                         return payment;
+                    }
+                });
+    }
+
+    /*********
+     * Device Method
+     ********/
+
+    @Override public Observable<Boolean> registerDevice(@NonNull Device device) {
+        return Observable.just(device)
+                .map(new Func1<Device, String>() {
+                    @Override public String call(Device device) {
+                        return mGson.toJson(new DeviceJson.Request(device));
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(DEVICES, jsonString));
+                    }
+                })
+                .map(new Func1<String, Boolean>() {
+                    @Override public Boolean call(String jsonString) {
+                        d(jsonString);
+                        DeviceJson.Response response = mGson.fromJson(jsonString, DeviceJson.Response.class);
+                        return response.active;
                     }
                 });
     }

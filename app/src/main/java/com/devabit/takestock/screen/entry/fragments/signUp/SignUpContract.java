@@ -1,6 +1,7 @@
 package com.devabit.takestock.screen.entry.fragments.signUp;
 
-import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.Authentication;
+import com.devabit.takestock.data.model.Device;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
@@ -12,7 +13,11 @@ interface SignUpContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showAuthTokenInView(AuthToken authToken);
+        Device getDevice();
+
+        void showDeviceRegisteredInView();
+
+        void showAuthTokenInView(Authentication authentication);
 
         void showUserNameError();
 

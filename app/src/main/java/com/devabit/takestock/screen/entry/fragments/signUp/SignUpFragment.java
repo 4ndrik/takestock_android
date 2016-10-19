@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +23,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.*;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.TakeStockPref;
+import com.devabit.takestock.data.model.Authentication;
+import com.devabit.takestock.data.model.Device;
 import com.devabit.takestock.data.model.UserCredentials;
 import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 
@@ -122,8 +125,22 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         return mPasswordEditText.getText().toString().trim();
     }
 
-    @Override public void showAuthTokenInView(AuthToken authToken) {
-        displayEmailConfirmationDialog(authToken.getEmail());
+    @Override @Nullable public Device getDevice() {
+        if (TakeStockPref.isDeviceRegistered(getActivity())) return null;
+        return new Device.Builder()
+                .setId(Build.ID)
+                .setName(Build.MODEL)
+                .setRegistrationId(TakeStockPref.getFCMToken(getActivity()))
+                .setIsActive(true)
+                .create();
+    }
+
+    @Override public void showDeviceRegisteredInView() {
+        TakeStockPref.putIsDeviceRegistered(getActivity(), true);
+    }
+
+    @Override public void showAuthTokenInView(Authentication authentication) {
+        displayEmailConfirmationDialog(authentication.getEmail());
     }
 
     private void displayEmailConfirmationDialog(String email) {

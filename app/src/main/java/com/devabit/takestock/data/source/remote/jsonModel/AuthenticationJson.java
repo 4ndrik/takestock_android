@@ -1,12 +1,12 @@
 package com.devabit.takestock.data.source.remote.jsonModel;
 
-import com.devabit.takestock.data.model.AuthToken;
+import com.devabit.takestock.data.model.Authentication;
 
 /**
  * Created by Victor Artemyev on 09/10/2016.
  */
 
-public class AuthTokenJson implements JsonModel {
+public class AuthenticationJson implements JsonModel {
 
     public String email;
     public String username;
@@ -14,8 +14,8 @@ public class AuthTokenJson implements JsonModel {
     public String token;
     public UserJson user;
 
-    public AuthToken toAuthToken() {
-        return new AuthToken.Builder()
+    public Authentication toAuthentication() {
+        return new Authentication.Builder()
                 .setToken(token)
                 .setUserId(user == null ? id : user.id)
                 .setUsername(user == null ? username : user.username)
