@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -30,13 +31,13 @@ import java.util.List;
  */
 public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHolder> {
 
-    private final int mUserId;
     private final LayoutInflater mLayoutInflater;
     private final List<Advert> mAdverts;
     private final SparseArray<Advert> mAdvertsInProcessing;
+    private User mAccountUser;
 
     public interface OnItemClickListener {
-        void onItemClick(Advert advert, boolean isAccount);
+        void onItemClick(Advert advert);
     }
 
     private OnItemClickListener mItemClickListener;
@@ -47,28 +48,31 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
     private OnWatchingChangedListener mWatchingChangedListener;
 
-    public AdvertsAdapter(Context context, int userId) {
+    public AdvertsAdapter(Context context, @Nullable User accountUser) {
         mLayoutInflater = LayoutInflater.from(context);
         mAdverts = new ArrayList<>();
         mAdvertsInProcessing = new SparseArray<>();
-        mUserId = userId;
+        mAccountUser = accountUser;
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, @LayoutRes int viewType) {
+        View itemView = inflateItemView(viewType, parent);
         switch (viewType) {
             case R.layout.item_progress:
-                return new ProgressViewHolder(inflateItemView(viewType, parent));
+                return new ProgressViewHolder(itemView);
 
             case R.layout.item_advert_account_vertical:
             case R.layout.item_advert_account_horizontal:
-            case R.layout.item_advert_offered_vertical:
-            case R.layout.item_advert_offered_horizontal:
-                return new AdvertViewHolder(inflateItemView(viewType, parent));
+                return new AdvertViewHolder(itemView);
+
+            case R.layout.item_advert_lacks_account_vertical:
+            case R.layout.item_advert_lacks_account_horizontal:
+                return new AdvertLacksAccountViewHolder(itemView);
 
             case R.layout.item_advert_vertical:
             case R.layout.item_advert_horizontal:
             default:
-                return new AdvertWatchingViewHolder(inflateItemView(viewType, parent));
+                return new AdvertWatchingViewHolder(itemView);
         }
     }
 
@@ -78,27 +82,28 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder.getItemViewType() == R.layout.item_progress) return;
-        ((AdvertViewHolder) holder).bindAdvert(mAdverts.get(position));
+        ((AdvertAbstractViewHolder) holder).bindAdvert(mAdverts.get(position));
     }
 
     @Override public @LayoutRes int getItemViewType(int position) {
         Advert advert = mAdverts.get(position);
         if (advert == null) return R.layout.item_progress;
 
-        List<Photo> photos = advert.getPhotos();
-        if (photos.isEmpty()) return R.layout.item_advert_horizontal;
 
-        Photo photo = photos.get(0);
+        if (advert.getPhotos().isEmpty()) return R.layout.item_advert_lacks_account_horizontal;
+
+        Photo photo = advert.getPhotos().get(0);
         boolean isVertical = photo.getHeight() > photo.getWidth();
-        if (advert.getAuthorId() == mUserId) {
+
+        if (mAccountUser == null || !mAccountUser.isVerified()) {
+            return isVertical ? R.layout.item_advert_lacks_account_vertical : R.layout.item_advert_lacks_account_horizontal;
+        }
+
+        if (advert.getAuthorId() == mAccountUser.getId()) {
             return isVertical ? R.layout.item_advert_account_vertical : R.layout.item_advert_account_horizontal;
         }
 
-        if (advert.canOffer()) {
-            return isVertical ? R.layout.item_advert_vertical : R.layout.item_advert_horizontal;
-        }
-
-        return isVertical ? R.layout.item_advert_offered_vertical : R.layout.item_advert_offered_horizontal;
+        return isVertical ? R.layout.item_advert_vertical : R.layout.item_advert_horizontal;
     }
 
     @Override public int getItemCount() {
@@ -106,7 +111,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     }
 
     public void addAdverts(List<Advert> adverts) {
-        int startPosition = mAdverts.size() - 1;
+        int startPosition = mAdverts.size();
         mAdverts.addAll(adverts);
         notifyItemRangeInserted(startPosition, adverts.size());
     }
@@ -151,18 +156,17 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         return mAdverts;
     }
 
+    public void setAccountUser(User accountUser) {
+        mAccountUser = accountUser;
+        notifyDataSetChanged();
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         mItemClickListener = listener;
     }
 
     public void setOnWatchingChangedListener(OnWatchingChangedListener watchedChangeListener) {
         mWatchingChangedListener = watchedChangeListener;
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
     class ProgressViewHolder extends ViewHolder {
@@ -190,9 +194,13 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         @Override void bindAdvert(Advert advert) {
             super.bindAdvert(advert);
             watchingCheckBox.setOnCheckedChangeListener(null);
-            watchingCheckBox.setChecked(mAdvert.hasSubscriber(mUserId));
+            watchingCheckBox.setChecked(mAdvert.hasSubscriber(mAccountUser.getId()));
             watchingCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
             setItemViewActive(!isAdvertProcessing(mAdvert));
+        }
+
+        boolean isAdvertProcessing(Advert advert) {
+            return mAdvertsInProcessing.get(advert.getId(), null) != null;
         }
 
         void setItemViewActive(boolean isActive) {
@@ -202,44 +210,59 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         }
     }
 
-    class AdvertViewHolder extends ViewHolder {
+    class AdvertViewHolder extends AdvertAbstractViewHolder {
 
-        private final Resources mResources;
+        @BindView(R.id.date_text_view) TextView dateTextView;
+        @BindView(R.id.price_text_view) TextView priceTextView;
+
+        AdvertViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override void bindAdvert(Advert advert) {
+            super.bindAdvert(advert);
+            dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getExpiresAt()));
+            String priceString = mResources.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice());
+            priceTextView.setText(priceString);
+        }
+    }
+
+    class AdvertLacksAccountViewHolder extends AdvertAbstractViewHolder {
+
+        AdvertLacksAccountViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    abstract class AdvertAbstractViewHolder extends ViewHolder {
+
+        final Resources mResources;
 
         @BindView(R.id.photo_image_view) ImageView photoImageView;
         @BindView(R.id.name_text_view) TextView nameTextView;
         @BindView(R.id.location_text_view) TextView locationTextView;
-        @BindView(R.id.date_text_view) TextView dateTextView;
-        @BindView(R.id.price_text_view) TextView priceTextView;
 
         Advert mAdvert;
 
-        AdvertViewHolder(View itemView) {
+        AdvertAbstractViewHolder(View itemView) {
             super(itemView);
             mResources = itemView.getResources();
-            ButterKnife.bind(AdvertViewHolder.this, itemView);
+            ButterKnife.bind(AdvertAbstractViewHolder.this, itemView);
             itemView.setOnClickListener(mClickListener);
         }
 
         final View.OnClickListener mClickListener
                 = new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (mItemClickListener != null) mItemClickListener.onItemClick(mAdvert, mAdvert.getAuthorId() == mUserId);
+                if (mItemClickListener != null) mItemClickListener.onItemClick(mAdvert);
             }
         };
 
         void bindAdvert(Advert advert) {
             mAdvert = advert;
-            nameTextView.setText(mAdvert.getName());
-            locationTextView.setText(mAdvert.getLocation());
-            String priceString = mResources.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice());
-            priceTextView.setText(priceString);
-            dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getExpiresAt()));
-            bindPhoto(mAdvert.getPhotos());
-        }
-
-        boolean isAdvertProcessing(Advert advert) {
-            return mAdvertsInProcessing.get(advert.getId(), null) != null;
+            bindPhoto(advert.getPhotos());
+            nameTextView.setText(advert.getName());
+            locationTextView.setText(advert.getLocation());
         }
 
         void bindPhoto(List<Photo> photos) {
@@ -260,6 +283,12 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(photoImageView);
+        }
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        public ViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

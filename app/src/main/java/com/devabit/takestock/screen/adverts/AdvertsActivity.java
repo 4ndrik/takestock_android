@@ -33,10 +33,12 @@ import com.devabit.takestock.data.filter.AdvertFilter;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.advert.active.AdvertActiveActivity;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.adverts.adapter.AdvertsAdapter;
 import com.devabit.takestock.screen.category.CategoriesActivity;
+import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.widget.GridSpacingItemDecoration;
 
@@ -53,7 +55,9 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     private static final String EXTRA_CATEGORY = "EXTRA_CATEGORY";
     private static final String EXTRA_SUBCATEGORY = "EXTRA_SUBCATEGORY";
     private static final String EXTRA_QUERY = "EXTRA_QUERY";
+
     private static final int RC_ADVERT_ACTIVE = 102;
+    private static final int RC_ENTRY = 103;
 
     public static Intent getSearchingStartIntent(Context context, String query) {
         Intent starter = new Intent(context, AdvertsActivity.class);
@@ -79,19 +83,21 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     @BindView(R.id.count_text_view) protected TextView mCountTextView;
 
     TakeStockAccount mAccount;
+    @Nullable User mAccountUser;
     Category mCategory;
     Subcategory mSubcategory;
     String mQuery;
     AdvertsAdapter mAdvertsAdapter;
     AdvertsContract.Presenter mPresenter;
 
-    int totalAdvertsCount;
+    int mTotalAdvertsCount;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adverts);
         ButterKnife.bind(AdvertsActivity.this);
         mAccount = TakeStockAccount.get(AdvertsActivity.this);
+        mAccountUser = mAccount.getUser();
         initDataFromIntent(getIntent());
         setUpToolbar();
         setUpRefreshLayout();
@@ -157,13 +163,21 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void setUpAdvertAdapter(RecyclerView recyclerView) {
-        mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext(), mAccount.getId());
+        mAdvertsAdapter = new AdvertsAdapter(recyclerView.getContext(), mAccountUser);
         mAdvertsAdapter.setOnItemClickListener(new AdvertsAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Advert advert, boolean isAccount) {
-                if (isAccount) startAdvertSellingActivity(advert);
-                else startAdvertDetailActivity(advert);
+            @Override public void onItemClick(Advert advert) {
+                if (mAccountUser == null) {
+                    displaySignInDialog();
+                } else if (!mAccountUser.isVerified()) {
+                    displayEmailConfirmationDialog();
+                } else if (mAccountUser.getId() == advert.getUser().getId()) {
+                    startAdvertSellingActivity(advert);
+                } else {
+                    startAdvertDetailActivity(advert);
+                }
             }
         });
+
         mAdvertsAdapter.setOnWatchingChangedListener(new AdvertsAdapter.OnWatchingChangedListener() {
             @Override public void onWatchingChanged(Advert advert, boolean isWatched) {
                 mAdvertsAdapter.startAdvertProcessing(advert);
@@ -175,7 +189,24 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
                 }
             }
         });
+
         recyclerView.setAdapter(mAdvertsAdapter);
+    }
+
+    private void displaySignInDialog() {
+        new AlertDialog.Builder(AdvertsActivity.this)
+                .setMessage("Sign in to see details")
+                .setPositiveButton("Sign in", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
+
+    private void displayEmailConfirmationDialog() {
+        EmailConfirmationDialog dialog = EmailConfirmationDialog.newInstance(mAccount.getEmail());
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
     }
 
     private void startAdvertSellingActivity(Advert advert) {
@@ -187,7 +218,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void startEntryActivity() {
-        startActivity(EntryActivity.getStartIntent(AdvertsActivity.this));
+        startActivityForResult(EntryActivity.getStartIntent(AdvertsActivity.this), RC_ENTRY);
     }
 
     private void createPresenter(AdvertFilter filter) {
@@ -225,13 +256,13 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     @Override public void showTotalAdvertsCountInView(int count) {
-        totalAdvertsCount = count;
+        mTotalAdvertsCount = count;
         setAdvertsCount(0);
     }
 
     void setAdvertsCount(int count) {
         String visibleCountText = String.valueOf(count);
-        String countText = getString(R.string.adverts_count, visibleCountText, totalAdvertsCount);
+        String countText = getString(R.string.adverts_count, visibleCountText, mTotalAdvertsCount);
         SpannableString spString = new SpannableString(countText);
         spString.setSpan(new ForegroundColorSpan(Color.BLACK), 0, visibleCountText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mCountTextView.setText(spString);
