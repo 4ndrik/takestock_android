@@ -55,7 +55,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         return starter;
     }
 
-    public static final int RC_PAYMENT = 101;
+    public static final int RC_PAYMENT_BY_CARD = 101;
     public static final int RC_SHIPPING = 102;
 
     @BindView(R.id.content_activity_offer) protected ViewGroup mContent;
@@ -151,9 +151,13 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     private void setUpListenersOnAdapter(OffersBuyingAdapter adapter) {
         adapter.setOnStatusChangedListener(mOnStatusChangedListener);
-        adapter.setOnMakePaymentClickListener(new OffersBuyingAdapter.OnMakePaymentClickListener() {
-            @Override public void onMakePayment(Offer offer) {
-                startActivityForResult(PaymentActivity.getStartIntent(OfferActivity.this, offer), RC_PAYMENT);
+        adapter.setOnMakePaymentClickListener(new OffersBuyingAdapter.OnPaymentClickListener() {
+            @Override public void onPayByCard(Offer offer) {
+                startActivityForResult(PaymentActivity.getStartIntent(OfferActivity.this, offer), RC_PAYMENT_BY_CARD);
+            }
+
+            @Override public void onPayByBACS(Offer offer) {
+
             }
         });
         adapter.setOnShippingAddressClickListener(new OffersBuyingAdapter.OnShippingAddressClickListener() {
@@ -264,7 +268,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PAYMENT || requestCode == RC_SHIPPING && resultCode == RESULT_OK) {
+        if (requestCode == RC_PAYMENT_BY_CARD || requestCode == RC_SHIPPING && resultCode == RESULT_OK) {
             Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
             mOffersBuyingAdapter.refreshOffer(offer);
         }

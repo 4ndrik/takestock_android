@@ -48,11 +48,12 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     private OnStatusChangedListener mStatusChangedListener;
 
-    interface OnMakePaymentClickListener {
-        void onMakePayment(Offer offer);
+    interface OnPaymentClickListener {
+        void onPayByCard(Offer offer);
+        void onPayByBACS(Offer offer);
     }
 
-    private OnMakePaymentClickListener mMakePaymentClickListener;
+    private OnPaymentClickListener mPaymentClickListener;
 
     interface OnShippingAddressClickListener {
         void onShippingAddressSet(Offer offer);
@@ -180,8 +181,8 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         mStatusChangedListener = statusChangedListener;
     }
 
-    void setOnMakePaymentClickListener(OnMakePaymentClickListener makePaymentClickListener) {
-        mMakePaymentClickListener = makePaymentClickListener;
+    void setOnMakePaymentClickListener(OnPaymentClickListener makePaymentClickListener) {
+        mPaymentClickListener = makePaymentClickListener;
     }
 
     void setOnShippingAddressClickListener(OnShippingAddressClickListener shippingAddressClickListener) {
@@ -338,9 +339,14 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
             super(itemView);
         }
 
-        @OnClick(R.id.payment_button)
-        void onPaymentButtonClick() {
-            if (mMakePaymentClickListener != null) mMakePaymentClickListener.onMakePayment(mOffer);
+        @OnClick(R.id.pay_by_card_button)
+        void onPayByCardButtonClick() {
+            if (mPaymentClickListener != null) mPaymentClickListener.onPayByCard(mOffer);
+        }
+
+        @OnClick(R.id.pay_by_bacs_button)
+        void omPayByBACSButtonClic() {
+            if (mPaymentClickListener != null) mPaymentClickListener.onPayByBACS(mOffer);
         }
     }
 

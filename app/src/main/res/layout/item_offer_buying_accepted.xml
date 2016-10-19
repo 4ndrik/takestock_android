@@ -86,15 +86,40 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="Many businesses in large distributed industries have a problem with stock being"/>
 
-        <Button
-                android:id="@+id/payment_button"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/comment_text_view"
-                android:text="Make payment"
-                android:textStyle="bold"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:theme="@style/Widget.TakeStock.Button.Gold"/>
+                android:paddingTop="8dp"
+                android:orientation="horizontal">
+
+            <Button
+                    android:id="@+id/pay_by_bacs_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/offer_buying_item_pay_by_bacs"
+                    android:drawableStart="@drawable/ic_bacs_white_24dp"
+                    android:drawablePadding="8dp"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:theme="@style/Widget.TakeStock.Button.Gold"
+                    style="@style/Widget.AppCompat.Button"/>
+
+            <Button
+                    android:id="@+id/pay_by_card_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/offer_buying_item_pay_by_card"
+                    android:drawableStart="@drawable/ic_card_unknown_white_24dp"
+                    android:drawablePadding="8dp"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:theme="@style/Widget.TakeStock.Button.Gold"
+                    style="@style/Widget.AppCompat.Button"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

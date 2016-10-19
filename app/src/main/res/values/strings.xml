@@ -309,6 +309,8 @@
     <string name="offer_buying_item_courier_name">Courier name:\u0020</string>
     <string name="offer_buying_item_confirm_goods_received">Confirm goods received</string>
     <string name="offer_buying_item_raise_dispute">Raise dispute</string>
+    <string name="offer_buying_item_pay_by_card">Pay by card</string>
+    <string name="offer_buying_item_pay_by_bacs">Pay by BACS</string>
     <!--offer buying item end-->
 
     <!--offer selling item start-->
