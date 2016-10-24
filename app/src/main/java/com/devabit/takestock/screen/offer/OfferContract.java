@@ -1,5 +1,9 @@
 package com.devabit.takestock.screen.offer;
 
+import android.support.annotation.NonNull;
+import android.util.Pair;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Notification;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
@@ -11,6 +15,8 @@ import com.devabit.takestock.screen.BaseView;
 interface OfferContract {
 
     interface View extends BaseView<Presenter> {
+
+        void showOfferAdvertPairInView(Pair<Offer, Advert> offerAdvertPair);
 
         void showOfferAcceptedInView(Offer offer);
 
@@ -24,5 +30,9 @@ interface OfferContract {
 
     interface Presenter extends BasePresenter {
         void acceptOffer(Offer offer, Offer.Accept accept);
+
+        void readNotification(@NonNull Notification notification);
+
+        void loadOfferAdvertPair(int offerId, int advertId);
     }
 }

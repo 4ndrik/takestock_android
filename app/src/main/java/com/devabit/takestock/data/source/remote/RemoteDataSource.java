@@ -531,6 +531,17 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public Observable<Advert> getAdvertWithId(int advertId) {
+        String url = ADVERTS + advertId +"/";
+        return Observable.fromCallable(createGETCallable(url))
+                .map(new Func1<String, Advert>() {
+                    @Override public Advert call(String jsonString) {
+                        AdvertJson json = mGson.fromJson(jsonString, AdvertJson.class);
+                        return json.toAdvert();
+                    }
+                });
+    }
+
     @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter) {
         return Observable.just(filter)
                 .map(new Func1<AdvertFilter, String>() {
@@ -906,6 +917,22 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return response.active;
                     }
                 });
+    }
+
+    @Override public Observable<Notification> saveNotification(@NonNull Notification notification) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Notification> readNotification(@NonNull Notification notification) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Integer> getNewNotificationsCount() {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<List<Notification>> getNotifications() {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 
     ///////////////////////////////////////////////////////////////////////////

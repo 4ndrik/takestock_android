@@ -2,6 +2,7 @@ package com.devabit.takestock.screen.adverts.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     private final LayoutInflater mLayoutInflater;
     private final List<Advert> mAdverts;
     private final SparseArray<Advert> mAdvertsInProcessing;
+    private final Handler mHandler;
     private User mAccountUser;
 
     public interface OnItemClickListener {
@@ -52,6 +54,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         mLayoutInflater = LayoutInflater.from(context);
         mAdverts = new ArrayList<>();
         mAdvertsInProcessing = new SparseArray<>();
+        mHandler = new Handler();
         mAccountUser = accountUser;
     }
 
@@ -110,6 +113,11 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         return mAdverts.size();
     }
 
+    @Override public void onViewRecycled(ViewHolder holder) {
+        if (holder == null || holder.getItemViewType() == R.layout.item_progress) return;
+        ((AdvertAbstractViewHolder) holder).unbind();
+    }
+
     public void addAdverts(List<Advert> adverts) {
         int startPosition = mAdverts.size();
         mAdverts.addAll(adverts);
@@ -141,7 +149,12 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
     public void setLoadingProgressEnable(boolean enable) {
         if (enable) {
             mAdverts.add(null);
-            notifyItemInserted(mAdverts.size());
+            mHandler.post(new Runnable() {
+                @Override public void run() {
+                    notifyItemInserted(mAdverts.size());
+                }
+            });
+
         } else {
             mAdverts.remove(mAdverts.size() - 1);
             notifyItemRemoved(mAdverts.size());
@@ -283,6 +296,10 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(photoImageView);
+        }
+
+        void unbind() {
+            Glide.clear(photoImageView);
         }
     }
 

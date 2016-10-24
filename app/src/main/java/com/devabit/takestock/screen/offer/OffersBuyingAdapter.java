@@ -34,9 +34,10 @@ import java.util.List;
 
 class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewHolder> {
 
-    private final String mPackaging;
     private final LayoutInflater mLayoutInflater;
     private final List<Offer> mOffers;
+
+    private String mPackaging;
 
     interface OnStatusChangedListener {
         void onAccepted(Offer offer);
@@ -67,8 +68,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     private OnConfirmGoodsListener mConfirmGoodsListener;
 
-    OffersBuyingAdapter(Context context, String packaging) {
-        mPackaging = packaging;
+    OffersBuyingAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
         mOffers = new ArrayList<>();
     }
@@ -175,6 +175,10 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
     void addOffer(Offer offer) {
         mOffers.add(0, offer);
         notifyItemInserted(0);
+    }
+
+    public void setPackaging(String packaging) {
+        mPackaging = packaging;
     }
 
     void setOnStatusChangedListener(OnStatusChangedListener statusChangedListener) {

@@ -16,20 +16,26 @@ import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Notification;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Photo;
+import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
-import com.devabit.takestock.screen.payment.PaymentActivity;
+import com.devabit.takestock.screen.payment.PayByCardActivity;
+import com.devabit.takestock.screen.payment.byBACS.PayByBACSActivity;
 import com.devabit.takestock.screen.shipping.ShippingActivity;
 import com.devabit.takestock.utils.DateUtil;
 import com.devabit.takestock.widget.ControllableAppBarLayout;
@@ -47,6 +53,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     private static final String EXTRA_OFFER = "com.devabit.takestock.screen.offer.EXTRA_OFFER";
     private static final String EXTRA_ADVERT = "com.devabit.takestock.screen.offer.EXTRA_ADVERT";
+    private static final String EXTRA_NOTIFICATION = "com.devabit.takestock.screen.offer.EXTRA_NOTIFICATION";
 
     public static Intent getStartIntent(Context context, Pair<Offer, Advert> offerAdvertPair) {
         Intent starter = new Intent(context, OfferActivity.class);
@@ -55,22 +62,30 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         return starter;
     }
 
+    public static Intent getStartIntent(Context context, Notification notification) {
+        Intent starter = new Intent(context, OfferActivity.class);
+        starter.putExtra(EXTRA_NOTIFICATION, notification);
+        return starter;
+    }
+
     public static final int RC_PAYMENT_BY_CARD = 101;
-    public static final int RC_SHIPPING = 102;
+    public static final int RC_PAYMENT_BY_BACS = 102;
+    public static final int RC_SHIPPING = 103;
 
-    @BindView(R.id.content_activity_offer) protected ViewGroup mContent;
-    @BindView(R.id.appbar_layout) protected ControllableAppBarLayout mAppBarLayout;
-    @BindView(R.id.toolbar) protected Toolbar mToolbar;
-    @BindView(R.id.advert_image_view) protected ImageView mAdvertImageView;
-    @BindView(R.id.advert_name_text_view) protected TextView mAdvertNameTextView;
-    @BindView(R.id.advert_location_text_view) protected TextView mAdvertLocationTextView;
-    @BindView(R.id.advert_date_text_view) protected TextView mAdvertDateTextView;
-    @BindView(R.id.advert_price_text_view) protected TextView mAdvertPriceTextView;
-    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
+    @BindView(R.id.content_activity_offer) ViewGroup mContent;
+    @BindView(R.id.appbar_layout) ControllableAppBarLayout mAppBarLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.advert_image_view) ImageView mAdvertImageView;
+    @BindView(R.id.advert_name_text_view) TextView mAdvertNameTextView;
+    @BindView(R.id.advert_location_text_view) TextView mAdvertLocationTextView;
+    @BindView(R.id.advert_date_text_view) TextView mAdvertDateTextView;
+    @BindView(R.id.advert_price_text_view) TextView mAdvertPriceTextView;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
-    private Advert mAdvert;
-    private OfferContract.Presenter mPresenter;
-    private OffersBuyingAdapter mOffersBuyingAdapter;
+    Advert mAdvert;
+    OfferContract.Presenter mPresenter;
+    OffersBuyingAdapter mOffersBuyingAdapter;
+    @Nullable Notification mNotification;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,12 +93,16 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         ButterKnife.bind(OfferActivity.this);
         setUpToolbar();
         setUpAppBarLayout();
-        mAdvert = getIntent().getParcelableExtra(EXTRA_ADVERT);
-        setUpAdvert(mAdvert);
-        setUpRecyclerView(mAdvert);
-        Offer offer = getIntent().getParcelableExtra(EXTRA_OFFER);
-        List<Offer> offers = fetchOffers(offer);
-        mOffersBuyingAdapter.addOffers(offers);
+        RecyclerView recyclerView = setUpRecyclerView();
+        setUpOfferAdapter(recyclerView);
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_NOTIFICATION)) {
+            mNotification = intent.getParcelableExtra(EXTRA_NOTIFICATION);
+        } else {
+            Offer offer = intent.getParcelableExtra(EXTRA_OFFER);
+            mAdvert = intent.getParcelableExtra(EXTRA_ADVERT);
+            setUpOfferAdvertPair(offer, mAdvert);
+        }
         createPresenter();
     }
 
@@ -113,12 +132,44 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         });
     }
 
+    private void createPresenter() {
+        new OfferPresenter(Injection.provideDataRepository(OfferActivity.this), OfferActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull OfferContract.Presenter presenter) {
+        mPresenter = presenter;
+        if (mNotification != null) {
+            mPresenter.loadOfferAdvertPair(mNotification.getOfferId(), mNotification.getAdvertId());
+            if (mNotification.isNew()) mPresenter.readNotification(mNotification);
+        }
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if ((requestCode == RC_PAYMENT_BY_CARD || requestCode == RC_SHIPPING) && resultCode == RESULT_OK) {
+            Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
+            mOffersBuyingAdapter.refreshOffer(offer);
+        }
+    }
+
+    @Override public void showOfferAdvertPairInView(Pair<Offer, Advert> offerAdvertPair) {
+        setUpOfferAdvertPair(offerAdvertPair.first, offerAdvertPair.second);
+    }
+
+    private void setUpOfferAdvertPair(Offer offer, Advert advert) {
+        setUpAdvert(advert);
+        List<Offer> offers = fetchOffers(offer);
+        mOffersBuyingAdapter.addOffers(offers);
+    }
+
     private void setUpAdvert(Advert advert) {
+        mAdvert = advert;
         loadAdvertImage(advert);
         mAdvertNameTextView.setText(advert.getName());
         mAdvertLocationTextView.setText(advert.getLocation());
         mAdvertDateTextView.setText(DateUtil.formatToDefaultDate(advert.getUpdatedAt()));
         mAdvertPriceTextView.setText(getString(R.string.offer_activity_advert_price, advert.getGuidePrice(), advert.getPackagingName()));
+        mOffersBuyingAdapter.setPackaging(advert.getPackagingName());
     }
 
     private void loadAdvertImage(Advert advert) {
@@ -137,27 +188,32 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         }
     }
 
-    private void setUpRecyclerView(Advert advert) {
+    private RecyclerView setUpRecyclerView() {
         mRecyclerView = ButterKnife.findById(OfferActivity.this, R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(OfferActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
         mRecyclerView.addItemDecoration(itemDecoration);
-        mOffersBuyingAdapter = new OffersBuyingAdapter(OfferActivity.this, advert.getPackagingName());
+        return mRecyclerView;
+
+    }
+
+    private void setUpOfferAdapter(RecyclerView recyclerView) {
+        mOffersBuyingAdapter = new OffersBuyingAdapter(OfferActivity.this);
         setUpListenersOnAdapter(mOffersBuyingAdapter);
-        mRecyclerView.setAdapter(mOffersBuyingAdapter);
+        recyclerView.setAdapter(mOffersBuyingAdapter);
     }
 
     private void setUpListenersOnAdapter(OffersBuyingAdapter adapter) {
         adapter.setOnStatusChangedListener(mOnStatusChangedListener);
         adapter.setOnMakePaymentClickListener(new OffersBuyingAdapter.OnPaymentClickListener() {
             @Override public void onPayByCard(Offer offer) {
-                startActivityForResult(PaymentActivity.getStartIntent(OfferActivity.this, offer), RC_PAYMENT_BY_CARD);
+                startActivityForResult(PayByCardActivity.getStartIntent(OfferActivity.this, offer), RC_PAYMENT_BY_CARD);
             }
 
             @Override public void onPayByBACS(Offer offer) {
-
+                startActivityForResult(PayByBACSActivity.getStartIntent(OfferActivity.this, offer, mAdvert.getName()), RC_PAYMENT_BY_BACS);
             }
         });
         adapter.setOnShippingAddressClickListener(new OffersBuyingAdapter.OnShippingAddressClickListener() {
@@ -258,21 +314,6 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         return offers;
     }
 
-    private void createPresenter() {
-        new OfferPresenter(Injection.provideDataRepository(OfferActivity.this), OfferActivity.this);
-    }
-
-    @Override public void setPresenter(@NonNull OfferContract.Presenter presenter) {
-        mPresenter = presenter;
-    }
-
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PAYMENT_BY_CARD || requestCode == RC_SHIPPING && resultCode == RESULT_OK) {
-            Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
-            mOffersBuyingAdapter.refreshOffer(offer);
-        }
-    }
 
     @Override public void showOfferAcceptedInView(Offer offer) {
         mOffersBuyingAdapter.addOffer(offer);
@@ -292,8 +333,24 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
     }
 
     @Override public void setProgressIndicator(boolean isActive) {
-        mRecyclerView.setEnabled(!isActive);
+        setTouchDisabled(isActive);
         mRecyclerView.setAlpha(isActive ? 0.5f : 1f);
+    }
+
+    private void setTouchDisabled(boolean isActive) {
+        Window window = getWindow();
+        if (isActive) {
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    @OnClick(R.id.content_advert)
+    void onContentAdvertClick() {
+        startActivity(AdvertDetailActivity.getStartIntent(OfferActivity.this, mAdvert.getId()));
     }
 
     @Override protected void onPause() {

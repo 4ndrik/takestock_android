@@ -28,7 +28,7 @@ public class ActiveAdvertsFragment extends BaseAdvertsFragment {
         mAdvertAdapter = new ActiveAdvertsAdapter(recyclerView.getContext());
         mAdvertAdapter.setOnItemClickListener(new BaseAdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClicked(Advert advert) {
-                startActivityForResult(AdvertActiveActivity.getStartIntent(getActivity(), advert), RC_ADVERT_ACTIVE);
+                startActivityForResult(AdvertActiveActivity.getStartIntent(getActivity(), advert.getId()), RC_ADVERT_ACTIVE);
             }
         });
         recyclerView.setAdapter(mAdvertAdapter);

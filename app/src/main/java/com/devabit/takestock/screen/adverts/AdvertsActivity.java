@@ -210,7 +210,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void startAdvertSellingActivity(Advert advert) {
-        startActivityForResult(AdvertActiveActivity.getStartIntent(AdvertsActivity.this, advert), RC_ADVERT_ACTIVE);
+        startActivityForResult(AdvertActiveActivity.getStartIntent(AdvertsActivity.this, advert.getId()), RC_ADVERT_ACTIVE);
     }
 
     private void startAdvertDetailActivity(Advert advert) {

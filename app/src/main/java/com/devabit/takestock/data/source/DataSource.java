@@ -114,6 +114,8 @@ public interface DataSource {
 
     Observable<Advert> editAdvert(@NonNull Advert advert);
 
+    Observable<Advert> getAdvertWithId(int advertId);
+
     Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter);
 
     Observable<PaginatedList<Advert>> getPaginatedAdvertListPerPage(@NonNull String page);
@@ -175,5 +177,16 @@ public interface DataSource {
     /********** Device Method **********/
 
     Observable<Boolean> registerDevice(@NonNull Device device);
+
+
+    /********** Notifications Method **********/
+
+    Observable<Notification> saveNotification(@NonNull Notification notification);
+
+    Observable<Notification> readNotification(@NonNull Notification notification);
+
+    Observable<Integer> getNewNotificationsCount();
+
+    Observable<List<Notification>> getNotifications();
 
 }

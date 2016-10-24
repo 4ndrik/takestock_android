@@ -1,6 +1,9 @@
 package com.devabit.takestock.screen.offer;
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
+import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Notification;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
@@ -8,7 +11,9 @@ import com.devabit.takestock.rx.RxTransformers;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -68,6 +73,49 @@ class OfferPresenter implements OfferContract.Presenter {
                     @Override public void onNext(Offer offer) {
                         d(offer.toString());
                         mView.showOfferAcceptedInView(offer);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override public void readNotification(@NonNull Notification notification) {
+        Subscription subscription = mDataRepository.readNotification(notification)
+                .compose(RxTransformers.<Notification>applyObservableSchedulers())
+                .subscribe(new Action1<Notification>() {
+                    @Override public void call(Notification notification) {
+                        d("%s - read", notification);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override public void call(Throwable throwable) {
+                        handleError(throwable);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override public void loadOfferAdvertPair(int offerId, int advertId) {
+        mView.setProgressIndicator(true);
+        Subscription subscription = Observable.zip(
+                mDataRepository.getOfferWithId(offerId),
+                mDataRepository.getAdvertWithId(advertId),
+                new Func2<Offer, Advert, Pair<Offer, Advert>>() {
+                    @Override public Pair<Offer, Advert> call(Offer offer, Advert advert) {
+                        return Pair.create(offer, advert);
+                    }
+                })
+                .compose(RxTransformers.<Pair<Offer, Advert>>applyObservableSchedulers())
+                .subscribe(new Subscriber<Pair<Offer, Advert>>() {
+                    @Override public void onCompleted() {
+                        mView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable throwable) {
+                        mView.setProgressIndicator(false);
+                        handleError(throwable);
+                    }
+
+                    @Override public void onNext(Pair<Offer, Advert> offerAdvertPair) {
+                        mView.showOfferAdvertPairInView(offerAdvertPair);
                     }
                 });
         mSubscriptions.add(subscription);

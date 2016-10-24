@@ -28,6 +28,7 @@ import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.dialog.accountNotVerified.AccountNotVerifiedDialog;
 import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
+import com.devabit.takestock.screen.notifications.NotificationsActivity;
 import com.devabit.takestock.screen.selling.SellingActivity;
 import com.devabit.takestock.screen.watching.WatchingActivity;
 
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @BindView(R.id.search_products_edit_text) EditText mSearchEditText;
     @BindView(R.id.browse_categories_button) Button mBrowseProductsButton;
     @BindView(R.id.sell_something_button) Button mSellSomethingButton;
+    TextView mNewNotificationCounterTextView;
 
     @BindViews({R.id.menu_button, R.id.logo_image_view, R.id.search_products_edit_text,
             R.id.browse_categories_button, R.id.sell_something_button})
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         mAccount = TakeStockAccount.get(MainActivity.this);
         createPresenter();
         setUpSearchEditText();
+        initNewNotificationCounterTextView();
         setUpNavigationItemSelectedListener();
     }
 
@@ -127,6 +130,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(AdvertsActivity.getSearchingStartIntent(MainActivity.this, query));
     }
 
+    private void initNewNotificationCounterTextView() {
+        mNewNotificationCounterTextView = (TextView) mNavigationView.getMenu()
+                .findItem(R.id.nav_notifications).getActionView();
+    }
+
     private void setUpNavigationItemSelectedListener() {
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -173,11 +181,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void onNotificationMenuItemClick() {
-        showNotYetImplementedSnackbar();
-    }
-
-    private void showNotYetImplementedSnackbar() {
-        Snackbar.make(mContent, "Not yet implemented.", Snackbar.LENGTH_LONG).show();
+        if (mAccount.lacksAccount()) {
+            startEntryActivity();
+        } else {
+            startActivity(NotificationsActivity.getStartIntent(MainActivity.this));
+        }
     }
 
     private void onSellingMenuItemClick() {
@@ -271,10 +279,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
-//    private boolean lacksAccount() {
-//        return mAccount.lacksAccount();
-//    }
-
     @OnClick(R.id.browse_categories_button)
     protected void onBrowseCategoriesButtonClick() {
         startActivity(CategoriesActivity.getStartIntent(MainActivity.this));
@@ -304,6 +308,20 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override public void showDataUpdated() {
         mViewSwitcher.setDisplayedChild(INDEX_MAIN_CONTENT);
         setUpHeaderNavigationView();
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        mPresenter.loadNewNotificationsCount();
+    }
+
+    @Override public void showNewNotificationsCount(Integer count) {
+        setNewNotificationCount(count);
+    }
+
+    private void setNewNotificationCount(Integer count) {
+        boolean isNew = count > 0;
+        mNewNotificationCounterTextView.setText(isNew ? count.toString() : "");
     }
 
     private void setUpHeaderNavigationView() {

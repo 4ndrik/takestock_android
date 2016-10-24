@@ -8,6 +8,14 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/item_offer_selling_pending"/>
+
     <com.devabit.takestock.widget.ControllableAppBarLayout
             android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
@@ -30,6 +38,7 @@
                     tools:ignore="ContentDescription"/>
 
             <RelativeLayout
+                    android:id="@+id/content_advert"
                     android:layout_width="match_parent"
                     android:layout_height="144dp"
                     android:layout_gravity="bottom"
@@ -108,13 +117,5 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </com.devabit.takestock.widget.ControllableAppBarLayout>
-
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_offer_selling_pending"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
+import com.devabit.takestock.data.model.Notification;
 import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.screen.advert.editor.AdvertEditorActivity;
 import com.devabit.takestock.screen.advert.active.fragment.offers.OffersFragment;
@@ -39,11 +40,18 @@ import java.util.List;
 
 public class AdvertActiveActivity extends AppCompatActivity implements AdvertActiveContract.View {
 
-    private static final String EXTRA_ADVERT = "EXTRA_ADVERT";
+    private static final String EXTRA_ADVERT_ID = "EXTRA_ADVERT_ID";
+    private static final String EXTRA_NOTIFICATION = "EXTRA_NOTIFICATION";
 
-    public static Intent getStartIntent(Context context, Advert advert) {
+    public static Intent getStartIntent(Context context, int advertId) {
         Intent starter = new Intent(context, AdvertActiveActivity.class);
-        starter.putExtra(EXTRA_ADVERT, advert);
+        starter.putExtra(EXTRA_ADVERT_ID, advertId);
+        return starter;
+    }
+
+    public static Intent getStartIntent(Context context, Notification notification) {
+        Intent starter = new Intent(context, AdvertActiveActivity.class);
+        starter.putExtra(EXTRA_NOTIFICATION, notification);
         return starter;
     }
 
@@ -58,6 +66,7 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
     @BindView(R.id.table_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
+    @Nullable Notification mNotification;
     Advert mAdvert;
     AdvertActiveContract.Presenter mPresenter;
 
@@ -66,11 +75,16 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
         setContentView(R.layout.activity_advert_active);
         ButterKnife.bind(AdvertActiveActivity.this);
         setUpToolbar();
-        Advert advert = getIntent().getParcelableExtra(EXTRA_ADVERT);
-        setUpAppBarLayout(advert);
-        setUpTabLayout(advert);
-        createPresenter(advert);
-        bindAdvert(advert);
+        createPresenter(getAdvertId());
+    }
+
+    private int getAdvertId() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_NOTIFICATION)) {
+            mNotification = intent.getParcelableExtra(EXTRA_NOTIFICATION);
+            return mNotification.getAdvertId();
+        }
+        return intent.getIntExtra(EXTRA_ADVERT_ID, 0);
     }
 
     private void setUpToolbar() {
@@ -96,6 +110,25 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
 
     private void startAdvertEditorActivity() {
         startActivityForResult(AdvertEditorActivity.getStartIntent(AdvertActiveActivity.this, mAdvert), RC_EDIT);
+    }
+
+    private void createPresenter(int advertId) {
+        new AdvertActivePresenter(advertId,
+                Injection.provideDataRepository(AdvertActiveActivity.this), AdvertActiveActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull AdvertActiveContract.Presenter presenter) {
+        mPresenter = presenter;
+        mPresenter.loadAdvert();
+        if (mNotification != null && mNotification.isNew()) mPresenter.readNotification(mNotification);
+    }
+
+    @Override public void showAdvertInView(Advert advert) {
+        Timber.d("Advert: %s", advert);
+        mAdvert = advert;
+        setUpAppBarLayout(advert);
+        setUpTabLayout(advert);
+        bindAdvert(advert);
     }
 
     private void setUpAppBarLayout(final Advert advert) {
@@ -127,21 +160,6 @@ public class AdvertActiveActivity extends AppCompatActivity implements AdvertAct
                 getResources().getQuantityString(R.plurals.questions, Integer.valueOf(advert.getQuestionsCount()), advert.getQuestionsCount()));
         mViewPager.setAdapter(pagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-    }
-
-    private void createPresenter(Advert advert) {
-        new AdvertActivePresenter(advert,
-                Injection.provideDataRepository(AdvertActiveActivity.this), AdvertActiveActivity.this);
-    }
-
-    @Override public void setPresenter(@NonNull AdvertActiveContract.Presenter presenter) {
-        mPresenter = presenter;
-        mPresenter.unnotifyAdvert();
-    }
-
-    @Override public void showUnnotifiedAdvertInView(Advert advert) {
-        Timber.d("Unnotified Advert: %s", advert);
-        mAdvert = advert;
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -340,6 +340,10 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<Advert> getAdvertWithId(int advertId) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListPerPage(@NonNull String link) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -452,5 +456,46 @@ public class LocalDataSource implements DataSource {
 
     @Override public Observable<Boolean> registerDevice(@NonNull Device device) {
         throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    /********** Notification Methods **********/
+
+    @Override public Observable<Notification> saveNotification(@NonNull Notification notification) {
+        return Observable.just(notification)
+                .doOnNext(new Action1<Notification>() {
+                    @Override public void call(Notification notification) {
+                        NotificationRealmDao dao = new NotificationRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateNotification(notification);
+                    }
+                });
+    }
+
+    @Override public Observable<Notification> readNotification(@NonNull Notification notification) {
+        return Observable.just(notification)
+                .doOnNext(new Action1<Notification>() {
+                    @Override public void call(Notification notification) {
+                        notification.setNew(false);
+                        NotificationRealmDao dao = new NotificationRealmDao(mRealmConfiguration);
+                        dao.storeOrUpdateNotification(notification);
+                    }
+                });
+    }
+
+    @Override public Observable<Integer> getNewNotificationsCount() {
+        return Observable.fromCallable(new Callable<Integer>() {
+            @Override public Integer call() throws Exception {
+                NotificationRealmDao dao = new NotificationRealmDao(mRealmConfiguration);
+                return (int) dao.getNewNotificationCount();
+            }
+        });
+    }
+
+    @Override public Observable<List<Notification>> getNotifications() {
+        return Observable.fromCallable(new Callable<List<Notification>>() {
+            @Override public List<Notification> call() throws Exception {
+                NotificationRealmDao dao = new NotificationRealmDao(mRealmConfiguration);
+                return dao.getNotificationList();
+            }
+        });
     }
 }

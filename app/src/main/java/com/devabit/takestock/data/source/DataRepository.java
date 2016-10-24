@@ -314,6 +314,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.editAdvert(advert);
     }
 
+    @Override public Observable<Advert> getAdvertWithId(int advertId) {
+        return mRemoteDataSource.getAdvertWithId(advertId);
+    }
+
     @Override public Observable<PaginatedList<Advert>> getPaginatedAdvertListWithFilter(@NonNull AdvertFilter filter) {
         return mRemoteDataSource.getPaginatedAdvertListWithFilter(filter);
     }
@@ -439,5 +443,26 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<Boolean> registerDevice(@NonNull Device device) {
         return mRemoteDataSource.registerDevice(device);
+    }
+
+
+    /**********
+     * Notification Methods
+     **********/
+
+    @Override public Observable<Notification> saveNotification(@NonNull Notification notification) {
+        return mLocalDataSource.saveNotification(notification);
+    }
+
+    @Override public Observable<Notification> readNotification(@NonNull Notification notification) {
+        return mLocalDataSource.readNotification(notification);
+    }
+
+    @Override public Observable<Integer> getNewNotificationsCount() {
+        return mLocalDataSource.getNewNotificationsCount();
+    }
+
+    @Override public Observable<List<Notification>> getNotifications() {
+        return mLocalDataSource.getNotifications();
     }
 }

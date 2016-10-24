@@ -16,8 +16,10 @@
     <string name="action_sign_up">com.devabit.takestock.action.SIGN_UP</string>
     <string name="action_log_out">com.devabit.takestock.action.LOG_OUT</string>
     <string name="action_advert_saved">com.devabit.takestock.action.ADVERT_SAVED</string>
+    <string name="action_notification">com.devabit.takestock.action.NOTIFICATION</string>
 
     <string name="extra_advert">com.devabit.takestock.extra.ADVERT</string>
     <string name="extra_offer">com.devabit.takestock.extra.OFFER</string>
+    <string name="extra_notification">com.devabit.takestock.extra.NOTIFICATION</string>
 
 </resources>

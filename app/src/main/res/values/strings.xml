@@ -377,15 +377,23 @@
     <string name="watching_activity_toolbar_title">Watching</string>
     <!--watching activity end-->
 
-    <!--payment activity start-->
-    <string name="payment_activity_card_number">Card number</string>
-    <string name="payment_activity_hint_cvv_code">CVV code</string>
-    <string name="payment_activity_hint_mm_yy">MM/YY</string>
-    <string name="payment_activity_make_payment">Pay £%1$.2f</string>
-    <string name="payment_activity_toolbar_title">Payment</string>
-    <string name="payment_activity_expiry_date">Expiry date</string>
-    <string name="payment_activity_error_payment">Payment failed</string>
-    <!--payment activity end-->
+    <!--pay by card activity start-->
+    <string name="pay_by_card_activity_card_number">Card number</string>
+    <string name="pay_by_card_activity_hint_cvv_code">CVV code</string>
+    <string name="pay_by_card_activity_hint_mm_yy">MM/YY</string>
+    <string name="pay_by_card_activity_make_payment">Pay £%1$.2f</string>
+    <string name="pay_by_card_activity_toolbar_title">Pay by card</string>
+    <string name="pay_by_card_activity_expiry_date">Expiry date</string>
+    <string name="pay_by_card_activity_error_payment">Payment failed</string>
+    <!--pay by card activity end-->
+
+    <!--pay by BACS activity start-->
+    <string name="pay_by_bacs_activity_toolbar_title">Pay by BACS</string>
+    <string name="pay_by_bacs_activity_info_bank_part_one">If paying by BACS please send the full balance to the bank account below and use\u0020</string>
+    <string name="pay_by_bacs_activity_info_bank_part_two">\u0020as advertised as the reference.</string>
+    <string name="pay_by_bacs_activity_info_pay">You can also pay by BACS although we recommend users pay by card where possible for faster transaction times.</string>
+    <string name="pay_by_bacs_activity_bank_account">wetakestock ltd, c/o Barclays bank.\nSort Code; 205914\nAccount -  73498883</string>
+    <!--pay by BACS activity end-->
 
     <!--shipping activity start-->
     <string name="shipping_activity_toolbar_title">Ship to</string>
@@ -490,6 +498,7 @@
     <string name="email_confirmation_dialog_message_part_one">Registration almost complete, please check\u0020</string>
     <string name="email_confirmation_dialog_message_part_two">\u0020for a confirmation link.</string>
     <string name="email_confirmation_dialog_ok">OK</string>
+    <string name="notifications_activity_toolbar_title">Notifications</string>
     <!--email confirmation dialog end-->
 
 </resources>

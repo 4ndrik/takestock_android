@@ -8,6 +8,7 @@ import com.devabit.takestock.rx.RxTransformers;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.functions.Func8;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -73,6 +74,21 @@ class MainPresenter implements MainContract.Presenter {
 
                     @Override public void onNext(Void v) {
 
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override public void loadNewNotificationsCount() {
+        Subscription subscription = mDataRepository.getNewNotificationsCount()
+                .compose(RxTransformers.<Integer>applyObservableSchedulers())
+                .subscribe(new Action1<Integer>() {
+                    @Override public void call(Integer count) {
+                        mMainView.showNewNotificationsCount(count);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override public void call(Throwable throwable) {
+                        Timber.e(throwable);
                     }
                 });
         mSubscriptions.add(subscription);
