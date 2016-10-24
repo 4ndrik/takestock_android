@@ -146,7 +146,10 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == RC_PAYMENT_BY_CARD || requestCode == RC_SHIPPING) && resultCode == RESULT_OK) {
+        if ((requestCode == RC_PAYMENT_BY_CARD
+                || requestCode == RC_PAYMENT_BY_BACS
+                || requestCode == RC_SHIPPING)
+                && resultCode == RESULT_OK) {
             Offer offer = data.getParcelableExtra(getString(R.string.extra_offer));
             mOffersBuyingAdapter.refreshOffer(offer);
         }
@@ -209,7 +212,7 @@ public class OfferActivity extends AppCompatActivity implements OfferContract.Vi
         adapter.setOnStatusChangedListener(mOnStatusChangedListener);
         adapter.setOnMakePaymentClickListener(new OffersBuyingAdapter.OnPaymentClickListener() {
             @Override public void onPayByCard(Offer offer) {
-                startActivityForResult(PayByCardActivity.getStartIntent(OfferActivity.this, offer), RC_PAYMENT_BY_CARD);
+                startActivityForResult(PayByCardActivity.getStartIntent(OfferActivity.this, offer, false), RC_PAYMENT_BY_CARD);
             }
 
             @Override public void onPayByBACS(Offer offer) {

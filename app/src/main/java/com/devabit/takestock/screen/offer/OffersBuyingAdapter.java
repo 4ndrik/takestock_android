@@ -103,6 +103,9 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
             case R.layout.item_offer_buying_goods_received:
                 return new OfferGoodsReceivedViewHolder(itemView);
 
+            case R.layout.item_offer_buying_paying_by_bacs:
+                return new OfferPayingByBACSViewHolder(itemView);
+
             default:
                 return new OfferHistoryViewHolder(itemView);
         }
@@ -145,6 +148,9 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
                 case Offer.Status.GOODS_RECEIVED:
                     return R.layout.item_offer_buying_goods_received;
+
+                case Offer.Status.PAYING_BY_BACS:
+                    return R.layout.item_offer_buying_paying_by_bacs;
 
                 default:
                     return R.layout.item_offer_buying_countered;
@@ -200,6 +206,13 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
     ///////////////////////////////////////////////////////////////////////////
     // ViewHolders
     ///////////////////////////////////////////////////////////////////////////
+
+    class OfferPayingByBACSViewHolder extends ViewHolder {
+
+        OfferPayingByBACSViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
 
     class OfferGoodsReceivedViewHolder extends ViewHolder {
 
@@ -349,7 +362,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         }
 
         @OnClick(R.id.pay_by_bacs_button)
-        void omPayByBACSButtonClic() {
+        void omPayByBACSButtonClick() {
             if (mPaymentClickListener != null) mPaymentClickListener.onPayByBACS(mOffer);
         }
     }

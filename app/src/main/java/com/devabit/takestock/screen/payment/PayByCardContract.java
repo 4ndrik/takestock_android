@@ -9,7 +9,7 @@ import com.stripe.android.model.Card;
 /**
  * Created by Victor Artemyev on 04/07/2016.
  */
-interface PaymentContract {
+interface PayByCardContract {
 
     interface View extends BaseView<Presenter> {
 

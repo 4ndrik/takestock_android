@@ -22,6 +22,7 @@ public class Offer implements Parcelable {
         public static final int STOCK_IN_TRANSIT = 9;
         public static final int GOODS_RECEIVED = 10;
         public static final int IN_DISPUTE = 11;
+        public static final int PAYING_BY_BACS = 12;
     }
 
     private int mId;
@@ -176,6 +177,10 @@ public class Offer implements Parcelable {
 
     public void setStatus(int status) {
         mStatus = status;
+    }
+
+    public void setStatusForBuyer(int statusForBuyer) {
+        mStatusForBuyer = statusForBuyer;
     }
 
     public String getComment() {

@@ -85,6 +85,8 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
                 return new OfferStockInTransitViewHolder(itemView);
             case R.layout.item_offer_selling_goods_received:
                 return new OfferGoodsReceivedViewHolder(itemView);
+            case R.layout.item_offer_selling_paying_by_bacs:
+                return new OfferPayingByBACSViewHolder(itemView);
             default:
                 return new OfferAcceptedViewHolder(itemView);
         }
@@ -119,6 +121,9 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
 
             case Offer.Status.GOODS_RECEIVED:
                 return R.layout.item_offer_selling_goods_received;
+
+            case Offer.Status.PAYING_BY_BACS:
+                return R.layout.item_offer_selling_paying_by_bacs;
 
             default:
                 return R.layout.item_offer_selling_accepted;
@@ -162,6 +167,13 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
     /********
      * ViewHolders
      *********/
+
+    class OfferPayingByBACSViewHolder extends ViewHolder {
+
+        OfferPayingByBACSViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
 
     class OfferGoodsReceivedViewHolder extends ViewHolder {
 

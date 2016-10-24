@@ -393,6 +393,7 @@
     <string name="pay_by_bacs_activity_info_bank_part_two">\u0020as advertised as the reference.</string>
     <string name="pay_by_bacs_activity_info_pay">You can also pay by BACS although we recommend users pay by card where possible for faster transaction times.</string>
     <string name="pay_by_bacs_activity_bank_account">wetakestock ltd, c/o Barclays bank.\nSort Code; 205914\nAccount -  73498883</string>
+    <string name="pay_by_bacs_activity_error_payment">Payment failed</string>
     <!--pay by BACS activity end-->
 
     <!--shipping activity start-->

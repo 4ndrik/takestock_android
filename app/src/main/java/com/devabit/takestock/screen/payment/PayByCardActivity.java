@@ -32,12 +32,13 @@ import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 /**
  * Created by Victor Artemyev on 04/07/2016.
  */
-public class PaymentActivity extends AppCompatActivity implements PaymentContract.View {
+public class PayByCardActivity extends AppCompatActivity implements PayByCardContract.View {
 
-    private static final String TAG = makeLogTag(PaymentActivity.class);
+    private static final String TAG = makeLogTag(PayByCardActivity.class);
 
-    public static Intent getStartIntent(Context context, Offer offer) {
-        Intent starter = new Intent(context, PaymentActivity.class);
+    public static Intent getStartIntent(Context context, Offer offer, boolean forwardResult) {
+        Intent starter = new Intent(context, PayByCardActivity.class);
+        if (forwardResult) starter.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         starter.putExtra(Offer.class.getName(), offer);
         return starter;
     }
@@ -53,16 +54,15 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @BindView(R.id.card_number_edit_text) protected EditText mCardNumberEditText;
     @BindView(R.id.expiry_date_edit_text) protected EditText mExpiryDateEditText;
     @BindView(R.id.cvv_code_edit_text) protected EditText mCVVCodeEditText;
-//    @BindView(R.id.destination_address_edit_text) protected EditText mDestinationAddressEditText;
 
     private Offer mOffer;
 
-    private PaymentContract.Presenter mPresenter;
+    private PayByCardContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment);
-        ButterKnife.bind(PaymentActivity.this);
+        setContentView(R.layout.activity_pay_by_card);
+        ButterKnife.bind(PayByCardActivity.this);
         initPresenter();
         setUpToolbar();
         setUpCardNumberKeyListener();
@@ -71,16 +71,16 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     private void initPresenter() {
-        new PaymentPresenter(Injection.provideDataRepository(PaymentActivity.this), PaymentActivity.this);
+        new PayByCardPresenter(Injection.provideDataRepository(PayByCardActivity.this), PayByCardActivity.this);
     }
 
-    @Override public void setPresenter(@NonNull PaymentContract.Presenter presenter) {
+    @Override public void setPresenter(@NonNull PayByCardContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
     private void setUpToolbar() {
-        Toolbar toolbar = ButterKnife.findById(PaymentActivity.this, R.id.toolbar);
-        toolbar.setTitle(R.string.payment_activity_toolbar_title);
+        Toolbar toolbar = ButterKnife.findById(PayByCardActivity.this, R.id.toolbar);
+        toolbar.setTitle(R.string.pay_by_card_activity_toolbar_title);
         toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -98,10 +98,10 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     private void setUpPayButton(Offer offer) {
-        Button button = ButterKnife.findById(PaymentActivity.this, R.id.pay_button);
+        Button button = ButterKnife.findById(PayByCardActivity.this, R.id.pay_button);
         double price = Double.parseDouble(offer.getPrice());
         double finalPrice = price * offer.getQuantity();
-        button.setText(getString(R.string.payment_activity_make_payment, finalPrice));
+        button.setText(getString(R.string.pay_by_card_activity_make_payment, finalPrice));
     }
 
     @OnTextChanged(R.id.card_number_edit_text)
@@ -137,9 +137,9 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     protected void onExpiryDateEditTextFocusChanged(EditText editText, boolean focusable) {
         boolean isEmpty = editText.getText().toString().isEmpty();
         if (!focusable && isEmpty) {
-            mExpiryDateInputLayout.setHint(getString(R.string.payment_activity_hint_mm_yy));
+            mExpiryDateInputLayout.setHint(getString(R.string.pay_by_card_activity_hint_mm_yy));
         } else {
-            mExpiryDateInputLayout.setHint(getString(R.string.payment_activity_expiry_date));
+            mExpiryDateInputLayout.setHint(getString(R.string.pay_by_card_activity_expiry_date));
         }
     }
 
@@ -175,13 +175,14 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override public void showPaymentMadeInView(Payment payment) {
         if (payment.isSuccessful()) {
-            mOffer.setStatus(Offer.Status.PAYMENT_MADE);
+            mOffer.setStatus(Offer.Status.PAYING_BY_BACS);
+            mOffer.setStatusForBuyer(Offer.Status.PAYMENT_MADE);
             Intent intent = new Intent();
             intent.putExtra(getString(R.string.extra_offer), mOffer);
             setResult(RESULT_OK, intent);
             finish();
         } else {
-            showSnack(R.string.payment_activity_error_payment);
+            showSnack(R.string.pay_by_card_activity_error_payment);
         }
     }
 

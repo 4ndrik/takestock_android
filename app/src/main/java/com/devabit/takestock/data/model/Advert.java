@@ -135,6 +135,7 @@ public class Advert implements Parcelable {
         mItemsCount = in.readInt();
         mItemsCountNow = in.readInt();
         mTags = in.createStringArrayList();
+        mUser = in.readParcelable(User.class.getClassLoader());
         mPackagingName = in.readString();
         mOffersCount = in.readString();
         mQuestionsCount = in.readString();
@@ -180,6 +181,7 @@ public class Advert implements Parcelable {
         dest.writeInt(mItemsCount);
         dest.writeInt(mItemsCountNow);
         dest.writeStringList(mTags);
+        dest.writeParcelable(mUser, flags);
         dest.writeString(mPackagingName);
         dest.writeString(mOffersCount);
         dest.writeString(mQuestionsCount);

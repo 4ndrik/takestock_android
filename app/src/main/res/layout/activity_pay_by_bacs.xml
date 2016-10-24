@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:elevation="4dp"
+            android:background="@color/gold"
+            app:title="@string/pay_by_bacs_activity_toolbar_title"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+            tools:targetApi="lollipop">
+
+        <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="end"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+        <TextView
+                android:id="@+id/info_bank_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/black"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_info_grey600_24dp"
+                tools:text="@string/pay_by_bacs_activity_info_bank_part_one"/>
+
+        <TextView
+                android:id="@+id/bank_account_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="16dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@color/black"
+                android:text="@string/pay_by_bacs_activity_bank_account"/>
+
+        <TextView
+                android:id="@+id/info_pay_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/black"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_info_grey600_24dp"
+                android:text="@string/pay_by_bacs_activity_info_pay"/>
+
+        <Button
+                android:id="@+id/pay_by_card_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/offer_buying_item_pay_by_card"
+                android:drawableStart="@drawable/ic_card_unknown_white_24dp"
+                android:textStyle="bold"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:theme="@style/Widget.TakeStock.Button.Grey"
+                style="@style/Widget.AppCompat.Button"/>
+
+        <Button
+                android:id="@+id/pay_by_bacs_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="I am paying by BACS"
+                android:drawableStart="@drawable/ic_bacs_white_24dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:theme="@style/Widget.TakeStock.Button.Gold"
+                style="@style/Widget.AppCompat.Button"/>
+
+    </LinearLayout>
+
+</LinearLayout>

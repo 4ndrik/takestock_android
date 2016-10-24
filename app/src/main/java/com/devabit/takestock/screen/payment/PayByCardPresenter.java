@@ -30,19 +30,19 @@ import static timber.log.Timber.e;
 /**
  * Created by Victor Artemyev on 04/07/2016.
  */
-final class PaymentPresenter implements PaymentContract.Presenter {
+final class PayByCardPresenter implements PayByCardContract.Presenter {
 
     private final DataRepository mDataRepository;
 
-    private final PaymentContract.View mPaymentView;
+    private final PayByCardContract.View mPaymentView;
 
     private CompositeSubscription mSubscriptions;
 
-    PaymentPresenter(@NonNull DataRepository dataRepository, @NonNull PaymentContract.View paymentView) {
+    PayByCardPresenter(@NonNull DataRepository dataRepository, @NonNull PayByCardContract.View paymentView) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mPaymentView = checkNotNull(paymentView, "paymentView cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mPaymentView.setPresenter(PaymentPresenter.this);
+        mPaymentView.setPresenter(PayByCardPresenter.this);
     }
 
     @Override public void resume() {
@@ -151,7 +151,7 @@ final class PaymentPresenter implements PaymentContract.Presenter {
                 .map(new Func1<Token, Payment>() {
                     @Override public Payment call(Token token) {
                         d(token.toString());
-                        return new Payment(offerId, token.getId());
+                        return new Payment(offerId, token.getId(), Payment.Type.CARD);
                     }
                 })
                 .flatMap(new Func1<Payment, Observable<Payment>>() {

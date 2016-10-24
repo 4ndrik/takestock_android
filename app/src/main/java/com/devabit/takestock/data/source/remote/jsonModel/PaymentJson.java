@@ -10,9 +10,11 @@ public class PaymentJson implements JsonModel {
 
     public int offer_id;
     public String token;
+    public String payment_type;
 
     public PaymentJson(Payment payment) {
         this.offer_id = payment.getOfferId();
         this.token = payment.getTokenId();
+        this.payment_type = payment.getType();
     }
 }
