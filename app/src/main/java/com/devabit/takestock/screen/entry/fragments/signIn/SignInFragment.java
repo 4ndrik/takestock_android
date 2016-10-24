@@ -96,17 +96,12 @@ public class SignInFragment extends Fragment implements SignInContract.View {
     }
 
     @Override @Nullable public Device getDevice() {
-        if (TakeStockPref.isDeviceRegistered(getActivity())) return null;
         return new Device.Builder()
                 .setId(Build.ID)
                 .setName(Build.MODEL)
                 .setRegistrationId(TakeStockPref.getFCMToken(getActivity()))
                 .setIsActive(true)
                 .create();
-    }
-
-    @Override public void showDeviceRegisteredInView() {
-        TakeStockPref.putIsDeviceRegistered(getActivity(), true);
     }
 
     @Override public void showSignInSuccess() {

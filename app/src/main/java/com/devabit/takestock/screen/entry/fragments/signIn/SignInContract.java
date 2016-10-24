@@ -14,8 +14,6 @@ interface SignInContract {
 
         Device getDevice();
 
-        void showDeviceRegisteredInView();
-
         void showSignInSuccess();
 
         void showUserNameError();

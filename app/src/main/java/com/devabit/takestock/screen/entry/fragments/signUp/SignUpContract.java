@@ -15,8 +15,6 @@ interface SignUpContract {
 
         Device getDevice();
 
-        void showDeviceRegisteredInView();
-
         void showAuthTokenInView(Authentication authentication);
 
         void showUserNameError();

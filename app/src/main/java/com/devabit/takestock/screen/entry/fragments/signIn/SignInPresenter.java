@@ -60,7 +60,6 @@ public class SignInPresenter implements SignInContract.Presenter {
                                 new Func2<Authentication, Boolean, Authentication>() {
                                     @Override public Authentication call(Authentication authentication, Boolean isDeviceReg) {
                                         Timber.d("%s registered - %s", device, isDeviceReg);
-                                        if (isDeviceReg) mSignInView.showDeviceRegisteredInView();
                                         return authentication;
                                     }
                                 });

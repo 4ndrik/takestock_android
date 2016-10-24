@@ -12,6 +12,7 @@ public final class TakeStockPref {
     private static final String TAKESTOCK_PREF = "TAKESTOCK_PREF";
     private static final String KEY_FCM_TOKEN = "FCM_TOKEN"; // key for Firebase Cloud Messaging token
     private static final String KEY_DEVICE_REGISTERED = "DEVICE_REGISTERED";
+    private static final String KEY_NOTIFICATION_ID = "NOTIFICATION_ID";
 
     public static void putFCMToken(Context context, String token) {
         getPreferences(context)
@@ -35,6 +36,13 @@ public final class TakeStockPref {
     public static boolean isDeviceRegistered(Context context) {
         return getPreferences(context)
                 .getBoolean(KEY_DEVICE_REGISTERED, false);
+    }
+
+    public static int getNotificationId(Context context) {
+        SharedPreferences pref = getPreferences(context);
+        int id = pref.getInt(KEY_NOTIFICATION_ID, 0);
+        pref.edit().putInt(KEY_NOTIFICATION_ID, ++id).apply();
+        return id;
     }
 
     private static SharedPreferences getPreferences(Context context) {
