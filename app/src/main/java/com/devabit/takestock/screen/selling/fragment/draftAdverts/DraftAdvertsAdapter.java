@@ -43,9 +43,7 @@ class DraftAdvertsAdapter extends BaseAdvertsAdapter {
 
         @BindView(R.id.photo_image_view) ImageView imageView;
         @BindView(R.id.title_text_view) TextView titleTextView;
-        @BindView(R.id.guide_price_text_view) TextView guidePriceTextView;
-        @BindView(R.id.qty_available_text_view) TextView qtyAvailableTextView;
-        @BindView(R.id.days_left_text_view) TextView daysLeftTextView;
+//        @BindView(R.id.guide_price_text_view) TextView guidePriceTextView;
         @BindView(R.id.date_updated_text_view) TextView dateUpdatedTextView;
 
         DraftActiveViewHolder(View itemView) {
@@ -62,12 +60,8 @@ class DraftAdvertsAdapter extends BaseAdvertsAdapter {
             String date = DateUtil.formatToDefaultDate(advert.getUpdatedAt());
             dateUpdatedTextView.setText(date);
             titleTextView.setText(advert.getName());
-            guidePriceTextView.setText(
-                    resources.getString(R.string.advert_selling_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
-            qtyAvailableTextView.setText(
-                    resources.getString(R.string.advert_selling_available, advert.getItemsCountNow(), advert.getPackagingName()));
-            daysLeftTextView.setText(
-                    resources.getString(R.string.advert_selling_days_left, advert.getDaysLeft()));
+//            guidePriceTextView.setText(
+//                    resources.getString(R.string.advert_selling_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
         }
 
         @Override public void bindPhoto(Photo photo) {

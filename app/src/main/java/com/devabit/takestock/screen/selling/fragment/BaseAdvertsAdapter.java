@@ -23,8 +23,8 @@ import java.util.List;
 public abstract class BaseAdvertsAdapter extends RecyclerView.Adapter<BaseAdvertsAdapter.ViewHolder> {
 
     protected final LayoutInflater mLayoutInflater;
-    protected final @LayoutRes int mItemLayoutResId;
-    protected final List<Advert> mAdverts;
+    private final @LayoutRes int mItemLayoutResId;
+    private final List<Advert> mAdverts;
 
     public interface OnItemClickListener {
         void onItemClicked(Advert advert);
@@ -70,12 +70,12 @@ public abstract class BaseAdvertsAdapter extends RecyclerView.Adapter<BaseAdvert
         notifyItemChanged(position);
     }
 
-    public void addAdverts(List<Advert> adverts) {
+    void addAdverts(List<Advert> adverts) {
         mAdverts.addAll(adverts);
         notifyDataSetChanged();
     }
 
-    public void setLoadingProgress(boolean active) {
+    void setLoadingProgress(boolean active) {
         if (active) {
             mAdverts.add(null);
             notifyItemInserted(mAdverts.size());
