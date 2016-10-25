@@ -502,4 +502,10 @@
     <string name="notifications_activity_toolbar_title">Notifications</string>
     <!--email confirmation dialog end-->
 
+    <!--sig in dialog start-->
+    <string name="sign_in_dialog_title">Sign in to see details</string>
+    <string name="sig_in_dialog_pos_button">Sign in</string>
+    <string name="sig_in_dialog_neg_button">Cancel</string>
+    <!--sig in dialog end-->
+
 </resources>

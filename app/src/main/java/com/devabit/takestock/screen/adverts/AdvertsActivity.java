@@ -180,11 +180,10 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
 
         mAdvertsAdapter.setOnWatchingChangedListener(new AdvertsAdapter.OnWatchingChangedListener() {
             @Override public void onWatchingChanged(Advert advert, boolean isWatched) {
-                mAdvertsAdapter.startAdvertProcessing(advert);
                 if (mAccount.lacksAccount()) {
-                    mAdvertsAdapter.stopAdvertProcessing(advert.getId());
                     startEntryActivity();
                 } else {
+                    mAdvertsAdapter.startAdvertProcessing(advert);
                     mPresenter.addOrRemoveWatchingAdvert(advert, mAccount.getId());
                 }
             }
@@ -195,12 +194,13 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
 
     private void displaySignInDialog() {
         new AlertDialog.Builder(AdvertsActivity.this)
-                .setMessage("Sign in to see details")
-                .setPositiveButton("Sign in", new DialogInterface.OnClickListener() {
+                .setMessage(R.string.sign_in_dialog_title)
+                .setPositiveButton(R.string.sig_in_dialog_pos_button, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
-
+                        startEntryActivity();
                     }
                 })
+                .setNegativeButton(R.string.sig_in_dialog_neg_button, null)
                 .show();
     }
 
@@ -232,11 +232,19 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == RC_ADVERT_DETAIL || requestCode == RC_ADVERT_ACTIVE)
-                && resultCode == RESULT_OK) {
-            Advert advert = data.getParcelableExtra(getString(R.string.extra_advert));
-            mAdvertsAdapter.refreshAdvert(advert);
+        if (resultCode != RESULT_OK) return;
+        switch (requestCode) {
+            case RC_ADVERT_ACTIVE:
+            case RC_ADVERT_DETAIL:
+                Advert advert = data.getParcelableExtra(getString(R.string.extra_advert));
+                mAdvertsAdapter.refreshAdvert(advert);
+                break;
+            case RC_ENTRY:
+                mAccountUser = mAccount.getUser();
+                mAdvertsAdapter.setAccountUser(mAccountUser);
+                break;
         }
+
     }
 
     @Override protected void onNewIntent(Intent intent) {
