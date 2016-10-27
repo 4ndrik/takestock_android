@@ -26,6 +26,10 @@ public class Device {
         return mId;
     }
 
+    public void setUserId(int userId) {
+        mId = mId + "-" + userId;
+    }
+
     public String getRegistrationId() {
         return mRegistrationId;
     }

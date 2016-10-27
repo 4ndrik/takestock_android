@@ -4,15 +4,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -20,8 +21,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
+import com.devabit.takestock.TakeStockPref;
 import com.devabit.takestock.screen.about.AboutActivity;
 import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 import com.devabit.takestock.screen.help.HelpActivity;
@@ -31,7 +34,7 @@ import com.devabit.takestock.screen.profileEditor.ProfileEditorActivity;
 /**
  * Created by Victor Artemyev on 07/06/2016.
  */
-public class ProfileAccountActivity extends AppCompatActivity {
+public class ProfileAccountActivity extends AppCompatActivity implements ProfileAccountContract.View {
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, ProfileAccountActivity.class);
@@ -40,11 +43,13 @@ public class ProfileAccountActivity extends AppCompatActivity {
     private static final int RC_EDIT_PROFILE = 101;
 
     @BindView(R.id.content) ViewGroup mContent;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.profile_image_view) ImageView mProfileImageView;
     @BindView(R.id.profile_name_text_view) TextView mProfileNameTextView;
     @BindView(R.id.rating_bar) RatingBar mRatingBar;
 
-    private TakeStockAccount mAccount;
+    TakeStockAccount mAccount;
+    ProfileAccountContract.Presenter mPresenter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +58,7 @@ public class ProfileAccountActivity extends AppCompatActivity {
         mAccount = TakeStockAccount.get(ProfileAccountActivity.this);
         setUpToolbar();
         bindAccount();
-    }
-
-    private void bindAccount() {
-        loadProfilePhoto(mAccount.getPhoto());
-        mProfileNameTextView.setText(mAccount.getName());
-        mRatingBar.setRating(mAccount.getRating());
+        createPresenter();
     }
 
     private void setUpToolbar() {
@@ -103,6 +103,21 @@ public class ProfileAccountActivity extends AppCompatActivity {
     private void displayEmailConfirmationDialog() {
         EmailConfirmationDialog dialog = EmailConfirmationDialog.newInstance(mAccount.getEmail());
         dialog.show(getFragmentManager(), dialog.getClass().getName());
+    }
+
+    private void bindAccount() {
+        loadProfilePhoto(mAccount.getPhoto());
+        mProfileNameTextView.setText(mAccount.getName());
+        mRatingBar.setRating(mAccount.getRating());
+    }
+
+    private void createPresenter() {
+        new ProfileAccountPresenter(
+                Injection.provideDataRepository(ProfileAccountActivity.this), ProfileAccountActivity.this);
+    }
+
+    @Override public void setPresenter(@NonNull ProfileAccountContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -160,13 +175,54 @@ public class ProfileAccountActivity extends AppCompatActivity {
     }
 
     private void logOut() {
+        mPresenter.logOut(TakeStockPref.getFCMToken(ProfileAccountActivity.this));
+    }
+
+    @Override public void showLogOutSuccess() {
         mAccount.removeAccount(new TakeStockAccount.OnAccountRemovedListener() {
             @Override public void onAccountRemoved(boolean isRemoved) {
                 if (isRemoved) {
-                    startActivity(MainActivity.getStartIntent(
-                            ProfileAccountActivity.this, getString(R.string.action_log_out)));
+                    startMainActivity();
                 }
             }
         });
+    }
+
+    private void startMainActivity() {
+        startActivity(MainActivity.getStartIntent(ProfileAccountActivity.this, getString(R.string.action_log_out)));
+    }
+
+    @Override public void showNetworkConnectionError() {
+        showSnack(R.string.error_no_network_connection);
+    }
+
+    @Override public void showLogOutError() {
+        showSnack(R.string.profile_account_activity_error_log_out);
+    }
+
+    private void showSnack(@StringRes int resId) {
+        Snackbar.make(mContent, resId, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override public void setProgressIndicator(boolean isActive) {
+        mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
+        mContent.setAlpha(isActive ? 0.5f : 1f);
+        setTouchDisabled(isActive);
+    }
+
+    private void setTouchDisabled(boolean isActive) {
+        Window window = getWindow();
+        if (isActive) {
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    @Override protected void onPause() {
+        mPresenter.pause();
+        super.onPause();
     }
 }

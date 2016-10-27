@@ -23,14 +23,19 @@ import java.io.IOException;
 public class HttpResponseException extends IOException {
 
     private final int mCode;
+    private final String mResponse;
 
     public HttpResponseException(int code, String message, String response) {
         super(message + "\nCode: " + code + "\nResponse: " + response);
         mCode = code;
+        mResponse = response;
     }
 
     public int getCode() {
         return mCode;
     }
 
+    public String getResponse() {
+        return mResponse;
+    }
 }

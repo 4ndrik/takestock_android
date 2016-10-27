@@ -170,10 +170,12 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String json) {
+                        d(json);
                         return Observable.fromCallable(createPOSTCallable(TOKEN_REGISTER, json));
                     }
                 }).map(new Func1<String, Authentication>() {
                     @Override public Authentication call(String jsonString) {
+                        d(jsonString);
                         AuthenticationJson json = mGson.fromJson(jsonString, AuthenticationJson.class);
                         return json.toAuthentication();
                     }
@@ -532,7 +534,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
     }
 
     @Override public Observable<Advert> getAdvertWithId(int advertId) {
-        String url = ADVERTS + advertId +"/";
+        String url = ADVERTS + advertId + "/";
         return Observable.fromCallable(createGETCallable(url))
                 .map(new Func1<String, Advert>() {
                     @Override public Advert call(String jsonString) {
@@ -611,6 +613,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                         return json.toAdvert();
                     }
                 });
+
     }
 
     /*********
@@ -653,6 +656,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 })
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
                         return Observable.fromCallable(createPOSTCallable(ACCEPT_OFFER, jsonString));
                     }
                 })
@@ -919,6 +923,22 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public Observable<Boolean> unregisterDevice(@NonNull String token) {
+        return Observable.just(token)
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String token) {
+                        String url = DEVICES + token + "/";
+                        return Observable.fromCallable(createDELETECallable(url));
+                    }
+                })
+                .map(new Func1<String, Boolean>() {
+                    @Override public Boolean call(String jsonString) {
+                        d(jsonString);
+                        return Boolean.TRUE;
+                    }
+                });
+    }
+
     @Override public Observable<Notification> saveNotification(@NonNull Notification notification) {
         throw new UnsupportedOperationException("This operation not required.");
     }
@@ -933,6 +953,32 @@ public class RemoteDataSource implements ApiRest, DataSource {
 
     @Override public Observable<List<Notification>> getNotifications() {
         throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Void> clearNotifications() {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
+    @Override public Observable<Boolean> sendInvite(@NonNull String email) {
+        return Observable.just(email)
+                .map(new Func1<String, String>() {
+                    @Override public String call(String email) {
+                        return mGson.toJson(new InviteJson(email));
+                    }
+                })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override public Observable<String> call(String jsonString) {
+                        d(jsonString);
+                        return Observable.fromCallable(createPOSTCallable(INVITE, jsonString));
+                    }
+                })
+                .map(new Func1<String, Boolean>() {
+                    @Override public Boolean call(String jsonString) {
+                        d(jsonString);
+                        InviteJson.Status status = mGson.fromJson(jsonString, InviteJson.Status.class);
+                        return status.isSuccess();
+                    }
+                });
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -1059,6 +1105,36 @@ public class RemoteDataSource implements ApiRest, DataSource {
         return new Request.Builder()
                 .url(url)
                 .patch(body)
+                .build();
+    }
+
+    /**
+     * DELETE
+     */
+    private Callable<String> createDELETECallable(final String url) {
+        return new Callable<String>() {
+            @Override public String call() throws Exception {
+                return createDELETE(url);
+            }
+        };
+    }
+
+    private String createDELETE(String url) throws Exception {
+        if (isThereInternetConnection()) {
+            Request request = buildDELETERequest(url);
+            d(request.toString());
+            Response response = mOkHttpClient.newCall(request).execute();
+            ResponseBody body = response.body();
+            return body.string();
+        } else {
+            throw new NetworkConnectionException("There is no internet connection.");
+        }
+    }
+
+    private Request buildDELETERequest(String url) {
+        return new Request.Builder()
+                .url(url)
+                .delete()
                 .build();
     }
 

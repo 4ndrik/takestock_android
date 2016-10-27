@@ -42,7 +42,7 @@ public class HelpActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        toolbar.setTitle(R.string.help_and_contact);
+        toolbar.setTitle(R.string.profile_account_activity_help_and_contact);
     }
 
     private void setUpGuideTextView() {

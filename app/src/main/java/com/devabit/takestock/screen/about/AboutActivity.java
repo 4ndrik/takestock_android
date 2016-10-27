@@ -35,7 +35,7 @@ public class AboutActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        toolbar.setTitle(R.string.about);
+        toolbar.setTitle(R.string.profile_account_activity_about);
     }
 
     @OnClick(R.id.terms_text_view)

@@ -178,6 +178,8 @@ public interface DataSource {
 
     Observable<Boolean> registerDevice(@NonNull Device device);
 
+    Observable<Boolean> unregisterDevice(@NonNull String token);
+
 
     /********** Notifications Method **********/
 
@@ -188,5 +190,12 @@ public interface DataSource {
     Observable<Integer> getNewNotificationsCount();
 
     Observable<List<Notification>> getNotifications();
+
+    Observable<Void> clearNotifications();
+
+
+    /********** Invite Method **********/
+
+    Observable<Boolean> sendInvite(@NonNull String email);
 
 }

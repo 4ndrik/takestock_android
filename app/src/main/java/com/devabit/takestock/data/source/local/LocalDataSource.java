@@ -458,6 +458,10 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<Boolean> unregisterDevice(@NonNull String token) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     /********** Notification Methods **********/
 
     @Override public Observable<Notification> saveNotification(@NonNull Notification notification) {
@@ -497,5 +501,19 @@ public class LocalDataSource implements DataSource {
                 return dao.getNotificationList();
             }
         });
+    }
+
+    @Override public Observable<Void> clearNotifications() {
+        return Observable.fromCallable(new Callable<Void>() {
+            @Override public Void call() throws Exception {
+                NotificationRealmDao dao = new NotificationRealmDao(mRealmConfiguration);
+                dao.clearDatabase();
+                return null;
+            }
+        });
+    }
+
+    @Override public Observable<Boolean> sendInvite(@NonNull String email) {
+        throw new UnsupportedOperationException("This operation not required.");
     }
 }

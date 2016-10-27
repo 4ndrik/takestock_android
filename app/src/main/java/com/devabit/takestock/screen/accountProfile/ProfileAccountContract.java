@@ -1,6 +1,5 @@
 package com.devabit.takestock.screen.accountProfile;
 
-import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 
@@ -11,19 +10,20 @@ interface ProfileAccountContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showUserInView(User user);
+        void showLogOutSuccess();
 
         void showNetworkConnectionError();
 
-        void showUnknownError();
+        void showLogOutError();
 
         void setProgressIndicator(boolean isActive);
+
 
     }
 
     interface Presenter extends BasePresenter {
 
-        void loadUser();
+        void logOut(String token);
 
     }
 }

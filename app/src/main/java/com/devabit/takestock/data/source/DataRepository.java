@@ -445,6 +445,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.registerDevice(device);
     }
 
+    @Override public Observable<Boolean> unregisterDevice(@NonNull String token) {
+        return mRemoteDataSource.unregisterDevice(token);
+    }
+
 
     /**********
      * Notification Methods
@@ -464,5 +468,13 @@ public class DataRepository implements DataSource {
 
     @Override public Observable<List<Notification>> getNotifications() {
         return mLocalDataSource.getNotifications();
+    }
+
+    @Override public Observable<Void> clearNotifications() {
+        return mLocalDataSource.clearNotifications();
+    }
+
+    @Override public Observable<Boolean> sendInvite(@NonNull String email) {
+        return mRemoteDataSource.sendInvite(email);
     }
 }
