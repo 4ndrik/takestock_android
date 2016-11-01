@@ -31,8 +31,11 @@
                 android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.takestock.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -52,7 +55,12 @@
                 android:windowSoftInputMode="stateHidden"/>
         <activity
                 android:name=".screen.advert.detail.AdvertDetailActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.takestock.action.ADEVRT_ANSWER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
                 android:name=".screen.advert.preview.AdvertPreviewActivity"
                 android:screenOrientation="portrait"/>
@@ -64,7 +72,8 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screen.buying.BuyingActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait">
+        </activity>
         <activity
                 android:name=".screen.payment.PayByCardActivity"
                 android:screenOrientation="portrait"/>
@@ -75,8 +84,13 @@
                 android:name=".screen.offers.OffersActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.offer.OfferActivity"
-                android:screenOrientation="portrait"/>
+                android:name=".screen.advert.buying.AdvertBuyingActivity"
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.takestock.action.BUYING" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
                 android:name=".screen.questions.QuestionsActivity"
                 android:screenOrientation="portrait"/>
@@ -97,8 +111,14 @@
                 android:name=".screen.watching.WatchingActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.advert.active.AdvertActiveActivity"
-                android:screenOrientation="portrait"/>
+                android:name=".screen.advert.selling.AdvertSellingActivity"
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.takestock.action.SELLING" />
+                <action android:name="com.takestock.action.ADVERT_QUESTION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
                 android:name=".screen.shipping.ShippingActivity"
                 android:screenOrientation="portrait"/>
@@ -110,6 +130,9 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screen.notifications.NotificationsActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".screen.notificationPreview.NotificationPreviewActivity"
                 android:screenOrientation="portrait"/>
 
         <service android:name=".authenticator.TakeStockAuthenticatorService"

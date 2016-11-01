@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offer;
+package com.devabit.takestock.screen.advert.buying;
 
 import android.support.annotation.NonNull;
 import android.util.Pair;
@@ -12,7 +12,7 @@ import com.devabit.takestock.screen.BaseView;
  * Created by Victor Artemyev on 27/09/2016.
  */
 
-interface OfferContract {
+interface AdvertBuyingContract {
 
     interface View extends BaseView<Presenter> {
 

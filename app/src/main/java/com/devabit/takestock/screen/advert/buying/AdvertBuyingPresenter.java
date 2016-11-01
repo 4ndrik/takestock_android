@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offer;
+package com.devabit.takestock.screen.advert.buying;
 
 import android.support.annotation.NonNull;
 import android.util.Pair;
@@ -24,18 +24,18 @@ import static timber.log.Timber.d;
  * Created by Victor Artemyev on 27/09/2016.
  */
 
-class OfferPresenter implements OfferContract.Presenter {
+class AdvertBuyingPresenter implements AdvertBuyingContract.Presenter {
 
     private final DataRepository mDataRepository;
-    private final OfferContract.View mView;
+    private final AdvertBuyingContract.View mView;
 
     private CompositeSubscription mSubscriptions;
 
-    OfferPresenter(@NonNull DataRepository dataRepository, @NonNull OfferContract.View view) {
+    AdvertBuyingPresenter(@NonNull DataRepository dataRepository, @NonNull AdvertBuyingContract.View view) {
         mDataRepository = checkNotNull(dataRepository, "dataRepository cannot be null.");
         mView = checkNotNull(view, "view cannot be null.");
         mSubscriptions = new CompositeSubscription();
-        mView.setPresenter(OfferPresenter.this);
+        mView.setPresenter(AdvertBuyingPresenter.this);
     }
 
     @Override public void resume() {

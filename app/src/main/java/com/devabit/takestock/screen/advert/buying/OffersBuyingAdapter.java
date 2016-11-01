@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.offer;
+package com.devabit.takestock.screen.advert.buying;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -41,9 +41,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     interface OnStatusChangedListener {
         void onAccepted(Offer offer);
-
         void onCountered(Offer offer);
-
         void onRejected(Offer offer);
     }
 
@@ -67,6 +65,13 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
     }
 
     private OnConfirmGoodsListener mConfirmGoodsListener;
+
+    interface OnRaiseDisputeListener {
+        void onDispute(Offer offer);
+        void onContactSupport(Offer offer);
+    }
+
+    private OnRaiseDisputeListener mOnRaiseDisputeListener;
 
     OffersBuyingAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -105,6 +110,9 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
             case R.layout.item_offer_buying_paying_by_bacs:
                 return new OfferPayingByBACSViewHolder(itemView);
+
+            case R.layout.item_offer_buying_in_dispute:
+                return new OfferInDisputeViewHolder(itemView);
 
             default:
                 return new OfferHistoryViewHolder(itemView);
@@ -151,6 +159,9 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
                 case Offer.Status.PAYING_BY_BACS:
                     return R.layout.item_offer_buying_paying_by_bacs;
+
+                case Offer.Status.IN_DISPUTE:
+                    return R.layout.item_offer_buying_in_dispute;
 
                 default:
                     return R.layout.item_offer_buying_countered;
@@ -203,9 +214,20 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         mConfirmGoodsListener = onConfirmGoodsListener;
     }
 
+    public void setOnRaiseDisputeListener(OnRaiseDisputeListener onRaiseDisputeListener) {
+        mOnRaiseDisputeListener = onRaiseDisputeListener;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // ViewHolders
     ///////////////////////////////////////////////////////////////////////////
+
+    class OfferInDisputeViewHolder extends ViewHolder {
+
+        OfferInDisputeViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
 
     class OfferPayingByBACSViewHolder extends ViewHolder {
 
@@ -218,6 +240,16 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
         OfferGoodsReceivedViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @OnClick(R.id.raise_dispute_button)
+        void onRaiseDisputeButtonClick() {
+            if (mOnRaiseDisputeListener != null) mOnRaiseDisputeListener.onDispute(mOffer);
+        }
+
+        @OnClick(R.id.contact_support_button)
+        void onContactSupportButtonClick() {
+            if (mOnRaiseDisputeListener != null) mOnRaiseDisputeListener.onContactSupport(mOffer);
         }
     }
 
