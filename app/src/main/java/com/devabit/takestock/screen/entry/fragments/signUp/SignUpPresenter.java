@@ -53,7 +53,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                 .flatMap(new Func1<Authentication, Observable<Authentication>>() {
                     @Override public Observable<Authentication> call(Authentication authentication) {
                         final Device device = mSignUpView.getDevice();
-                        if (device == null) return Observable.just(authentication);
+                        device.setUserId(authentication.getUserId());
                         return Observable.zip(
                                 Observable.just(authentication),
                                 mDataRepository.registerDevice(device),
@@ -77,7 +77,8 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                         if (e instanceof NetworkConnectionException) {
                             mSignUpView.showNetworkConnectionError();
                         } else if (e instanceof HttpResponseException) {
-                            mSignUpView.showCredentialsError();
+                            String error = ((HttpResponseException) e).getResponse();
+                            mSignUpView.showCredentialsError(error);
                         } else {
                             mSignUpView.showUnknownError();
                         }

@@ -27,7 +27,7 @@ import com.devabit.takestock.screen.profileEditor.adapter.BusinessTypeSpinnerAda
 import com.devabit.takestock.screen.profileEditor.dialog.PasswordDialog;
 import com.devabit.takestock.screen.profileEditor.dialog.PhotoPickerDialog;
 import com.devabit.takestock.utils.ImagePicker;
-import com.devabit.takestock.widget.HintSpinnerAdapter;
+import com.devabit.takestock.ui.widget.HintSpinnerAdapter;
 import timber.log.Timber;
 
 import java.io.File;

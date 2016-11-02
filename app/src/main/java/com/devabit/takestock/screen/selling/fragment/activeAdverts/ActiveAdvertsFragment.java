@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
-import com.devabit.takestock.screen.advert.active.AdvertActiveActivity;
+import com.devabit.takestock.screen.advert.selling.AdvertSellingActivity;
 import com.devabit.takestock.screen.selling.SellingContract;
 import com.devabit.takestock.screen.selling.fragment.BaseAdvertsAdapter;
 import com.devabit.takestock.screen.selling.fragment.BaseAdvertsFragment;
@@ -28,7 +28,7 @@ public class ActiveAdvertsFragment extends BaseAdvertsFragment {
         mAdvertAdapter = new ActiveAdvertsAdapter(recyclerView.getContext());
         mAdvertAdapter.setOnItemClickListener(new BaseAdvertsAdapter.OnItemClickListener() {
             @Override public void onItemClicked(Advert advert) {
-                startActivityForResult(AdvertActiveActivity.getStartIntent(getActivity(), advert.getId()), RC_ADVERT_ACTIVE);
+                startActivityForResult(AdvertSellingActivity.getStartIntent(getActivity(), advert.getId()), RC_ADVERT_ACTIVE);
             }
         });
         recyclerView.setAdapter(mAdvertAdapter);

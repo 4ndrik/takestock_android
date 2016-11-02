@@ -1,7 +1,6 @@
 package com.devabit.takestock.screen.payment;
 
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.Payment;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
 import com.stripe.android.model.Card;
@@ -13,7 +12,7 @@ interface PayByCardContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showPaymentMadeInView(Payment payment);
+        void showOfferPaidInView(Offer offer);
 
         void showCardAmericanExpressInView();
 
@@ -38,6 +37,8 @@ interface PayByCardContract {
         void showNetworkConnectionError();
 
         void showUnknownError();
+
+        void showPaymentError();
 
         void setProgressIndicator(boolean isActive);
 

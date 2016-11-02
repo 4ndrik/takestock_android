@@ -413,7 +413,7 @@ public class Offer implements Parcelable {
         private String mStreet;
         private String mHouse;
         private String mCity;
-        private int mPostcode;
+        private String mPostcode;
         private String mPhone;
         private boolean mStockInTransit;
         private boolean mFromSeller;
@@ -435,7 +435,7 @@ public class Offer implements Parcelable {
                        String street,
                        String house,
                        String city,
-                       int postcode,
+                       String postcode,
                        String phone,
                        boolean stockInTransit,
                        boolean fromSeller,
@@ -503,7 +503,7 @@ public class Offer implements Parcelable {
             return mCity;
         }
 
-        public int getPostcode() {
+        public String getPostcode() {
             return mPostcode;
         }
 
@@ -568,7 +568,7 @@ public class Offer implements Parcelable {
             private String mStreet;
             private String mHouse;
             private String mCity;
-            private int mPostcode;
+            private String mPostcode;
             private String mPhone;
             private boolean mStockInTransit;
             private boolean mFromSeller;
@@ -627,7 +627,7 @@ public class Offer implements Parcelable {
                 return this;
             }
 
-            public Builder setPostcode(int postcode) {
+            public Builder setPostcode(String postcode) {
                 mPostcode = postcode;
                 return this;
             }
@@ -679,7 +679,7 @@ public class Offer implements Parcelable {
         private String mHouse;
         private String mStreet;
         private String mCity;
-        private int mPostcode;
+        private String mPostcode;
         private String mPhone;
         private String mArrivalDate;
         private String mPickUpDate;
@@ -695,7 +695,7 @@ public class Offer implements Parcelable {
                         String house,
                         String street,
                         String city,
-                        int postcode,
+                        String postcode,
                         String phone,
                         String arrivalDate,
                         String pickUpDate,
@@ -724,7 +724,7 @@ public class Offer implements Parcelable {
             mHouse = in.readString();
             mStreet = in.readString();
             mCity = in.readString();
-            mPostcode = in.readInt();
+            mPostcode = in.readString();
             mPhone = in.readString();
             mArrivalDate = in.readString();
             mPickUpDate = in.readString();
@@ -763,7 +763,7 @@ public class Offer implements Parcelable {
             return mCity;
         }
 
-        public int getPostcode() {
+        public String getPostcode() {
             return mPostcode;
         }
 
@@ -826,7 +826,7 @@ public class Offer implements Parcelable {
             dest.writeString(mHouse);
             dest.writeString(mStreet);
             dest.writeString(mCity);
-            dest.writeInt(mPostcode);
+            dest.writeString(mPostcode);
             dest.writeString(mPhone);
             dest.writeString(mArrivalDate);
             dest.writeString(mPickUpDate);
@@ -843,7 +843,7 @@ public class Offer implements Parcelable {
             private String mHouse;
             private String mStreet;
             private String mCity;
-            private int mPostcode;
+            private String mPostcode;
             private String mPhone;
             private String mArrivalDate;
             private String mPickUpDate;
@@ -873,7 +873,7 @@ public class Offer implements Parcelable {
                 return this;
             }
 
-            public Builder setPostcode(int postcode) {
+            public Builder setPostcode(String postcode) {
                 mPostcode = postcode;
                 return this;
             }

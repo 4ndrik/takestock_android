@@ -6,5 +6,5 @@
             android:angle="270"
             android:startColor="@color/translucent_black_59"
             android:endColor="@android:color/transparent"
-            android:type="linear"/>
+            android:action="linear"/>
 </shape>

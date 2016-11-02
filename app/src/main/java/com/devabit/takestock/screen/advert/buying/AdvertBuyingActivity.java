@@ -37,9 +37,10 @@ import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
 import com.devabit.takestock.screen.payment.PayByCardActivity;
 import com.devabit.takestock.screen.payment.byBACS.PayByBACSActivity;
 import com.devabit.takestock.screen.shipping.ShippingActivity;
+import com.devabit.takestock.ui.decoration.ListVerticalSpacingItemDecoration;
+import com.devabit.takestock.ui.widget.ControllableAppBarLayout;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.widget.ControllableAppBarLayout;
-import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
+import com.devabit.takestock.utils.NotificationFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,13 +97,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
         RecyclerView recyclerView = setUpRecyclerView();
         setUpOfferAdapter(recyclerView);
         Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_NOTIFICATION)) {
-            mNotification = intent.getParcelableExtra(EXTRA_NOTIFICATION);
-        } else {
-            Offer offer = intent.getParcelableExtra(EXTRA_OFFER);
-            mAdvert = intent.getParcelableExtra(EXTRA_ADVERT);
-            setUpOfferAdvertPair(offer, mAdvert);
-        }
+        setUpData(intent);
         createPresenter();
     }
 
@@ -132,6 +127,18 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
         });
     }
 
+    private void setUpData(Intent intent) {
+        if (intent.hasExtra(EXTRA_NOTIFICATION)) {
+            mNotification = intent.getParcelableExtra(EXTRA_NOTIFICATION);
+        } else if (intent.hasExtra(Notification.EXTRA_ACTION)){
+            mNotification = NotificationFactory.build(AdvertBuyingActivity.this, intent);
+        } else {
+            Offer offer = intent.getParcelableExtra(EXTRA_OFFER);
+            mAdvert = intent.getParcelableExtra(EXTRA_ADVERT);
+            setUpOfferAdvertPair(offer, mAdvert);
+        }
+    }
+
     private void createPresenter() {
         new AdvertBuyingPresenter(Injection.provideDataRepository(AdvertBuyingActivity.this), AdvertBuyingActivity.this);
     }
@@ -139,8 +146,9 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
     @Override public void setPresenter(@NonNull AdvertBuyingContract.Presenter presenter) {
         mPresenter = presenter;
         if (mNotification != null) {
-            mPresenter.loadOfferAdvertPair(mNotification.getOfferId(), mNotification.getAdvertId());
-            if (mNotification.isNew()) mPresenter.readNotification(mNotification);
+            mPresenter.loadOfferAdvertPair(mNotification.getOfferId());
+            if (mNotification.isSaved()) return;
+            mPresenter.saveNotification(mNotification);
         }
     }
 
@@ -226,17 +234,12 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
         });
         adapter.setOnConfirmGoodsListener(new OffersBuyingAdapter.OnConfirmGoodsListener() {
             @Override public void onConfirm(Offer offer) {
-                confirmGoodsReceived(offer);
+                acceptOffer(offer, buildOfferAccept(offer, Offer.Status.GOODS_RECEIVED));
             }
         });
         adapter.setOnRaiseDisputeListener(new OffersBuyingAdapter.OnRaiseDisputeListener() {
             @Override public void onDispute(Offer offer) {
-                Offer.Accept accept = new Offer.Accept.Builder()
-                        .setOfferId(offer.getId())
-                        .setStatus(Offer.Status.IN_DISPUTE)
-                        .setFromSeller(false)
-                        .create();
-                mPresenter.acceptOffer(offer, accept);
+                acceptOffer(offer, buildOfferAccept(offer, Offer.Status.IN_DISPUTE));
             }
 
             @Override public void onContactSupport(Offer offer) {
@@ -269,12 +272,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
                 .setPositiveButton(R.string.accept_offer_dialog_accept,
                         new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
-                                Offer.Accept accept = new Offer.Accept.Builder()
-                                        .setOfferId(offer.getId())
-                                        .setStatus(Offer.Status.ACCEPTED)
-                                        .setFromSeller(false)
-                                        .create();
-                                mPresenter.acceptOffer(offer, accept);
+                        acceptOffer(offer, buildOfferAccept(offer, Offer.Status.ACCEPTED));
                             }
                         })
                 .setNegativeButton(R.string.accept_offer_dialog_cancel, null)
@@ -287,7 +285,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
         dialog.setOnOfferCounteredListener(new CounterOfferDialog.OnOfferCounteredListener() {
             @Override public void onCountered(CounterOfferDialog dialog, Offer.Accept accept) {
                 dialog.dismiss();
-                mPresenter.acceptOffer(offer, accept);
+                acceptOffer(offer, accept);
             }
         });
     }
@@ -298,17 +296,20 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
         dialog.setOnRejectOfferListener(new RejectOfferDialog.OnRejectOfferListener() {
             @Override public void onOfferRejected(RejectOfferDialog dialog, Offer.Accept accept) {
                 dialog.dismiss();
-                mPresenter.acceptOffer(offer, accept);
+                acceptOffer(offer, accept);
             }
         });
     }
 
-    private void confirmGoodsReceived(Offer offer) {
-        Offer.Accept accept = new Offer.Accept.Builder()
+    private Offer.Accept buildOfferAccept(Offer offer, int offerStatus) {
+        return new Offer.Accept.Builder()
                 .setOfferId(offer.getId())
-                .setStatus(Offer.Status.GOODS_RECEIVED)
+                .setStatus(offerStatus)
                 .setFromSeller(false)
                 .create();
+    }
+
+    private void acceptOffer(Offer offer, Offer.Accept accept) {
         mPresenter.acceptOffer(offer, accept);
     }
 
@@ -334,6 +335,10 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
     @Override public void showOfferAcceptedInView(Offer offer) {
         mOffersBuyingAdapter.addOffer(offer);
         mRecyclerView.scrollToPosition(0);
+    }
+
+    @Override public void showNotificationSavedInView(Notification notification) {
+        mNotification = notification;
     }
 
     @Override public void showNetworkConnectionError() {

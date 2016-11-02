@@ -15,16 +15,16 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 import static timber.log.Timber.d;
+import static timber.log.Timber.e;
 
 /**
  * Created by Victor Artemyev on 27/09/2016.
  */
 
-class AdvertBuyingPresenter implements AdvertBuyingContract.Presenter {
+final class AdvertBuyingPresenter implements AdvertBuyingContract.Presenter {
 
     private final DataRepository mDataRepository;
     private final AdvertBuyingContract.View mView;
@@ -93,14 +93,19 @@ class AdvertBuyingPresenter implements AdvertBuyingContract.Presenter {
         mSubscriptions.add(subscription);
     }
 
-    @Override public void loadOfferAdvertPair(int offerId, int advertId) {
+    @Override public void loadOfferAdvertPair(int offerId) {
         mView.setProgressIndicator(true);
-        Subscription subscription = Observable.zip(
-                mDataRepository.getOfferWithId(offerId),
-                mDataRepository.getAdvertWithId(advertId),
-                new Func2<Offer, Advert, Pair<Offer, Advert>>() {
-                    @Override public Pair<Offer, Advert> call(Offer offer, Advert advert) {
-                        return Pair.create(offer, advert);
+        Subscription subscription = mDataRepository.getOfferWithId(offerId)
+                .flatMap(new Func1<Offer, Observable<Pair<Offer, Advert>>>() {
+                    @Override public Observable<Pair<Offer, Advert>> call(Offer offer) {
+                        return Observable.zip(
+                                Observable.just(offer),
+                                mDataRepository.getAdvertWithId(offer.getAdvertId()),
+                                new Func2<Offer, Advert, Pair<Offer, Advert>>() {
+                                    @Override public Pair<Offer, Advert> call(Offer offer, Advert advert) {
+                                        return Pair.create(offer, advert);
+                                    }
+                                });
                     }
                 })
                 .compose(RxTransformers.<Pair<Offer, Advert>>applyObservableSchedulers())
@@ -121,8 +126,23 @@ class AdvertBuyingPresenter implements AdvertBuyingContract.Presenter {
         mSubscriptions.add(subscription);
     }
 
+    @Override public void saveNotification(Notification notification) {
+        Subscription subscription = mDataRepository.saveNotification(notification)
+                .compose(RxTransformers.<Notification>applyObservableSchedulers())
+                .subscribe(new Action1<Notification>() {
+                    @Override public void call(Notification notification) {
+                        mView.showNotificationSavedInView(notification);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override public void call(Throwable throwable) {
+                        e(throwable);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
     private void handleError(Throwable throwable) {
-        Timber.e(throwable);
+        e(throwable);
         if (throwable instanceof NetworkConnectionException) {
             mView.showNetworkConnectionError();
         } else {

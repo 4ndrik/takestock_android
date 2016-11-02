@@ -24,7 +24,7 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Question;
-import com.devabit.takestock.widget.DividerItemDecoration;
+import com.devabit.takestock.ui.decoration.DividerItemDecoration;
 
 import java.util.List;
 

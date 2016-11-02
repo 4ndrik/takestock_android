@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+        <TextView
+                android:id="@+id/status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:layout_alignParentStart="true"
+                android:textAllCaps="true"
+                android:textColor="@color/red_500"
+                android:textStyle="bold"
+                android:textAppearance="?android:textAppearanceSmall"
+                tools:text="In dispute"/>
+
+        <com.devabit.takestock.ui.widget.CircleImageView
+                android:id="@+id/user_image_view"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/status_text_view"
+                android:src="@drawable/ic_placeholder_user_96dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/gold"
+                tools:ignore="ContentDescription"/>
+
+        <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/user_image_view"
+                android:layout_below="@id/status_text_view"
+                android:maxLines="1"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textStyle="bold"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/black"
+                tools:text="Mason"/>
+
+        <TextView
+                android:id="@+id/date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/user_image_view"
+                android:layout_below="@+id/name_text_view"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="@color/grey_400"
+                android:textAppearance="?android:textAppearanceSmall"
+                tools:text="10/12/2016"/>
+
+        <TextView
+                android:id="@+id/offer_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/date_text_view"
+                android:layout_toEndOf="@id/user_image_view"
+                android:padding="8dp"
+                android:textColor="@color/black"
+                android:textAppearance="?android:textAppearanceMedium"
+                tools:text="100 kg - £ 1000.00/kg"/>
+
+        <Button
+                android:id="@+id/contact_buyer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/offer_text_view"
+                android:layout_centerInParent="true"
+                android:text="@string/offer_selling_item_contact_buyer"
+                android:textStyle="bold"
+                android:theme="@style/Widget.TakeStock.Button.Gold"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

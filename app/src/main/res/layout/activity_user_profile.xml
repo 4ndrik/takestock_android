@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.devabit.takestock.widget.ControllableAppBarLayout
+    <com.devabit.takestock.ui.widget.ControllableAppBarLayout
             android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                     android:orientation="vertical"
                     app:layout_collapseMode="parallax">
 
-                <com.devabit.takestock.widget.CircleImageView
+                <com.devabit.takestock.ui.widget.CircleImageView
                         android:id="@+id/user_image_view"
                         android:layout_width="96dp"
                         android:layout_height="96dp"
@@ -77,7 +77,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
 
-    </com.devabit.takestock.widget.ControllableAppBarLayout>
+    </com.devabit.takestock.ui.widget.ControllableAppBarLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"

@@ -26,8 +26,8 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
-import com.devabit.takestock.widget.ControllableAppBarLayout;
-import com.devabit.takestock.widget.GridSpacingItemDecoration;
+import com.devabit.takestock.ui.widget.ControllableAppBarLayout;
+import com.devabit.takestock.ui.decoration.GridSpacingItemDecoration;
 
 import java.util.List;
 

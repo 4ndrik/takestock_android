@@ -102,21 +102,19 @@ public class PayByBACSActivity extends AppCompatActivity implements PayByBACSCon
         return new Payment(mOffer.getId(), "", Payment.Type.BACS);
     }
 
-    @Override public void showPaymentMadeInView(Payment payment) {
-        if (payment.isSuccessful()) {
-            mOffer.setStatus(Offer.Status.PAYING_BY_BACS);
-            mOffer.setStatusForBuyer(Offer.Status.PAYING_BY_BACS);
+    @Override public void showOfferPaidInView(Offer offer) {
             Intent intent = new Intent();
-            intent.putExtra(getString(R.string.extra_offer), mOffer);
+            intent.putExtra(getString(R.string.extra_offer), offer);
             setResult(RESULT_OK, intent);
             finish();
-        } else {
-            showSnack(R.string.pay_by_bacs_activity_error_payment);
-        }
     }
 
     @Override public void showNetworkConnectionError() {
         showSnack(R.string.error_no_network_connection);
+    }
+
+    @Override public void showPaymentError() {
+        showSnack(R.string.pay_by_bacs_activity_error_payment);
     }
 
     @Override public void showUnknownError() {

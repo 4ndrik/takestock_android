@@ -23,7 +23,7 @@ interface SignUpContract {
 
         void showPasswordError();
 
-        void showCredentialsError();
+        void showCredentialsError(String error);
 
         void showNetworkConnectionError();
 

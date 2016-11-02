@@ -31,10 +31,10 @@ import com.devabit.takestock.screen.advert.dialog.PhotoEditorDialog;
 import com.devabit.takestock.screen.advert.dialog.PhotoPickerDialog;
 import com.devabit.takestock.screen.advert.preview.AdvertPreviewActivity;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.widget.CertificationRadioButtonGroupView;
-import com.devabit.takestock.widget.FlexboxLayout;
-import com.devabit.takestock.widget.HintSpinnerAdapter;
-import com.devabit.takestock.widget.ListHorizontalSpacingItemDecoration;
+import com.devabit.takestock.ui.widget.CertificationRadioButtonGroupView;
+import com.devabit.takestock.ui.widget.FlexboxLayout;
+import com.devabit.takestock.ui.widget.HintSpinnerAdapter;
+import com.devabit.takestock.ui.decoration.ListHorizontalSpacingItemDecoration;
 import timber.log.Timber;
 
 import java.io.File;

@@ -12,7 +12,7 @@ public class OfferShippingJson implements JsonModel {
     public String street;
     public String house;
     public String city;
-    public int postcode;
+    public String postcode;
     public String phone;
     public String arrival_date;
     public String pick_up_date;
@@ -31,6 +31,7 @@ public class OfferShippingJson implements JsonModel {
                 .setPhone(phone)
                 .setArrivalDate(arrival_date)
                 .setPickUpDate(pick_up_date)
+                .setPostcode(postcode)
                 .setTracking(tracking)
                 .setCourierName(courier_name)
                 .setFromSeller(from_seller)

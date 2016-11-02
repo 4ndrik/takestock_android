@@ -20,7 +20,7 @@ import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.category.CategoriesContract;
 import com.devabit.takestock.screen.category.CategoriesPresenter;
 import com.devabit.takestock.screen.category.adapter.CategoriesAdapter;
-import com.devabit.takestock.widget.DividerItemDecoration;
+import com.devabit.takestock.ui.decoration.DividerItemDecoration;
 
 import java.util.List;
 

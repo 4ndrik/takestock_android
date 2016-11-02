@@ -7,5 +7,5 @@
             android:startColor="@color/translucent_black_59"
             android:centerColor="@android:color/transparent"
             android:endColor="@color/translucent_black_59"
-            android:type="linear"/>
+            android:action="linear"/>
 </shape>

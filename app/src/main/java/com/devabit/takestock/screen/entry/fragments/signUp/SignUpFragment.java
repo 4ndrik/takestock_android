@@ -125,7 +125,7 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         return mPasswordEditText.getText().toString().trim();
     }
 
-    @Override @Nullable public Device getDevice() {
+    @Override public Device getDevice() {
         return new Device.Builder()
                 .setId(Build.ID)
                 .setName(Build.MODEL)
@@ -188,8 +188,9 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         }
     }
 
-    @Override public void showCredentialsError() {
-        showSnack(R.string.error_user_exists);
+    @Override public void showCredentialsError(String error) {
+//        showSnack(R.string.error_user_exists);
+        Snackbar.make(mContent, error, Snackbar.LENGTH_LONG).show();
     }
 
     @Override public void showNetworkConnectionError() {

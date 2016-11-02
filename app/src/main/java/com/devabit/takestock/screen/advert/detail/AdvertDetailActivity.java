@@ -36,8 +36,8 @@ import com.devabit.takestock.screen.entry.EntryActivity;
 import com.devabit.takestock.screen.queAndAns.QueAndAnsActivity;
 import com.devabit.takestock.screen.userProfile.UserProfileActivity;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.widget.GravitySnapHelper;
-import com.devabit.takestock.widget.GridSpacingItemDecoration;
+import com.devabit.takestock.ui.widget.GravitySnapHelper;
+import com.devabit.takestock.ui.decoration.GridSpacingItemDecoration;
 import timber.log.Timber;
 
 import java.util.List;

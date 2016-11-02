@@ -22,7 +22,6 @@ import butterknife.*;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Offer;
-import com.devabit.takestock.data.model.Payment;
 import com.stripe.android.model.Card;
 
 import static com.devabit.takestock.utils.Logger.LOGD;
@@ -173,17 +172,11 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
         mCVVCodeInputLayout.setErrorEnabled(false);
     }
 
-    @Override public void showPaymentMadeInView(Payment payment) {
-        if (payment.isSuccessful()) {
-            mOffer.setStatus(Offer.Status.PAYING_BY_BACS);
-            mOffer.setStatusForBuyer(Offer.Status.PAYMENT_MADE);
+    @Override public void showOfferPaidInView(Offer offer) {
             Intent intent = new Intent();
-            intent.putExtra(getString(R.string.extra_offer), mOffer);
+            intent.putExtra(getString(R.string.extra_offer), offer);
             setResult(RESULT_OK, intent);
             finish();
-        } else {
-            showSnack(R.string.pay_by_card_activity_error_payment);
-        }
     }
 
     @Override public void showCardAmericanExpressInView() {
@@ -282,6 +275,10 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
 
     @Override public void showUnknownError() {
         showSnack(R.string.error_unknown);
+    }
+
+    @Override public void showPaymentError() {
+        showSnack(R.string.pay_by_card_activity_error_payment);
     }
 
     private void showSnack(@StringRes int resId) {

@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @BindViews({R.id.menu_button, R.id.logo_image_view, R.id.search_products_edit_text,
             R.id.browse_categories_button, R.id.sell_something_button})
-    protected List<View> mViews;
+    List<View> mViews;
 
-    private TakeStockAccount mAccount;
-    private MainContract.Presenter mPresenter;
+    TakeStockAccount mAccount;
+    MainContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,11 +308,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override public void showDataUpdated() {
         mViewSwitcher.setDisplayedChild(INDEX_MAIN_CONTENT);
         setUpHeaderNavigationView();
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-        mPresenter.loadNewNotificationsCount();
     }
 
     @Override public void showNewNotificationsCount(Integer count) {

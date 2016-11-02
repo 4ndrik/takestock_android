@@ -20,6 +20,8 @@ interface AdvertBuyingContract {
 
         void showOfferAcceptedInView(Offer offer);
 
+        void showNotificationSavedInView(Notification notification);
+
         void showNetworkConnectionError();
 
         void showUnknownError();
@@ -33,6 +35,8 @@ interface AdvertBuyingContract {
 
         void readNotification(@NonNull Notification notification);
 
-        void loadOfferAdvertPair(int offerId, int advertId);
+        void loadOfferAdvertPair(int offerId);
+
+        void saveNotification(Notification notification);
     }
 }

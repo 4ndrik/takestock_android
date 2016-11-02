@@ -23,7 +23,7 @@
                 android:padding="16dp"
                 android:orientation="vertical">
 
-            <com.devabit.takestock.widget.CircleImageView
+            <com.devabit.takestock.ui.widget.CircleImageView
                     android:id="@+id/profile_image_view"
                     android:layout_width="96dp"
                     android:layout_height="96dp"

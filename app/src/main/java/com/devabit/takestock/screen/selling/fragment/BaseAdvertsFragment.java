@@ -20,7 +20,7 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.screen.selling.SellingContract;
-import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
+import com.devabit.takestock.ui.decoration.ListVerticalSpacingItemDecoration;
 
 import java.util.List;
 

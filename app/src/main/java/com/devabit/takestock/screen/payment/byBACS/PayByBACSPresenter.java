@@ -1,12 +1,14 @@
 package com.devabit.takestock.screen.payment.byBACS;
 
 import android.support.annotation.NonNull;
+import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Payment;
 import com.devabit.takestock.data.source.DataRepository;
-import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
@@ -36,19 +38,31 @@ final class PayByBACSPresenter implements PayByBACSContract.Presenter {
     @Override public void makePayment(Payment payment) {
         mView.setProgressIndicator(true);
         Subscription subscription = mDataRepository.makePayment(payment)
-                .compose(RxTransformers.<Payment>applyObservableSchedulers())
-                .subscribe(new Subscriber<Payment>() {
+                .filter(new Func1<Payment, Boolean>() {
+                    @Override public Boolean call(Payment payment) {
+                        if (payment.isSuccessful()) return Boolean.TRUE;
+                        throw new RuntimeException("Payment failed");
+                    }
+                })
+                .flatMap(new Func1<Payment, Observable<Offer>>() {
+                    @Override public Observable<Offer> call(Payment payment) {
+                        return mDataRepository.getOfferWithId(payment.getOfferId());
+                    }
+                })
+                .compose(RxTransformers.<Offer>applyObservableSchedulers())
+                .subscribe(new Subscriber<Offer>() {
                     @Override public void onCompleted() {
                         mView.setProgressIndicator(false);
                     }
 
                     @Override public void onError(Throwable e) {
                         mView.setProgressIndicator(false);
+                        mView.showPaymentError();
                         handleError(e);
                     }
 
-                    @Override public void onNext(Payment payment) {
-                        mView.showPaymentMadeInView(payment);
+                    @Override public void onNext(Offer offer) {
+                        mView.showOfferPaidInView(offer);
                     }
                 });
         mSubscriptions.add(subscription);
@@ -56,11 +70,6 @@ final class PayByBACSPresenter implements PayByBACSContract.Presenter {
 
     private void handleError(Throwable throwable) {
         e(throwable);
-        if (throwable instanceof NetworkConnectionException) {
-            mView.showNetworkConnectionError();
-        } else {
-            mView.showUnknownError();
-        }
     }
 
     @Override public void pause() {

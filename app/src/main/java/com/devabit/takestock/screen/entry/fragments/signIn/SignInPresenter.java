@@ -48,12 +48,11 @@ public class SignInPresenter implements SignInContract.Presenter {
     @Override public void signIn(UserCredentials credentials) {
         if (!isUserCredentialsValid(credentials)) return;
         mSignInView.setProgressIndicator(true);
-        mSubscriptions.clear();
         Subscription subscription = mDataRepository.signIn(credentials)
                 .flatMap(new Func1<Authentication, Observable<Authentication>>() {
                     @Override public Observable<Authentication> call(Authentication authentication) {
                         final Device device = mSignInView.getDevice();
-                        if (device == null) return Observable.just(authentication);
+                        device.setUserId(authentication.getUserId());
                         return Observable.zip(
                                 Observable.just(authentication),
                                 mDataRepository.registerDevice(device),
@@ -78,7 +77,8 @@ public class SignInPresenter implements SignInContract.Presenter {
                         if (e instanceof NetworkConnectionException) {
                             mSignInView.showNetworkConnectionError();
                         } else if (e instanceof HttpResponseException) {
-                            mSignInView.showCredentialsError();
+                            String error = ((HttpResponseException) e).getResponse();
+                            mSignInView.showCredentialsError(error);
                         } else {
                             mSignInView.showUnknownError();
                         }

@@ -27,7 +27,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="Goods received"/>
 
-        <com.devabit.takestock.widget.CircleImageView
+        <com.devabit.takestock.ui.widget.CircleImageView
                 android:id="@+id/user_image_view"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -88,7 +88,7 @@
                 tools:text="Many businesses in large distributed industries have a problem with stock being"/>
 
         <Button
-                android:id="@+id/contact_buyer_button"
+                android:id="@+id/raise_dispute_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/comment_text_view"
@@ -101,7 +101,7 @@
                 android:id="@+id/contact_support_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/contact_buyer_button"
+                android:layout_below="@id/raise_dispute_button"
                 android:layout_centerInParent="true"
                 android:text="@string/offer_selling_item_contact_support"
                 android:textStyle="bold"

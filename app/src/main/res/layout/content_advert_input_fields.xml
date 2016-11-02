@@ -263,11 +263,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:singleLine="true"
                 android:inputType="textCapSentences"
                 android:imeOptions="actionDone"
                 android:drawableEnd="@drawable/ic_place_purple_dark_24dp"
-                android:hint="@string/hint_location"/>
+                android:hint="@string/hint_location"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
         <TextView
                 android:layout_width="wrap_content"
@@ -337,7 +338,7 @@
                 android:text="@string/advert_create_certification"
                 android:textAppearance="@style/TextAppearance.Small.AllCaps.Jam"/>
 
-        <com.devabit.takestock.widget.CertificationRadioButtonGroupView
+        <com.devabit.takestock.ui.widget.CertificationRadioButtonGroupView
                 android:id="@+id/certification_group_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -375,7 +376,7 @@
                 android:text="@string/advert_create_keywords"
                 android:textAppearance="@style/TextAppearance.Small.AllCaps.Black"/>
 
-        <com.devabit.takestock.widget.FlexboxLayout
+        <com.devabit.takestock.ui.widget.FlexboxLayout
                 android:id="@+id/keywords_flexbox_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

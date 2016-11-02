@@ -22,7 +22,7 @@ import com.devabit.takestock.data.model.Answer;
 import com.devabit.takestock.data.model.Question;
 import com.devabit.takestock.screen.questions.adapters.QuestionsAdapter;
 import com.devabit.takestock.screen.questions.dialog.AnswerDialog;
-import com.devabit.takestock.widget.DividerItemDecoration;
+import com.devabit.takestock.ui.decoration.DividerItemDecoration;
 
 import java.util.List;
 

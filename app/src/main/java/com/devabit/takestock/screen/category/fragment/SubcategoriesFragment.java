@@ -15,7 +15,7 @@ import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
 import com.devabit.takestock.screen.adverts.AdvertsActivity;
 import com.devabit.takestock.screen.category.adapter.SubcategoriesAdapter;
-import com.devabit.takestock.widget.DividerItemDecoration;
+import com.devabit.takestock.ui.decoration.DividerItemDecoration;
 
 /**
  * Created by Victor Artemyev on 12/09/2016.

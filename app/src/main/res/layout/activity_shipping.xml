@@ -136,7 +136,7 @@
                         android:id="@+id/phone_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/shipping_activity_hint_phone"
+                        android:hint="@string/shipping_activity_hint_phone_template"
                         android:imeOptions="actionDone"
                         android:inputType="phone"
                         android:paddingStart="8dp"

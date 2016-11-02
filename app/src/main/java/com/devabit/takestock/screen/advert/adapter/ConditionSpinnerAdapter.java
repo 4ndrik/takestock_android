@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.devabit.takestock.data.model.Condition;
-import com.devabit.takestock.widget.BaseSpinnerAdapter;
+import com.devabit.takestock.ui.widget.BaseSpinnerAdapter;
 
 import java.util.List;
 

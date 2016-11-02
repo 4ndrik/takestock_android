@@ -1,7 +1,6 @@
 package com.devabit.takestock.screen.shipping;
 
 import android.support.annotation.NonNull;
-import android.util.Patterns;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
@@ -13,6 +12,8 @@ import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import java.util.regex.Pattern;
+
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 import static timber.log.Timber.e;
 
@@ -21,6 +22,8 @@ import static timber.log.Timber.e;
  */
 
 final class ShippingPresenter implements ShippingContract.Presenter {
+
+    private static final Pattern PHONE = Pattern.compile("(\\+(?:[0-9] ?){6,14}[0-9]$)");
 
     private final DataRepository mDataRepository;
     private final ShippingContract.View mView;
@@ -79,7 +82,7 @@ final class ShippingPresenter implements ShippingContract.Presenter {
         return isHouseValid(accept.getHouse())
                 && isStreetValid(accept.getStreet())
                 && isCityValid(accept.getCity())
-                && isPostcodeValid(accept.getCity())
+                && isPostcodeValid(accept.getPostcode())
                 && isPhoneValid(accept.getPhone());
     }
 
@@ -118,7 +121,7 @@ final class ShippingPresenter implements ShippingContract.Presenter {
     private boolean isPhoneValid(String phone) {
         if (phone.isEmpty()
                 || !phone.startsWith("+")
-                || !Patterns.PHONE.matcher(phone).matches()) {
+                || !PHONE.matcher(phone).matches()) {
             mView.showPhoneError();
             return false;
         }

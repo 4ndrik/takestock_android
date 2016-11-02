@@ -52,10 +52,10 @@ public class TakeStockAccount {
 
     private TakeStockAccount(Context context) {
         mAccountManager = AccountManager.get(context);
-        mAccount = getCurrentAccountOrNull(context, mAccountManager);
+        mAccount = getCurrentAccountOrNull(mAccountManager);
     }
 
-    @Nullable private Account getCurrentAccountOrNull(Context context, AccountManager accountManager) {
+    @Nullable private Account getCurrentAccountOrNull(AccountManager accountManager) {
         Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);
         return accounts.length > 0 ? accounts[0] : null;
     }

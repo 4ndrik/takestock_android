@@ -27,7 +27,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="Payment made"/>
 
-        <com.devabit.takestock.widget.CircleImageView
+        <com.devabit.takestock.ui.widget.CircleImageView
                 android:id="@+id/user_image_view"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

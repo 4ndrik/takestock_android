@@ -23,7 +23,7 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.utils.DateUtil;
-import com.devabit.takestock.widget.CircleImageView;
+import com.devabit.takestock.ui.widget.CircleImageView;
 
 import java.util.ArrayList;
 import java.util.List;

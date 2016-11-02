@@ -1,5 +1,6 @@
 package com.devabit.takestock.screen.payment.byBACS;
 
+import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Payment;
 import com.devabit.takestock.screen.BasePresenter;
 import com.devabit.takestock.screen.BaseView;
@@ -11,9 +12,11 @@ interface PayByBACSContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showPaymentMadeInView(Payment payment);
+        void showOfferPaidInView(Offer offer);
 
         void showNetworkConnectionError();
+
+        void showPaymentError();
 
         void showUnknownError();
 

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import butterknife.*;
 import com.devabit.takestock.Injection;
@@ -112,6 +113,15 @@ public class ShippingActivity extends AppCompatActivity implements ShippingContr
         }
     }
 
+    @OnFocusChange(R.id.phone_edit_text)
+    protected void onPhoneNumberEditTextFocusChanged(EditText editText, boolean focusable) {
+        if (!focusable && editText.getText().length() == 0) {
+            mPhoneInputLayout.setHint(getString(R.string.shipping_activity_hint_phone_template));
+        } else {
+            mPhoneInputLayout.setHint(getString(R.string.shipping_activity_hint_phone_number));
+        }
+    }
+
     @OnEditorAction(R.id.phone_edit_text)
     boolean onPhoneEditorAction(int actionId) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -134,7 +144,7 @@ public class ShippingActivity extends AppCompatActivity implements ShippingContr
                 .setHouse(getHouse())
                 .setStreet(getStreet())
                 .setCity(getCity())
-                .setPostcode(123456789)
+                .setPostcode(getPostcode())
                 .setPhone(getPhone())
                 .create();
     }
@@ -156,7 +166,8 @@ public class ShippingActivity extends AppCompatActivity implements ShippingContr
     }
 
     private String getPhone() {
-        return mPhoneEditText.getText().toString().trim();
+        String phone = mPhoneEditText.getText().toString().trim();
+        return phone.startsWith("+") ? phone : "+" + phone;
     }
 
     @Override public void showOfferAcceptedInView(Offer offer) {

@@ -34,13 +34,13 @@ import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Category;
 import com.devabit.takestock.data.model.Subcategory;
 import com.devabit.takestock.data.model.User;
-import com.devabit.takestock.screen.advert.active.AdvertActiveActivity;
+import com.devabit.takestock.screen.advert.selling.AdvertSellingActivity;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.adverts.adapter.AdvertsAdapter;
 import com.devabit.takestock.screen.category.CategoriesActivity;
 import com.devabit.takestock.screen.dialog.emailConfirmation.EmailConfirmationDialog;
 import com.devabit.takestock.screen.entry.EntryActivity;
-import com.devabit.takestock.widget.GridSpacingItemDecoration;
+import com.devabit.takestock.ui.decoration.GridSpacingItemDecoration;
 
 import java.util.List;
 
@@ -210,7 +210,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
     }
 
     private void startAdvertSellingActivity(Advert advert) {
-        startActivityForResult(AdvertActiveActivity.getStartIntent(AdvertsActivity.this, advert.getId()), RC_ADVERT_ACTIVE);
+        startActivityForResult(AdvertSellingActivity.getStartIntent(AdvertsActivity.this, advert.getId()), RC_ADVERT_ACTIVE);
     }
 
     private void startAdvertDetailActivity(Advert advert) {

@@ -5,7 +5,6 @@ import com.devabit.takestock.BuildConfig;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Payment;
 import com.devabit.takestock.data.source.DataRepository;
-import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import com.stripe.android.model.Card;
 import com.stripe.android.util.TextUtils;
@@ -103,12 +102,22 @@ final class PayByCardPresenter implements PayByCardContract.Presenter {
     }
 
     @Override public void makePayment(Offer offer, Card card) {
-        d(card.toString());
         if (!validateCard(card)) return;
         mPaymentView.setProgressIndicator(true);
         Subscription subscription = buildPaymentObservable(offer.getId(), card)
-                .compose(RxTransformers.<Payment>applyObservableSchedulers())
-                .subscribe(new Subscriber<Payment>() {
+                .filter(new Func1<Payment, Boolean>() {
+                    @Override public Boolean call(Payment payment) {
+                        if (payment.isSuccessful()) return Boolean.TRUE;
+                        throw new RuntimeException("Payment failed");
+                    }
+                })
+                .flatMap(new Func1<Payment, Observable<Offer>>() {
+                    @Override public Observable<Offer> call(Payment payment) {
+                        return mDataRepository.getOfferWithId(payment.getOfferId());
+                    }
+                })
+                .compose(RxTransformers.<Offer>applyObservableSchedulers())
+                .subscribe(new Subscriber<Offer>() {
                     @Override public void onCompleted() {
                         mPaymentView.setProgressIndicator(false);
                     }
@@ -118,21 +127,11 @@ final class PayByCardPresenter implements PayByCardContract.Presenter {
                         handleError(e);
                     }
 
-                    @Override public void onNext(Payment payment) {
-                        d(payment.toString());
-                        mPaymentView.showPaymentMadeInView(payment);
+                    @Override public void onNext(Offer offer) {
+                        mPaymentView.showOfferPaidInView(offer);
                     }
                 });
         mSubscriptions.add(subscription);
-    }
-
-    private void handleError(Throwable throwable) {
-        e(throwable);
-        if (throwable instanceof NetworkConnectionException) {
-            mPaymentView.showNetworkConnectionError();
-        } else {
-            mPaymentView.showUnknownError();
-        }
     }
 
     private Observable<Payment> buildPaymentObservable(final int offerId, final Card card) {
@@ -187,6 +186,10 @@ final class PayByCardPresenter implements PayByCardContract.Presenter {
 
         tokenParams.put("card", cardParams);
         return tokenParams;
+    }
+
+    private void handleError(Throwable throwable) {
+        e(throwable);
     }
 
     @Override public void pause() {
