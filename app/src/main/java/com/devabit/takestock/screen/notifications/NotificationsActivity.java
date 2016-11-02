@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,8 +17,10 @@ import butterknife.ButterKnife;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Notification;
-import com.devabit.takestock.screen.advert.active.AdvertActiveActivity;
-import com.devabit.takestock.widget.ListVerticalSpacingItemDecoration;
+import com.devabit.takestock.ui.decoration.DividerItemDecoration;
+import com.devabit.takestock.ui.decoration.RemovingItemDecoration;
+import com.devabit.takestock.ui.widget.SwipeMenuRecyclerView;
+import com.devabit.takestock.utils.NotificationFactory;
 
 import java.util.List;
 
@@ -57,14 +60,16 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
     }
 
     private void setUpSwipeRefreshLayout() {
-        mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mRefreshLayout.setColorSchemeResources(R.color.jam);
         mRefreshLayout.setEnabled(false);
     }
 
     private void setUpRecyclerView() {
-        RecyclerView recyclerView = ButterKnife.findById(NotificationsActivity.this, R.id.recycler_view);
-        ListVerticalSpacingItemDecoration itemDecoration = new ListVerticalSpacingItemDecoration(getResources().getDimensionPixelSize(R.dimen.item_list_space_8dp));
-        recyclerView.addItemDecoration(itemDecoration);
+        SwipeMenuRecyclerView recyclerView = ButterKnife.findById(NotificationsActivity.this, R.id.recycler_view);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.divider_grey300));
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addItemDecoration(new RemovingItemDecoration());
         LinearLayoutManager layoutManager = new LinearLayoutManager(NotificationsActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         setUpNotificationAdapter(recyclerView);
@@ -74,7 +79,11 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
         mNotificationsAdapter = new NotificationsAdapter(NotificationsActivity.this);
         mNotificationsAdapter.setOnItemClickListener(new NotificationsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Notification notification) {
-                startActivity(AdvertActiveActivity.getStartIntent(NotificationsActivity.this, notification));
+                startActivity(NotificationFactory.getStartIntent(NotificationsActivity.this, notification));
+            }
+
+            @Override public void onItemDelete(Notification notification) {
+                mPresenter.removeNotification(notification);
             }
         });
         recyclerView.setAdapter(mNotificationsAdapter);
@@ -95,6 +104,10 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
 
     @Override public void setProgressIndicator(boolean isActive) {
         mRefreshLayout.setRefreshing(isActive);
+    }
+
+    @Override public void showNotificationRemovedInView(Notification notification) {
+        mNotificationsAdapter.removeNotification(notification);
     }
 
     @Override protected void onPause() {

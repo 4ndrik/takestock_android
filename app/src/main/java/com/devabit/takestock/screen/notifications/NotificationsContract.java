@@ -17,11 +17,15 @@ interface NotificationsContract {
 
         void setProgressIndicator(boolean isActive);
 
+        void showNotificationRemovedInView(Notification notification);
+
     }
 
     interface Presenter extends BasePresenter {
 
         void loadNotifications();
+
+        void removeNotification(Notification notification);
 
     }
 }

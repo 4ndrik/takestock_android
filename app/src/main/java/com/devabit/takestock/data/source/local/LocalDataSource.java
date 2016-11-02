@@ -478,9 +478,19 @@ public class LocalDataSource implements DataSource {
         return Observable.just(notification)
                 .doOnNext(new Action1<Notification>() {
                     @Override public void call(Notification notification) {
-                        notification.setNew(false);
+                        notification.setSaved(false);
                         NotificationRealmDao dao = new NotificationRealmDao(mRealmConfiguration);
                         dao.storeOrUpdateNotification(notification);
+                    }
+                });
+    }
+
+    @Override public Observable<Notification> removeNotification(@NonNull Notification notification) {
+        return Observable.just(notification)
+                .doOnNext(new Action1<Notification>() {
+                    @Override public void call(Notification notification) {
+                        NotificationRealmDao dao = new NotificationRealmDao(mRealmConfiguration);
+                        dao.removeNotification(notification);
                     }
                 });
     }

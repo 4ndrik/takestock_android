@@ -947,6 +947,10 @@ public class RemoteDataSource implements ApiRest, DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<Notification> removeNotification(@NonNull Notification notification) {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public Observable<Integer> getNewNotificationsCount() {
         throw new UnsupportedOperationException("This operation not required.");
     }

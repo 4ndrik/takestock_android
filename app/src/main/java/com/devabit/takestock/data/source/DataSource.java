@@ -187,6 +187,8 @@ public interface DataSource {
 
     Observable<Notification> readNotification(@NonNull Notification notification);
 
+    Observable<Notification> removeNotification(@NonNull Notification notification);
+
     Observable<Integer> getNewNotificationsCount();
 
     Observable<List<Notification>> getNotifications();

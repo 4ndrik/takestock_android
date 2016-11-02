@@ -455,11 +455,16 @@ public class DataRepository implements DataSource {
      **********/
 
     @Override public Observable<Notification> saveNotification(@NonNull Notification notification) {
+        notification.setSaved(true);
         return mLocalDataSource.saveNotification(notification);
     }
 
     @Override public Observable<Notification> readNotification(@NonNull Notification notification) {
         return mLocalDataSource.readNotification(notification);
+    }
+
+    @Override public Observable<Notification> removeNotification(@NonNull Notification notification) {
+        return mLocalDataSource.removeNotification(notification);
     }
 
     @Override public Observable<Integer> getNewNotificationsCount() {
