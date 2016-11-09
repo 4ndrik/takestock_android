@@ -119,9 +119,7 @@ final class ShippingPresenter implements ShippingContract.Presenter {
     }
 
     private boolean isPhoneValid(String phone) {
-        if (phone.isEmpty()
-                || !phone.startsWith("+")
-                || !PHONE.matcher(phone).matches()) {
+        if (phone.isEmpty()) {
             mView.showPhoneError();
             return false;
         }

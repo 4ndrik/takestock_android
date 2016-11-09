@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  */
 public final class Validator {
 
-    public static final Pattern USER_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9\\.\\+\\-_@]{3,30}$");
+    public static final Pattern USER_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9\\.\\+\\-_@]{3,100}$");
 
     public static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
             "[a-zA-Z0-9\\+\\._%\\-\\+]{1,256}" +

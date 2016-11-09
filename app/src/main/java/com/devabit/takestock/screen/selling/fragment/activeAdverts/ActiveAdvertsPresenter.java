@@ -20,7 +20,7 @@ final class ActiveAdvertsPresenter extends SellingPresenter {
         return new AdvertFilter.Builder()
                 .setAuthorId(mUserId)
                 .setOrder(AdvertFilter.ORDER_UPDATED_AT_DESCENDING)
-                .setAdditions(AdvertFilter.Addition.POSTED, AdvertFilter.Addition.HOLD_ON)
+                .setAdditions(AdvertFilter.Addition.POSTED)
                 .create();
     }
 }

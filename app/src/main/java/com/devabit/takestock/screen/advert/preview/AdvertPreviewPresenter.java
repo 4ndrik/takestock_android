@@ -8,6 +8,7 @@ import com.devabit.takestock.data.model.Shipping;
 import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -68,8 +69,7 @@ class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
 
     @Override public void saveAdvert() {
         mView.setProgressIndicator(true);
-        Subscription subscription = mDataRepository
-                .saveAdvert(mAdvert)
+        Subscription subscription = getAdvertObservable()
                 .compose(RxTransformers.<Advert>applyObservableSchedulers())
                 .subscribe(new Subscriber<Advert>() {
                     @Override public void onCompleted() {
@@ -91,6 +91,15 @@ class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
                     }
                 });
         mSubscriptions.add(subscription);
+    }
+
+    private Observable<Advert> getAdvertObservable() {
+        if (mAdvert.isInDrafts()) {
+            mAdvert.setInDrafts(false);
+            return mDataRepository.editAdvert(mAdvert);
+        } else {
+            return mDataRepository.saveAdvert(mAdvert);
+        }
     }
 
     @Override public void pause() {

@@ -13,10 +13,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
-import android.view.Gravity;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -75,6 +72,8 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
     @BindView(R.id.user_image_view) ImageView mUserImageView;
     @BindView(R.id.user_rating_bar) RatingBar mUserRatingBar;
     @BindView(R.id.similar_listing_text_view) TextView mSimilarListingTextView;
+    @BindView(R.id.button_content) ViewGroup mButtonContent;
+    @BindView(R.id.sold_out_text_view) TextView mSoldOutTextView;
 
     TakeStockAccount mAccount;
     AdvertPhotosAdapter mPhotosAdapter;
@@ -202,6 +201,11 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     private void bindAdvert(Advert advert) {
         mAdvert = advert;
+        if (mAdvert.getState() == Advert.State.SOLD_OUT) {
+            mSoldOutTextView.setVisibility(View.VISIBLE);
+            mButtonContent.setVisibility(View.GONE);
+            mPhotosRecyclerView.setAlpha(0.5f);
+        }
         setUpPhotos(advert.getPhotos());
         mNameTextView.setText(advert.getName());
         String packaging = advert.getPackagingName();
@@ -293,9 +297,13 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
 
     @Override public void setProgressIndicator(boolean isActive) {
         mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
-        mPhotosRecyclerView.setAlpha(isActive ? 0.5f : 1f);
-        mScrollView.setAlpha(isActive ? 0.5f : 1f);
+        setContentAlpha(isActive);
         setTouchDisabled(isActive);
+    }
+
+    private void setContentAlpha(boolean alpha) {
+        mPhotosRecyclerView.setAlpha(alpha ? 0.5f : 1f);
+        mScrollView.setAlpha(alpha ? 0.5f : 1f);
     }
 
     private void setTouchDisabled(boolean isActive) {

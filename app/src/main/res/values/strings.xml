@@ -47,7 +47,6 @@
     <string name="password">Password</string>
     <string name="user_name_or_email">Username or email</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="guide_price_per_kg">£ %1$s/kg</string>
     <string name="offer_price_per_kg">£%1$s/%2$d kg</string>
     <string name="add_expiry_date">Add expiry date</string>
 
@@ -203,6 +202,11 @@
     <string name="adverts_sort_guide_price_descending">Guide price (descending)</string>
     <!--adverts activity end-->
 
+    <!--advert item start-->
+    <string name="advert_item_guide_price">£ %1$s/%2$s</string>
+    <string name="advert_item_sold_out">SOLD\nOUT</string>
+    <!--advert item end -->
+
     <!--adverts detail activity start-->
     <string name="advert_detail_guide_price_per_unit">£ %1$s/%2$s</string>
     <string name="advert_detail_minimum_order_unit">%1$d %2$s</string>
@@ -223,6 +227,7 @@
     <string name="advert_detail_thank_for_offer">Thank you for offer!\nWaiting for response!</string>
     <string name="advert_detail_photo_count">%1$d / %2$d</string>
     <string name="advert_detail_similar_listing">Similar listing</string>
+    <string name="advert_detail_sold_out">SOLD\nOUT</string>
     <!--adverts detail activity end-->
 
     <!--offer dialog start-->
@@ -308,6 +313,8 @@
     <string name="offer_buying_item_raise_dispute">Raise dispute</string>
     <string name="offer_buying_item_pay_by_card">Pay by card</string>
     <string name="offer_buying_item_pay_by_bacs">Pay by BACS</string>
+    <string name="offer_buying_item_in_dispute_message">Dispute raised on the sale of the product. Our team will contact you shortly about this.
+    </string>
     <!--offer buying item end-->
 
     <!--offer selling item start-->
@@ -321,6 +328,7 @@
     <string name="offer_selling_item_confirm_stock_dispatched">Confirm stock dispatched</string>
     <string name="offer_selling_item_contact_buyer">Contact buyer</string>
     <string name="offer_selling_item_contact_support">Contact customer support</string>
+    <string name="offer_selling_item_in_dispute_message">The buyer has raised a dispute on this purchase. The takestock team are looking into this ad we will contact you as soon as possible</string>
     <!--offer selling item start-->
 
     <!--advert selling item start-->
@@ -331,6 +339,9 @@
     <string name="advert_selling_questions">questions</string>
     <string name="advert_selling_views">views</string>
     <string name="advert_selling_new_count">%1$d new</string>
+    <string name="advert_selling_live">LIVE</string>
+    <string name="advert_selling_on_hold">ON HOLD</string>
+    <string name="advert_selling_sold_out">SOLD OUT</string>
     <!--advert selling item end-->
 
     <!--counter offer dialog start-->
@@ -366,7 +377,7 @@
 
     <!--advert watching item start-->
     <string name="advert_watching_item_guide_price">£ %1$s/%2$s</string>
-    <string name="advert_watching_item_additional">%1$s offers \u2022 %2$s questions \u2022 %3$s days left</string>
+    <string name="advert_watching_item_additional">%1$s offers \u2022 %2$s questions</string>
     <string name="advert_watching_item_available_unit">available: %1$d%2$s</string>
     <!--advert selling activity end-->
 
@@ -513,5 +524,7 @@
     <string name="profile_account_activity_about">About</string>
     <string name="profile_account_activity_help_and_contact"><![CDATA[Help & Contact]]></string>
     <!--profile account end-->
+
+    <string name="error_incorrect_username_or_password">Username or password is incorrect</string>
 
 </resources>

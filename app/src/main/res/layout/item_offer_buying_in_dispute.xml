@@ -25,7 +25,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/red_500"
                 android:textAppearance="?android:textAppearanceSmall"
-                tools:text="Countered"/>
+                tools:text="In dispute"/>
 
         <com.devabit.takestock.ui.widget.CircleImageView
                 android:id="@+id/user_image_view"

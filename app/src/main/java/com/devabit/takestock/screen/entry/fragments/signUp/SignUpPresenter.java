@@ -99,7 +99,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     private boolean validateUserName(String userName) {
-        boolean isValid = Validator.validateUserName(userName);
+        boolean isValid = !TextUtils.isEmpty(userName);
         if (isValid) return true;
         mSignUpView.showUserNameError();
         return false;

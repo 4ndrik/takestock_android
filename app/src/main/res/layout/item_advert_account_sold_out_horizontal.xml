@@ -46,36 +46,52 @@
                 android:textColor="@color/grey_600"
                 tools:text="Lviv, Ukraine"/>
 
-        <TextView
-                android:id="@+id/date_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:layout_below="@id/location_text_view"
-                android:textAppearance="@android:style/TextAppearance.Small"
-                android:textColor="@color/grey_600"
-                tools:text="Feb 29, 2016"/>
+        <!--<TextView-->
+                <!--android:id="@+id/date_text_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingStart="8dp"-->
+                <!--android:paddingEnd="8dp"-->
+                <!--android:layout_below="@id/location_text_view"-->
+                <!--android:textAppearance="@android:style/TextAppearance.Small"-->
+                <!--android:textColor="@color/grey_600"-->
+                <!--tools:text="Feb 29, 2016"/>-->
 
         <TextView
                 android:id="@+id/price_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:layout_below="@+id/date_text_view"
+                android:layout_below="@+id/location_text_view"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:textColor="@color/black"
                 tools:text="@string/advert_item_guide_price"/>
 
     </RelativeLayout>
 
-    <ImageView
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
             android:layout_margin="8dp"
-            android:background="@null"
-            android:src="@drawable/layer_list_offered"
+            android:layout_gravity="end"
+            android:background="@drawable/shape_oval_jam"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/white"
+            android:text="My"
+            android:padding="8dp"
             tools:ignore="ContentDescription"/>
+
+    <TextView
+            android:id="@+id/sold_out_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@drawable/circle_red500"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="48dp"
+            android:text="@string/advert_item_sold_out"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/white"/>
 
 </android.support.v7.widget.CardView>

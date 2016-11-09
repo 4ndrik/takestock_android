@@ -19,8 +19,8 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devabit.takestock.R;
-import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.data.model.Offer;
+import com.devabit.takestock.data.model.User;
 import com.devabit.takestock.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         }
     }
 
-    public void refreshOffers(List<Offer> offers) {
+    void refreshOffers(List<Offer> offers) {
         mOffers.clear();
         mOffers.addAll(offers);
         notifyDataSetChanged();
@@ -177,6 +177,10 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
 
         OfferInDisputeViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @Override void setOfferText() {
+            offerTextView.setText(R.string.offer_selling_item_in_dispute_message);
         }
     }
 
@@ -338,10 +342,14 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
             bindUserImage(user.getPhoto());
             nameTextView.setText(user.getUserName());
             dateTextView.setText(DateUtil.formatToDefaultDate(mOffer.getCreatedAt()));
+            statusTextView.setText(offerStatuses[mOffer.getStatus() - 1]);
+            setOfferText();
+        }
+
+        void setOfferText() {
             String offerString = offerTextView.getResources()
                     .getString(R.string.offer_item_offer, mOffer.getQuantity(), mPackaging, mOffer.getPrice(), mPackaging);
             offerTextView.setText(offerString);
-            statusTextView.setText(offerStatuses[mOffer.getStatus() - 1]);
         }
 
         void bindUserImage(String image) {

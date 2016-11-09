@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -43,6 +44,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.devabit.takestock.R.id.toolbar;
 import static com.devabit.takestock.utils.ImagePicker.*;
 import static com.devabit.takestock.utils.PermissionChecker.*;
@@ -316,6 +318,8 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Category category = hintAdapter.getItem(position);
                 showSubcategoriesInView(category);
+                boolean isFood = category != null && category.isFood();
+                mExpiryDateTextView.setVisibility(isFood ? VISIBLE : GONE);
             }
 
             @Override public void onNothingSelected(AdapterView<?> parent) {
@@ -359,8 +363,8 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
     }
 
     private void setSubcategoryContentVisibility(boolean visible) {
-        mSubcategoryTextView.setVisibility(visible ? View.VISIBLE : GONE);
-        mSubcategorySpinner.setVisibility(visible ? View.VISIBLE : GONE);
+        mSubcategoryTextView.setVisibility(visible ? VISIBLE : GONE);
+        mSubcategorySpinner.setVisibility(visible ? VISIBLE : GONE);
     }
 
     @Override public void showPackagingsInView(List<Packaging> packagings) {
@@ -566,7 +570,7 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
     }
 
     private void setProgressBarActive(boolean isActive) {
-        mProgressBar.setVisibility(isActive ? View.VISIBLE : GONE);
+        mProgressBar.setVisibility(isActive ? VISIBLE : GONE);
     }
 
     private void setTouchDisabled(boolean isActive) {
@@ -655,6 +659,8 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
                 .setTags(getKeywords())
                 .setState(getState())
                 .setAuthorId(getUserId())
+                .setIsFood(isFoodCategory())
+                .setInDrafts(mAdvert != null && mAdvert.isInDrafts())
                 .create();
     }
 
@@ -698,6 +704,11 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
         return Integer.valueOf(text);
     }
 
+    private boolean isFoodCategory() {
+        Category category = (Category) mCategorySpinner.getSelectedItem();
+        return category != null && category.isFood();
+    }
+
     private String getGuidePrice() {
         return mGuidePriceEditText.getText().toString().trim();
     }
@@ -720,8 +731,9 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
         return condition == null ? -1 : condition.getId();
     }
 
-    private String getExpiryDate() {
+    @Nullable private String getExpiryDate() {
         String value = mExpiryDateTextView.getText().toString().trim();
+        if (value.isEmpty()) return null;
         return DateUtil.formatToApiDate(value);
     }
 
@@ -751,14 +763,13 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
     private int getState() {
         int id = mStateRadioGroup.getCheckedRadioButtonId();
         switch (id) {
-            case R.id.live_radio_button:
-                return Advert.State.LIVE;
             case R.id.on_hold_radio_button:
                 return Advert.State.ON_HOLD;
             case R.id.sold_out_radio_button:
                 return Advert.State.SOLD_OUT;
+            case R.id.live_radio_button:
             default:
-                return -1;
+                return Advert.State.LIVE;
         }
     }
 

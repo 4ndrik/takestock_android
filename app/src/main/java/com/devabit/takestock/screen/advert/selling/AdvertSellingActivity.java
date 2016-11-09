@@ -62,7 +62,6 @@ public class AdvertSellingActivity extends AppCompatActivity implements AdvertSe
     @BindView(R.id.advert_image_view) ImageView mImageView;
     @BindView(R.id.advert_name_text_view) TextView mNameTextView;
     @BindView(R.id.qty_available_text_view) TextView mQtyAvailableTextView;
-    @BindView(R.id.days_left_text_view) TextView mDaysLeftTextView;
     @BindView(R.id.guide_price_text_view) TextView mGuidePriceTextView;
     @BindView(R.id.table_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
@@ -188,7 +187,6 @@ public class AdvertSellingActivity extends AppCompatActivity implements AdvertSe
         mAdvert = advert;
         mNameTextView.setText(advert.getName());
         mQtyAvailableTextView.setText(getString(R.string.advert_selling_activity_available, advert.getItemsCountNow(), advert.getPackagingName()));
-        mDaysLeftTextView.setText(getString(R.string.advert_selling_activity_days_left, advert.getDaysLeft()));
         mGuidePriceTextView.setText(getString(R.string.advert_selling_activity_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
         setUpPhotos(advert.getPhotos());
     }

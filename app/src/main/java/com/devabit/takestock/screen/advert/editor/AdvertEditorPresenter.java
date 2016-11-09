@@ -312,8 +312,9 @@ class AdvertEditorPresenter implements AdvertEditorContract.Presenter {
     }
 
     private boolean validateExpiryDate(Advert advert) {
+        if (!advert.isFood()) return true;
         String date = advert.getExpiresAt();
-        if (date.isEmpty()) {
+        if (date == null || date.isEmpty()) {
             mCreateView.showEmptyExpiryDateError();
             return false;
         }

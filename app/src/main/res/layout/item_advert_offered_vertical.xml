@@ -65,7 +65,7 @@
                 android:layout_below="@+id/date_text_view"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:textColor="@color/black"
-                tools:text="@string/guide_price_per_kg"/>
+                tools:text="@string/advert_item_guide_price"/>
 
     </RelativeLayout>
 

@@ -165,7 +165,7 @@ public class WatchingAdvertsAdapter extends RecyclerView.Adapter<WatchingAdverts
             nameTextView.setText(mAdvert.getName());
             guidePriceTextView.setText(resources.getString(R.string.advert_watching_item_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
             qtyAvailableTextView.setText(resources.getString(R.string.advert_watching_item_available_unit, advert.getItemsCountNow(), advert.getPackagingName()));
-            additionalTextView.setText(resources.getString(R.string.advert_watching_item_additional, advert.getOffersCount(), advert.getQuestionsCount(), advert.getDaysLeft()));
+            additionalTextView.setText(resources.getString(R.string.advert_watching_item_additional, advert.getOffersCount(), advert.getQuestionsCount()));
             setItemViewActive(!isAdvertProcessing(mAdvert));
         }
 

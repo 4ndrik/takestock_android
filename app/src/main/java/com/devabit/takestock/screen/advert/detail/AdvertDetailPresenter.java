@@ -59,7 +59,6 @@ class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
                 .compose(RxTransformers.<Pair<Advert, PaginatedList<Advert>>>applyObservableSchedulers())
                 .subscribe(new Subscriber<Pair<Advert, PaginatedList<Advert>>>() {
                     @Override public void onCompleted() {
-                        mAdvertView.setProgressIndicator(false);
                     }
 
                     @Override public void onError(Throwable e) {
@@ -68,6 +67,7 @@ class AdvertDetailPresenter implements AdvertDetailContract.Presenter {
                     }
 
                     @Override public void onNext(Pair<Advert, PaginatedList<Advert>> pair) {
+                        mAdvertView.setProgressIndicator(false);
                         mAdvertView.showAdvertInView(pair.first);
                         List<Advert> similarAdverts = pair.second.getResults();
                         mAdvertView.showSimilarAdvertsInView(similarAdverts);

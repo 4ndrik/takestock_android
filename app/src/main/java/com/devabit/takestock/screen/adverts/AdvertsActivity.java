@@ -366,6 +366,7 @@ public class AdvertsActivity extends AppCompatActivity implements AdvertsContrac
         return new AdvertFilter.Builder()
                 .setCategory(mCategory)
                 .setSubcategory(mSubcategory)
+                .setAdditions(AdvertFilter.Addition.POSTED, AdvertFilter.Addition.HOLD_ON)
                 .setQuery(mQuery)
                 .setOrder(mSortOrder)
                 .create();

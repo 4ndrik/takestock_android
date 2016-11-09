@@ -81,9 +81,6 @@
                 android:name=".screen.payment.byBACS.PayByBACSActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".screen.offers.OffersActivity"
-                android:screenOrientation="portrait"/>
-        <activity
                 android:name=".screen.advert.buying.AdvertBuyingActivity"
                 android:screenOrientation="portrait">
             <intent-filter>

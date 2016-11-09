@@ -135,9 +135,8 @@ public class SignInFragment extends Fragment implements SignInContract.View {
         showSnack(R.string.error_no_network_connection);
     }
 
-    @Override public void showCredentialsError(String error) {
-//        showSnack(R.string.error_incorrect_credentials);
-        Snackbar.make(mContent, error, Snackbar.LENGTH_LONG).show();
+    @Override public void showSignInError() {
+        showSnack(R.string.error_incorrect_username_or_password);
     }
 
     @Override public void showUnknownError() {

@@ -1,15 +1,13 @@
 package com.devabit.takestock.screen.entry.fragments.signIn;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import com.devabit.takestock.data.model.Device;
-import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.data.model.Authentication;
+import com.devabit.takestock.data.model.Device;
 import com.devabit.takestock.data.model.UserCredentials;
+import com.devabit.takestock.data.source.DataRepository;
 import com.devabit.takestock.exception.HttpResponseException;
 import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
-import com.devabit.takestock.utils.Validator;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -77,8 +75,7 @@ public class SignInPresenter implements SignInContract.Presenter {
                         if (e instanceof NetworkConnectionException) {
                             mSignInView.showNetworkConnectionError();
                         } else if (e instanceof HttpResponseException) {
-                            String error = ((HttpResponseException) e).getResponse();
-                            mSignInView.showCredentialsError(error);
+                            mSignInView.showSignInError();
                         } else {
                             mSignInView.showUnknownError();
                         }
@@ -97,18 +94,19 @@ public class SignInPresenter implements SignInContract.Presenter {
     }
 
     private boolean validateUsername(String userName) {
-        boolean isValid = Validator.validateUserName(userName);
-        if (isValid) return true;
-        mSignInView.showUserNameError();
-        return false;
-
+        if (userName.isEmpty()) {
+            mSignInView.showUserNameError();
+            return false;
+        }
+        return true;
     }
 
     private boolean validatePassword(String password) {
-        boolean isValid = !TextUtils.isEmpty(password);
-        if (isValid) return true;
-        mSignInView.showPasswordError();
-        return false;
+       if (password.isEmpty()) {
+           mSignInView.showPasswordError();
+           return false;
+       }
+        return true;
     }
 
     @Override public void pause() {

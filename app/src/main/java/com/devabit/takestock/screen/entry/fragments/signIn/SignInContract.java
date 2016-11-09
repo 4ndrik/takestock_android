@@ -22,7 +22,7 @@ interface SignInContract {
 
         void showNetworkConnectionError();
 
-        void showCredentialsError(String error);
+        void showSignInError();
 
         void showUnknownError();
 

@@ -41,7 +41,9 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     interface OnStatusChangedListener {
         void onAccepted(Offer offer);
+
         void onCountered(Offer offer);
+
         void onRejected(Offer offer);
     }
 
@@ -49,6 +51,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     interface OnPaymentClickListener {
         void onPayByCard(Offer offer);
+
         void onPayByBACS(Offer offer);
     }
 
@@ -68,6 +71,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     interface OnRaiseDisputeListener {
         void onDispute(Offer offer);
+
         void onContactSupport(Offer offer);
     }
 
@@ -214,7 +218,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         mConfirmGoodsListener = onConfirmGoodsListener;
     }
 
-    public void setOnRaiseDisputeListener(OnRaiseDisputeListener onRaiseDisputeListener) {
+    void setOnRaiseDisputeListener(OnRaiseDisputeListener onRaiseDisputeListener) {
         mOnRaiseDisputeListener = onRaiseDisputeListener;
     }
 
@@ -226,6 +230,10 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
         OfferInDisputeViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @Override void setOfferString() {
+            offerTextView.setText(R.string.offer_buying_item_in_dispute_message);
         }
     }
 
@@ -454,9 +462,7 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
             bindUserImage(user.getPhoto());
             nameTextView.setText(user.getUserName());
             dateTextView.setText(DateUtil.formatToDefaultDate(mOffer.getCreatedAt()));
-            String offerString = offerTextView.getResources()
-                    .getString(R.string.offer_item_offer, mOffer.getQuantity(), mPackaging, mOffer.getPrice(), mPackaging);
-            offerTextView.setText(offerString);
+
 
             if (TextUtils.isEmpty(offer.getComment())) {
                 commentTextView.setVisibility(View.GONE);
@@ -464,8 +470,14 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
                 commentTextView.setVisibility(View.VISIBLE);
                 commentTextView.setText(offer.getComment());
             }
-
+            setOfferString();
             setStatus();
+        }
+
+        void setOfferString() {
+            String offerString = offerTextView.getResources()
+                    .getString(R.string.offer_item_offer, mOffer.getQuantity(), mPackaging, mOffer.getPrice(), mPackaging);
+            offerTextView.setText(offerString);
         }
 
         void setStatus() {

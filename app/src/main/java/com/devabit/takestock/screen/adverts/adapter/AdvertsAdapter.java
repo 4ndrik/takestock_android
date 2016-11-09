@@ -22,7 +22,6 @@ import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
 import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.data.model.User;
-import com.devabit.takestock.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,14 +63,18 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             case R.layout.item_progress:
                 return new ProgressViewHolder(itemView);
 
-            case R.layout.item_advert_account_vertical:
-            case R.layout.item_advert_account_horizontal:
-                return new AdvertViewHolder(itemView);
-
             case R.layout.item_advert_lacks_account_vertical:
             case R.layout.item_advert_lacks_account_horizontal:
                 return new AdvertLacksAccountViewHolder(itemView);
 
+            case R.layout.item_advert_account_sold_out_vertical:
+            case R.layout.item_advert_account_sold_out_horizontal:
+            case R.layout.item_advert_account_vertical:
+            case R.layout.item_advert_account_horizontal:
+                return new AdvertViewHolder(itemView);
+
+            case R.layout.item_advert_sold_out_vertical:
+            case R.layout.item_advert_sold_out_horizontal:
             case R.layout.item_advert_vertical:
             case R.layout.item_advert_horizontal:
             default:
@@ -102,8 +105,17 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
             return isVertical ? R.layout.item_advert_lacks_account_vertical : R.layout.item_advert_lacks_account_horizontal;
         }
 
+        boolean isSoldOut = advert.getState() == Advert.State.SOLD_OUT;
+
         if (advert.getAuthorId() == mAccountUser.getId()) {
+            if (isSoldOut) {
+                return isVertical ? R.layout.item_advert_account_sold_out_vertical : R.layout.item_advert_account_sold_out_horizontal;
+            }
             return isVertical ? R.layout.item_advert_account_vertical : R.layout.item_advert_account_horizontal;
+        }
+
+        if (isSoldOut) {
+            return isVertical ? R.layout.item_advert_sold_out_vertical : R.layout.item_advert_sold_out_horizontal;
         }
 
         return isVertical ? R.layout.item_advert_vertical : R.layout.item_advert_horizontal;
@@ -225,7 +237,7 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
     class AdvertViewHolder extends AdvertAbstractViewHolder {
 
-        @BindView(R.id.date_text_view) TextView dateTextView;
+//        @BindView(R.id.date_text_view) TextView dateTextView;
         @BindView(R.id.price_text_view) TextView priceTextView;
 
         AdvertViewHolder(View itemView) {
@@ -234,8 +246,8 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
 
         @Override void bindAdvert(Advert advert) {
             super.bindAdvert(advert);
-            dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getExpiresAt()));
-            String priceString = mResources.getString(R.string.guide_price_per_kg, mAdvert.getGuidePrice());
+//            dateTextView.setText(DateUtil.formatToDefaultDate(mAdvert.getExpiresAt()));
+            String priceString = mResources.getString(R.string.advert_item_guide_price, mAdvert.getGuidePrice(), mAdvert.getPackagingName());
             priceTextView.setText(priceString);
         }
     }

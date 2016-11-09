@@ -58,7 +58,7 @@ public class EditAdvertJson implements JsonModel {
         this.photos_list = toPhotoList(advert.getPhotos());
         this.in_drafts = advert.isInDrafts();
         this.is_vat_exempt = advert.isVatExempt();
-        this.state = 1;
+        this.state = advert.getState();
     }
 
     private String[] toPhotoList(List<Photo> photos) throws IOException {

@@ -3,6 +3,7 @@ package com.devabit.takestock.screen.advert.buying;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -243,7 +244,9 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
             }
 
             @Override public void onContactSupport(Offer offer) {
-
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "admin@wetakestock.com", null));
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
             }
         });
     }

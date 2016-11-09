@@ -30,7 +30,8 @@ import java.util.List;
 
 class ActiveAdvertsAdapter extends BaseAdvertsAdapter {
 
-    private static final @LayoutRes int ITEM_LAYOUT_RESOURCE = R.layout.item_advert_selling_active;
+    private static final
+    @LayoutRes int ITEM_LAYOUT_RESOURCE = R.layout.item_advert_selling_active;
 
     ActiveAdvertsAdapter(Context context) {
         super(context, ITEM_LAYOUT_RESOURCE);
@@ -50,13 +51,13 @@ class ActiveAdvertsAdapter extends BaseAdvertsAdapter {
 
         @BindView(R.id.photo_image_view) ImageView imageView;
         @BindView(R.id.title_text_view) TextView titleTextView;
-//        @BindView(R.id.guide_price_text_view) TextView guidePriceTextView;
         @BindView(R.id.date_updated_text_view) TextView dateUpdatedTextView;
         @BindView(R.id.new_offers_count_text_view) TextView newOffersCountTextView;
         @BindView(R.id.offers_count_text_view) TextView offersCountTextView;
         @BindView(R.id.new_questions_count_text_view) TextView newQuestionsCountTextView;
         @BindView(R.id.questions_count_text_view) TextView questionsCountTextView;
         @BindView(R.id.views_text_view) TextView viewsTextView;
+        @BindView(R.id.state_text_view) TextView stateTextView;
 
         AdvertActiveViewHolder(View itemView) {
             super(itemView);
@@ -69,11 +70,10 @@ class ActiveAdvertsAdapter extends BaseAdvertsAdapter {
                 Photo photo = advert.getPhotos().get(0);
                 bindPhoto(photo);
             }
+            bindState(advert.getState());
             String date = DateUtil.formatToDefaultDate(advert.getUpdatedAt());
             dateUpdatedTextView.setText(date);
             titleTextView.setText(advert.getName());
-//            guidePriceTextView.setText(
-//                    resources.getString(R.string.advert_selling_guide_price, advert.getGuidePrice(), advert.getPackagingName()));
 
             int newOffersCount = advert.getNewOffersCount();
             if (newOffersCount > 0) {
@@ -118,6 +118,24 @@ class ActiveAdvertsAdapter extends BaseAdvertsAdapter {
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imageView);
+        }
+
+        void bindState(int state) {
+            switch (state) {
+                case Advert.State.LIVE:
+                default:
+                    stateTextView.setText(resources.getString(R.string.advert_selling_live));
+                    stateTextView.setBackgroundResource(R.color.jam);
+                    break;
+                case Advert.State.ON_HOLD:
+                    stateTextView.setText(resources.getString(R.string.advert_selling_on_hold));
+                    stateTextView.setBackgroundResource(R.color.gold);
+                    break;
+                case Advert.State.SOLD_OUT:
+                    stateTextView.setText(resources.getString(R.string.advert_selling_sold_out));
+                    stateTextView.setBackgroundResource(R.color.red_500);
+                    break;
+            }
         }
     }
 }
