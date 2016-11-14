@@ -258,7 +258,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
         adapter.setOnContactListener(new OffersBuyingAdapter.OnContactListener() {
             @Override public void onContactSeller(Offer offer) {
                 Intent contactIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", offer.getUser().getEmail(), null));
+                        "mailto", mAdvert.getUser().getEmail(), null));
                 contactIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.buying_activity_contact_email_subject));
                 contactIntent.putExtra(Intent.EXTRA_TEXT,
                         Html.fromHtml(getString(R.string.buying_activity_contact_email_text, mAdvert.getName(), BuildConfig.BASE_URL, mAdvert.getId())));
