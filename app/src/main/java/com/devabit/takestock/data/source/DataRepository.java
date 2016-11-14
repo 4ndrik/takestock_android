@@ -436,6 +436,10 @@ public class DataRepository implements DataSource {
         return mRemoteDataSource.makePayment(payment);
     }
 
+    @Override public Observable<Integer> getPaymentRate() {
+        return mRemoteDataSource.getPaymentRate();
+    }
+
 
     /**********
      * Device Method

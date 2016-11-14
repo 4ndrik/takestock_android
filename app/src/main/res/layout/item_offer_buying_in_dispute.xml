@@ -89,6 +89,16 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="Many businesses in large distributed industries have a problem with stock being"/>
 
+        <Button
+                android:id="@+id/contact_seller_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/comment_text_view"
+                android:layout_centerInParent="true"
+                android:text="Contact seller"
+                android:textStyle="bold"
+                android:theme="@style/Widget.TakeStock.Button.Gold"/>
+
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

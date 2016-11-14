@@ -61,6 +61,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
 
     interface OnContactListener {
         void onContactBuyer(Offer offer);
+
         void onContactSupport(Offer offer);
     }
 
@@ -182,6 +183,11 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         @Override void setOfferText() {
             offerTextView.setText(R.string.offer_selling_item_in_dispute_message);
         }
+
+        @OnClick(R.id.contact_buyer_button)
+        void onContactBuyerClick() {
+            if (mContactListener != null) mContactListener.onContactBuyer(mOffer);
+        }
     }
 
     class OfferPayingByBACSViewHolder extends ViewHolder {
@@ -189,12 +195,22 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         OfferPayingByBACSViewHolder(View itemView) {
             super(itemView);
         }
+
+        @OnClick(R.id.contact_buyer_button)
+        void onContactBuyerClick() {
+            if (mContactListener != null) mContactListener.onContactBuyer(mOffer);
+        }
     }
 
     class OfferGoodsReceivedViewHolder extends ViewHolder {
 
         OfferGoodsReceivedViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @OnClick(R.id.contact_buyer_button)
+        void onContactBuyerClick() {
+            if (mContactListener != null) mContactListener.onContactBuyer(mOffer);
         }
     }
 
@@ -226,6 +242,10 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
             if (mConfirmStockDispatchedListener != null) mConfirmStockDispatchedListener.onConfirm(mOffer);
         }
 
+        @OnClick(R.id.contact_buyer_button)
+        void onContactBuyerClick() {
+            if (mContactListener != null) mContactListener.onContactBuyer(mOffer);
+        }
     }
 
     class OfferAddressReceivedViewHolder extends ViewHolder {
@@ -279,6 +299,11 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         @OnClick(R.id.buyer_transport_button)
         void OnBuyerTransportButtonClick() {
             if (mTransportArrangedListener != null) mTransportArrangedListener.onBuyerArrange(mOffer);
+        }
+
+        @OnClick(R.id.contact_buyer_button)
+        void onContactBuyerClick() {
+            if (mContactListener != null) mContactListener.onContactBuyer(mOffer);
         }
     }
 

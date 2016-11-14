@@ -87,6 +87,7 @@
                 tools:text="Shipping info:"/>
 
         <LinearLayout
+                android:id="@+id/content_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/shipping_info_text_view"
@@ -100,7 +101,7 @@
                     android:layout_weight="1"
                     android:text="@string/offer_selling_item_seller_transport"
                     android:textStyle="bold"
-                    android:theme="@style/Widget.TakeStock.Button.Gold"/>
+                    android:theme="@style/Widget.TakeStock.Button.Jam"/>
 
             <Button
                     android:id="@+id/buyer_transport_button"
@@ -112,6 +113,16 @@
                     android:theme="@style/Widget.TakeStock.Button.Jam"/>
 
         </LinearLayout>
+
+        <Button
+                android:id="@+id/contact_buyer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/content_buttons"
+                android:layout_centerInParent="true"
+                android:text="@string/offer_selling_item_contact_buyer"
+                android:textStyle="bold"
+                android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
     </RelativeLayout>
 

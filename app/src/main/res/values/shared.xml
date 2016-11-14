@@ -5,6 +5,8 @@
     <string name="font_brandon_regular">brandon_regular.otf</string>
     <string name="font_brandon_medium">brandon_medium.otf</string>
 
+    <string name="email_admin">admin@wetakestock.com</string>
+
     <string name="authenticator_account_type">com.devabit.takestock.ACCOUNT</string>
     <string name="authenticator_token_type">com.devabit.takestock.TOKEN</string>
     <string name="authenticator_user_id">com.devabit.takestock.USER_ID</string>

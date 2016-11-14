@@ -897,6 +897,16 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 });
     }
 
+    @Override public Observable<Integer> getPaymentRate() {
+        return Observable.fromCallable(createGETCallable(STRIPE_RATE))
+                .map(new Func1<String, Integer>() {
+                    @Override public Integer call(String jsonString) {
+                        StripeRateJson json = mGson.fromJson(jsonString, StripeRateJson.class);
+                        return json.stripe_rate;
+                    }
+                });
+    }
+
     /*********
      * Device Method
      ********/

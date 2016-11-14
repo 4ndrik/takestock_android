@@ -29,7 +29,7 @@ ext {
     // App version
     versionMajor = 0
     versionMinor = 1
-    versionPatch = 15
+    versionPatch = 18
 
     // Sdk and tools
     minSdkVersion = 17

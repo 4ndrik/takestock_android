@@ -13,10 +13,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
+import com.devabit.takestock.BuildConfig;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
@@ -123,13 +125,19 @@ public class OffersFragment extends Fragment implements OffersContract.View {
 
         adapter.setOnContactListener(new OffersSellingAdapter.OnContactListener() {
             @Override public void onContactBuyer(Offer offer) {
-
+                Intent contactIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", offer.getUser().getEmail(), null));
+                contactIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.advert_selling_contact_email_subject));
+                contactIntent.putExtra(Intent.EXTRA_TEXT,
+                        Html.fromHtml(getString(R.string.advert_selling_contact_email_text, mAdvert.getName(), BuildConfig.BASE_URL, mAdvert.getId())));
+                contactIntent.putExtra(Intent.EXTRA_CC, new String[]{getString(R.string.admin_email)});
+                startActivity(Intent.createChooser(contactIntent, getString(R.string.advert_selling_contact_email_send)));
             }
 
             @Override public void onContactSupport(Offer offer) {
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "admin@wetakestock.com", null));
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                Intent supportIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", getString(R.string.admin_email), null));
+                startActivity(Intent.createChooser(supportIntent, getString(R.string.advert_selling_contact_email_send)));
             }
         });
     }

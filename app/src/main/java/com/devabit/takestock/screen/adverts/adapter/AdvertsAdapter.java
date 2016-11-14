@@ -95,7 +95,6 @@ public class AdvertsAdapter extends RecyclerView.Adapter<AdvertsAdapter.ViewHold
         Advert advert = mAdverts.get(position);
         if (advert == null) return R.layout.item_progress;
 
-
         if (advert.getPhotos().isEmpty()) return R.layout.item_advert_lacks_account_horizontal;
 
         Photo photo = advert.getPhotos().get(0);

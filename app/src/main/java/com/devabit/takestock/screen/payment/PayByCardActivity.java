@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,22 +17,24 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import butterknife.*;
+import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
+import com.devabit.takestock.TakeStockAccount;
 import com.devabit.takestock.data.model.Offer;
 import com.stripe.android.model.Card;
+import timber.log.Timber;
 
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 04/07/2016.
  */
 public class PayByCardActivity extends AppCompatActivity implements PayByCardContract.View {
-
-    private static final String TAG = makeLogTag(PayByCardActivity.class);
 
     public static Intent getStartIntent(Context context, Offer offer, boolean forwardResult) {
         Intent starter = new Intent(context, PayByCardActivity.class);
@@ -46,35 +47,29 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
     @BindView(R.id.content_input) protected ViewGroup mContentInput;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
 
-    @BindView(R.id.card_number_input_layout) protected TextInputLayout mCardNumberInputLayout;
-    @BindView(R.id.expiry_date_input_layout) protected TextInputLayout mExpiryDateInputLayout;
-    @BindView(R.id.cvv_code_input_layout) protected TextInputLayout mCVVCodeInputLayout;
+//    @BindView(R.id.card_number_input_layout) protected TextInputLayout mCardNumberInputLayout;
+//    @BindView(R.id.expiry_date_input_layout) protected TextInputLayout mExpiryDateInputLayout;
+//    @BindView(R.id.cvv_code_input_layout) protected TextInputLayout mCVVCodeInputLayout;
 
-    @BindView(R.id.card_number_edit_text) protected EditText mCardNumberEditText;
-    @BindView(R.id.expiry_date_edit_text) protected EditText mExpiryDateEditText;
-    @BindView(R.id.cvv_code_edit_text) protected EditText mCVVCodeEditText;
+    @BindView(R.id.email_text_view) TextView mEmailTextView;
+    @BindView(R.id.card_number_edit_text) EditText mCardNumberEditText;
+    @BindView(R.id.expiry_date_edit_text) EditText mExpiryDateEditText;
+    @BindView(R.id.cvv_code_edit_text) EditText mCVVCodeEditText;
+    @BindView(R.id.payment_rate_text_view) TextView mPaymentRateTextView;
 
-    private Offer mOffer;
-
-    private PayByCardContract.Presenter mPresenter;
+    Offer mOffer;
+    PayByCardContract.Presenter mPresenter;
+    int mStripeRate;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_by_card);
         ButterKnife.bind(PayByCardActivity.this);
-        initPresenter();
         setUpToolbar();
+        setUpEmailTextView();
         setUpCardNumberKeyListener();
         mOffer = getIntent().getParcelableExtra(Offer.class.getName());
-        setUpPayButton(mOffer);
-    }
-
-    private void initPresenter() {
-        new PayByCardPresenter(Injection.provideDataRepository(PayByCardActivity.this), PayByCardActivity.this);
-    }
-
-    @Override public void setPresenter(@NonNull PayByCardContract.Presenter presenter) {
-        mPresenter = checkNotNull(presenter);
+        createPresenter();
     }
 
     private void setUpToolbar() {
@@ -88,6 +83,10 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
         });
     }
 
+    private void setUpEmailTextView() {
+        mEmailTextView.setText(TakeStockAccount.get(PayByCardActivity.this).getEmail());
+    }
+
     private void setUpCardNumberKeyListener() {
         mCardNumberEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -96,17 +95,13 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
         });
     }
 
-    private void setUpPayButton(Offer offer) {
-        Button button = ButterKnife.findById(PayByCardActivity.this, R.id.pay_button);
-        double price = Double.parseDouble(offer.getPrice());
-        double finalPrice = price * offer.getQuantity();
-        button.setText(getString(R.string.pay_by_card_activity_make_payment, finalPrice));
+    private void createPresenter() {
+        new PayByCardPresenter(Injection.provideDataRepository(PayByCardActivity.this), PayByCardActivity.this);
     }
 
-    @OnTextChanged(R.id.card_number_edit_text)
-    protected void onCardNumberTextChanged() {
-        mCardNumberInputLayout.setError(null);
-        mCardNumberInputLayout.setErrorEnabled(false);
+    @Override public void setPresenter(@NonNull PayByCardContract.Presenter presenter) {
+        mPresenter = checkNotNull(presenter);
+        mPresenter.loadPaymentRate();
     }
 
     @OnTextChanged(value = R.id.card_number_edit_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -132,22 +127,6 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
         }
     }
 
-    @OnFocusChange(R.id.expiry_date_edit_text)
-    protected void onExpiryDateEditTextFocusChanged(EditText editText, boolean focusable) {
-        boolean isEmpty = editText.getText().toString().isEmpty();
-        if (!focusable && isEmpty) {
-            mExpiryDateInputLayout.setHint(getString(R.string.pay_by_card_activity_hint_mm_yy));
-        } else {
-            mExpiryDateInputLayout.setHint(getString(R.string.pay_by_card_activity_expiry_date));
-        }
-    }
-
-    @OnTextChanged(R.id.expiry_date_edit_text)
-    protected void onExpiryDateTextChanged() {
-        mExpiryDateInputLayout.setError(null);
-        mExpiryDateInputLayout.setErrorEnabled(false);
-    }
-
     @OnTextChanged(value = R.id.expiry_date_edit_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     protected void onExpiryDateAfterTextChanged(Editable text) {
 
@@ -166,17 +145,35 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
         }
     }
 
-    @OnTextChanged(R.id.cvv_code_edit_text)
-    protected void onCVVCodeTextChanged() {
-        mCVVCodeInputLayout.setError(null);
-        mCVVCodeInputLayout.setErrorEnabled(false);
+//    @OnTextChanged(R.id.cvv_code_edit_text)
+//    protected void onCVVCodeTextChanged() {
+//        mCVVCodeInputLayout.setError(null);
+//        mCVVCodeInputLayout.setErrorEnabled(false);
+//    }
+
+    @Override public void showPaymentRateInView(int rate) {
+        mStripeRate = rate;
+        mPaymentRateTextView.setText(getString(R.string.pay_by_card_activity_payment_rate, rate));
+        setUpPayButton(mStripeRate);
+    }
+
+    private void setUpPayButton(int stripeRate) {
+        Button button = ButterKnife.findById(PayByCardActivity.this, R.id.pay_button);
+        button.setText(getString(R.string.pay_by_card_activity_make_payment, getPrice(stripeRate)));
+    }
+
+    private double getPrice(int paymentRate) {
+        double price = Double.parseDouble(mOffer.getPrice());
+        double finalPrice = price * mOffer.getQuantity();
+        double surcharge = paymentRate / 100.0;
+        return finalPrice + (finalPrice * surcharge);
     }
 
     @Override public void showOfferPaidInView(Offer offer) {
-            Intent intent = new Intent();
-            intent.putExtra(getString(R.string.extra_offer), offer);
-            setResult(RESULT_OK, intent);
-            finish();
+        Intent intent = new Intent();
+        intent.putExtra(getString(R.string.extra_offer), offer);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override public void showCardAmericanExpressInView() {
@@ -245,7 +242,7 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            LOGD(TAG, "BOOM:", e);
+            Timber.e(e);
             return 0;
         }
     }
@@ -255,18 +252,19 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
     }
 
     @Override public void showCardNumberError() {
-        mCardNumberInputLayout.setErrorEnabled(true);
-        mCardNumberInputLayout.setError("The card number is invalid");
+        mCardNumberEditText.setError("The card number is invalid");
+//        mCardNumberInputLayout.setErrorEnabled(true);
+//        mCardNumberInputLayout.setError();
     }
 
     @Override public void showExpiryDateError() {
-        mExpiryDateInputLayout.setErrorEnabled(true);
-        mExpiryDateInputLayout.setError("The expiration date is invalid");
+//        mExpiryDateInputLayout.setErrorEnabled(true);
+        mExpiryDateEditText.setError("The expiration date is invalid");
     }
 
     @Override public void showCVVCodeError() {
-        mCVVCodeInputLayout.setErrorEnabled(true);
-        mCVVCodeInputLayout.setError("The CVC code is invalid");
+//        mCVVCodeInputLayout.setErrorEnabled(true);
+        mCVVCodeEditText.setError("The CVC code is invalid");
     }
 
     @Override public void showNetworkConnectionError() {

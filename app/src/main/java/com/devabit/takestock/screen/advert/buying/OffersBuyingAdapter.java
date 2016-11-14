@@ -77,6 +77,12 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     private OnRaiseDisputeListener mOnRaiseDisputeListener;
 
+    interface OnContactListener {
+        void onContactSeller(Offer offer);
+    }
+
+    OnContactListener mContactListener;
+
     OffersBuyingAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
         mOffers = new ArrayList<>();
@@ -222,6 +228,10 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         mOnRaiseDisputeListener = onRaiseDisputeListener;
     }
 
+    public void setOnContactListener(OnContactListener onContactListener) {
+        mContactListener = onContactListener;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // ViewHolders
     ///////////////////////////////////////////////////////////////////////////
@@ -235,12 +245,22 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         @Override void setOfferString() {
             offerTextView.setText(R.string.offer_buying_item_in_dispute_message);
         }
+
+        @OnClick(R.id.contact_seller_button)
+        void onContactSellerButtonClick() {
+            if (mContactListener != null) mContactListener.onContactSeller(mOffer);
+        }
     }
 
     class OfferPayingByBACSViewHolder extends ViewHolder {
 
         OfferPayingByBACSViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @OnClick(R.id.contact_seller_button)
+        void onContactSellerButtonClick() {
+            if (mContactListener != null) mContactListener.onContactSeller(mOffer);
         }
     }
 
@@ -258,6 +278,11 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         @OnClick(R.id.contact_support_button)
         void onContactSupportButtonClick() {
             if (mOnRaiseDisputeListener != null) mOnRaiseDisputeListener.onContactSupport(mOffer);
+        }
+
+        @OnClick(R.id.contact_seller_button)
+        void onContactSellerButtonClick() {
+            if (mContactListener != null) mContactListener.onContactSeller(mOffer);
         }
     }
 
@@ -303,6 +328,11 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         void onConfirmGoodsButtonClick() {
             if (mConfirmGoodsListener != null) mConfirmGoodsListener.onConfirm(mOffer);
         }
+
+        @OnClick(R.id.contact_seller_button)
+        void onContactSellerButtonClick() {
+            if (mContactListener != null) mContactListener.onContactSeller(mOffer);
+        }
     }
 
     class OfferAddressReceivedViewHolder extends ViewHolder {
@@ -346,6 +376,11 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
             builder.append(phone);
             builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - phone.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             shippingInfoTextView.setText(builder);
+        }
+
+        @OnClick(R.id.contact_seller_button)
+        void onContactSellerButtonClick() {
+            if (mContactListener != null) mContactListener.onContactSeller(mOffer);
         }
     }
 

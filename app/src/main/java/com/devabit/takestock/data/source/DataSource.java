@@ -173,6 +173,8 @@ public interface DataSource {
 
     Observable<Payment> makePayment(@NonNull Payment payment);
 
+    Observable<Integer> getPaymentRate();
+
 
     /********** Device Method **********/
 

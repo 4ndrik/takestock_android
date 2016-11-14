@@ -11,5 +11,5 @@
           android:textColor="@color/black"
           android:drawablePadding="8dp"
           android:drawableEnd="@drawable/ic_expand_down_purple_dark_14dp"
-          android:background="@drawable/rounded_corners_dark_purple"
+          android:background="@drawable/rounded_corners_jam"
           tools:text="Test"/>

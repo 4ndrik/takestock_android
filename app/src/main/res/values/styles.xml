@@ -47,7 +47,7 @@
     </style>
 
     <style name="EditTextRoundedCornersPurple" parent="EditTextRoundedCornersGrey">
-        <item name="android:background">@drawable/rounded_corners_dark_purple</item>
+        <item name="android:background">@drawable/rounded_corners_jam</item>
     </style>
 
     <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small">

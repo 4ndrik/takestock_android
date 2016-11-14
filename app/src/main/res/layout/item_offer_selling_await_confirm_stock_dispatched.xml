@@ -84,6 +84,16 @@
                 android:text="@string/offer_selling_item_confirm_stock_dispatched"
                 android:textStyle="bold"
                 android:textAppearance="?android:textAppearanceSmall"
+                android:theme="@style/Widget.TakeStock.Button.Jam"/>
+
+        <Button
+                android:id="@+id/contact_buyer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/confirm_button"
+                android:layout_centerInParent="true"
+                android:text="@string/offer_selling_item_contact_buyer"
+                android:textStyle="bold"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>
     </RelativeLayout>
 

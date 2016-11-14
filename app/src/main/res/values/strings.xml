@@ -291,6 +291,9 @@
 
     <!--buying activity start-->
     <string name="buying_activity_toolbar_title">Buying</string>
+    <string name="buying_activity_contact_email_subject">Takestock Trade Message</string>
+    <string name="buying_activity_contact_email_text">Advert name: %1$s (%2$s/selling/%3$d/)</string>
+    <string name="buying_activity_contact_email_send">Send email…</string>
     <!--buying activity end-->
 
     <!--offer activity start-->
@@ -368,6 +371,9 @@
     <string name="advert_selling_activity_guide_price">£ %1$s/%2$s</string>
     <string name="advert_selling_activity_available">Available: £ %1$d %2$s</string>
     <string name="advert_selling_activity_days_left">Days left: %1$s</string>
+    <string name="advert_selling_contact_email_subject">Takestock Trade Message</string>
+    <string name="advert_selling_contact_email_text">Advert name: %1$s (%2$s/selling/%3$d/)</string>
+    <string name="advert_selling_contact_email_send">Send email…</string>
     <!--advert selling activity end-->
 
     <!--offer buying history item start-->
@@ -387,12 +393,13 @@
 
     <!--pay by card activity start-->
     <string name="pay_by_card_activity_card_number">Card number</string>
-    <string name="pay_by_card_activity_hint_cvv_code">CVV code</string>
+    <string name="pay_by_card_activity_hint_cvv">CVV</string>
     <string name="pay_by_card_activity_hint_mm_yy">MM/YY</string>
     <string name="pay_by_card_activity_make_payment">Pay £%1$.2f</string>
-    <string name="pay_by_card_activity_toolbar_title">Pay by card</string>
+    <string name="pay_by_card_activity_toolbar_title">Pay by card. Provided by Stripe</string>
     <string name="pay_by_card_activity_expiry_date">Expiry date</string>
     <string name="pay_by_card_activity_error_payment">Payment failed</string>
+    <string name="pay_by_card_activity_payment_rate">There is a %1$d%% surcharge by Stripe</string>
     <!--pay by card activity end-->
 
     <!--pay by BACS activity start-->

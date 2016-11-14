@@ -48,6 +48,27 @@ final class PayByCardPresenter implements PayByCardContract.Presenter {
 
     }
 
+    @Override public void loadPaymentRate() {
+        mPaymentView.setProgressIndicator(true);
+        Subscription subscription = mDataRepository.getPaymentRate()
+                .compose(RxTransformers.<Integer>applyObservableSchedulers())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override public void onCompleted() {
+                        mPaymentView.setProgressIndicator(false);
+                    }
+
+                    @Override public void onError(Throwable e) {
+                        mPaymentView.setProgressIndicator(false);
+                        handleError(e);
+                    }
+
+                    @Override public void onNext(Integer rate) {
+                        mPaymentView.showPaymentRateInView(rate);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
     @Override public void validateCardNumber(String number) {
         if (number.isEmpty()) {
             mPaymentView.showCardUnknownInView();

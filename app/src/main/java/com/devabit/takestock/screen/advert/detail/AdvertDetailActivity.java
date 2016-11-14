@@ -213,7 +213,7 @@ public class AdvertDetailActivity extends AppCompatActivity implements AdvertDet
         mMinimumOrderTextView.setText(getString(R.string.advert_detail_minimum_order_unit, advert.getMinOrderQuantity(), packaging));
         mQtyAvailableTextView.setText(getString(R.string.advert_detail_qty_available_unit, advert.getItemsCount(), packaging));
         mDescriptionTextView.setText(advert.getDescription());
-        mExpiryTextView.setText(DateUtil.formatToDefaultDate(advert.getExpiresAt()));
+        mExpiryTextView.setText(advert.isFood() ? DateUtil.formatToDefaultDate(advert.getExpiresAt()) : "N/A");
         Certification certification = advert.getCertification();
         mCertificationTextView.setText(certification == null ? "" : certification.getName());
         mShippingTextView.setText(advert.getShippingDisplay());

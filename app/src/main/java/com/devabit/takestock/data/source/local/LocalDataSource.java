@@ -454,6 +454,10 @@ public class LocalDataSource implements DataSource {
         throw new UnsupportedOperationException("This operation not required.");
     }
 
+    @Override public Observable<Integer> getPaymentRate() {
+        throw new UnsupportedOperationException("This operation not required.");
+    }
+
     @Override public Observable<Boolean> registerDevice(@NonNull Device device) {
         throw new UnsupportedOperationException("This operation not required.");
     }

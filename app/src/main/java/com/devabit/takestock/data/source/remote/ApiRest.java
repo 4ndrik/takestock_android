@@ -34,4 +34,5 @@ public interface ApiRest {
     String CHANGE_PASSWORD = API_BASE_URL + "/change_password/";
     String DEVICES = API_BASE_URL + "/devices/";
     String INVITE = API_BASE_URL + "/send_invite/";
+    String STRIPE_RATE = API_BASE_URL + "/stripe_rate/";
 }

@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.devabit.takestock.BuildConfig;
 import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Advert;
@@ -131,7 +133,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
     private void setUpData(Intent intent) {
         if (intent.hasExtra(EXTRA_NOTIFICATION)) {
             mNotification = intent.getParcelableExtra(EXTRA_NOTIFICATION);
-        } else if (intent.hasExtra(Notification.EXTRA_ACTION)){
+        } else if (intent.hasExtra(Notification.EXTRA_ACTION)) {
             mNotification = NotificationFactory.build(AdvertBuyingActivity.this, intent);
         } else {
             Offer offer = intent.getParcelableExtra(EXTRA_OFFER);
@@ -228,16 +230,19 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
                 startActivityForResult(PayByBACSActivity.getStartIntent(AdvertBuyingActivity.this, offer, mAdvert.getName()), RC_PAYMENT_BY_BACS);
             }
         });
+
         adapter.setOnShippingAddressClickListener(new OffersBuyingAdapter.OnShippingAddressClickListener() {
             @Override public void onShippingAddressSet(Offer offer) {
                 startActivityForResult(ShippingActivity.getStartIntent(AdvertBuyingActivity.this, offer), RC_SHIPPING);
             }
         });
+
         adapter.setOnConfirmGoodsListener(new OffersBuyingAdapter.OnConfirmGoodsListener() {
             @Override public void onConfirm(Offer offer) {
                 acceptOffer(offer, buildOfferAccept(offer, Offer.Status.GOODS_RECEIVED));
             }
         });
+
         adapter.setOnRaiseDisputeListener(new OffersBuyingAdapter.OnRaiseDisputeListener() {
             @Override public void onDispute(Offer offer) {
                 acceptOffer(offer, buildOfferAccept(offer, Offer.Status.IN_DISPUTE));
@@ -246,7 +251,19 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
             @Override public void onContactSupport(Offer offer) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto", "admin@wetakestock.com", null));
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.buying_activity_contact_email_send)));
+            }
+        });
+
+        adapter.setOnContactListener(new OffersBuyingAdapter.OnContactListener() {
+            @Override public void onContactSeller(Offer offer) {
+                Intent contactIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", offer.getUser().getEmail(), null));
+                contactIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.buying_activity_contact_email_subject));
+                contactIntent.putExtra(Intent.EXTRA_TEXT,
+                        Html.fromHtml(getString(R.string.buying_activity_contact_email_text, mAdvert.getName(), BuildConfig.BASE_URL, mAdvert.getId())));
+                contactIntent.putExtra(Intent.EXTRA_CC, new String[]{getString(R.string.admin_email)});
+                startActivity(Intent.createChooser(contactIntent, getString(R.string.buying_activity_contact_email_send)));
             }
         });
     }
@@ -275,7 +292,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
                 .setPositiveButton(R.string.accept_offer_dialog_accept,
                         new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
-                        acceptOffer(offer, buildOfferAccept(offer, Offer.Status.ACCEPTED));
+                                acceptOffer(offer, buildOfferAccept(offer, Offer.Status.ACCEPTED));
                             }
                         })
                 .setNegativeButton(R.string.accept_offer_dialog_cancel, null)

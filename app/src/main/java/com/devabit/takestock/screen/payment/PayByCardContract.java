@@ -12,6 +12,8 @@ interface PayByCardContract {
 
     interface View extends BaseView<Presenter> {
 
+        void showPaymentRateInView(int rate);
+
         void showOfferPaidInView(Offer offer);
 
         void showCardAmericanExpressInView();
@@ -45,6 +47,8 @@ interface PayByCardContract {
     }
 
     interface Presenter extends BasePresenter {
+
+        void loadPaymentRate();
 
         void validateCardNumber(String number);
 

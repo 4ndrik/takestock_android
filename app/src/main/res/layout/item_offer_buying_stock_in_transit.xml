@@ -107,6 +107,16 @@
                 android:layout_centerInParent="true"
                 android:text="@string/offer_buying_item_confirm_goods_received"
                 android:textStyle="bold"
+                android:theme="@style/Widget.TakeStock.Button.Jam"/>
+
+        <Button
+                android:id="@+id/contact_seller_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/confirm_goods_button"
+                android:layout_centerInParent="true"
+                android:text="Contact seller"
+                android:textStyle="bold"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>
 
     </RelativeLayout>
