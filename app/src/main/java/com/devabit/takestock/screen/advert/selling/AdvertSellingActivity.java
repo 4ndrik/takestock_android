@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +60,7 @@ public class AdvertSellingActivity extends AppCompatActivity implements AdvertSe
     private static final int RC_EDIT = 1001;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.advert_image_view) ImageView mImageView;
     @BindView(R.id.advert_name_text_view) TextView mNameTextView;
     @BindView(R.id.qty_available_text_view) TextView mQtyAvailableTextView;
@@ -138,6 +140,10 @@ public class AdvertSellingActivity extends AppCompatActivity implements AdvertSe
 
     @Override public void showNotificationSavedInView(Notification notification) {
         mNotification = notification;
+    }
+
+    @Override public void setProgressIndicator(boolean isActive) {
+        mProgressBar.setVisibility(isActive ? View.VISIBLE : View.GONE);
     }
 
     private void setUpAppBarLayout(final Advert advert) {

@@ -17,6 +17,8 @@ interface AdvertSellingContract {
         void showAdvertInView(Advert advert);
 
         void showNotificationSavedInView(Notification notification);
+
+        void setProgressIndicator(boolean isActive);
     }
 
     interface Presenter extends BasePresenter {

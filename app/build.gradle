@@ -28,18 +28,25 @@ android {
 
     buildTypes {
         release {
-            buildConfigField("String", "API_URL", '"http://dev.takestock.com/api/v1/"')
-            buildConfigField("String", "STRIPE_API_KEY", '"pk_test_qevXdEtyHKRjlP1WOXLcsd0s"')
-            buildConfigField("boolean", "LOGGING_ENABLED", "false")
-            shrinkResources true
-            minifyEnabled false
+            buildConfigField("String", "API_URL", '"http://takestock.com/api/v1"')
+            buildConfigField("String", "BASE_URL", '"http://takestock.com"')
+            buildConfigField("String", "STRIPE_API_KEY", '"pk_live_W4yPMXpQFqYn5e12RnRAlDCM"')
+            buildConfigField("boolean", "LOGGING_ENABLED", "true")
+//            shrinkResources true
+//            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
+//            buildConfigField("String", "API_URL", '"http://takestock.com/api/v1"')
+//            buildConfigField("String", "BASE_URL", '"http://takestock.com"')
+//            buildConfigField("String", "STRIPE_API_KEY", '"pk_live_W4yPMXpQFqYn5e12RnRAlDCM"')
+
+
             buildConfigField("String", "API_URL", '"http://uat.takestock.com/api/v1"')
             buildConfigField("String", "BASE_URL", '"http://uat.takestock.com"')
             buildConfigField("String", "STRIPE_API_KEY", '"pk_test_qevXdEtyHKRjlP1WOXLcsd0s"')
+
             buildConfigField("boolean", "LOGGING_ENABLED", "true")
 //            applicationIdSuffix ".debug"
 //            versionNameSuffix "-debug"

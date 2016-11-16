@@ -75,10 +75,24 @@
                 tools:text="100 kg - £ 1000.00/kg"/>
 
         <TextView
+                android:id="@+id/comment_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/offer_text_view"
+                android:layout_toEndOf="@id/user_image_view"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/black"
+                android:textAppearance="?android:textAppearanceSmall"
+                tools:text="Many businesses in large distributed industries have a problem with stock being"/>
+
+
+        <TextView
                 android:id="@+id/shipping_info_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/offer_text_view"
+                android:layout_below="@+id/comment_text_view"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="8dp"
@@ -87,25 +101,14 @@
                 tools:text="Shipping info:"/>
 
         <Button
-                android:id="@+id/contact_buyer_button"
+                android:id="@+id/contact_seller_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/shipping_info_text_view"
                 android:layout_centerInParent="true"
-                android:text="@string/offer_selling_item_contact_buyer"
+                android:text="Contact seller"
                 android:textStyle="bold"
                 android:theme="@style/Widget.TakeStock.Button.Gold"/>
-
-        <Button
-                android:id="@+id/contact_support_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/contact_buyer_button"
-                android:layout_centerInParent="true"
-                android:text="@string/offer_selling_item_contact_support"
-                android:textStyle="bold"
-                android:textColor="@color/gold"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
 
     </RelativeLayout>
 

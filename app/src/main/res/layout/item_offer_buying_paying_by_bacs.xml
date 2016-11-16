@@ -90,10 +90,21 @@
                 tools:text="Many businesses in large distributed industries have a problem with stock being"/>
 
         <Button
-                android:id="@+id/contact_seller_button"
+                android:id="@+id/bacs_detail_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/comment_text_view"
+                android:layout_centerInParent="true"
+                android:text="BACS DETAILS"
+                android:textStyle="bold"
+                android:textColor="@color/jam"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+
+        <Button
+                android:id="@+id/contact_seller_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bacs_detail_button"
                 android:layout_centerInParent="true"
                 android:text="Contact seller"
                 android:textStyle="bold"

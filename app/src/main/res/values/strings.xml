@@ -534,4 +534,12 @@
 
     <string name="error_incorrect_username_or_password">Username or password is incorrect</string>
 
+    <!--BACS detail dialog start-->
+    <string name="BACS_detail_dialog_title">BACS Detail</string>
+    <string name="BACS_detail_dialog_ok">OK</string>
+    <string name="BACS_detail_dialog_bank_account">wetakestock ltd, c/o Barclays bank.\nSort Code; 205914\nAccount -  73498883</string>
+    <string name="BACS_detail_dialog_info_bank_part_one">If paying by BACS please send the full balance to the bank account below and use\u0020</string>
+    <string name="BACS_detail_dialog_info_bank_part_two">\u0020as advertised as the reference.</string>
+    <!--BACS detail dialog end-->
+
 </resources>

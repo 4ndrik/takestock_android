@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:padding="16dp"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <TextView
+            android:id="@+id/info_bank_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/black"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_info_grey600_24dp"
+            tools:text="@string/pay_by_bacs_activity_info_bank_part_one"/>
+
+    <TextView
+            android:id="@+id/bank_account_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/black"
+            android:text="@string/pay_by_bacs_activity_bank_account"/>
+
+</LinearLayout>

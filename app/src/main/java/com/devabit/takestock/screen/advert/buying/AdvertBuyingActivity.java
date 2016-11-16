@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -231,6 +230,12 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
             }
         });
 
+        adapter.setOnBACSDetailClickListener(new OffersBuyingAdapter.OnBACSDetailClickListener() {
+            @Override public void onClick(Offer offer) {
+                displayBacsDetailDialog(offer);
+            }
+        });
+
         adapter.setOnShippingAddressClickListener(new OffersBuyingAdapter.OnShippingAddressClickListener() {
             @Override public void onShippingAddressSet(Offer offer) {
                 startActivityForResult(ShippingActivity.getStartIntent(AdvertBuyingActivity.this, offer), RC_SHIPPING);
@@ -250,7 +255,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
 
             @Override public void onContactSupport(Offer offer) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "admin@wetakestock.com", null));
+                        "mailto", getString(R.string.admin_email), null));
                 startActivity(Intent.createChooser(emailIntent, getString(R.string.buying_activity_contact_email_send)));
             }
         });
@@ -261,7 +266,7 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
                         "mailto", mAdvert.getUser().getEmail(), null));
                 contactIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.buying_activity_contact_email_subject));
                 contactIntent.putExtra(Intent.EXTRA_TEXT,
-                        Html.fromHtml(getString(R.string.buying_activity_contact_email_text, mAdvert.getName(), BuildConfig.BASE_URL, mAdvert.getId())));
+                        getString(R.string.buying_activity_contact_email_text, mAdvert.getName(), BuildConfig.BASE_URL, mAdvert.getId()));
                 contactIntent.putExtra(Intent.EXTRA_CC, new String[]{getString(R.string.admin_email)});
                 startActivity(Intent.createChooser(contactIntent, getString(R.string.buying_activity_contact_email_send)));
             }
@@ -350,6 +355,11 @@ public class AdvertBuyingActivity extends AppCompatActivity implements AdvertBuy
         }
         Collections.reverse(offers);
         return offers;
+    }
+
+    private void displayBacsDetailDialog(Offer offer) {
+        BACSDetailDialog dialog = BACSDetailDialog.newInstance(offer, mAdvert.getName());
+        dialog.show(getFragmentManager(), dialog.getClass().getName());
     }
 
     @Override public void showOfferAcceptedInView(Offer offer) {

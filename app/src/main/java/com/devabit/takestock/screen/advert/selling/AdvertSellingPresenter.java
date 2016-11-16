@@ -38,14 +38,16 @@ final class AdvertSellingPresenter implements AdvertSellingContract.Presenter {
     }
 
     @Override public void loadAdvert() {
+        mView.setProgressIndicator(true);
         Subscription subscription = mDataRepository.unnotifyAdvertWithId(mAdvertId)
                 .compose(RxTransformers.<Advert>applyObservableSchedulers())
                 .subscribe(new Subscriber<Advert>() {
                     @Override public void onCompleted() {
-
+                        mView.setProgressIndicator(false);
                     }
 
                     @Override public void onError(Throwable e) {
+                        mView.setProgressIndicator(false);
                         handleError(e);
                     }
 

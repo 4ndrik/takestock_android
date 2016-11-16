@@ -83,6 +83,12 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
     OnContactListener mContactListener;
 
+    interface OnBACSDetailClickListener {
+        void onClick(Offer offer);
+    }
+
+    OnBACSDetailClickListener mOnBACSDetailClickListener;
+
     OffersBuyingAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
         mOffers = new ArrayList<>();
@@ -123,6 +129,9 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
             case R.layout.item_offer_buying_in_dispute:
                 return new OfferInDisputeViewHolder(itemView);
+
+            case R.layout.item_offer_buying_stock_dispatched:
+                return new OfferStockDispatched(itemView);
 
             default:
                 return new OfferHistoryViewHolder(itemView);
@@ -169,6 +178,9 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
                 case Offer.Status.PAYING_BY_BACS:
                     return R.layout.item_offer_buying_paying_by_bacs;
+
+                case Offer.Status.AWAIT_CONFIRM_STOCK_DISPATCHED:
+                    return R.layout.item_offer_buying_stock_dispatched;
 
                 case Offer.Status.IN_DISPUTE:
                     return R.layout.item_offer_buying_in_dispute;
@@ -228,13 +240,29 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         mOnRaiseDisputeListener = onRaiseDisputeListener;
     }
 
-    public void setOnContactListener(OnContactListener onContactListener) {
+    void setOnContactListener(OnContactListener onContactListener) {
         mContactListener = onContactListener;
+    }
+
+    public void setOnBACSDetailClickListener(OnBACSDetailClickListener onBACSDetailClickListener) {
+        mOnBACSDetailClickListener = onBACSDetailClickListener;
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // ViewHolders
     ///////////////////////////////////////////////////////////////////////////
+
+    class OfferStockDispatched extends ViewHolder {
+
+        OfferStockDispatched(View itemView) {
+            super(itemView);
+        }
+
+        @OnClick(R.id.contact_seller_button)
+        void onContactSellerButtonClick() {
+            if (mContactListener != null) mContactListener.onContactSeller(mOffer);
+        }
+    }
 
     class OfferInDisputeViewHolder extends ViewHolder {
 
@@ -256,6 +284,11 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
 
         OfferPayingByBACSViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @OnClick(R.id.bacs_detail_button)
+        void onBACSDetailButtonClick() {
+            if (mOnBACSDetailClickListener != null) mOnBACSDetailClickListener.onClick(mOffer);
         }
 
         @OnClick(R.id.contact_seller_button)

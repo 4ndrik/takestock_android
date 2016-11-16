@@ -76,11 +76,23 @@
                 android:textAppearance="?android:textAppearanceMedium"
                 tools:text="100 kg - £ 1000.00/kg"/>
 
+        <TextView
+                android:id="@+id/shipping_info_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/offer_text_view"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/translucent_black_80"
+                android:textAppearance="?android:textAppearanceSmall"
+                tools:text="Shipping info:"/>
+
         <Button
                 android:id="@+id/confirm_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/offer_text_view"
+                android:layout_below="@id/shipping_info_text_view"
                 android:text="@string/offer_selling_item_confirm_stock_dispatched"
                 android:textStyle="bold"
                 android:textAppearance="?android:textAppearanceSmall"

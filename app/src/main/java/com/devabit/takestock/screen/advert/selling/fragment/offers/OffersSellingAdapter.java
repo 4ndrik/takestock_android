@@ -174,7 +174,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
      * ViewHolders
      *********/
 
-    class OfferInDisputeViewHolder extends ViewHolder {
+    class OfferInDisputeViewHolder extends OfferShippingAbstractViewHolder {
 
         OfferInDisputeViewHolder(View itemView) {
             super(itemView);
@@ -190,19 +190,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         }
     }
 
-    class OfferPayingByBACSViewHolder extends ViewHolder {
-
-        OfferPayingByBACSViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @OnClick(R.id.contact_buyer_button)
-        void onContactBuyerClick() {
-            if (mContactListener != null) mContactListener.onContactBuyer(mOffer);
-        }
-    }
-
-    class OfferGoodsReceivedViewHolder extends ViewHolder {
+    class OfferGoodsReceivedViewHolder extends OfferShippingAbstractViewHolder {
 
         OfferGoodsReceivedViewHolder(View itemView) {
             super(itemView);
@@ -214,7 +202,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         }
     }
 
-    class OfferStockInTransitViewHolder extends ViewHolder {
+    class OfferStockInTransitViewHolder extends OfferShippingAbstractViewHolder {
 
         OfferStockInTransitViewHolder(View itemView) {
             super(itemView);
@@ -231,7 +219,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         }
     }
 
-    class OfferAwaitStockDispatchedViewHolder extends ViewHolder {
+    class OfferAwaitStockDispatchedViewHolder extends OfferShippingAbstractViewHolder {
 
         OfferAwaitStockDispatchedViewHolder(View itemView) {
             super(itemView);
@@ -248,11 +236,33 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         }
     }
 
-    class OfferAddressReceivedViewHolder extends ViewHolder {
+    class OfferAddressReceivedViewHolder extends OfferShippingAbstractViewHolder {
+
+        OfferAddressReceivedViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @OnClick(R.id.seller_transport_button)
+        void OnSellerTransportButtonClick() {
+            if (mTransportArrangedListener != null) mTransportArrangedListener.onSellerArrange(mOffer);
+        }
+
+        @OnClick(R.id.buyer_transport_button)
+        void OnBuyerTransportButtonClick() {
+            if (mTransportArrangedListener != null) mTransportArrangedListener.onBuyerArrange(mOffer);
+        }
+
+        @OnClick(R.id.contact_buyer_button)
+        void onContactBuyerClick() {
+            if (mContactListener != null) mContactListener.onContactBuyer(mOffer);
+        }
+    }
+
+    abstract class OfferShippingAbstractViewHolder extends ViewHolder {
 
         @BindView(R.id.shipping_info_text_view) TextView shippingInfoTextView;
 
-        OfferAddressReceivedViewHolder(View itemView) {
+        OfferShippingAbstractViewHolder(View itemView) {
             super(itemView);
         }
 
@@ -290,15 +300,12 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
             builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length() - phone.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             shippingInfoTextView.setText(builder);
         }
+    }
 
-        @OnClick(R.id.seller_transport_button)
-        void OnSellerTransportButtonClick() {
-            if (mTransportArrangedListener != null) mTransportArrangedListener.onSellerArrange(mOffer);
-        }
+    class OfferPayingByBACSViewHolder extends ViewHolder {
 
-        @OnClick(R.id.buyer_transport_button)
-        void OnBuyerTransportButtonClick() {
-            if (mTransportArrangedListener != null) mTransportArrangedListener.onBuyerArrange(mOffer);
+        OfferPayingByBACSViewHolder(View itemView) {
+            super(itemView);
         }
 
         @OnClick(R.id.contact_buyer_button)
@@ -343,7 +350,7 @@ class OffersSellingAdapter extends RecyclerView.Adapter<OffersSellingAdapter.Vie
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    abstract class ViewHolder extends RecyclerView.ViewHolder {
 
         final String[] offerStatuses;
 
