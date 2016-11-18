@@ -290,11 +290,6 @@ class OffersBuyingAdapter extends RecyclerView.Adapter<OffersBuyingAdapter.ViewH
         void onBACSDetailButtonClick() {
             if (mOnBACSDetailClickListener != null) mOnBACSDetailClickListener.onClick(mOffer);
         }
-
-        @OnClick(R.id.contact_seller_button)
-        void onContactSellerButtonClick() {
-            if (mContactListener != null) mContactListener.onContactSeller(mOffer);
-        }
     }
 
     class OfferGoodsReceivedViewHolder extends ViewHolder {

@@ -19,19 +19,15 @@ import io.realm.RealmResults;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 import java.util.List;
 import java.util.concurrent.Callable;
-
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 
 /**
  * Created by Victor Artemyev on 28/04/2016.
  */
 public class LocalDataSource implements DataSource {
-
-    private static final String TAG = makeLogTag(LocalDataSource.class);
 
     private static LocalDataSource sInstance;
 
@@ -309,7 +305,7 @@ public class LocalDataSource implements DataSource {
             }
         }).doOnNext(new Action1<List<BusinessType>>() {
             @Override public void call(List<BusinessType> types) {
-                LOGD(TAG, "BusinessTypes from LocalDataSource " + types);
+                Timber.d("BusinessTypes from LocalDataSource %s ", types);
             }
         });
     }

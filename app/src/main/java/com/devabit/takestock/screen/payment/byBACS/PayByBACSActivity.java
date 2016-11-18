@@ -26,7 +26,7 @@ import com.devabit.takestock.Injection;
 import com.devabit.takestock.R;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Payment;
-import com.devabit.takestock.screen.payment.PayByCardActivity;
+import com.devabit.takestock.screen.payment.byCard.PayByCardActivity;
 
 /**
  * Created by Victor Artemyev on 20/10/2016.

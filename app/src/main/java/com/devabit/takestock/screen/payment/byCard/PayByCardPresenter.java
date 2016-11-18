@@ -1,10 +1,11 @@
-package com.devabit.takestock.screen.payment;
+package com.devabit.takestock.screen.payment.byCard;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.BuildConfig;
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.data.model.Payment;
 import com.devabit.takestock.data.source.DataRepository;
+import com.devabit.takestock.exception.NetworkConnectionException;
 import com.devabit.takestock.rx.RxTransformers;
 import com.stripe.android.model.Card;
 import com.stripe.android.util.TextUtils;
@@ -31,6 +32,7 @@ import static timber.log.Timber.e;
  */
 final class PayByCardPresenter implements PayByCardContract.Presenter {
 
+    private static final String ERROR_PAYMENT_FAILED = "Payment failed";
     private final DataRepository mDataRepository;
 
     private final PayByCardContract.View mPaymentView;
@@ -129,7 +131,7 @@ final class PayByCardPresenter implements PayByCardContract.Presenter {
                 .filter(new Func1<Payment, Boolean>() {
                     @Override public Boolean call(Payment payment) {
                         if (payment.isSuccessful()) return Boolean.TRUE;
-                        throw new RuntimeException("Payment failed");
+                        throw new RuntimeException(ERROR_PAYMENT_FAILED);
                     }
                 })
                 .flatMap(new Func1<Payment, Observable<Offer>>() {
@@ -164,7 +166,7 @@ final class PayByCardPresenter implements PayByCardContract.Presenter {
                         try {
                             return Token.create(getTokenRequestParamsFromCard(card), requestOptions);
                         } catch (Exception e) {
-                            throw new RuntimeException(e);
+                            throw new RuntimeException(ERROR_PAYMENT_FAILED, e);
                         }
                     }
                 })
@@ -211,6 +213,13 @@ final class PayByCardPresenter implements PayByCardContract.Presenter {
 
     private void handleError(Throwable throwable) {
         e(throwable);
+        if (throwable instanceof NetworkConnectionException) {
+            mPaymentView.showNetworkConnectionError();
+        } else if (ERROR_PAYMENT_FAILED.equals(throwable.getMessage())) {
+            mPaymentView.showPaymentError();
+        } else {
+            mPaymentView.showUnknownError();
+        }
     }
 
     @Override public void pause() {

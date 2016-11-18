@@ -36,7 +36,7 @@ import com.devabit.takestock.data.model.Photo;
 import com.devabit.takestock.screen.advert.detail.AdvertDetailActivity;
 import com.devabit.takestock.screen.dialog.counterOffer.CounterOfferDialog;
 import com.devabit.takestock.screen.dialog.rejectOffer.RejectOfferDialog;
-import com.devabit.takestock.screen.payment.PayByCardActivity;
+import com.devabit.takestock.screen.payment.byCard.PayByCardActivity;
 import com.devabit.takestock.screen.payment.byBACS.PayByBACSActivity;
 import com.devabit.takestock.screen.shipping.ShippingActivity;
 import com.devabit.takestock.ui.decoration.ListVerticalSpacingItemDecoration;

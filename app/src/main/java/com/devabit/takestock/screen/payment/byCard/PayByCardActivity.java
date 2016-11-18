@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.payment;
+package com.devabit.takestock.screen.payment.byCard;
 
 import android.content.Context;
 import android.content.Intent;
@@ -46,11 +46,6 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
     @BindView(R.id.content) protected View mContent;
     @BindView(R.id.content_input) protected ViewGroup mContentInput;
     @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
-
-//    @BindView(R.id.card_number_input_layout) protected TextInputLayout mCardNumberInputLayout;
-//    @BindView(R.id.expiry_date_input_layout) protected TextInputLayout mExpiryDateInputLayout;
-//    @BindView(R.id.cvv_code_input_layout) protected TextInputLayout mCVVCodeInputLayout;
-
     @BindView(R.id.email_text_view) TextView mEmailTextView;
     @BindView(R.id.card_number_edit_text) EditText mCardNumberEditText;
     @BindView(R.id.expiry_date_edit_text) EditText mExpiryDateEditText;
@@ -144,12 +139,6 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
             }
         }
     }
-
-//    @OnTextChanged(R.id.cvv_code_edit_text)
-//    protected void onCVVCodeTextChanged() {
-//        mCVVCodeInputLayout.setError(null);
-//        mCVVCodeInputLayout.setErrorEnabled(false);
-//    }
 
     @Override public void showPaymentRateInView(int rate) {
         mStripeRate = rate;
@@ -253,18 +242,17 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
 
     @Override public void showCardNumberError() {
         mCardNumberEditText.setError("The card number is invalid");
-//        mCardNumberInputLayout.setErrorEnabled(true);
-//        mCardNumberInputLayout.setError();
+        mCardNumberEditText.requestFocus();
     }
 
     @Override public void showExpiryDateError() {
-//        mExpiryDateInputLayout.setErrorEnabled(true);
         mExpiryDateEditText.setError("The expiration date is invalid");
+        mExpiryDateEditText.requestFocus();
     }
 
     @Override public void showCVVCodeError() {
-//        mCVVCodeInputLayout.setErrorEnabled(true);
         mCVVCodeEditText.setError("The CVC code is invalid");
+        mCVVCodeEditText.requestFocus();
     }
 
     @Override public void showNetworkConnectionError() {
@@ -272,11 +260,17 @@ public class PayByCardActivity extends AppCompatActivity implements PayByCardCon
     }
 
     @Override public void showUnknownError() {
-        showSnack(R.string.error_unknown);
+        showSnack(R.string.pay_by_card_activity_server_error);
     }
 
     @Override public void showPaymentError() {
-        showSnack(R.string.pay_by_card_activity_error_payment);
+//        showSnack(R.string.pay_by_card_activity_error_payment);
+        displayPaymentFailedDialog();
+    }
+
+    private void displayPaymentFailedDialog() {
+        PaymentFailedDialog dialog = PaymentFailedDialog.newInstance();
+        dialog.show(getFragmentManager(), dialog.getClass().getSimpleName());
     }
 
     private void showSnack(@StringRes int resId) {

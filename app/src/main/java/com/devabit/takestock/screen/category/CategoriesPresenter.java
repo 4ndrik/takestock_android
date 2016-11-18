@@ -8,19 +8,16 @@ import com.devabit.takestock.rx.RxTransformers;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import java.util.List;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 10/05/2016.
  */
 public class CategoriesPresenter implements CategoriesContract.Presenter {
-
-    private static final String TAG = makeLogTag(CategoriesPresenter.class);
 
     private final DataRepository mDataRepository;
     private final CategoriesContract.View mCategoriesView;
@@ -48,7 +45,7 @@ public class CategoriesPresenter implements CategoriesContract.Presenter {
                     }
 
                     @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
+                        Timber.e(e);
                         mCategoriesView.setProgressIndicator(false);
                         if (e instanceof NetworkConnectionException) {
                             mCategoriesView.showNetworkConnectionError();

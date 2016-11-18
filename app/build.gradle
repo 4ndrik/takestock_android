@@ -26,15 +26,30 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('../buildKeystore/debug.keystore')
+            storePassword 'takestock'
+            keyAlias 'takestockDebug'
+            keyPassword 'takestock'
+        }
+        release {
+            storeFile file('../buildKeystore/release.keystore')
+            storePassword 'takestock'
+            keyAlias 'takestockRelease'
+            keyPassword 'takestock'
+        }
+    }
+
     buildTypes {
         release {
             buildConfigField("String", "API_URL", '"http://takestock.com/api/v1"')
             buildConfigField("String", "BASE_URL", '"http://takestock.com"')
             buildConfigField("String", "STRIPE_API_KEY", '"pk_live_W4yPMXpQFqYn5e12RnRAlDCM"')
-            buildConfigField("boolean", "LOGGING_ENABLED", "true")
-//            shrinkResources true
-//            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {
@@ -42,12 +57,11 @@ android {
 //            buildConfigField("String", "BASE_URL", '"http://takestock.com"')
 //            buildConfigField("String", "STRIPE_API_KEY", '"pk_live_W4yPMXpQFqYn5e12RnRAlDCM"')
 
-
             buildConfigField("String", "API_URL", '"http://uat.takestock.com/api/v1"')
             buildConfigField("String", "BASE_URL", '"http://uat.takestock.com"')
-            buildConfigField("String", "STRIPE_API_KEY", '"pk_test_qevXdEtyHKRjlP1WOXLcsd0s"')
+            buildConfigField("String", "STRIPE_API_KEY", '"pk_test_vqadhDOynhijTjKgj7sEnybl"')
+            signingConfig signingConfigs.debug
 
-            buildConfigField("boolean", "LOGGING_ENABLED", "true")
 //            applicationIdSuffix ".debug"
 //            versionNameSuffix "-debug"
             // Run code coverage reports by default on debug builds.

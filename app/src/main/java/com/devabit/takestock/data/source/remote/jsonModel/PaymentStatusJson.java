@@ -5,8 +5,5 @@ package com.devabit.takestock.data.source.remote.jsonModel;
  */
 
 public class PaymentStatusJson {
-
     public String status;
-    public String message;
-    public String data;
 }

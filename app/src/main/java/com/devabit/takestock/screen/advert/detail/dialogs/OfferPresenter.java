@@ -2,21 +2,19 @@ package com.devabit.takestock.screen.advert.detail.dialogs;
 
 import android.support.annotation.NonNull;
 import com.devabit.takestock.data.model.Offer;
+import timber.log.Timber;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 25/05/2016.
  */
-public class OfferPresenter implements OfferContract.Presenter {
+final class OfferPresenter implements OfferContract.Presenter {
 
-    private static final String TAG = makeLogTag(OfferPresenter.class);
 
     private final OfferContract.View mOfferView;
 
-    public OfferPresenter(@NonNull OfferContract.View offerView) {
+    OfferPresenter(@NonNull OfferContract.View offerView) {
         mOfferView = checkNotNull(offerView, "offerView cannot be null.");
         mOfferView.setPresenter(OfferPresenter.this);
     }
@@ -40,7 +38,7 @@ public class OfferPresenter implements OfferContract.Presenter {
             double totalPrice = qtyValue * priceValue;
             mOfferView.showTotalPriceInView(quantity, totalPrice);
         } catch (NumberFormatException e) {
-            LOGE(TAG, "BOOM:", e);
+            Timber.e(e);
         }
     }
 

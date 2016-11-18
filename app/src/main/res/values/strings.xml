@@ -400,6 +400,7 @@
     <string name="pay_by_card_activity_expiry_date">Expiry date</string>
     <string name="pay_by_card_activity_error_payment">Payment failed</string>
     <string name="pay_by_card_activity_payment_rate">There is a %1$d%% surcharge by Stripe</string>
+    <string name="pay_by_card_activity_server_error">Server error</string>
     <!--pay by card activity end-->
 
     <!--pay by BACS activity start-->

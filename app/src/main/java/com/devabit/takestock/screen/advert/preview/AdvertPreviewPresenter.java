@@ -12,17 +12,14 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 11/05/2016.
  */
 class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
-
-    private static final String TAG = makeLogTag(AdvertPreviewPresenter.class);
 
     private final Advert mAdvert;
     private final DataRepository mDataRepository;
@@ -77,7 +74,7 @@ class AdvertPreviewPresenter implements AdvertPreviewContract.Presenter {
                     }
 
                     @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
+                        Timber.e(e);
                         mView.setProgressIndicator(false);
                         if (e instanceof NetworkConnectionException) {
                             mView.showNetworkConnectionError();

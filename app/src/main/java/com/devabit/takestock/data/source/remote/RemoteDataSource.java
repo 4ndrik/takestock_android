@@ -26,14 +26,13 @@ import org.json.JSONException;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import static com.devabit.takestock.utils.Logger.LOGD;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static timber.log.Timber.d;
 
 /**
@@ -42,8 +41,6 @@ import static timber.log.Timber.d;
  * Created by Victor Artemyev on 22/04/2016.
  */
 public class RemoteDataSource implements ApiRest, DataSource {
-
-    private static final String TAG = makeLogTag(RemoteDataSource.class);
 
     private static RemoteDataSource sInstance;
 
@@ -453,7 +450,7 @@ public class RemoteDataSource implements ApiRest, DataSource {
                 })
                 .doOnNext(new Action1<List<BusinessType>>() {
                     @Override public void call(List<BusinessType> types) {
-                        LOGD(TAG, "BusinessTypes from RemoteDataSource " + types);
+                        Timber.d("BusinessTypes from RemoteDataSource %s", types);
                     }
                 });
     }

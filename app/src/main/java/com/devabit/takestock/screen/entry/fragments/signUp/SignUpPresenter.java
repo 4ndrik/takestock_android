@@ -18,16 +18,12 @@ import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-import static com.devabit.takestock.utils.Logger.LOGE;
-import static com.devabit.takestock.utils.Logger.makeLogTag;
 import static com.devabit.takestock.utils.Preconditions.checkNotNull;
 
 /**
  * Created by Victor Artemyev on 06/05/2016.
  */
 public class SignUpPresenter implements SignUpContract.Presenter {
-
-    private static final String TAG = makeLogTag(SignUpPresenter.class);
 
     private final DataRepository mDataRepository;
     private final SignUpContract.View mSignUpView;
@@ -72,7 +68,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                     }
 
                     @Override public void onError(Throwable e) {
-                        LOGE(TAG, "BOOM:", e);
+                        Timber.e(e);
                         mSignUpView.setProgressIndicator(false);
                         if (e instanceof NetworkConnectionException) {
                             mSignUpView.showNetworkConnectionError();

@@ -75,7 +75,7 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".screen.payment.PayByCardActivity"
+                android:name=".screen.payment.byCard.PayByCardActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".screen.payment.byBACS.PayByBACSActivity"

@@ -1,4 +1,4 @@
-package com.devabit.takestock.screen.payment;
+package com.devabit.takestock.screen.payment.byCard;
 
 import com.devabit.takestock.data.model.Offer;
 import com.devabit.takestock.screen.BasePresenter;
