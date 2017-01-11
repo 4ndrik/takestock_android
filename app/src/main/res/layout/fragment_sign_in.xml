@@ -83,7 +83,7 @@
                         android:textAppearance="@android:style/TextAppearance.Small"
                         android:gravity="start"
                         android:text="@string/forgot_password"
-                        android:textColor="@color/lime_900"/>
+                        android:textColor="@drawable/selector_forgot_password"/>
 
                 <Button
                         android:id="@+id/sign_in_button"

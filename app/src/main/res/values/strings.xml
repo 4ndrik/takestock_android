@@ -87,8 +87,6 @@
     <string name="edit_advert">Edit advert</string>
     <string name="help_guide">There are detailed selling guides and best practice on our main website at</string>
     <string name="help_questions_message">If you have any questions about using our app you can message us</string>
-    <string name="website">www.takestock.com</string>
-    <string name="website_url">http://www.takestock.com/</string>
     <string name="admin_email">admin@wetakestock.com</string>
     <string name="send_question">Send question…</string>
     <string name="about_takestock">\tMany businesses in large distributed industries have a problem with stock being
@@ -102,7 +100,6 @@
         of experience across multiple tech and food sectors. We think it is unacceptable that nearly £1Bn in food is
         wasted each year in the UK and we intend to make an impact on that at Takestock.
     </string>
-    <string name="terms_of_services_url">http://uat.takestock.com/legal/</string>
     <string name="select">Select</string>
     <string name="my_business">My business</string>
     <string name="business_name">Business name</string>
@@ -542,5 +539,12 @@
     <string name="BACS_detail_dialog_info_bank_part_one">If paying by BACS please send the full balance to the bank account below and use\u0020</string>
     <string name="BACS_detail_dialog_info_bank_part_two">\u0020as advertised as the reference.</string>
     <!--BACS detail dialog end-->
+
+    <!--Recover password dialog start-->
+    <string name="recover_password_dialog_title">Recover password</string>
+    <string name="recover_password_dialog_message">You will be taken to takestock.com to recover your password</string>
+    <string name="recover_password_dialog_positive_button">OK</string>
+    <string name="recover_password_dialog_negative_button">Cancel</string>
+    <!--Recover password dialog end-->
 
 </resources>

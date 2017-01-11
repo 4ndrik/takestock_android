@@ -3,6 +3,9 @@ package com.devabit.takestock.screen.entry.fragments.signIn;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -176,7 +180,7 @@ public class SignInFragment extends Fragment implements SignInContract.View {
     }
 
     @OnClick(R.id.sign_up_button)
-    protected void onSignUpButtonClick() {
+    void onSignUpButtonClick() {
         hideKeyboard();
         SignUpFragment signUpFragment = SignUpFragment.newInstance();
         getFragmentManager()
@@ -191,6 +195,29 @@ public class SignInFragment extends Fragment implements SignInContract.View {
         Activity parentActivity = getActivity();
         InputMethodManager imm = (InputMethodManager) parentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(parentActivity.getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    @OnClick(R.id.forgot_password_text_view)
+    void onForgotPasswordTextViewClick() {
+        displayRecoverDialog();
+    }
+
+    void displayRecoverDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.recover_password_dialog_title)
+                .setMessage(R.string.recover_password_dialog_message)
+                .setNegativeButton(R.string.recover_password_dialog_negative_button, null)
+                .setPositiveButton(R.string.recover_password_dialog_positive_button, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        openRecoverPasswordUrl();
+                    }
+                })
+                .show();
+    }
+
+    void openRecoverPasswordUrl() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_recover_password)));
+        startActivity(browserIntent);
     }
 
     @Override public void onPause() {

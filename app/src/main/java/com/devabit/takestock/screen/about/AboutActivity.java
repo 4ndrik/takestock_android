@@ -44,7 +44,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void openTermsAndConditions() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_services_url)));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_terms_of_services)));
         startActivity(browserIntent);
     }
 }

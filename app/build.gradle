@@ -53,10 +53,6 @@ android {
         }
 
         debug {
-//            buildConfigField("String", "API_URL", '"http://takestock.com/api/v1"')
-//            buildConfigField("String", "BASE_URL", '"http://takestock.com"')
-//            buildConfigField("String", "STRIPE_API_KEY", '"pk_live_W4yPMXpQFqYn5e12RnRAlDCM"')
-
             buildConfigField("String", "API_URL", '"http://uat.takestock.com/api/v1"')
             buildConfigField("String", "BASE_URL", '"http://uat.takestock.com"')
             buildConfigField("String", "STRIPE_API_KEY", '"pk_test_vqadhDOynhijTjKgj7sEnybl"')
@@ -71,7 +67,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 21
+            minSdkVersion rootProject.ext.minSdkVersion
         }
 
         mock {

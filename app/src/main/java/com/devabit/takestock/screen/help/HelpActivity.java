@@ -82,13 +82,12 @@ public class HelpActivity extends AppCompatActivity {
                 case R.id.question_text_view:
                     sendQuestion();
                     break;
-
             }
         }
     };
 
     private void openWebsite() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_url)));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_website)));
         startActivity(browserIntent);
     }
 

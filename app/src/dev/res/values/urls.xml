@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="website">uat.takestock.com</string>
+    <string name="url_website">http://uat.takestock.com/</string>
+    <string name="url_terms_of_services">http://uat.takestock.com/legal/</string>
+    <string name="url_recover_password">http://uat.takestock.com/recover/</string>
+</resources>
