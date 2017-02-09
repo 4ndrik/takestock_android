@@ -734,6 +734,7 @@ public class AdvertEditorActivity extends AppCompatActivity implements AdvertEdi
     @Nullable private String getExpiryDate() {
         String value = mExpiryDateTextView.getText().toString().trim();
         if (value.isEmpty()) return null;
+        String test = DateUtil.formatToApiDate(value);
         return DateUtil.formatToApiDate(value);
     }
 
